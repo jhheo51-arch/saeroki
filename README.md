@@ -56,6 +56,7 @@
 | [`source_collector.py`](source_collector.py) | 공개 웹페이지 메타데이터 확인 |
 | [`data/candidates.example.json`](data/candidates.example.json) | 실제 자료가 아닌 기능 확인용 후보 |
 | [`data/sources.example.json`](data/sources.example.json) | 공개 출처와 수집 허용 범위 초안 |
+| [`data/insight-bookmarks.example.json`](data/insight-bookmarks.example.json) | 이미지에서 옮긴 INSIGHT 북마크 이름 목록 |
 
 ## 직접 확인하기
 
@@ -89,6 +90,7 @@ python saeroki_cli.py feedback --profile data/profile.local.json --candidate exa
 - [x] 콘텐츠 개인화 공통 기반의 자동 검사 8개
 - [x] 공개 웹페이지 메타데이터 파서
 - [x] 뉴닉 공개 출처 후보와 수집 범위 기록
+- [x] INSIGHT 북마크 이름 59개 기록
 - [ ] 기술 블로그와 뉴스레터 RSS 연결
 - [ ] 날씨 기반 음악 추천 실험
 - [ ] Claude 또는 OpenAI API 연결
