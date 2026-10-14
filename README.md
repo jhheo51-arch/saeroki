@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/PRD-v0.1-40916C" alt="PRD v0.1">
+  <img src="https://img.shields.io/badge/PRD-v1.5-40916C" alt="PRD v1.5">
   <img src="https://img.shields.io/badge/Agent_Ideas-16-90A955" alt="에이전트 후보 16개">
   <img src="https://img.shields.io/badge/Tests-11_passing-31572C" alt="자동 검사 11개 통과">
   <img src="https://img.shields.io/badge/Claude_%2B_Codex-shared_rules-40916C" alt="Claude와 Codex 공통 규칙">
@@ -41,13 +41,14 @@
 | 데이터 | 데이터 시각화, 자연어 SQL |
 | 공통 기반 | 정보 수집, 계획 후 실행, 결과 자기 검토, Agno 검토 |
 
-상세 범위와 1번부터 16번까지의 원래 목록은 [제품군 PRD](docs/PRD-v01.md)에 보관합니다.
+초기 방향과 1번부터 16번까지의 원래 목록은 [PRD v01](docs/PRD-v01.md)에, 현재 구현 상태는 [PRD v1.5](docs/PRD-v1.5.md)에 보관합니다.
 
 ## 프로젝트 지도
 
 | 위치 | 내용 |
 |---|---|
 | [`docs/PRD-v01.md`](docs/PRD-v01.md) | 제품 방향, 16개 후보, 위험과 개발 순서 |
+| [`docs/PRD-v1.5.md`](docs/PRD-v1.5.md) | 현재 구현 범위, 실행 방법, 16개 상태와 Claude 이어하기 안내 |
 | [`AGENT-SPEC.md`](AGENT-SPEC.md) | 모든 에이전트가 함께 지킬 판단 원칙 |
 | [`AGENTS.md`](AGENTS.md) | Codex 작업 안내 |
 | [`CLAUDE.md`](CLAUDE.md) | Claude 작업 안내 |
