@@ -6,7 +6,7 @@
   {"name":"토스","category":"기업 콘텐츠","url":null,"status":"needs_url"},
   {"name":"NAVER D2","category":"기술 블로그","url":"https://d2.naver.com/","status":"confirmed_public"},
   {"name":"우아한형제들 기술블로그","category":"기술 블로그","url":"https://techblog.woowahan.com/","status":"confirmed_public_needs_recheck"},
-  {"name":"당근 기술 블로그","category":"기술 블로그","url":null,"status":"needs_url"},
+  {"name":"당근 기술 블로그","category":"기술 블로그","url":"https://careers.daangn.com/blog/?category=tech","status":"confirmed_public"},
   {"name":"컬리 기술 블로그","category":"기술 블로그","url":"https://helloworld.kurly.com/","status":"confirmed_public"},
   {"name":"MUSINSA techblog — 무신사 테크 블로그","category":"기술 블로그","url":"https://techblog.musinsa.com/","status":"confirmed_public"},
   {"name":"뱅크샐러드 공식 블로그 | 기술 블로그","category":"기술 블로그","url":null,"status":"needs_url"},
