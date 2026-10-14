@@ -140,6 +140,12 @@ def fetch_public_links(url: str, timeout: int = 10) -> list[PublicLink]:
     return links
 
 
+def fetch_public_json(url: str, timeout: int = 10) -> object:
+    request = Request(url, headers={"User-Agent": "Saeroki/0.1 public JSON check"})
+    with urlopen(request, timeout=timeout) as response:
+        return json.loads(response.read().decode(response.headers.get_content_charset() or "utf-8"))
+
+
 def load_source_records(path: str | Path) -> list[dict[str, object]]:
     data = json.loads(Path(path).read_text(encoding="utf-8"))
     if not isinstance(data, list):
@@ -163,6 +169,31 @@ def collect_confirmed_sources(
         if status != "confirmed_public":
             continue
         try:
+            if record.get("collection_mode") == "json_articles":
+                api_url = record.get("api_url")
+                if not isinstance(api_url, str):
+                    raise ValueError("api_url이 없습니다")
+                payload = fetch_public_json(api_url, timeout=timeout)
+                articles = payload.get("articles", []) if isinstance(payload, dict) else []
+                for article in articles:
+                    if not isinstance(article, dict) or not article.get("id"):
+                        continue
+                    meta = article.get("meta") if isinstance(article.get("meta"), dict) else {}
+                    author_info = meta.get("user") if isinstance(meta.get("user"), dict) else {}
+                    candidates.append(
+                        Candidate(
+                            id=f"newneek-{article['id']}",
+                            title=str(article.get("title") or article.get("headline") or "제목 없음"),
+                            url=f"https://newneek.co/@newneek/article/{article['id']}",
+                            tags=[str(record.get("category") or "뉴스레터")],
+                            source=str(record.get("name") or "뉴닉"),
+                            checked_at=checked_at,
+                            popularity=meta.get("countReads") if isinstance(meta.get("countReads"), int) else None,
+                            author=str(author_info.get("name")) if author_info.get("name") else None,
+                            published_at=str(article.get("dtPublished")) if article.get("dtPublished") else None,
+                        )
+                    )
+                continue
             if record.get("collection_mode") == "public_list":
                 links = fetch_public_links(url, timeout=timeout)
                 for link_index, link in enumerate(links):

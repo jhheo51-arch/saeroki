@@ -153,6 +153,36 @@ class SaerokiTest(unittest.TestCase):
         self.assertEqual(candidates[0].title, "개별 글")
         self.assertEqual(candidates[0].url, "https://example.com/article")
 
+    def test_collection_reads_public_json_articles(self):
+        records = [
+            {
+                "name": "뉴닉 주간 에디터 픽",
+                "url": "https://newneek.co/issues/43",
+                "api_url": "https://api.newneek.co/product/v1/issues/43/articles?page=1",
+                "collection_mode": "json_articles",
+                "access_status": "confirmed_public",
+            }
+        ]
+        payload = {
+            "articles": [
+                {
+                    "id": 123,
+                    "title": "공개 글",
+                    "dtPublished": "2026-10-14T00:00:00+09:00",
+                    "meta": {
+                        "countReads": 42,
+                        "user": {"name": "뉴닉"},
+                    },
+                }
+            ]
+        }
+        with patch("source_collector.fetch_public_json", return_value=payload):
+            candidates, errors = collect_confirmed_sources(records)
+        self.assertEqual(errors, [])
+        self.assertEqual(candidates[0].id, "newneek-123")
+        self.assertEqual(candidates[0].popularity, 42)
+        self.assertEqual(candidates[0].published_at, "2026-10-14T00:00:00+09:00")
+
 
 if __name__ == "__main__":
     unittest.main()

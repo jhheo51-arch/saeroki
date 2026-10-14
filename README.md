@@ -5,7 +5,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/PRD-v0.1-40916C" alt="PRD v0.1">
   <img src="https://img.shields.io/badge/Agent_Ideas-16-90A955" alt="에이전트 후보 16개">
-  <img src="https://img.shields.io/badge/Tests-9_passing-31572C" alt="자동 검사 9개 통과">
+  <img src="https://img.shields.io/badge/Tests-11_passing-31572C" alt="자동 검사 11개 통과">
   <img src="https://img.shields.io/badge/Claude_%2B_Codex-shared_rules-40916C" alt="Claude와 Codex 공통 규칙">
 </p>
 
@@ -102,6 +102,7 @@ python saeroki_cli.py feedback --profile data/profile.local.json --candidate exa
 - [x] 확인된 공개 출처에서 후보 JSON 만들기
 - [x] 공개 목록의 개별 링크를 후보로 바꾸는 기본 추출기
 - [x] 뉴닉 공개 출처 후보와 수집 범위 기록
+- [x] 뉴닉 주간 에디터 픽 공개 JSON에서 아티클 후보 만들기
 - [x] INSIGHT 북마크 이름 59개 기록
 - [ ] 기술 블로그와 뉴스레터 RSS 연결
 - [ ] 뉴닉 공개 목록에서 실제 아티클 링크 연결
