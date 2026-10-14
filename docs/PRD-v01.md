@@ -29,28 +29,30 @@
 
 조건에 맞는 후보가 없거나 출처를 확인하지 못하면 추천하지 않습니다.
 
-## 5. 에이전트 후보 16개
+## 5. 사용자가 지정한 에이전트 16개
 
-| 번호 | 이름 | 제품 역할 | 분류와 상태 |
+아래 이름과 목적은 사용자가 처음 제시한 목록을 축약하지 않고 보존한 원문 기준입니다. 2번과 12번부터 14번은 여러 에이전트가 공유할 개발 기반으로 구현할 수 있지만, 사용자가 만들고 싶다고 한 16개 목록에서는 제외하지 않습니다.
+
+| 번호 | 사용자가 지정한 이름 | 사용자가 설명한 목적 | 현재 설계 메모 |
 |---:|---|---|---|
-| 1 | Content Personalization Agent | 취향 기반 콘텐츠 추천 | 첫 상세 제품 |
-| 2 | Agno 기반 에이전트 운영 | 여러 에이전트 실행과 관리 | 제품이 아니라 개발 기반 후보 |
-| 3 | Marketing Strategy Generator | 시장 자료 기반 전략 초안 | 기획형 |
-| 4 | PRD Design Support Agent | 문제 정의와 PRD 작성 지원 | 기획형 |
-| 5 | Data Visualization Group Chat | 분석 역할 협업과 시각화 생성 | 데이터형, 다중 에이전트는 후순위 |
-| 6 | Recipe Creator | 조건과 취향 기반 레시피 생성 | 추천형 |
-| 7 | Finance Agent | 시장 자료와 분석가 의견 정리 | 고위험 분석형, 투자 판단 금지 |
-| 8 | Media Trend Analysis Agent | 디지털 흐름과 인플루언서 후보 탐색 | 조사형 |
-| 9 | Legal Document Analysis | PDF 법률 문서 구조와 쟁점 정리 | 고위험 분석형, 법률 판단 금지 |
-| 10 | Legal Document Analysis | 9번과 같은 항목 | 중복, 별도 개발하지 않음 |
-| 11 | Book Recommendation Agent | 취향 기반 도서 추천 | 추천형 |
-| 12 | Information Gathering | 프롬프트와 출처 기반 자료 수집 | 여러 제품이 공유할 공통 능력 |
-| 13 | Plan-and-Execute | 계획을 세우고 단계별 실행 | 여러 제품이 공유할 공통 능력 |
-| 14 | Reflection | 결과를 기준에 따라 검토하고 수정 | 여러 제품이 공유할 공통 능력 |
-| 15 | Research Agent | 질문, 근거와 반론을 연결한 보고서 | 조사형 |
-| 16 | Natural Language to SQL Agent | 자연어 요청을 SQL로 변환하고 설명 | 데이터형, 첫 버전은 읽기 전용 |
+| 1 | Content Personalization Agent | 엔터테인먼트, 사용자 취향 기반 맞춤형 콘텐츠 추천 | 첫 구현 대상 |
+| 2 | Agno | 금융 분석, 학습 보조, 연구 논문 분석, 전자상거래 추천 등 지식 탐구와 추천 중심 | 여러 에이전트 운영 방식인지 별도 제품인지 확정 필요 |
+| 3 | Marketing Strategy Generator | 시장 데이터를 분석해 마케팅 전략 생성 | 기획형 |
+| 4 | PRD 설계 지원 에이전트 | PRD 설계 지원 | 기획형 |
+| 5 | Data Visualization Group Chat | 데이터 분석, 협업 기반 시각화 생성 | 여러 역할의 대화형 분석 |
+| 6 | Recipe Creator | 요리, 개인 맞춤형 레시피 생성 | 추천형 |
+| 7 | Finance Agent (고급) | 금융, 분석가 인사이트 및 시장 뉴스 제공 | 고위험 분석형 |
+| 8 | Media Trend Analysis Agent | 뉴스와 미디어, 디지털 트렌드 분석 및 인플루언서 탐지 | 조사형 |
+| 9 | Legal Document Analysis | 법률, PDF 법률 문서 분석 및 인사이트 제공 | 고위험 분석형 |
+| 10 | Legal Document Analysis | 법률, PDF 법률 문서 분석 및 인사이트 제공 | 9번과 같은 이름과 설명. 별도 에이전트인지 확인 필요 |
+| 11 | Book Recommendation Agent | 출판과 미디어, 개인화된 도서 추천 | 추천형 |
+| 12 | Information Gathering Prompting | 연구와 개발, 프롬프트 기반 정보 수집 | 여러 에이전트가 공유할 능력 |
+| 13 | Plan-and-Execute Agent | 워크플로우 관리, 계획 수립 후 실행하는 에이전트 | 여러 에이전트가 공유할 능력 |
+| 14 | Reflection Agent | 워크플로우 관리, 출력물을 스스로 비판하고 수정 | 여러 에이전트가 공유할 능력 |
+| 15 | Research Agent | 저널리즘과 뉴스, 심층 탐구와 NYT 스타일 리포트 작성 | 조사형 |
+| 16 | SQL 관련 Agent | 비전공자도 할 수 있게 자연어로 말하면 SQL로 구현하고, 자연어를 SQL 언어로 분석해서 제공 | 데이터형, 첫 버전은 읽기 전용 검토 |
 
-실제 사용자용 제품 후보는 중복을 제외한 11개입니다. 12번부터 14번은 공통 능력으로 구현합니다.
+이 표의 16개는 모두 제품군 문서에 남깁니다. 개발할 때 공통 기반과 사용자용 제품을 나누더라도 목록 자체를 줄이거나 다른 이름으로 바꾸지 않습니다.
 
 ## 6. 첫 제품 요구사항
 
