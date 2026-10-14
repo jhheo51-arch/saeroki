@@ -1,0 +1,42 @@
+[
+  {
+    "id": "newneek-public-home",
+    "name": "뉴닉 공식 공개 홈",
+    "url": "https://newneek.co/",
+    "kind": "public_web",
+    "collection_mode": "metadata_only",
+    "access_status": "confirmed_public",
+    "feed_status": "unknown",
+    "notes": "공개 페이지의 링크와 제목 후보만 확인합니다. 뉴스레터 이메일 원문은 수집하지 않습니다."
+  },
+  {
+    "id": "newneek-public-issues",
+    "name": "뉴닉 주간 에디터 픽",
+    "url": "https://newneek.co/issues/43",
+    "kind": "public_web",
+    "collection_mode": "metadata_only",
+    "access_status": "confirmed_public",
+    "feed_status": "unknown",
+    "notes": "공개 이슈 목록과 제목, 날짜, 링크를 후보로 사용합니다."
+  },
+  {
+    "id": "newneek-public-notice",
+    "name": "고슴이의 소식통",
+    "url": "https://newneek.co/notice",
+    "kind": "public_web",
+    "collection_mode": "metadata_only",
+    "access_status": "confirmed_public",
+    "feed_status": "unknown",
+    "notes": "공지와 공개 콘텐츠 목록을 후보로 사용합니다."
+  },
+  {
+    "id": "insight-bookmarks-pending",
+    "name": "사용자 INSIGHT 북마크",
+    "url": null,
+    "kind": "user_bookmarks",
+    "collection_mode": "pending_user_list",
+    "access_status": "not_inspected",
+    "feed_status": "unknown",
+    "notes": "첨부 이미지에는 폴더 이름만 보입니다. 내부 링크를 받은 뒤 추가합니다."
+  }
+]
