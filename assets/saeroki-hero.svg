@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 360" role="img" aria-labelledby="title desc">
+  <title id="title">새록이</title>
+  <desc id="desc">한 잔의 차처럼 새로운 발견을 건네는 개인 AI 에이전트</desc>
+  <rect width="1200" height="360" rx="28" fill="#31572C"/>
+  <circle cx="1040" cy="72" r="170" fill="#40916C" opacity="0.52"/>
+  <circle cx="1100" cy="28" r="82" fill="#90A955" opacity="0.64"/>
+  <path d="M0 286C185 250 316 306 500 275s308-24 450 4 172 27 250 4v77H0z" fill="#40916C"/>
+  <path d="M0 309c168-24 303 34 500 2s358 31 520 3 140-8 180 0v46H0z" fill="#90A955"/>
+  <path d="M958 105c38-59 103-55 125-21-49 1-78 16-100 48-12-5-20-14-25-27z" fill="#ECF39E"/>
+  <path d="M983 132c25-41 62-66 101-76" fill="none" stroke="#31572C" stroke-width="7" stroke-linecap="round"/>
+  <text x="86" y="147" fill="#FAF9F6" font-size="74" font-weight="800" font-family="Pretendard, Apple SD Gothic Neo, Noto Sans KR, sans-serif">새록이</text>
+  <text x="90" y="206" fill="#ECF39E" font-size="28" font-weight="700" font-family="Pretendard, Apple SD Gothic Neo, Noto Sans KR, sans-serif">새로운 새, 초록과 기록의 록</text>
+  <text x="90" y="253" fill="#FAF9F6" font-size="24" font-weight="500" font-family="Pretendard, Apple SD Gothic Neo, Noto Sans KR, sans-serif">한 잔의 차처럼 건네는 새로운 발견</text>
+</svg>
