@@ -1,4 +1,4 @@
-"""다록이의 첫 번째 모델 독립 추천 흐름."""
+"""새록이의 첫 번째 모델 독립 추천 흐름."""
 
 from dataclasses import dataclass
 from typing import Iterable

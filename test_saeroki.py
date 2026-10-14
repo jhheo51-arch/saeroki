@@ -1,6 +1,6 @@
 import unittest
 
-from daroki import Candidate, Preference, recommend
+from saeroki import Candidate, Preference, recommend
 
 
 class RecommendTest(unittest.TestCase):
