@@ -13,6 +13,7 @@ from saeroki import (
     run_discovery,
     save_profile,
 )
+from source_collector import parse_public_metadata
 
 
 class SaerokiTest(unittest.TestCase):
@@ -95,6 +96,20 @@ class SaerokiTest(unittest.TestCase):
         self.assertEqual(run.prepared_count, 5)
         self.assertEqual(len(run.rejected), 1)
         self.assertTrue(run.review.passed)
+
+    def test_public_metadata_parser_prefers_open_graph_title(self):
+        html = """
+        <html><head>
+          <title>페이지 제목</title>
+          <meta property="og:title" content="공개 콘텐츠 제목">
+          <meta property="og:description" content="짧은 설명">
+          <meta property="article:published_time" content="2026-10-14">
+        </head></html>
+        """
+        metadata = parse_public_metadata("https://example.com/article", html)
+        self.assertEqual(metadata.title, "공개 콘텐츠 제목")
+        self.assertEqual(metadata.description, "짧은 설명")
+        self.assertEqual(metadata.published_at, "2026-10-14")
 
 
 if __name__ == "__main__":

@@ -53,6 +53,7 @@
 | [`CLAUDE.md`](CLAUDE.md) | Claude 작업 안내 |
 | [`saeroki.py`](saeroki.py) | 취향 저장부터 자기 검토까지의 공통 기반 |
 | [`saeroki_cli.py`](saeroki_cli.py) | 터미널에서 전체 흐름을 실행하는 도구 |
+| [`source_collector.py`](source_collector.py) | 공개 웹페이지 메타데이터 확인 |
 | [`data/candidates.example.json`](data/candidates.example.json) | 실제 자료가 아닌 기능 확인용 후보 |
 | [`data/sources.example.json`](data/sources.example.json) | 공개 출처와 수집 허용 범위 초안 |
 
@@ -85,7 +86,8 @@ python saeroki_cli.py feedback --profile data/profile.local.json --candidate exa
 - [x] 취향 저장, 출처 검사, 중복 제거와 추천 이유
 - [x] 계획 후 실행, 결과 자기 검토와 실행 기록
 - [x] 저장, 이미 앎, 관심 없음과 너무 유명함 피드백
-- [x] 콘텐츠 개인화 공통 기반의 자동 검사 7개
+- [x] 콘텐츠 개인화 공통 기반의 자동 검사 8개
+- [x] 공개 웹페이지 메타데이터 파서
 - [x] 뉴닉 공개 출처 후보와 수집 범위 기록
 - [ ] 기술 블로그와 뉴스레터 RSS 연결
 - [ ] 날씨 기반 음악 추천 실험
