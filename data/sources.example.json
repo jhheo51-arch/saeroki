@@ -14,7 +14,7 @@
     "name": "뉴닉 주간 에디터 픽",
     "url": "https://newneek.co/issues/43",
     "kind": "public_web",
-    "collection_mode": "metadata_only",
+    "collection_mode": "public_list",
     "access_status": "confirmed_public",
     "feed_status": "unknown",
     "notes": "공개 이슈 목록과 제목, 날짜, 링크를 후보로 사용합니다."
@@ -24,7 +24,7 @@
     "name": "고슴이의 소식통",
     "url": "https://newneek.co/notice",
     "kind": "public_web",
-    "collection_mode": "metadata_only",
+    "collection_mode": "public_list",
     "access_status": "confirmed_public",
     "feed_status": "unknown",
     "notes": "공지와 공개 콘텐츠 목록을 후보로 사용합니다."

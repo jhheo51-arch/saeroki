@@ -7,6 +7,7 @@ from html.parser import HTMLParser
 from datetime import datetime, timezone
 import json
 from pathlib import Path
+from urllib.parse import urljoin, urlparse
 from urllib.request import Request, urlopen
 
 from saeroki import Candidate
@@ -18,6 +19,12 @@ class PublicMetadata:
     title: str
     description: str | None = None
     published_at: str | None = None
+
+
+@dataclass(frozen=True)
+class PublicLink:
+    url: str
+    title: str
 
 
 class _MetadataParser(HTMLParser):
@@ -44,6 +51,44 @@ class _MetadataParser(HTMLParser):
     def handle_data(self, data: str) -> None:
         if self.in_title:
             self.title_parts.append(data.strip())
+
+
+class _LinkParser(HTMLParser):
+    def __init__(self) -> None:
+        super().__init__()
+        self.links: list[tuple[str, list[str]]] = []
+        self.current_href: str | None = None
+        self.current_text: list[str] = []
+
+    def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
+        if tag == "a":
+            self.current_href = dict(attrs).get("href")
+            self.current_text = []
+
+    def handle_endtag(self, tag: str) -> None:
+        if tag == "a" and self.current_href:
+            title = " ".join(part for part in self.current_text if part).strip()
+            if title:
+                self.links.append((self.current_href, title))
+            self.current_href = None
+            self.current_text = []
+
+    def handle_data(self, data: str) -> None:
+        if self.current_href:
+            self.current_text.append(data.strip())
+
+
+_NON_CONTENT_LINK_TITLES = {
+    "뉴닉",
+    "뉴닉 소개",
+    "뉴스레터 구독",
+    "광고제휴",
+    "채용",
+    "서비스 이용약관",
+    "개인정보처리방침",
+    "고객센터",
+    "slack에 추가",
+}
 
 
 def parse_public_metadata(url: str, html: str) -> PublicMetadata:
@@ -73,6 +118,28 @@ def fetch_public_metadata(url: str, timeout: int = 10) -> PublicMetadata:
     return parse_public_metadata(url, html)
 
 
+def fetch_public_links(url: str, timeout: int = 10) -> list[PublicLink]:
+    request = Request(url, headers={"User-Agent": "Saeroki/0.1 public list check"})
+    with urlopen(request, timeout=timeout) as response:
+        html = response.read().decode(response.headers.get_content_charset() or "utf-8", "replace")
+    parser = _LinkParser()
+    parser.feed(html)
+    base_host = urlparse(url).netloc
+    seen: set[str] = set()
+    links: list[PublicLink] = []
+    for href, title in parser.links:
+        absolute = urljoin(url, href).split("#", 1)[0]
+        if urlparse(absolute).scheme not in {"http", "https"}:
+            continue
+        if urlparse(absolute).netloc != base_host or absolute in seen:
+            continue
+        if title.casefold() in _NON_CONTENT_LINK_TITLES:
+            continue
+        seen.add(absolute)
+        links.append(PublicLink(absolute, title))
+    return links
+
+
 def load_source_records(path: str | Path) -> list[dict[str, object]]:
     data = json.loads(Path(path).read_text(encoding="utf-8"))
     if not isinstance(data, list):
@@ -96,6 +163,20 @@ def collect_confirmed_sources(
         if status != "confirmed_public":
             continue
         try:
+            if record.get("collection_mode") == "public_list":
+                links = fetch_public_links(url, timeout=timeout)
+                for link_index, link in enumerate(links):
+                    candidates.append(
+                        Candidate(
+                            id=f"source-{index + 1}-{link_index + 1}",
+                            title=link.title,
+                            url=link.url,
+                            tags=[str(record.get("category") or "미분류")],
+                            source=str(record.get("name") or url),
+                            checked_at=checked_at,
+                        )
+                    )
+                continue
             metadata = fetch_public_metadata(url, timeout=timeout)
         except Exception as error:  # noqa: BLE001
             errors.append({"url": url, "error": str(error)})

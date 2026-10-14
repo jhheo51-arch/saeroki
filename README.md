@@ -100,9 +100,11 @@ python saeroki_cli.py feedback --profile data/profile.local.json --candidate exa
 - [x] 콘텐츠 개인화 공통 기반의 자동 검사 8개
 - [x] 공개 웹페이지 메타데이터 파서
 - [x] 확인된 공개 출처에서 후보 JSON 만들기
+- [x] 공개 목록의 개별 링크를 후보로 바꾸는 기본 추출기
 - [x] 뉴닉 공개 출처 후보와 수집 범위 기록
 - [x] INSIGHT 북마크 이름 59개 기록
 - [ ] 기술 블로그와 뉴스레터 RSS 연결
+- [ ] 뉴닉 공개 목록에서 실제 아티클 링크 연결
 - [ ] 날씨 기반 음악 추천 실험
 - [ ] Claude 또는 OpenAI API 연결
 

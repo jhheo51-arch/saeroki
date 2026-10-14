@@ -14,7 +14,7 @@ from saeroki import (
     run_discovery,
     save_profile,
 )
-from source_collector import collect_confirmed_sources, parse_public_metadata
+from source_collector import PublicLink, collect_confirmed_sources, parse_public_metadata
 
 
 class SaerokiTest(unittest.TestCase):
@@ -134,6 +134,24 @@ class SaerokiTest(unittest.TestCase):
             candidates, errors = collect_confirmed_sources(records)
         self.assertEqual(candidates, [])
         self.assertEqual(len(errors), 1)
+
+    def test_collection_expands_public_list_links(self):
+        records = [
+            {
+                "name": "공개 목록",
+                "url": "https://example.com/list",
+                "collection_mode": "public_list",
+                "access_status": "confirmed_public",
+            }
+        ]
+        with patch(
+            "source_collector.fetch_public_links",
+            return_value=[PublicLink("https://example.com/article", "개별 글")],
+        ):
+            candidates, errors = collect_confirmed_sources(records)
+        self.assertEqual(errors, [])
+        self.assertEqual(candidates[0].title, "개별 글")
+        self.assertEqual(candidates[0].url, "https://example.com/article")
 
 
 if __name__ == "__main__":
