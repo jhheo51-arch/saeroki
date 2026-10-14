@@ -1,6 +1,6 @@
 # 새록이 Saeroki
 
-<img src="assets/saeroki-character-v01.png" alt="말차 찻잔에서 올라와 빈 기록장을 들고 있는 새록이 캐릭터" width="320">
+<img src="assets/saeroki-character-v02.png" alt="찻잎 귀와 새싹 꼬리, 기록장 주머니를 가진 새록이 캐릭터" width="320">
 
 새록이는 관심 분야에서 아직 알지 못한 항목을 발견하고, 근거와 함께 소수만 추천하는 개인 AI 에이전트 프로젝트입니다.
 
