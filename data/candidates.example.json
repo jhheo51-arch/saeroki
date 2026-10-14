@@ -1,0 +1,43 @@
+[
+  {
+    "id": "example-data-story",
+    "title": "작은 팀의 데이터 기록법",
+    "url": "https://example.com/data-story?utm_source=sample",
+    "tags": ["데이터", "기술블로그"],
+    "source": "새록이 예시 기술블로그",
+    "checked_at": "2026-10-14T09:00:00+09:00",
+    "popularity": 18,
+    "author": "예시 작성자",
+    "published_at": "2026-10-10"
+  },
+  {
+    "id": "example-ai-note",
+    "title": "작게 시작하는 AI 실험 노트",
+    "url": "https://example.org/ai-note",
+    "tags": ["AI", "실험"],
+    "source": "새록이 예시 뉴스레터",
+    "checked_at": "2026-10-14T09:05:00+09:00",
+    "popularity": null,
+    "author": "예시 편집자",
+    "published_at": "2026-10-12"
+  },
+  {
+    "id": "example-ad",
+    "title": "이번 주 제품 광고",
+    "url": "https://example.net/ad",
+    "tags": ["AI", "광고"],
+    "source": "새록이 예시 광고",
+    "checked_at": "2026-10-14T09:10:00+09:00",
+    "popularity": 5,
+    "published_at": "2026-10-13"
+  },
+  {
+    "id": "example-data-story-copy",
+    "title": "작은 팀의 데이터 기록법 다시 보기",
+    "url": "https://example.com/data-story?utm_campaign=duplicate",
+    "tags": ["데이터"],
+    "source": "새록이 예시 모음",
+    "checked_at": "2026-10-14T09:15:00+09:00",
+    "popularity": 20
+  }
+]

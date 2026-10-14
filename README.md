@@ -5,7 +5,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/PRD-v0.1-40916C" alt="PRD v0.1">
   <img src="https://img.shields.io/badge/Agent_Ideas-16-90A955" alt="에이전트 후보 16개">
-  <img src="https://img.shields.io/badge/Tests-3_passing-31572C" alt="자동 검사 3개 통과">
+  <img src="https://img.shields.io/badge/Tests-7_passing-31572C" alt="자동 검사 7개 통과">
   <img src="https://img.shields.io/badge/Claude_%2B_Codex-shared_rules-40916C" alt="Claude와 Codex 공통 규칙">
 </p>
 
@@ -51,7 +51,9 @@
 | [`AGENT-SPEC.md`](AGENT-SPEC.md) | 모든 에이전트가 함께 지킬 판단 원칙 |
 | [`AGENTS.md`](AGENTS.md) | Codex 작업 안내 |
 | [`CLAUDE.md`](CLAUDE.md) | Claude 작업 안내 |
-| [`saeroki.py`](saeroki.py) | 첫 번째 모델 독립 추천 흐름 |
+| [`saeroki.py`](saeroki.py) | 취향 저장부터 자기 검토까지의 공통 기반 |
+| [`saeroki_cli.py`](saeroki_cli.py) | 터미널에서 전체 흐름을 실행하는 도구 |
+| [`data/candidates.example.json`](data/candidates.example.json) | 실제 자료가 아닌 기능 확인용 후보 |
 
 ## 직접 확인하기
 
@@ -63,13 +65,27 @@ python -m unittest -v
 
 검사는 이미 아는 항목과 제외 태그를 거르는지, 인기도 자료가 없을 때 덜 유명하다고 단정하지 않는지 확인합니다.
 
+### 첫 추천 흐름 실행
+
+아래 명령은 기능 확인용 취향 파일을 만들고 예시 후보를 추천합니다. `data/profile.local.json`과 실행 기록은 GitHub에 올라가지 않도록 제외했습니다.
+
+```powershell
+python saeroki_cli.py init-profile --output data/profile.local.json --interest AI --interest 데이터 --exclude 광고
+python saeroki_cli.py recommend --profile data/profile.local.json --candidates data/candidates.example.json --log data/run-log.jsonl
+python saeroki_cli.py feedback --profile data/profile.local.json --candidate example-data-story --action saved
+```
+
+현재 후보 자료는 흐름을 확인하기 위한 가상 예시입니다. 실제 기술 블로그와 뉴스레터를 수집한 결과가 아닙니다.
+
 ## 다음 잎사귀
 
 - [x] 제품군과 16개 후보를 정리한 PRD v01
 - [x] Claude와 Codex가 함께 읽는 공통 행동 원칙
-- [x] 콘텐츠 개인화 추천의 최소 코드와 자동 검사
+- [x] 취향 저장, 출처 검사, 중복 제거와 추천 이유
+- [x] 계획 후 실행, 결과 자기 검토와 실행 기록
+- [x] 저장, 이미 앎, 관심 없음과 너무 유명함 피드백
+- [x] 콘텐츠 개인화 공통 기반의 자동 검사 7개
 - [ ] 기술 블로그와 뉴스레터 RSS 연결
-- [ ] 사용자 취향과 추천 반응 저장
 - [ ] 날씨 기반 음악 추천 실험
 - [ ] Claude 또는 OpenAI API 연결
 
