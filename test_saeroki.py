@@ -1,6 +1,7 @@
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 from saeroki import (
     Candidate,
@@ -13,7 +14,7 @@ from saeroki import (
     run_discovery,
     save_profile,
 )
-from source_collector import parse_public_metadata
+from source_collector import collect_confirmed_sources, parse_public_metadata
 
 
 class SaerokiTest(unittest.TestCase):
@@ -110,6 +111,29 @@ class SaerokiTest(unittest.TestCase):
         self.assertEqual(metadata.title, "공개 콘텐츠 제목")
         self.assertEqual(metadata.description, "짧은 설명")
         self.assertEqual(metadata.published_at, "2026-10-14")
+
+    def test_collection_skips_unconfirmed_sources(self):
+        records = [
+            {
+                "name": "공개 예시",
+                "url": "https://example.com",
+                "category": "기술 블로그",
+                "status": "confirmed_public",
+            },
+            {
+                "name": "확인 전 예시",
+                "url": "https://example.org",
+                "category": "기술 블로그",
+                "status": "needs_url",
+            },
+        ]
+        with patch(
+            "source_collector.fetch_public_metadata",
+            side_effect=OSError("network disabled in test"),
+        ):
+            candidates, errors = collect_confirmed_sources(records)
+        self.assertEqual(candidates, [])
+        self.assertEqual(len(errors), 1)
 
 
 if __name__ == "__main__":

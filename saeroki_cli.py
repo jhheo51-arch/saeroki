@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import json
 from dataclasses import asdict
+from pathlib import Path
 
 from saeroki import (
     Profile,
@@ -44,6 +45,10 @@ def build_parser() -> argparse.ArgumentParser:
         required=True,
         choices=["saved", "known", "not_interested", "too_famous"],
     )
+
+    collect = commands.add_parser("collect", help="확인된 공개 출처의 메타데이터 수집")
+    collect.add_argument("--sources", required=True)
+    collect.add_argument("--output", required=True)
     return parser
 
 
@@ -69,6 +74,23 @@ def main() -> None:
         apply_feedback(profile, args.candidate, args.action)
         save_profile(profile, args.profile)
         print(f"피드백을 저장했습니다: {args.candidate} -> {args.action}")
+        return
+
+    if args.command == "collect":
+        from source_collector import collect_confirmed_sources, load_source_records
+
+        records = load_source_records(args.sources)
+        candidates, errors = collect_confirmed_sources(records)
+        Path(args.output).parent.mkdir(parents=True, exist_ok=True)
+        Path(args.output).write_text(
+            json.dumps([asdict(item) for item in candidates], ensure_ascii=False, indent=2) + "\n",
+            encoding="utf-8",
+        )
+        print(json.dumps({
+            "collected": len(candidates),
+            "errors": errors,
+            "output": args.output,
+        }, ensure_ascii=False, indent=2))
         return
 
     profile = load_profile(args.profile)

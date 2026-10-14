@@ -4,7 +4,12 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 from html.parser import HTMLParser
+from datetime import datetime, timezone
+import json
+from pathlib import Path
 from urllib.request import Request, urlopen
+
+from saeroki import Candidate
 
 
 @dataclass(frozen=True)
@@ -66,3 +71,47 @@ def fetch_public_metadata(url: str, timeout: int = 10) -> PublicMetadata:
     with urlopen(request, timeout=timeout) as response:
         html = response.read().decode(response.headers.get_content_charset() or "utf-8", "replace")
     return parse_public_metadata(url, html)
+
+
+def load_source_records(path: str | Path) -> list[dict[str, object]]:
+    data = json.loads(Path(path).read_text(encoding="utf-8"))
+    if not isinstance(data, list):
+        raise ValueError("출처 파일의 최상위 값은 목록이어야 합니다")
+    return data
+
+
+def collect_confirmed_sources(
+    records: list[dict[str, object]],
+    timeout: int = 10,
+) -> tuple[list[Candidate], list[dict[str, str]]]:
+    """공개 확인 상태인 출처의 메타데이터만 후보로 변환합니다."""
+    candidates: list[Candidate] = []
+    errors: list[dict[str, str]] = []
+    checked_at = datetime.now(timezone.utc).isoformat()
+    for index, record in enumerate(records):
+        url = record.get("url")
+        status = str(record.get("status") or record.get("access_status") or "")
+        if not isinstance(url, str) or not url.startswith(("http://", "https://")):
+            continue
+        if status != "confirmed_public":
+            continue
+        try:
+            metadata = fetch_public_metadata(url, timeout=timeout)
+        except Exception as error:  # noqa: BLE001
+            errors.append({"url": url, "error": str(error)})
+            continue
+        title = metadata.title or str(record.get("name") or url)
+        source_name = str(record.get("name") or url)
+        tags = [str(record.get("category") or "미분류")]
+        candidates.append(
+            Candidate(
+                id=f"source-{index + 1}",
+                title=title,
+                url=metadata.url,
+                tags=tags,
+                source=source_name,
+                checked_at=checked_at,
+                published_at=metadata.published_at,
+            )
+        )
+    return candidates, errors

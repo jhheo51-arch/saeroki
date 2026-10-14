@@ -5,7 +5,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/PRD-v0.1-40916C" alt="PRD v0.1">
   <img src="https://img.shields.io/badge/Agent_Ideas-16-90A955" alt="에이전트 후보 16개">
-  <img src="https://img.shields.io/badge/Tests-7_passing-31572C" alt="자동 검사 7개 통과">
+  <img src="https://img.shields.io/badge/Tests-9_passing-31572C" alt="자동 검사 9개 통과">
   <img src="https://img.shields.io/badge/Claude_%2B_Codex-shared_rules-40916C" alt="Claude와 Codex 공통 규칙">
 </p>
 
@@ -68,6 +68,16 @@ python -m unittest -v
 
 검사는 이미 아는 항목과 제외 태그를 거르는지, 인기도 자료가 없을 때 덜 유명하다고 단정하지 않는지 확인합니다.
 
+### 확인된 공개 출처에서 후보 만들기
+
+출처 목록에서 `status`가 `confirmed_public`인 주소만 읽어 제목과 게시 시각을 후보 파일로 만듭니다. 로그인이나 구독이 필요한 주소, 아직 확인하지 않은 주소는 자동으로 건너뜁니다.
+
+```powershell
+python saeroki_cli.py collect --sources data/sources.example.json --output data/candidates.collected.local.json
+```
+
+`data/candidates.collected.local.json`은 실행 때 만들어지는 로컬 결과라 GitHub에 올리지 않습니다. 수집에 실패한 주소는 명령 결과의 `errors`에 남깁니다.
+
 ### 첫 추천 흐름 실행
 
 아래 명령은 기능 확인용 취향 파일을 만들고 예시 후보를 추천합니다. `data/profile.local.json`과 실행 기록은 GitHub에 올라가지 않도록 제외했습니다.
@@ -89,6 +99,7 @@ python saeroki_cli.py feedback --profile data/profile.local.json --candidate exa
 - [x] 저장, 이미 앎, 관심 없음과 너무 유명함 피드백
 - [x] 콘텐츠 개인화 공통 기반의 자동 검사 8개
 - [x] 공개 웹페이지 메타데이터 파서
+- [x] 확인된 공개 출처에서 후보 JSON 만들기
 - [x] 뉴닉 공개 출처 후보와 수집 범위 기록
 - [x] INSIGHT 북마크 이름 59개 기록
 - [ ] 기술 블로그와 뉴스레터 RSS 연결
