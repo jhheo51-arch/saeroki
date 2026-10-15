@@ -5,7 +5,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/PRD-v1.5-40916C" alt="PRD v1.5">
   <img src="https://img.shields.io/badge/Agent_Ideas-16-90A955" alt="에이전트 후보 16개">
-  <img src="https://img.shields.io/badge/Tests-21_passing-31572C" alt="자동 검사 21개 통과">
+  <img src="https://img.shields.io/badge/Tests-25_passing-31572C" alt="자동 검사 25개 통과">
   <img src="https://img.shields.io/badge/Claude_%2B_Codex-shared_rules-40916C" alt="Claude와 Codex 공통 규칙">
 </p>
 
@@ -14,7 +14,7 @@
 </p>
 
 <p align="center">
-  <img src="assets/saeroki-motion.svg" alt="새록이 캐릭터가 초록 들판을 천천히 왔다 갔다 하는 모습" width="100%">
+  <img src="assets/saeroki-tree.svg" alt="지금까지 자란 새록이 묘목" width="100%">
 </p>
 
 ## 새로운 발견부터
@@ -24,6 +24,19 @@
 > **새록이, 취향을 따라 자라나는 새로운 발견**
 
 새록이는 많이 보여 주는 대신 지금 확인할 가치가 있는 낯선 항목을 1개에서 3개까지 건넵니다. 출처와 추천 이유를 함께 보여 주며, 적절한 후보가 없으면 억지로 추천하지 않습니다.
+
+## 자라는 새록이
+
+새록이는 작은 묘목입니다. 이 저장소를 계속 쓰고 이 페이지를 찾아올수록 조금씩 자라 큰 나무가 됩니다.
+
+<p align="center">
+  <img src="assets/saeroki-stages.svg" alt="새싹, 묘목, 어린 나무, 나무, 큰 나무 다섯 단계" width="100%">
+</p>
+
+- 성장 점수는 `누적 조회수 + 커밋 수`입니다.
+- GitHub Actions가 매일 서울 자정과 `main`에 push할 때 [`growth.py`](growth.py)를 실행해 그림을 다시 그립니다.
+- 조회수는 GitHub가 최근 14일만 알려 주므로 날짜별로 [`data/growth.json`](data/growth.json)에 쌓아 둡니다. 불러오지 못한 날은 0으로 바꾸지 않고 `확인 전`으로 남깁니다.
+- 조회수를 읽으려면 저장소 `Administration: Read` 권한이 있는 fine-grained 토큰을 `TRAFFIC_TOKEN` 시크릿으로 등록해야 합니다. 등록 전에는 커밋 수만으로 자랍니다.
 
 ## 지금의 새록이
 
@@ -59,6 +72,7 @@
 | [`saeroki.py`](saeroki.py) | 취향 저장부터 자기 검토까지의 공통 기반 |
 | [`saeroki_cli.py`](saeroki_cli.py) | 터미널에서 전체 흐름을 실행하는 도구 |
 | [`source_collector.py`](source_collector.py) | 공개 웹페이지 메타데이터 확인 |
+| [`growth.py`](growth.py) | 성장 점수 계산과 픽셀 묘목 SVG 생성 |
 | [`weather.py`](weather.py) | 서울 현재 날씨와 날씨 코드 확인 |
 | [`data/candidates.example.json`](data/candidates.example.json) | 실제 자료가 아닌 기능 확인용 후보 |
 | [`data/music-candidates.example.json`](data/music-candidates.example.json) | API 없이 직접 관리하는 YouTube Music 후보 양식 |
@@ -127,6 +141,7 @@ python saeroki_cli.py scheduled-recommend --profile data/profile.local.json --ca
 - [x] 계획 후 실행, 결과 자기 검토와 실행 기록
 - [x] 저장, 이미 앎, 관심 없음과 너무 유명함 피드백
 - [x] 콘텐츠 개인화 공통 기반의 자동 검사 21개
+- [x] 조회수와 커밋으로 자라는 픽셀 묘목 새록이
 - [x] 서울 시간대별 추천 구성
 - [x] 서울 현재 날씨를 아침 음악 추천에 전달
 - [x] API 없이 수동 YouTube Music 후보 목록 사용

@@ -1,0 +1,45 @@
+name: 새록이 성장
+
+on:
+  schedule:
+    - cron: "0 15 * * *" # 매일 서울 자정
+  push:
+    branches: [main]
+    paths-ignore:
+      - "assets/saeroki-tree.svg"
+      - "assets/saeroki-stages.svg"
+      - "data/growth.json"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: saeroki-grow
+  cancel-in-progress: false
+
+jobs:
+  grow:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: 성장 상태 갱신
+        env:
+          TRAFFIC_TOKEN: ${{ secrets.TRAFFIC_TOKEN }}
+        run: python growth.py
+      - name: 바뀐 그림 커밋
+        run: |
+          git config user.name "saeroki-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add assets/saeroki-tree.svg assets/saeroki-stages.svg data/growth.json
+          if git diff --cached --quiet; then
+            echo "변경 없음"
+          else
+            git commit -m "chore: grow saeroki"
+            git push
+          fi
