@@ -555,6 +555,92 @@ def render_current_svg(state: dict) -> str:
 """
 
 
+HERO_W, HERO_H = 1200, 360
+HERO_BLOCK = 8  # 배너 배경 픽셀 한 칸 크기
+HERO_GROWTH = ((1, 7, 560), (40, 5.5, 730), (100, 4.5, 940))  # (레벨, 픽셀 크기, 왼쪽 x)
+
+
+def _hero_ground(x: int) -> int:
+    """배너 오른쪽으로 갈수록 살짝 올라가는 언덕의 높이(y)를 8px 계단으로 돌려줍니다."""
+    y = 318 - 22 * math.sin(x / 260) - 10 * math.sin(x / 90 + 1) - (x / HERO_W) * 18
+    return int(y // HERO_BLOCK * HERO_BLOCK)
+
+
+def render_hero_svg() -> str:
+    """README 맨 위 배너. 캐릭터와 같은 픽셀 그림으로 새싹에서 세계수까지 자라는 모습을 보여 줍니다."""
+    b = HERO_BLOCK
+    stars = "".join(
+        f'<rect class="twinkle" x="{int(_noise(i, 1, 3) * 1180) // b * b}" y="{int(_noise(i, 2, 3) * 200) // b * b}" '
+        f'width="{b // 2 if i % 3 else b}" height="{b // 2 if i % 3 else b}" fill="#ECF39E" '
+        f'style="animation-delay:-{_noise(i, 4, 3) * 4:.1f}s"/>'
+        for i in range(28)
+    )
+    moon = "".join(
+        f'<rect x="{560 + dx * b}" y="{32 + dy * b}" width="{b}" height="{b}" fill="{"#ECF39E" if dx + dy < 7 else "#90A955"}"/>'
+        for dy in range(9) for dx in range(9)
+        if (dx - 4) ** 2 + (dy - 4) ** 2 <= 17
+    )
+    far = "".join(
+        f'<rect x="{x}" y="{_hero_ground(x) - 26}" width="{b}" height="{HERO_H}" fill="#40916C"/>'
+        for x in range(0, HERO_W, b)
+    )
+    near = "".join(
+        f'<rect x="{x}" y="{_hero_ground(x + 400) + 8}" width="{b}" height="{HERO_H}" fill="#90A955"/>'
+        for x in range(0, HERO_W, b)
+    )
+    grass = "".join(
+        f'<rect x="{x}" y="{_hero_ground(x + 400) + 4}" width="{b // 2}" height="{b // 2}" fill="#ECF39E"/>'
+        for x in range(0, HERO_W, b * 3) if _noise(x, 9, 3) > 0.45
+    )
+    trees, arrows = [], []
+    for i, (level, pixel, left) in enumerate(HERO_GROWTH):
+        sprite = sprite_for(level)
+        behind, front = render_effects(level, sprite, pixel, f"hero{level}")
+        center = left + GRID_W * pixel / 2
+        ground = _hero_ground(int(center) + 400) + 8
+        top = ground - GRID_H * pixel + pixel
+        trees.append(
+            f'<g transform="translate({left:g} {top:g})">{behind}'
+            f'<g shape-rendering="crispEdges">{sprite_rects(sprite, pixel)}</g>{front}</g>'
+        )
+        if i:
+            ax = left - 18
+            ay = ground - 40
+            arrows.append(
+                "".join(f'<rect x="{ax + k * b}" y="{ay}" width="{b // 2}" height="{b // 2}" fill="#ECF39E" opacity="0.7"/>' for k in range(3))
+            )
+    shadow = "#1F2A1F"
+    return f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {HERO_W} {HERO_H}" role="img" aria-labelledby="title desc">
+  <title id="title">새록이</title>
+  <desc id="desc">새로운 발견의 새, 기록의 록. 쓸수록 자라는 나만의 AI 에이전트 나무. 새싹에서 세계수까지 자라는 픽셀 새록이.</desc>
+  <style>
+    .twinkle {{ animation: twinkle 3.5s ease-in-out infinite; }}
+    .glow {{ animation: glow 4s ease-in-out infinite; }}
+    .rays {{ animation: spin 40s linear infinite; }}
+    .spark {{ animation-name: rise; animation-iteration-count: infinite; animation-timing-function: ease-in-out; opacity: 0; }}
+    @keyframes twinkle {{ 0%, 100% {{ opacity: 0.25; }} 50% {{ opacity: 1; }} }}
+    @keyframes glow {{ 0%, 100% {{ opacity: 0.75; }} 50% {{ opacity: 1; }} }}
+    @keyframes spin {{ to {{ transform: rotate(360deg); }} }}
+    @keyframes rise {{ 0% {{ transform: translateY(0); opacity: 0; }} 30% {{ opacity: 1; }} 100% {{ transform: translateY(-36px); opacity: 0; }} }}
+    @media (prefers-reduced-motion: reduce) {{ .twinkle, .glow, .rays {{ animation: none; }} .twinkle {{ opacity: 0.7; }} .spark {{ animation: none; opacity: 0.8; }} }}
+  </style>
+  <clipPath id="frame"><rect width="{HERO_W}" height="{HERO_H}" rx="28"/></clipPath>
+  <g clip-path="url(#frame)">
+    <rect width="{HERO_W}" height="{HERO_H}" fill="#31572C"/>
+    <g shape-rendering="crispEdges">{stars}{moon}{far}{near}{grass}{''.join(arrows)}</g>
+    {''.join(trees)}
+  </g>
+  <g font-family="{FONT}">
+    <text x="86" y="152" fill="{shadow}" font-size="80" font-weight="800">새록이</text>
+    <text x="80" y="146" fill="#FAF9F6" font-size="80" font-weight="800">새록이</text>
+    <text x="84" y="204" fill="{shadow}" font-size="27" font-weight="700">새로운 발견의 새, 기록의 록</text>
+    <text x="82" y="202" fill="#ECF39E" font-size="27" font-weight="700">새로운 발견의 새, 기록의 록</text>
+    <text x="82" y="250" fill="#FAF9F6" font-size="24" font-weight="600">쓸수록 자라는 나만의 AI 에이전트 나무</text>
+  </g>
+</svg>
+"""
+
+
 MILESTONES = (1, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100)
 
 
@@ -712,6 +798,7 @@ def update(state_path: Path, assets_dir: Path, repo: str | None, traffic_token: 
         state_path.write_text(json.dumps(state, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     (assets_dir / "saeroki-tree.svg").write_text(render_current_svg(state), encoding="utf-8")
     (assets_dir / "saeroki-stages.svg").write_text(render_stages_svg(), encoding="utf-8")
+    (assets_dir / "saeroki-hero.svg").write_text(render_hero_svg(), encoding="utf-8")
     return state
 
 
