@@ -123,7 +123,7 @@
 
 ## 10. 화면
 
-저장소 안 HTML 파일(`fruits/17-saerok-dictionary/web/index.html`)을 브라우저로 엽니다. 저장소가 비공개라 GitHub Pages는 쓰지 않습니다.
+저장소 안 HTML 파일(`fruits/17-saerok-dictionary/web/index.html`)을 브라우저로 엽니다. 저장소는 2026-10-15 공개로 바꿨으며, 웹 주소로 여는 GitHub Pages 배포는 아직 하지 않았습니다.
 
 `산업·직무 선택 → 오늘의 용어 → 검색창(단어 또는 목적) → 사전 항목 또는 10개 묶음 → 저장 → 내 단어장`
 
