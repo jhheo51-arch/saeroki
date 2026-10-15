@@ -136,6 +136,12 @@ def summary(catalog: dict, terms: list[dict]) -> dict:
         "senses": sum(statuses.values()),
         "verified": statuses.get("verified", 0),
         "needs_check": statuses.get("needs_check", 0),
+        "without_official_source": sum(
+            1
+            for term in terms
+            for sense in term.get("senses", [])
+            if sense.get("sources") and not any(src.get("kind") == "official" for src in sense["sources"])
+        ),
         "cells": {f"{i}×{r}": n for (i, r), n in cell_counts(catalog, terms).items()},
     }
 

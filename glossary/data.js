@@ -691,12 +691,18 @@ window.SAEROK_DATA = {
      "level": "실무",
      "importance": 5,
      "definition": "새 고객 한 명을 데려오는 데 평균적으로 든 마케팅·영업 비용입니다. 일정 기간의 획득 비용 합계를 그 기간 새 고객 수로 나눠 봅니다.",
-     "formula": "CAC = 고객 획득에 쓴 총비용 ÷ 새로 획득한 고객 수",
+     "formula": "CAC = 광고·영업에 쓴 총비용 ÷ 새로 획득한(첫 구매) 고객 수",
      "examples": [
       "유료 채널만 따로 보면 CAC가 꽤 높아서 오가닉 비중을 같이 봐야 해요.",
       "LTV가 CAC의 몇 배인지부터 보고 예산을 늘릴지 정하죠."
      ],
      "sources": [
+      {
+       "title": "Measuring marketing performance (Shopify Help Center)",
+       "url": "https://help.shopify.com/en/manual/promoting-marketing/analyze-marketing/marketing-performance",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
       {
        "title": "The Complete Guide to Customer Acquisition Cost - Amplitude",
        "url": "https://amplitude.com/explore/metrics/guide-to-customer-acquisition-cost",
@@ -749,12 +755,18 @@ window.SAEROK_DATA = {
      "level": "실무",
      "importance": 5,
      "definition": "고객 한 명이 서비스를 쓰는 동안 평균적으로 가져다줄 것으로 예상하는 매출(또는 이익)입니다. 고객 획득에 얼마까지 써도 되는지 판단하는 기준이 됩니다.",
-     "formula": "LTV = 평균 구매 금액 × 구매 횟수 × 유지 기간 (또는 기간 내 총매출 ÷ 해당 기간 유입 사용자 수)",
+     "formula": "LTV = 평균 구매 금액 × 구매 횟수 × 유지 기간 (앱 코호트 기준: 설치일부터 X일까지 누적 수익 ÷ 설치일 사용자 수)",
      "examples": [
       "LTV가 CAC의 3배는 넘어야 공격적으로 집행할 수 있을 것 같아요.",
       "첫 구매 쿠폰 받은 고객들 LTV가 낮게 나와서 혜택 구조를 다시 봐야겠어요."
      ],
      "sources": [
+      {
+       "title": "평생 가치 이해하기 - Google AdMob 고객센터",
+       "url": "https://support.google.com/admob/answer/9736630?hl=ko",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
       {
        "title": "What is LTV? - AppsFlyer glossary",
        "url": "https://www.appsflyer.com/glossary/ltv/",
@@ -1038,6 +1050,12 @@ window.SAEROK_DATA = {
      ],
      "sources": [
       {
+       "title": "Managing customer segments (Shopify Help Center)",
+       "url": "https://help.shopify.com/en/manual/customers/customer-segmentation/manage-customer-segments",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
+      {
        "title": "How to Use Your CRM to Power Your Marketing - HubSpot",
        "url": "https://blog.hubspot.com/marketing/crm-tips",
        "kind": "company_guide",
@@ -1094,6 +1112,12 @@ window.SAEROK_DATA = {
       "푸시 너무 자주 보내면 알림 끄는 사람이 늘어서 주 2회로 제한해요."
      ],
      "sources": [
+      {
+       "title": "Firebase Cloud Messaging (Firebase 문서)",
+       "url": "https://firebase.google.com/docs/cloud-messaging",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
       {
        "title": "What are push notifications? - AppsFlyer mobile glossary",
        "url": "https://www.appsflyer.com/glossary/push-notifications/",
@@ -1266,6 +1290,12 @@ window.SAEROK_DATA = {
      ],
      "sources": [
       {
+       "title": "기본 채널 그룹 - 애널리틱스 고객센터",
+       "url": "https://support.google.com/analytics/answer/9756891?hl=ko",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
+      {
        "title": "What is an organic install? - AppsFlyer mobile glossary",
        "url": "https://www.appsflyer.com/glossary/organic-install/",
        "kind": "company_guide",
@@ -1323,6 +1353,12 @@ window.SAEROK_DATA = {
      ],
      "sources": [
       {
+       "title": "About deep links (Android Developers)",
+       "url": "https://developer.android.com/training/app-links",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
+      {
        "title": "What is deep linking? - AppsFlyer mobile glossary",
        "url": "https://www.appsflyer.com/glossary/deep-linking/",
        "kind": "company_guide",
@@ -1377,6 +1413,12 @@ window.SAEROK_DATA = {
       "국가별 CPI 차이가 커서 예산 배분을 나눠 볼게요."
      ],
      "sources": [
+      {
+       "title": "앱 캠페인의 입찰 정보 - Google Ads 고객센터",
+       "url": "https://support.google.com/google-ads/answer/7100895?hl=ko",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
       {
        "title": "What is Cost per install (CPI)? - AppsFlyer glossary",
        "url": "https://www.appsflyer.com/glossary/cost-per-install/",
@@ -1548,6 +1590,12 @@ window.SAEROK_DATA = {
      ],
      "sources": [
       {
+       "title": "An introduction to Meridian (Google for Developers)",
+       "url": "https://developers.google.com/meridian/docs/basics/about-the-project",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
+      {
        "title": "What Is Media Mix Modeling (MMM)? - AppsFlyer glossary",
        "url": "https://www.appsflyer.com/glossary/media-mix-modeling/",
        "kind": "company_guide",
@@ -1718,12 +1766,24 @@ window.SAEROK_DATA = {
      "level": "입문",
      "importance": 5,
      "definition": "주문 한 건에 고객이 평균적으로 쓰는 금액입니다. 같은 방문·주문 수에서 매출을 늘리려면 객단가를 올리는 방법을 찾습니다.",
-     "formula": "AOV = 매출 ÷ 주문 수",
+     "formula": "AOV = (총매출 − 할인) ÷ 주문 수 (주문 뒤 반품·수정 등 조정은 제외)",
      "examples": [
       "무료배송 기준을 올린 뒤 객단가가 조금 올랐어요.",
       "객단가 올리려고 함께 사면 좋은 상품 추천 영역을 넣어 볼게요."
      ],
      "sources": [
+      {
+       "title": "Measuring marketing performance (Shopify Help Center)",
+       "url": "https://help.shopify.com/en/manual/promoting-marketing/analyze-marketing/marketing-performance",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
+      {
+       "title": "Analytics fields (Shopify Help Center)",
+       "url": "https://help.shopify.com/en/manual/reports-and-analytics/shopify-reports/report-types/analytics-fields",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
       {
        "title": "Average Order Value: Formula and 7 Ways - Shopify",
        "url": "https://www.shopify.com/blog/average-order-value",
@@ -1782,6 +1842,12 @@ window.SAEROK_DATA = {
      ],
      "sources": [
       {
+       "title": "[GA4] 장바구니 이탈자 잠재고객 설정하기 - 애널리틱스 고객센터",
+       "url": "https://support.google.com/analytics/answer/13286448?hl=ko",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
+      {
        "title": "How To Reduce Shopping Cart Abandonment - Shopify",
        "url": "https://www.shopify.com/enterprise/blog/44272899-how-to-reduce-shopping-cart-abandonment-by-optimizing-the-checkout",
        "kind": "company_guide",
@@ -1836,6 +1902,12 @@ window.SAEROK_DATA = {
       "크로스셀 추천이 너무 많으면 결제까지 방해되니 3개만 노출합시다."
      ],
      "sources": [
+      {
+       "title": "Customize product recommendations with Shopify Search & Discovery (Shopify Help Center)",
+       "url": "https://help.shopify.com/en/manual/online-store/storefront-search/search-and-discovery-recommendations",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
       {
        "title": "Cross Sell vs Upsell: Differences and Examples - Shopify",
        "url": "https://www.shopify.com/ca/blog/upselling-and-cross-selling",
@@ -2491,6 +2563,12 @@ window.SAEROK_DATA = {
      ],
      "sources": [
       {
+       "title": "Metric definitions - App Store Connect Analytics - Apple Developer",
+       "url": "https://developer.apple.com/help/app-store-connect-analytics/reference/metrics-definitions",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
+      {
        "title": "Churn Rate (First Round Review 용어집)",
        "url": "https://review.firstround.com/glossary/churn-rate/",
        "kind": "company_guide",
@@ -2679,6 +2757,12 @@ window.SAEROK_DATA = {
       "A/B 테스트는 표본이 다 찰 때까지 중간에 멈추지 말아 주세요."
      ],
      "sources": [
+      {
+       "title": "About Firebase A/B tests (Firebase 문서)",
+       "url": "https://firebase.google.com/docs/ab-testing/ab-concepts",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
       {
        "title": "A/B testing (Optimizely Optimization Glossary)",
        "url": "https://www.optimizely.com/optimization-glossary/ab-testing/",
@@ -3024,13 +3108,19 @@ window.SAEROK_DATA = {
      ],
      "level": "실무",
      "importance": 5,
-     "definition": "일정 기간 동안 플랫폼에서 팔린 상품의 총 금액으로, 판매가에 판매 수량을 곱해 구합니다. 수수료·할인·반품 등을 빼기 전 금액이라 회사가 실제로 가져가는 매출과는 다릅니다.",
+     "definition": "일정 기간 동안 플랫폼에서 상품·서비스 거래가 일어난 총 금액으로, 판매가에 판매 수량을 곱해 구합니다. 통계청 온라인쇼핑 거래액처럼 부가세·배송비까지 포함해 세는 경우가 많고, 수수료·할인·반품을 빼기 전 금액이라 회사가 실제로 가져가는 매출과는 다릅니다.",
      "formula": "GMV = 판매가 × 판매 수량 (기간 합계, 반품·할인·수수료 차감 전)",
      "examples": [
       "이번 행사로 GMV는 늘었지만 쿠폰 비용 때문에 매출은 생각보다 적어요.",
       "보고서에 GMV에 취소·반품을 포함했는지 기준을 적어 주세요."
      ],
      "sources": [
+      {
+       "title": "서비스업동향조사 및 온라인쇼핑동향조사 관련 문의 - KOSIS 국가통계포털",
+       "url": "https://kosis.kr/civilComplaint/qnaDetail.do?boardIdx=21551",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
       {
        "title": "Gross Merchandise Value (GMV) (First Round Review 용어집)",
        "url": "https://review.firstround.com/glossary/gross-merchandise-value-gmv/",
@@ -3544,13 +3634,19 @@ window.SAEROK_DATA = {
      ],
      "level": "입문",
      "importance": 5,
-     "definition": "고객에게 가치를 줄 수 있는 핵심 기능만 담아 빠르게 내놓는 첫 버전 제품입니다. 실제 사용자 반응을 보고 다음에 무엇을 만들지 배우는 것이 목적입니다.",
+     "definition": "최소한의 노력으로 고객에 대해 가장 많이 배울 수 있도록 핵심만 담아 내놓는 첫 버전 제품입니다. 실제 사용자 반응으로 가설을 검증하고 다음에 무엇을 만들지 정하는 것이 목적입니다.",
      "formula": null,
      "examples": [
       "MVP는 결제 없이 예약 신청만 받아 보고 수요부터 확인하죠.",
       "MVP 범위에 알림 기능까지 넣으면 출시가 너무 늦어질 것 같아요."
      ],
      "sources": [
+      {
+       "title": "Minimum Viable Product: a guide (Eric Ries)",
+       "url": "https://www.startuplessonslearned.com/2009/08/minimum-viable-product-guide.html",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
       {
        "title": "What is a Minimum Viable Product (MVP)? | Atlassian",
        "url": "https://www.atlassian.com/agile/product-management/minimum-viable-product",
@@ -3758,6 +3854,12 @@ window.SAEROK_DATA = {
      ],
      "sources": [
       {
+       "title": "What are work types? | Jira Cloud | Atlassian Support",
+       "url": "https://support.atlassian.com/jira-cloud-administration/docs/what-are-issue-types/",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
+      {
        "title": "User Stories | Atlassian",
        "url": "https://www.atlassian.com/agile/project-management/user-stories",
        "kind": "company_guide",
@@ -3879,6 +3981,12 @@ window.SAEROK_DATA = {
      ],
      "sources": [
       {
+       "title": "Wireframes | Digital.gov",
+       "url": "https://digital.gov/guides/research-collaboration/designing/wireframing",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
+      {
        "title": "What is wireframing? | Figma",
        "url": "https://www.figma.com/resource-library/what-is-wireframing/",
        "kind": "company_guide",
@@ -3938,6 +4046,12 @@ window.SAEROK_DATA = {
       "이번 릴리스 노트에 결제 오류 수정 건도 넣어 주세요."
      ],
      "sources": [
+      {
+       "title": "What is a version? | Jira Cloud | Atlassian Support",
+       "url": "https://support.atlassian.com/jira-software-cloud/docs/what-is-a-version/",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
       {
        "title": "Product release guide | Atlassian",
        "url": "https://www.atlassian.com/agile/product-management/product-release",
@@ -4213,6 +4327,12 @@ window.SAEROK_DATA = {
      ],
      "sources": [
       {
+       "title": "Configure columns | Jira Cloud | Atlassian Support",
+       "url": "https://support.atlassian.com/jira-software-cloud/docs/configure-columns/",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
+      {
        "title": "What is Kanban in Project Management? | Atlassian",
        "url": "https://www.atlassian.com/agile/kanban",
        "kind": "company_guide",
@@ -4268,6 +4388,12 @@ window.SAEROK_DATA = {
       "이 에픽은 이번 분기 안에 끝내는 걸 목표로 잡죠."
      ],
      "sources": [
+      {
+       "title": "What is an epic? | Jira Cloud | Atlassian Support",
+       "url": "https://support.atlassian.com/jira-software-cloud/docs/what-is-an-epic/",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
       {
        "title": "What is an Agile epic? | Atlassian",
        "url": "https://www.atlassian.com/agile/project-management/epics",
@@ -4613,6 +4739,12 @@ window.SAEROK_DATA = {
      ],
      "sources": [
       {
+       "title": "Understand your users by developing profiles | Digital.gov",
+       "url": "https://digital.gov/guides/research-collaboration/user-needs/user-profiles",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
+      {
        "title": "Personas | Nielsen Norman Group",
        "url": "https://www.nngroup.com/articles/persona/",
        "kind": "company_guide",
@@ -4672,6 +4804,12 @@ window.SAEROK_DATA = {
      ],
      "sources": [
       {
+       "title": "Map your users' and system's journeys | Digital.gov",
+       "url": "https://digital.gov/guides/research-collaboration/user-needs/journeys",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
+      {
        "title": "Journey Mapping 101 | Nielsen Norman Group",
        "url": "https://www.nngroup.com/articles/journey-mapping-101/",
        "kind": "company_guide",
@@ -4728,6 +4866,12 @@ window.SAEROK_DATA = {
      ],
      "sources": [
       {
+       "title": "Get started with LaunchDarkly | LaunchDarkly Docs",
+       "url": "https://launchdarkly.com/docs/home/getting-started",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
+      {
        "title": "Feature Toggles (aka Feature Flags) | martinfowler.com",
        "url": "https://martinfowler.com/articles/feature-toggles.html",
        "kind": "company_guide",
@@ -4783,6 +4927,12 @@ window.SAEROK_DATA = {
       "이번 분기엔 스프린트마다 20%를 기술 부채 정리에 쓰죠."
      ],
      "sources": [
+      {
+       "title": "The WyCash Portfolio Management System (Ward Cunningham, OOPSLA '92)",
+       "url": "https://c2.com/doc/oopsla92.html",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
       {
        "title": "Technical Debt | martinfowler.com",
        "url": "https://martinfowler.com/bliki/TechnicalDebt.html",
@@ -4902,6 +5052,12 @@ window.SAEROK_DATA = {
      ],
      "sources": [
       {
+       "title": "Part 4: The only thing that matters (Marc Andreessen)",
+       "url": "https://pmarchive.com/guide_to_startups_part4.html",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
+      {
        "title": "Navigating product-market fit: Intercom's PMF Panel | Intercom",
        "url": "https://www.intercom.com/blog/navigating-product-market-fit-pmf-panel/",
        "kind": "company_guide",
@@ -4958,6 +5114,12 @@ window.SAEROK_DATA = {
      ],
      "sources": [
       {
+       "title": "Jobs to Be Done Theory - Christensen Institute",
+       "url": "https://www.christenseninstitute.org/theory/jobs-to-be-done/",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
+      {
        "title": "How to market the Job-to-be-Done | Intercom",
        "url": "https://www.intercom.com/blog/videos/marketing-the-job-to-be-done/",
        "kind": "company_guide",
@@ -5007,13 +5169,25 @@ window.SAEROK_DATA = {
      ],
      "level": "심화",
      "importance": 3,
-     "definition": "작업을 시간 대신 상대적인 크기로 추정하는 단위로, 작업량·복잡도·불확실성을 함께 반영합니다. 한 스프린트에 팀이 완료한 작업량을 벨로시티라고 하며, 여러 스프린트 평균으로 다음 계획을 세웁니다.",
+     "definition": "작업을 시간 대신 다른 작업과 비교한 상대적인 크기(노력·복잡도)로 추정하는 단위로, 시간이나 일수와 직접 대응하지 않습니다. 한 스프린트에 팀이 완료하는 포인트 양을 벨로시티라고 하며, 벨로시티가 안정되면 남은 일이 몇 스프린트 걸릴지 예측하는 데 씁니다.",
      "formula": null,
      "examples": [
       "이 스토리는 지난번 3포인트짜리보다 조금 커 보여서 5로 할게요.",
       "최근 세 스프린트 벨로시티가 30 정도라 이번에도 30포인트까지만 담죠."
      ],
      "sources": [
+      {
+       "title": "What are story points? | Jira Cloud | Atlassian Support",
+       "url": "https://support.atlassian.com/jira-software-cloud/docs/what-are-story-points/",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
+      {
+       "title": "Estimate a work item | Jira Cloud | Atlassian Support",
+       "url": "https://support.atlassian.com/jira-software-cloud/docs/estimate-an-issue/",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
       {
        "title": "Story points and estimation | Atlassian",
        "url": "https://www.atlassian.com/agile/project-management/estimation",
@@ -5077,6 +5251,12 @@ window.SAEROK_DATA = {
       "PDP 상단에 배송 도착 예정일을 노출하는 실험 해 보죠."
      ],
      "sources": [
+      {
+       "title": "방문 페이지 요구사항 - Google Merchant Center 고객센터",
+       "url": "https://support.google.com/merchants/answer/4752265?hl=ko",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
       {
        "title": "What Is a PDP in Ecommerce? | Shopify",
        "url": "https://www.shopify.com/blog/what-is-pdp-in-ecommerce",
@@ -5382,6 +5562,18 @@ window.SAEROK_DATA = {
      ],
      "sources": [
       {
+       "title": "[보도자료] 티메프 사태 재발 방지를 위한 전자지급결제대행(PG)업 제도개선안 발표 - 금융위원회",
+       "url": "https://fsc.go.kr/no010101/83047?curPage=&srchBeginDt=&srchCtgry=&srchEndDt=&srchKey=&srchText=",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
+      {
+       "title": "PG업자의 정산자금 보호 및 관리·감독 장치 마련을 위한 「전자금융거래법」 개정법률안 공포 - 금융위원회",
+       "url": "https://www.fsc.go.kr/po010101/85855?srchCtgry=&curPage=&srchKey=&srchText=&srchBeginDt=&srchEndDt=",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
+      {
        "title": "사장님이 꼭 알아야 할 PG 용어 정리 | 토스페이먼츠",
        "url": "https://www.tosspayments.com/blog/articles/semo-8",
        "kind": "company_guide",
@@ -5550,6 +5742,12 @@ window.SAEROK_DATA = {
       "온보딩 중 이탈이 많은 화면에 툴팁 대신 예시 데이터를 보여 주면 어떨까요?"
      ],
      "sources": [
+      {
+       "title": "Onboarding - Growth & communications - Material Design",
+       "url": "https://m1.material.io/growth-communications/onboarding.html",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
       {
        "title": "What is customer onboarding? | Intercom",
        "url": "https://www.intercom.com/blog/what-is-customer-onboarding/",
@@ -5786,6 +5984,12 @@ window.SAEROK_DATA = {
      ],
      "sources": [
       {
+       "title": "Lesson 1: From support requests to tickets – Zendesk help",
+       "url": "https://support.zendesk.com/hc/en-us/articles/4408881925786-Lesson-1-From-support-requests-to-tickets",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
+      {
        "title": "지원 티켓이란?",
        "url": "https://www.zendesk.kr/blog/customer-service/ticketing-system/ticketing-system/what-is-a-support-ticket/",
        "kind": "company_guide",
@@ -5905,6 +6109,12 @@ window.SAEROK_DATA = {
      ],
      "sources": [
       {
+       "title": "About AI agents – Zendesk help",
+       "url": "https://support.zendesk.com/hc/en-us/articles/6970583409690-About-AI-agents",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
+      {
        "title": "The complete guide to customer service chatbots in 2026",
        "url": "https://www.zendesk.kr/service/ai/chatbots-customer-service/",
        "kind": "company_guide",
@@ -6017,6 +6227,12 @@ window.SAEROK_DATA = {
      ],
      "sources": [
       {
+       "title": "Using intelligent triage to identify and act on ticket escalations – Zendesk help",
+       "url": "https://support.zendesk.com/hc/en-us/articles/6353620565530-Using-intelligent-triage-to-identify-and-act-on-ticket-escalations",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
+      {
        "title": "Ticket escalation: What it is + 8 ways to manage it",
        "url": "https://www.zendesk.kr/blog/customer-service/ticketing-system/ticketing-system/art-ticket-escalation-process/",
        "kind": "company_guide",
@@ -6124,12 +6340,24 @@ window.SAEROK_DATA = {
      "level": "입문",
      "importance": 5,
      "definition": "상담이나 구매 직후 짧은 설문으로 고객이 얼마나 만족했는지 묻고, 만족했다고 답한 비율을 점수로 나타낸 지표입니다.",
-     "formula": "CSAT(%) = 만족 응답 수(5점 척도의 4~5점) ÷ 전체 응답 수 × 100",
+     "formula": "CSAT(%) = 만족(좋음) 응답 수 ÷ 평가를 남긴 응답 수 × 100 (5점 척도라면 보통 4~5점을 만족으로 셉니다)",
      "examples": [
       "이번 달 상담 CSAT가 82%로 지난달보다 3%p 올랐어요.",
       "만족도 낮은 티켓만 모아서 원인 태그를 붙여 볼게요."
      ],
      "sources": [
+      {
+       "title": "Metrics and attributes for Zendesk messaging – Zendesk help",
+       "url": "https://support.zendesk.com/hc/en-us/articles/4724624097818-Metrics-and-attributes-for-Zendesk-messaging",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
+      {
+       "title": "Analyzing the metrics that matter to improve customer support – Zendesk help",
+       "url": "https://support.zendesk.com/hc/en-us/articles/4408832234394-Analyzing-the-metrics-that-matter-to-improve-customer-support",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
       {
        "title": "What is customer satisfaction score (CSAT) and how to measure It",
        "url": "https://www.zendesk.kr/blog/customer-experience/loyalty/customer-loyalty/customer-satisfaction-score/",
@@ -6192,6 +6420,12 @@ window.SAEROK_DATA = {
       "인스타 DM도 상담툴에 붙여서 옴니채널로 묶어 보죠."
      ],
      "sources": [
+      {
+       "title": "About the Zendesk Agent Workspace",
+       "url": "https://support.zendesk.com/hc/en-us/articles/4408821259930-About-the-Zendesk-Agent-Workspace",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
       {
        "title": "What is omnichannel customer service? Definition, importance & strategy",
        "url": "https://www.zendesk.kr/blog/customer-service/support/omnichannel-really-means/",
@@ -6362,6 +6596,18 @@ window.SAEROK_DATA = {
      ],
      "sources": [
       {
+       "title": "Metric definitions in Connect Customer (Cases resolved on first contact)",
+       "url": "https://docs.aws.amazon.com/connect/latest/adminguide/metrics-definitions.html",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
+      {
+       "title": "Analyzing the metrics that matter to improve customer support – Zendesk help",
+       "url": "https://support.zendesk.com/hc/en-us/articles/4408832234394-Analyzing-the-metrics-that-matter-to-improve-customer-support",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
+      {
        "title": "What is first contact resolution (FCR)? Benefits + best practices",
        "url": "https://www.zendesk.kr/blog/customer-experience/retention/first-contact-resolution-friend-foe-frenemy/",
        "kind": "company_guide",
@@ -6417,6 +6663,12 @@ window.SAEROK_DATA = {
       "AHT만 줄이다 재문의가 늘면 안 되니 FCR도 같이 봐 주세요."
      ],
      "sources": [
+      {
+       "title": "Metric definitions in Connect Customer (Average handle time)",
+       "url": "https://docs.aws.amazon.com/connect/latest/adminguide/metrics-definitions.html",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
       {
        "title": "평균 처리 시간이란? 계산 방법 + 적합한 AHT의 정의",
        "url": "https://www.zendesk.kr/blog/customer-service/satisfaction/average-handle-time/",
@@ -6780,6 +7032,12 @@ window.SAEROK_DATA = {
      ],
      "sources": [
       {
+       "title": "Selling out of stock products · Shopify Help Center",
+       "url": "https://help.shopify.com/en/manual/products/inventory/setup/selling-when-out-of-stock",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
+      {
        "title": "out of stock, stockouts: Causes and Prevention",
        "url": "https://www.shopify.com/blog/what-causes-a-stockout",
        "kind": "company_guide",
@@ -6835,6 +7093,12 @@ window.SAEROK_DATA = {
       "반품 검수도 풀필먼트사에서 하니까 처리 현황은 그쪽 시스템에서 확인해 주세요."
      ],
      "sources": [
+      {
+       "title": "Fulfilling orders · Shopify Help Center",
+       "url": "https://help.shopify.com/en/manual/fulfillment/setup/fulfillment-options",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
       {
        "title": "What Is Fulfillment? Definition, Meaning, and Guide",
        "url": "https://www.shopify.com/blog/what-is-fulfillment",
@@ -6896,6 +7160,12 @@ window.SAEROK_DATA = {
       "배송 누락 건은 3PL에 확인 요청 넣고 결과 공유드릴게요."
      ],
      "sources": [
+      {
+       "title": "Fulfillment Network · Shopify Help Center",
+       "url": "https://help.shopify.com/en/manual/fulfillment/shopify-fulfillment-network",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
       {
        "title": "풀필먼트(Fulfillment) 정의와 유형 총정리 | 첼로스퀘어",
        "url": "https://www.cello-square.com/kr-ko/blog/view-111.do",
@@ -7062,12 +7332,18 @@ window.SAEROK_DATA = {
      "level": "실무",
      "importance": 3,
      "definition": "판매한 상품 수 가운데 고객이 반품한 상품 수의 비율입니다. 상품별·채널별로 나눠 보면 문제 상품을 찾기 좋습니다.",
-     "formula": "반품률(%) = 반품된 수량 ÷ 판매 수량 × 100",
+     "formula": "반품률(%) = 반품된 수량 ÷ 주문(판매) 수량 × 100",
      "examples": [
       "이 상품 반품률이 20%가 넘어서 사이즈 안내 문구를 바꿔 보려고요.",
       "반품 사유 태그를 붙여서 반품률이 높은 원인을 같이 봐 주세요."
      ],
      "sources": [
+      {
+       "title": "Sales reports · Shopify Help Center (Returned quantity rate)",
+       "url": "https://help.shopify.com/en/manual/reports-and-analytics/shopify-reports/report-types/default-reports/sales-report",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
       {
        "title": "25 Key Ecommerce Metrics to Track in 2026",
        "url": "https://www.shopify.com/blog/basic-ecommerce-metrics",
@@ -7587,6 +7863,12 @@ window.SAEROK_DATA = {
      ],
      "sources": [
       {
+       "title": "Forecasting & agent scheduling in Connect Customer",
+       "url": "https://docs.aws.amazon.com/connect/latest/adminguide/forecasting-capacity-planning-scheduling.html",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
+      {
        "title": "Workforce Management in Call Centers: WFM Explained",
        "url": "https://www.nice.com/glossary/what-is-contact-center-workforce-management-wfm",
        "kind": "company_guide",
@@ -7642,6 +7924,12 @@ window.SAEROK_DATA = {
      ],
      "sources": [
       {
+       "title": "Create a health score in the customer success workspace – HubSpot Knowledge Base",
+       "url": "https://knowledge.hubspot.com/help-desk/customize-a-health-score-in-the-customer-success-workspace",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
+      {
        "title": "Customer Health Score Explained: Metrics, Models & Tools",
        "url": "https://www.gainsight.com/blog/customer-health-scores/",
        "kind": "company_guide",
@@ -7665,6 +7953,255 @@ window.SAEROK_DATA = {
     {
      "term": "CSAT",
      "difference": "CSAT는 한 번의 경험 만족도이고, 건강 점수는 여러 신호를 묶은 계정 단위 예측 점수입니다."
+    }
+   ]
+  },
+  {
+   "id": "slo",
+   "term": "SLO",
+   "original": "Service Level Objective",
+   "korean": "서비스 수준 목표",
+   "aliases": [
+    "에스엘오",
+    "서비스수준목표",
+    "서비스 목표 수준",
+    "SLO 목표"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "platform"
+     ],
+     "roles": [
+      "cx",
+      "pm"
+     ],
+     "level": "심화",
+     "importance": 3,
+     "definition": "서비스가 얼마나 잘 동작해야 하는지 숫자로 정해 둔 내부 목표입니다. 응답 시간, 오류율, 가용성 같은 측정 지표(SLI)에 목표 값이나 범위를 붙여 정합니다.",
+     "formula": null,
+     "examples": [
+      "이번 분기 SLO는 결제 API 성공률 99.9%로 잡았어요.",
+      "상담 문의가 몰린 시간대에 응답 지연이 SLO를 넘었는지 먼저 확인해 주세요."
+     ],
+     "sources": [
+      {
+       "title": "Google SRE Book - Chapter 4: Service Level Objectives",
+       "url": "https://sre.google/sre-book/service-level-objectives/",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "가용성",
+     "note": "SLO를 정할 때 가장 흔히 쓰는 측정 지표입니다."
+    },
+    {
+     "term": "에러 버짓",
+     "note": "SLO를 기준으로 허용 가능한 실패 양을 계산합니다."
+    },
+    {
+     "term": "장애",
+     "note": "장애가 나면 SLO를 얼마나 깎아 먹었는지로 영향을 가늠합니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "SLA",
+     "difference": "SLA는 고객과 맺은 약속이라 어기면 보상 등 결과가 따르고, SLO는 내부 목표 값입니다."
+    }
+   ]
+  },
+  {
+   "id": "error_budget",
+   "term": "에러 버짓",
+   "original": "Error Budget",
+   "korean": "오류 예산",
+   "aliases": [
+    "에러버짓",
+    "오류예산",
+    "error budget",
+    "장애 허용량"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "platform"
+     ],
+     "roles": [
+      "cx",
+      "pm"
+     ],
+     "level": "심화",
+     "importance": 3,
+     "definition": "SLO를 지키면서도 허용되는 실패의 양입니다. 예산이 남아 있으면 새 기능 배포를 이어 가고, 다 쓰면 안정화 작업을 먼저 하는 기준으로 씁니다.",
+     "formula": "에러 버짓 = 1 - SLO (예: SLO 99.9%면 에러 버짓 0.1%)",
+     "examples": [
+      "이번 달 에러 버짓을 벌써 80% 썼으니 큰 배포는 다음 주로 미루죠.",
+      "어제 장애로 에러 버짓이 바닥나서 안정화 작업부터 하기로 했어요."
+     ],
+     "sources": [
+      {
+       "title": "Google SRE Workbook - Error Budget Policy for Service Reliability",
+       "url": "https://sre.google/workbook/error-budget-policy/",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "SLO",
+     "note": "에러 버짓은 SLO에서 바로 계산됩니다."
+    },
+    {
+     "term": "포스트모템",
+     "note": "에러 버짓을 크게 쓴 장애는 포스트모템으로 원인을 정리합니다."
+    },
+    {
+     "term": "장애",
+     "note": "장애 시간과 실패 요청이 에러 버짓을 소진시킵니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "SLA",
+     "difference": "SLA는 고객과의 계약상 약속이고, 에러 버짓은 내부 SLO를 기준으로 남은 실패 허용량입니다."
+    },
+    {
+     "term": "가용성",
+     "difference": "가용성은 실제로 서비스가 정상 동작한 비율이고, 에러 버짓은 목표 대비 허용된 실패 몫입니다."
+    }
+   ]
+  },
+  {
+   "id": "safety_stock",
+   "term": "안전 재고",
+   "original": "Safety Stock",
+   "korean": "안전재고",
+   "aliases": [
+    "안전재고",
+    "세이프티 스톡",
+    "버퍼 재고",
+    "safety stock",
+    "완충 재고"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "ecommerce"
+     ],
+     "roles": [
+      "cx",
+      "pm"
+     ],
+     "level": "심화",
+     "importance": 3,
+     "definition": "수요가 갑자기 늘거나 입고가 늦어져도 품절이 나지 않도록 평소보다 더 쌓아 두는 여분의 재고입니다. 너무 많으면 보관비와 악성 재고 부담이 커져 적정 수준을 계산해 정합니다.",
+     "formula": "안전 재고 = (최대 일 판매량 × 최대 리드타임) - (평균 일 판매량 × 평균 리드타임) (여러 계산법 가운데 간단한 방식)",
+     "examples": [
+      "프로모션 기간에는 인기 상품 안전 재고를 평소보다 늘려 두죠.",
+      "품절 문의가 계속 들어오는 상품은 안전 재고 기준을 다시 봐야 할 것 같아요."
+     ],
+     "sources": [
+      {
+       "title": "Safety Stock: What It Is and How to Calculate It - Shopify",
+       "url": "https://www.shopify.com/blog/safety-stock",
+       "kind": "company_guide",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "품절",
+     "note": "안전 재고는 품절을 막기 위한 장치입니다."
+    },
+    {
+     "term": "리드타임",
+     "note": "입고 리드타임이 길고 들쭉날쭉할수록 안전 재고가 더 필요합니다."
+    },
+    {
+     "term": "재고 회전율",
+     "note": "안전 재고를 과하게 잡으면 재고 회전율이 떨어집니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "재고 회전율",
+     "difference": "재고 회전율은 재고가 얼마나 빨리 팔리는지 보는 지표이고, 안전 재고는 미리 정해 두는 여분 수량입니다."
+    }
+   ]
+  },
+  {
+   "id": "reverse_logistics",
+   "term": "역물류",
+   "original": "Reverse Logistics",
+   "korean": "역물류",
+   "aliases": [
+    "리버스 로지스틱스",
+    "반품 물류",
+    "회수 물류",
+    "reverse logistics",
+    "역방향 물류"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "ecommerce"
+     ],
+     "roles": [
+      "cx"
+     ],
+     "level": "심화",
+     "importance": 3,
+     "definition": "고객에게 간 상품이 다시 판매자나 공급자 쪽으로 돌아오는 흐름을 다루는 물류입니다. 반품 회수, 리콜 같은 회수, 포장재 등의 폐기 처리가 포함됩니다.",
+     "formula": null,
+     "examples": [
+      "반품 접수는 늘었는데 역물류 회수가 늦어서 환불 문의가 쌓이고 있어요.",
+      "역물류 비용을 줄이려면 회수 상품 검수 기준부터 정리해야 해요."
+     ],
+     "sources": [
+      {
+       "title": "역물류 (Reverse Logistics) | 첼로스퀘어",
+       "url": "https://www.cello-square.com/kr/blog/view-233.do",
+       "kind": "company_guide",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "반품",
+     "note": "역물류에서 가장 큰 비중을 차지하는 흐름입니다."
+    },
+    {
+     "term": "반품률",
+     "note": "반품률이 오르면 역물류 물량과 비용이 함께 늘어납니다."
+    },
+    {
+     "term": "풀필먼트",
+     "note": "풀필먼트 업체가 반품 회수와 재입고까지 맡는 경우가 많습니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "풀필먼트",
+     "difference": "풀필먼트는 주문 상품을 고객에게 보내는 정방향 처리이고, 역물류는 고객에게서 돌아오는 흐름입니다."
+    },
+    {
+     "term": "반품",
+     "difference": "반품은 고객이 상품을 돌려보내는 거래 행위이고, 역물류는 그 상품을 실제로 옮기고 처리하는 물류 과정입니다."
     }
    ]
   }
