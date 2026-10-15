@@ -22,6 +22,14 @@ from saeroki import (
 )
 
 
+FEEDBACK_ALIASES = {
+    "읽을게요": "saved",
+    "이미 읽었어요": "known",
+    "관심 없어요": "not_interested",
+    "너무 유명해요": "too_famous",
+}
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="새록이 콘텐츠 개인화 실험")
     commands = parser.add_subparsers(dest="command", required=True)
@@ -54,7 +62,16 @@ def build_parser() -> argparse.ArgumentParser:
     feedback.add_argument(
         "--action",
         required=True,
-        choices=["saved", "known", "not_interested", "too_famous"],
+        choices=[
+            "saved",
+            "known",
+            "not_interested",
+            "too_famous",
+            "읽을게요",
+            "이미 읽었어요",
+            "관심 없어요",
+            "너무 유명해요",
+        ],
     )
 
     collect = commands.add_parser("collect", help="확인된 공개 출처의 메타데이터 수집")
@@ -84,7 +101,8 @@ def main() -> None:
 
     if args.command == "feedback":
         profile = load_profile(args.profile)
-        apply_feedback(profile, args.candidate, args.action)
+        action = FEEDBACK_ALIASES.get(args.action, args.action)
+        apply_feedback(profile, args.candidate, action)
         save_profile(profile, args.profile)
         print(f"피드백을 저장했습니다: {args.candidate} -> {args.action}")
         return
