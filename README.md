@@ -5,7 +5,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/PRD-v1.5-40916C" alt="PRD v1.5">
   <img src="https://img.shields.io/badge/Agent_Ideas-16-90A955" alt="에이전트 후보 16개">
-  <img src="https://img.shields.io/badge/Tests-11_passing-31572C" alt="자동 검사 11개 통과">
+  <img src="https://img.shields.io/badge/Tests-13_passing-31572C" alt="자동 검사 13개 통과">
   <img src="https://img.shields.io/badge/Claude_%2B_Codex-shared_rules-40916C" alt="Claude와 Codex 공통 규칙">
 </p>
 
@@ -93,6 +93,12 @@ python saeroki_cli.py recommend --profile data/profile.local.json --candidates d
 python saeroki_cli.py feedback --profile data/profile.local.json --candidate example-data-story --action saved
 ```
 
+시간대별 추천 구성은 서울 시간 기준으로 아래처럼 실행할 수 있습니다. `--at`을 생략하면 현재 시각을 사용합니다.
+
+```powershell
+python saeroki_cli.py scheduled-recommend --profile data/profile.local.json --candidates data/candidates.example.json --at 2026-10-15T08:00:00+09:00
+```
+
 현재 후보 자료는 흐름을 확인하기 위한 가상 예시입니다. 실제 기술 블로그와 뉴스레터를 수집한 결과가 아닙니다.
 
 ## 다음 잎사귀
@@ -102,7 +108,8 @@ python saeroki_cli.py feedback --profile data/profile.local.json --candidate exa
 - [x] 취향 저장, 출처 검사, 중복 제거와 추천 이유
 - [x] 계획 후 실행, 결과 자기 검토와 실행 기록
 - [x] 저장, 이미 앎, 관심 없음과 너무 유명함 피드백
-- [x] 콘텐츠 개인화 공통 기반의 자동 검사 8개
+- [x] 콘텐츠 개인화 공통 기반의 자동 검사 13개
+- [x] 서울 시간대별 추천 구성
 - [x] 공개 웹페이지 메타데이터 파서
 - [x] 확인된 공개 출처에서 후보 JSON 만들기
 - [x] 공개 목록의 개별 링크를 후보로 바꾸는 기본 추출기
@@ -110,7 +117,7 @@ python saeroki_cli.py feedback --profile data/profile.local.json --candidate exa
 - [x] 뉴닉 주간 에디터 픽 공개 JSON에서 아티클 후보 만들기
 - [x] INSIGHT 북마크 이름 59개 기록
 - [ ] 기술 블로그와 뉴스레터 RSS 연결
-- [ ] 뉴닉 공개 목록에서 실제 아티클 링크 연결
+- [x] 뉴닉 공개 목록에서 실제 아티클 링크 연결
 - [ ] 날씨 기반 음악 추천 실험
 - [ ] Claude 또는 OpenAI API 연결
 

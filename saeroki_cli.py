@@ -4,7 +4,9 @@ from __future__ import annotations
 
 import argparse
 import json
+import sys
 from dataclasses import asdict
+from datetime import datetime, timezone
 from pathlib import Path
 
 from saeroki import (
@@ -15,6 +17,7 @@ from saeroki import (
     load_candidates,
     load_profile,
     run_discovery,
+    scheduled_recommend,
     save_profile,
 )
 
@@ -37,6 +40,11 @@ def build_parser() -> argparse.ArgumentParser:
     recommend.add_argument("--limit", type=int, default=5)
     recommend.add_argument("--log")
 
+    scheduled = commands.add_parser("scheduled-recommend", help="시간대별 후보 추천하기")
+    scheduled.add_argument("--profile", required=True)
+    scheduled.add_argument("--candidates", required=True)
+    scheduled.add_argument("--at", help="ISO 시간, 생략하면 현재 시각")
+
     feedback = commands.add_parser("feedback", help="추천에 반응 남기기")
     feedback.add_argument("--profile", required=True)
     feedback.add_argument("--candidate", required=True)
@@ -53,6 +61,8 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def main() -> None:
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8")
     args = build_parser().parse_args()
 
     if args.command == "init-profile":
@@ -90,6 +100,30 @@ def main() -> None:
             "collected": len(candidates),
             "errors": errors,
             "output": args.output,
+        }, ensure_ascii=False, indent=2))
+        return
+
+    if args.command == "scheduled-recommend":
+        profile = load_profile(args.profile)
+        candidates = load_candidates(args.candidates)
+        current = datetime.fromisoformat(args.at) if args.at else datetime.now(timezone.utc)
+        run = scheduled_recommend(candidates, profile, current)
+        print(json.dumps({
+            "mode": run.mode,
+            "slots": [asdict(slot) for slot in run.slots],
+            "recommendations": {
+                content_type: [
+                    {
+                        "id": item.candidate.id,
+                        "title": item.candidate.title,
+                        "url": item.candidate.url,
+                        "reasons": item.reasons,
+                        "cautions": item.cautions,
+                    }
+                    for item in recommendations
+                ]
+                for content_type, recommendations in run.recommendations.items()
+            },
         }, ensure_ascii=False, indent=2))
         return
 

@@ -27,6 +27,18 @@ class PublicLink:
     title: str
 
 
+def content_type_for_record(record: dict[str, object]) -> str | None:
+    explicit = record.get("content_type")
+    if isinstance(explicit, str) and explicit:
+        return explicit
+    category = str(record.get("category") or "").casefold()
+    if "뉴스레터" in category:
+        return "newsletter"
+    if "기술" in category or "블로그" in category:
+        return "technology_blog"
+    return None
+
+
 class _MetadataParser(HTMLParser):
     def __init__(self) -> None:
         super().__init__()
@@ -191,6 +203,7 @@ def collect_confirmed_sources(
                             popularity=meta.get("countReads") if isinstance(meta.get("countReads"), int) else None,
                             author=str(author_info.get("name")) if author_info.get("name") else None,
                             published_at=str(article.get("dtPublished")) if article.get("dtPublished") else None,
+                            content_type=content_type_for_record(record),
                         )
                     )
                 continue
@@ -205,6 +218,7 @@ def collect_confirmed_sources(
                             tags=[str(record.get("category") or "미분류")],
                             source=str(record.get("name") or url),
                             checked_at=checked_at,
+                            content_type=content_type_for_record(record),
                         )
                     )
                 continue
@@ -224,6 +238,7 @@ def collect_confirmed_sources(
                 source=source_name,
                 checked_at=checked_at,
                 published_at=metadata.published_at,
+                content_type=content_type_for_record(record),
             )
         )
     return candidates, errors

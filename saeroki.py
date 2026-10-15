@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import json
 from dataclasses import asdict, dataclass, field
-from datetime import datetime, timezone
+from datetime import datetime, time, timedelta, timezone
 from pathlib import Path
 from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
 
@@ -27,6 +27,7 @@ TRACKING_QUERY_KEYS = {
     "utm_source",
     "utm_term",
 }
+SEOUL_TIMEZONE = timezone(timedelta(hours=9))
 
 
 @dataclass(frozen=True)
@@ -40,6 +41,7 @@ class Candidate:
     popularity: int | None = None
     author: str | None = None
     published_at: str | None = None
+    content_type: str | None = None
 
 
 @dataclass
@@ -81,6 +83,19 @@ class DiscoveryRun:
     rejected: list[dict[str, object]]
     recommendations: list[Recommendation]
     review: ReviewResult
+
+
+@dataclass(frozen=True)
+class ScheduleSlot:
+    content_type: str
+    limit: int
+
+
+@dataclass(frozen=True)
+class ScheduledRun:
+    mode: str | None
+    slots: list[ScheduleSlot]
+    recommendations: dict[str, list[Recommendation]]
 
 
 def canonical_url(url: str) -> str:
@@ -153,6 +168,7 @@ def recommend(
     preference: Preference,
     known_ids: set[str] | None = None,
     limit: int = 5,
+    allow_unmatched: bool = False,
 ) -> list[Recommendation]:
     """취향과 현재 상황에 맞는 후보를 점수순으로 추천합니다."""
     if limit < 1:
@@ -181,7 +197,7 @@ def recommend(
         interest_matches = sorted(tags & interest_set)
         context_matches = sorted(tags & context_set)
         score = len(interest_matches) * 2 + len(context_matches)
-        if score == 0:
+        if score == 0 and not allow_unmatched:
             continue
 
         reasons: list[str] = []
@@ -190,6 +206,8 @@ def recommend(
             reasons.append(f"관심사와 일치: {', '.join(interest_matches)}")
         if context_matches:
             reasons.append(f"현재 상황과 일치: {', '.join(context_matches)}")
+        if not reasons and allow_unmatched:
+            reasons.append("현재 시간대에 맞는 콘텐츠 유형")
         if candidate.popularity is None:
             cautions.append("인지도 자료가 없어 덜 알려진 콘텐츠인지 확인이 필요합니다")
 
@@ -206,6 +224,65 @@ def recommend(
         recommendations,
         key=lambda item: (-item.score, item.candidate.title.casefold()),
     )[:limit]
+
+
+def schedule_for_time(now: datetime) -> tuple[str | None, list[ScheduleSlot]]:
+    """서울 시간 기준으로 현재 추천 시간대와 콘텐츠 구성을 정합니다."""
+    local_now = now.astimezone(SEOUL_TIMEZONE) if now.tzinfo else now
+    current = local_now.time()
+    if time(7, 30) <= current < time(9):
+        return "morning_commute", [
+            ScheduleSlot("music", 1),
+            ScheduleSlot("technology_blog", 1),
+            ScheduleSlot("newsletter", 1),
+        ]
+    if time(9) <= current < time(18):
+        return "work", [ScheduleSlot("newsletter", 3)]
+    if time(18) <= current < time(20):
+        return "evening_commute", [ScheduleSlot("technology_blog", 3)]
+    return None, []
+
+
+def _content_type(candidate: Candidate) -> str | None:
+    if candidate.content_type:
+        return candidate.content_type
+    searchable = " ".join([candidate.source, candidate.title, *candidate.tags]).casefold()
+    if "뉴스레터" in searchable:
+        return "newsletter"
+    if "기술" in searchable or "블로그" in searchable:
+        return "technology_blog"
+    if "음악" in searchable or "노래" in searchable:
+        return "music"
+    return None
+
+
+def scheduled_recommend(
+    candidates: list[Candidate],
+    profile: Profile,
+    now: datetime,
+) -> ScheduledRun:
+    """현재 서울 시간대에 맞는 유형별 추천을 만듭니다."""
+    mode, slots = schedule_for_time(now)
+    if not slots:
+        return ScheduledRun(mode, slots, {})
+    prepared, _ = prepare_candidates(candidates)
+    known_ids = set(profile.known_ids)
+    known_ids.update(
+        candidate_id
+        for candidate_id, action in profile.feedback.items()
+        if action in {"known", "not_interested", "too_famous"}
+    )
+    results: dict[str, list[Recommendation]] = {}
+    for slot in slots:
+        typed = [item for item in prepared if _content_type(item) == slot.content_type]
+        results[slot.content_type] = recommend(
+            typed,
+            profile.preference,
+            known_ids=known_ids,
+            limit=slot.limit,
+            allow_unmatched=True,
+        )
+    return ScheduledRun(mode, slots, results)
 
 
 def review_recommendations(

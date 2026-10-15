@@ -1,5 +1,6 @@
 import tempfile
 import unittest
+from datetime import datetime
 from pathlib import Path
 from unittest.mock import patch
 
@@ -13,6 +14,8 @@ from saeroki import (
     recommend,
     run_discovery,
     save_profile,
+    schedule_for_time,
+    scheduled_recommend,
 )
 from source_collector import PublicLink, collect_confirmed_sources, parse_public_metadata
 
@@ -182,6 +185,31 @@ class SaerokiTest(unittest.TestCase):
         self.assertEqual(candidates[0].id, "newneek-123")
         self.assertEqual(candidates[0].popularity, 42)
         self.assertEqual(candidates[0].published_at, "2026-10-14T00:00:00+09:00")
+
+    def test_schedule_uses_seoul_time_boundaries(self):
+        mode, slots = schedule_for_time(datetime.fromisoformat("2026-10-15T07:30:00+09:00"))
+        self.assertEqual(mode, "morning_commute")
+        self.assertEqual([(slot.content_type, slot.limit) for slot in slots], [
+            ("music", 1), ("technology_blog", 1), ("newsletter", 1)
+        ])
+        mode, slots = schedule_for_time(datetime.fromisoformat("2026-10-15T20:00:00+09:00"))
+        self.assertIsNone(mode)
+        self.assertEqual(slots, [])
+
+    def test_scheduled_recommendation_selects_by_content_type(self):
+        profile = Profile("나", Preference(["기획", "발라드"]))
+        candidates = [
+            Candidate("music", "숨은 발라드", "https://example.com/music", ["발라드"], "음악", "2026-10-15", content_type="music"),
+            Candidate("tech", "기획 기록", "https://example.com/tech", ["기획"], "기술 블로그", "2026-10-15", content_type="technology_blog"),
+            Candidate("news", "업무 뉴스레터", "https://example.com/news", ["기획"], "뉴스레터", "2026-10-15", content_type="newsletter"),
+        ]
+        run = scheduled_recommend(
+            candidates,
+            profile,
+            datetime.fromisoformat("2026-10-15T08:00:00+09:00"),
+        )
+        self.assertEqual(set(run.recommendations), {"music", "technology_blog", "newsletter"})
+        self.assertEqual([item.candidate.id for item in run.recommendations["music"]], ["music"])
 
 
 if __name__ == "__main__":
