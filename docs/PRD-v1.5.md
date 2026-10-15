@@ -81,7 +81,7 @@ python saeroki_cli.py recommend --profile data/profile.local.json --candidates d
 | 14 | Reflection Agent | 뿌리 | 🌸 꽃 | 결과 자기 검토 일부 구현 |
 | 15 | Research Agent | 열매 | 🌱 씨앗 | 기획만 저장 |
 | 16 | SQL 관련 Agent | 열매 | 🌱 씨앗 | 기획만 저장, 첫 버전은 읽기 전용으로 예정 |
-| 17 | 산업별 용어 정리 사전 | 열매 | 🌱 씨앗 | 2026-10-15 추가, 첫 메모만 저장 |
+| 17 | 산업별 용어 정리 사전 | 열매 | 🌱 씨앗 | 2026-10-15 추가, 이름 새록 사전, 설계 확정([PRD v1.7](PRD-v1.7.md)) |
 
 17개 목록과 원래 목적은 축약하지 않고 [PRD v01](PRD-v01.md)에 보존합니다. 실제 독립 제품 수를 셀 때는 9번과 10번을 하나로 관리합니다.
 

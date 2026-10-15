@@ -94,7 +94,7 @@
 | 기획 | 🌱 3 마케팅 전략 · 🌱 4 PRD 설계 지원 |
 | 조사와 분석 | 🌱 7 금융 · 🌱 8 미디어 트렌드 · 🌱 9 법률 문서(10번 통합) · 🌱 15 심층 연구 |
 | 데이터 | 🌱 5 데이터 시각화 · 🌱 16 자연어 SQL |
-| 학습 | 🌱 17 산업별 용어 사전 |
+| 학습 | 🌱 17 새록 사전(산업별 용어 사전) |
 
 ### 뿌리 4개
 
@@ -114,6 +114,7 @@
 | [`docs/PRD-v01.md`](docs/PRD-v01.md) | 제품 방향, 열매 12개와 뿌리 4개의 원래 목록, 위험과 개발 순서 |
 | [`docs/PRD-v1.5.md`](docs/PRD-v1.5.md) | 현재 구현 범위, 실행 방법, 열매와 뿌리의 씨앗·꽃·열매 상태, Claude 이어하기 안내 |
 | [`docs/PRD-v1.6.md`](docs/PRD-v1.6.md) | 1번 콘텐츠 개인화 에이전트의 스무고개 확정 설계 |
+| [`docs/PRD-v1.7.md`](docs/PRD-v1.7.md) | 17번 열매 새록 사전(산업별 용어 사전)의 스무고개 확정 설계 |
 | [`docs/CLAUDE-HANDOFF.md`](docs/CLAUDE-HANDOFF.md) | Codex push 후 Claude Code pull 또는 웹앱 프로젝트 업로드 절차 |
 | [`claude/PROJECT-INSTRUCTIONS.md`](claude/PROJECT-INSTRUCTIONS.md) | Claude 프로젝트에서 사용할 새록이 지침 |
 | [`claude/session-input.template.json`](claude/session-input.template.json) | 시간대, 날씨, 취향과 후보 입력 양식 |
@@ -189,6 +190,8 @@ python saeroki_cli.py scheduled-recommend --profile data/profile.local.json --ca
 - [x] 제품군과 16개 후보를 정리한 PRD v01
 - [x] 17번 산업별 용어 사전 에이전트 후보 추가
 - [x] 에이전트를 열매 12개와 뿌리 4개로 정리
+- [x] 17번 새록 사전 스무고개 설계 확정(PRD v1.7)
+- [ ] 새록 사전 첫 버전: 용어집과 사전 웹 화면
 - [x] Claude와 Codex가 함께 읽는 공통 행동 원칙
 - [x] 취향 저장, 출처 검사, 중복 제거와 추천 이유
 - [x] 계획 후 실행, 결과 자기 검토와 실행 기록
