@@ -138,6 +138,7 @@ python saeroki_cli.py scheduled-recommend --profile data/profile.local.json --ca
 - [x] INSIGHT 북마크 이름 59개 기록
 - [x] RSS 2.0와 Atom 후보 변환기
 - [x] AWS 한국 기술 블로그 RSS 주소 연결
+- [x] 토스 테크, 카카오 테크, NAVER D2 RSS 주소 연결
 - [ ] 추가 기술 블로그와 뉴스레터 RSS 주소 연결
 - [x] 뉴닉 공개 목록에서 실제 아티클 링크 연결
 - [ ] 날씨에 맞는 실제 음악 후보 출처 연결

@@ -66,5 +66,41 @@
     "access_status": "confirmed_public",
     "feed_status": "confirmed",
     "notes": "AWS 공식 한국 블로그 RSS. 확인일 2026-10-15."
+  },
+  {
+    "id": "toss-tech-rss",
+    "name": "토스 테크",
+    "url": "https://toss.tech/rss.xml",
+    "kind": "rss",
+    "content_type": "technology_blog",
+    "collection_mode": "rss",
+    "category": "기술 블로그",
+    "access_status": "confirmed_public",
+    "feed_status": "confirmed",
+    "notes": "토스 테크 RSS. 확인일 2026-10-15."
+  },
+  {
+    "id": "kakao-tech-rss",
+    "name": "카카오 테크",
+    "url": "https://tech.kakao.com/feed/",
+    "kind": "rss",
+    "content_type": "technology_blog",
+    "collection_mode": "rss",
+    "category": "기술 블로그",
+    "access_status": "confirmed_public",
+    "feed_status": "confirmed",
+    "notes": "카카오 테크 RSS. 확인일 2026-10-15."
+  },
+  {
+    "id": "naver-d2-rss",
+    "name": "NAVER D2",
+    "url": "https://d2.naver.com/d2.atom",
+    "kind": "rss",
+    "content_type": "technology_blog",
+    "collection_mode": "rss",
+    "category": "기술 블로그",
+    "access_status": "confirmed_public",
+    "feed_status": "confirmed",
+    "notes": "NAVER D2 Atom 피드. 확인일 2026-10-15."
   }
 ]
