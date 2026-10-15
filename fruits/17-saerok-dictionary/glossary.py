@@ -45,6 +45,8 @@ def validate_source(source: dict, where: str) -> list[str]:
     url = source.get("url") or ""
     if url and not url.startswith("https://"):
         errors.append(f"{where}: 출처 주소는 https://로 시작해야 합니다 ({url})")
+    if url and (not url.isascii() or " " in url):
+        errors.append(f"{where}: 출처 주소의 한글·공백은 퍼센트 인코딩해야 합니다 ({url})")
     if source.get("kind") and source["kind"] not in SOURCE_KINDS:
         errors.append(f"{where}: 알 수 없는 출처 종류 {source['kind']}")
     if source.get("checked_at") and not DATE_RE.match(source["checked_at"]):
@@ -101,6 +103,9 @@ def validate(catalog: dict, terms: list[dict]) -> list[str]:
         if key in seen_terms:
             errors.append(f"{where}: 같은 표제어가 이미 있습니다. 뜻을 합쳐 주세요")
         seen_terms.add(key)
+        keywords = term.get("keywords", [])
+        if not isinstance(keywords, list) or not all(isinstance(k, str) and k.strip() for k in keywords):
+            errors.append(f"{where}: keywords는 빈칸 없는 문자열 목록입니다")
         if not term.get("senses"):
             errors.append(f"{where}: 뜻이 하나 이상 필요합니다")
         for n, sense in enumerate(term.get("senses") or [], start=1):

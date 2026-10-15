@@ -68,20 +68,33 @@
     return out;
   }
 
+  function overlaps(keys, q) {
+    return q.length >= 2 && keys.some(function (k) { return k.indexOf(q) >= 0 || (k.length >= 2 && q.indexOf(k) >= 0); });
+  }
+
   // 표제어·원어·약어·한글명·별칭이 정확히 같으면 exact, 일부만 겹치면 partial입니다.
+  // 이름은 다르지만 뜻 검색어(keywords)가 맞으면 meaning으로 따로 모읍니다. 예: '끝내다' → 랩업, 클로징
   function search(terms, query) {
     var q = normalize(query);
-    var result = { query: query, exact: [], partial: [] };
+    var result = { query: query, exact: [], partial: [], meaning: [] };
     if (!q) return result;
     terms.forEach(function (term) {
       var keys = searchKeys(term);
+      var meaningKeys = (term.keywords || []).map(normalize).filter(function (k) { return k; });
       if (keys.indexOf(q) >= 0) {
         result.exact.push(term);
-      } else if (q.length >= 2 && keys.some(function (k) { return k.indexOf(q) >= 0 || (k.length >= 2 && q.indexOf(k) >= 0); })) {
+      } else if (meaningKeys.indexOf(q) >= 0 || overlaps(meaningKeys, q)) {
+        result.meaning.push(term);
+      } else if (overlaps(keys, q)) {
         result.partial.push(term);
       }
     });
     return result;
+  }
+
+  // 용어집에 없는 일반 단어는 국립국어원 표준국어대사전 검색으로 넘깁니다.
+  function dictionaryUrl(query) {
+    return "https://stdict.korean.go.kr/search/searchResult.do?searchKeyword=" + encodeURIComponent(String(query).trim());
   }
 
   function matchPurpose(catalog, query) {
@@ -174,6 +187,7 @@
     cellSense: cellSense,
     cellTerms: cellTerms,
     search: search,
+    dictionaryUrl: dictionaryUrl,
     matchPurpose: matchPurpose,
     purposeList: purposeList,
     page: page,

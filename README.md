@@ -6,7 +6,7 @@
   <img src="https://img.shields.io/badge/PRD-v1.5-40916C" alt="PRD v1.5">
   <img src="https://img.shields.io/badge/%EC%97%B4%EB%A7%A4-12-D97757" alt="열매 12개">
   <img src="https://img.shields.io/badge/%EB%BF%8C%EB%A6%AC-4-8A5A36" alt="뿌리 4개">
-  <img src="https://img.shields.io/badge/Tests-44_passing-31572C" alt="자동 검사 44개 통과">
+  <img src="https://img.shields.io/badge/Tests-46_passing-31572C" alt="자동 검사 46개 통과">
   <img src="https://img.shields.io/badge/Claude_%2B_Codex-shared_rules-40916C" alt="Claude와 Codex 공통 규칙">
 </p>
 
@@ -157,6 +157,7 @@ python -m unittest -v
 - [x] 새록 사전 출처 재검토: 뜻 137개 중 113개에 공식 문서 출처, 나머지 24개는 기업 자료 기준임을 화면에 표시
 - [x] 새록 사전 금융·증권 산업 추가: 금융 용어 46개, 전체 용어 178개
 - [x] 새록 사전 GitHub Pages 배포
+- [x] 새록 사전 업무 공통 용어 42개, 뜻으로 찾기, 표준국어대사전 연결(전체 용어 220개)
 - [ ] 새록 사전 사용자 확인
 - [ ] 새록 사전 Claude API 보충
 - [x] Claude와 Codex가 함께 읽는 공통 행동 원칙

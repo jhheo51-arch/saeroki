@@ -66,6 +66,7 @@ FIXTURE = [
     term("cac", "CAC", [sense(E + P, ["marketing"], "실무", 5, formula="CAC = 비용 ÷ 신규 고객 수")], "Customer Acquisition Cost", "고객 획득 비용"),
     term("mmm", "마케팅 믹스 모델링", [sense(E + P, ["marketing"], "심화", 3)], "Marketing Mix Modeling", "마케팅 믹스 모델링", ["MMM"]),
     term("roas", "ROAS", [sense(E + P, ["marketing"], "입문", 5, status="needs_check")], "Return On Ad Spend", "광고 수익률"),
+    dict(term("wrap_up", "랩업", [sense(E + P, ["pm"], "입문", 4)], "Wrap-up", "마무리"), keywords=["끝내다", "정리하다"]),
 ]
 
 CATALOG_FIXTURE = {
@@ -164,6 +165,10 @@ class GlossaryValidateTest(unittest.TestCase):
         self.assertIn("난이도", joined)
         self.assertIn("같은 표제어", joined)
 
+    def test_keywords_must_be_text_list(self):
+        bad = dict(term("x", "X", [sense(E, ["pm"])]), keywords=["끝내다", ""])
+        self.assertTrue(any("keywords" in e for e in validate(CATALOG_FIXTURE, [bad])))
+
     def test_non_https_source_is_rejected(self):
         s = sense(E, ["pm"])
         s["sources"][0]["url"] = "http://example.com"
@@ -187,6 +192,18 @@ class GlossaryCoreTest(unittest.TestCase):
             FIXTURE,
         )
         self.assertEqual(out, [["ltv"], 0, 0])
+
+    def test_meaning_keywords_find_related_terms_and_unknown_words_go_to_dictionary(self):
+        script = (
+            "const r = core.search(data, '끝내다');"
+            "const stem = core.search(data, '끝내');"
+            "const none = core.search(data, '먹다');"
+            "return [r.exact.length, r.meaning.map(t => t.id), stem.meaning.map(t => t.id),"
+            " none.exact.length + none.partial.length + none.meaning.length, core.dictionaryUrl(' 끝내다 ')];"
+        )
+        exact, meaning, stem, none, url = run_core(script, FIXTURE)
+        self.assertEqual((exact, meaning, stem, none), (0, ["wrap_up"], ["wrap_up"], 0))
+        self.assertEqual(url, "https://stdict.korean.go.kr/search/searchResult.do?searchKeyword=%EB%81%9D%EB%82%B4%EB%8B%A4")
 
     def test_selected_cell_sense_comes_first_as_circled_one(self):
         script = (

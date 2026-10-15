@@ -11040,6 +11040,2842 @@ window.SAEROK_DATA = {
      "difference": "수익률은 번 비율만, 샤프 지수는 그 수익을 위험으로 나눈 효율입니다."
     }
    ]
+  },
+  {
+   "id": "kickoff",
+   "term": "킥오프",
+   "original": "Kickoff",
+   "korean": "착수 회의",
+   "aliases": [
+    "킥오프 미팅",
+    "킥오프미팅",
+    "kick-off",
+    "착수회의"
+   ],
+   "keywords": [
+    "시작하다",
+    "착수",
+    "첫 회의"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "ecommerce",
+      "platform",
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "data",
+      "marketing",
+      "cx"
+     ],
+     "level": "입문",
+     "importance": 4,
+     "definition": "프로젝트나 일을 본격적으로 시작하면서 여는 첫 회의, 또는 그 시작 자체를 말합니다. 목표·역할·일정을 처음으로 함께 맞추는 자리입니다. 원래는 축구에서 경기를 시작하는 첫 킥을 뜻하는 말입니다.",
+     "formula": null,
+     "examples": [
+      "다음 주 월요일 10시에 신규 프로젝트 킥오프 잡을게요. 목표랑 역할 분담 초안 미리 봐 주세요.",
+      "킥오프 때 합의한 범위에서 벗어나는 요청은 따로 정리해 둘게요."
+     ],
+     "sources": [
+      {
+       "title": "KICKOFF Definition & Meaning | Dictionary.com",
+       "url": "https://www.dictionary.com/browse/kickoff",
+       "kind": "company_guide",
+       "checked_at": "2026-10-15"
+      },
+      {
+       "title": "Planning Project Kickoff Meetings: Steps & Example Agenda",
+       "url": "https://www.atlassian.com/team-playbook/plays/project-kickoff",
+       "kind": "company_guide",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "어젠다",
+     "note": "킥오프 전에 다룰 안건을 어젠다로 미리 공유합니다."
+    },
+    {
+     "term": "액션 아이템",
+     "note": "킥오프가 끝나면 담당자와 기한이 붙은 할 일을 정리합니다."
+    },
+    {
+     "term": "KPI",
+     "note": "킥오프에서 성공 기준을 지표로 정해 두는 경우가 많습니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "랩업",
+     "difference": "킥오프는 일을 여는 첫 회의이고, 랩업은 회의나 일을 정리하며 마무리하는 것입니다."
+    }
+   ]
+  },
+  {
+   "id": "agenda",
+   "term": "어젠다",
+   "original": "Agenda",
+   "korean": "의제, 안건",
+   "aliases": [
+    "아젠다",
+    "어젠더",
+    "안건",
+    "회의 안건"
+   ],
+   "keywords": [
+    "안건",
+    "회의 주제",
+    "의제"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "ecommerce",
+      "platform",
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "data",
+      "marketing",
+      "cx"
+     ],
+     "level": "입문",
+     "importance": 4,
+     "definition": "회의에서 다룰 주제와 순서를 정리한 목록입니다. 회의 전에 미리 공유해 참석자가 준비할 수 있게 합니다. 국립국어원은 '어젠다'를 '의제'로 다듬어 쓰도록 권합니다.",
+     "formula": null,
+     "examples": [
+      "내일 회의 어젠다 스레드에 올려 두었어요. 추가할 안건 있으면 오늘까지 댓글 주세요.",
+      "시간이 부족하니 어젠다 3번은 다음 주로 넘길게요."
+     ],
+     "sources": [
+      {
+       "title": "AGENDA Definition & Meaning | Dictionary.com",
+       "url": "https://www.dictionary.com/browse/agenda",
+       "kind": "company_guide",
+       "checked_at": "2026-10-15"
+      },
+      {
+       "title": "국립국어원 다듬은 말 '어젠다 → 의제'",
+       "url": "https://www.korean.go.kr/front/imprv/refineView.do?mn_id=158&imprv_refine_seq=18233",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "회의록",
+     "note": "어젠다 순서대로 논의 내용과 결정 사항을 회의록에 남깁니다."
+    },
+    {
+     "term": "킥오프",
+     "note": "킥오프 회의도 어젠다를 먼저 공유하고 시작합니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "액션 아이템",
+     "difference": "어젠다는 회의에서 논의할 주제이고, 액션 아이템은 회의 결과로 생긴 할 일입니다."
+    }
+   ]
+  },
+  {
+   "id": "sync",
+   "term": "싱크",
+   "original": "Sync (Synchronization)",
+   "korean": "현황 맞추기",
+   "aliases": [
+    "싱크업",
+    "싱크 미팅",
+    "sync-up",
+    "싱크 맞추다"
+   ],
+   "keywords": [
+    "맞추다",
+    "공유하다",
+    "현황 공유"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "ecommerce",
+      "platform",
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "data",
+      "marketing",
+      "cx"
+     ],
+     "level": "입문",
+     "importance": 4,
+     "definition": "서로 알고 있는 정보와 진행 상황을 맞추는 일, 또는 그런 짧은 회의를 말합니다. 영어 sync는 원래 동시에 맞춰 움직이거나 서로 잘 맞는 상태를 뜻하며, 회사에서는 '싱크 맞추자'처럼 생각과 현황을 일치시키자는 뜻으로 씁니다.",
+     "formula": null,
+     "examples": [
+      "디자인팀이랑 한 번 싱크 맞추고 나서 일정 확정할게요.",
+      "주간 싱크 미팅에서 막힌 일만 짧게 공유해 주세요."
+     ],
+     "sources": [
+      {
+       "title": "SYNC Definition & Meaning | Dictionary.com",
+       "url": "https://www.dictionary.com/browse/sync",
+       "kind": "company_guide",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified",
+     "check_note": "실무 용법은 출처 없음"
+    }
+   ],
+   "related": [
+    {
+     "term": "1on1",
+     "note": "둘 사이의 정기적인 싱크 자리가 1on1입니다."
+    },
+    {
+     "term": "팔로업",
+     "note": "싱크 뒤에 남은 확인 사항을 팔로업으로 챙깁니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "리마인드",
+     "difference": "싱크는 서로 현황을 맞추는 것이고, 리마인드는 잊지 않도록 다시 알려 주는 것입니다."
+    }
+   ]
+  },
+  {
+   "id": "one_on_one",
+   "term": "1on1",
+   "original": "One-on-One",
+   "korean": "일대일 면담",
+   "aliases": [
+    "원온원",
+    "1:1",
+    "1-on-1",
+    "원온원 미팅"
+   ],
+   "keywords": [
+    "면담",
+    "일대일 대화"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "ecommerce",
+      "platform",
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "data",
+      "marketing",
+      "cx"
+     ],
+     "level": "입문",
+     "importance": 3,
+     "definition": "리더와 팀원 한 명이 정기적으로 마주 앉아 업무, 고민, 성장 방향, 피드백을 나누는 대화입니다. 진행 보고보다 팀원이 이야기하고 싶은 주제를 중심으로 하는 경우가 많습니다.",
+     "formula": null,
+     "examples": [
+      "이번 주 1on1은 목요일 오후로 옮겨도 될까요?",
+      "1on1 때 커리어 고민 얘기해 보고 싶어서 주제 미리 적어 둘게요."
+     ],
+     "sources": [
+      {
+       "title": "7 tips for better 1-on-1 meetings",
+       "url": "https://www.atlassian.com/blog/inside-atlassian/1-on-1-meeting-tips",
+       "kind": "company_guide",
+       "checked_at": "2026-10-15"
+      },
+      {
+       "title": "ONE-ON-ONE Definition & Meaning | Dictionary.com",
+       "url": "https://www.dictionary.com/browse/one-on-one",
+       "kind": "company_guide",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "피드백",
+     "note": "1on1은 피드백을 주고받는 대표적인 자리입니다."
+    },
+    {
+     "term": "싱크",
+     "note": "업무 현황을 맞추는 짧은 싱크와 함께 쓰이기도 합니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "싱크",
+     "difference": "싱크는 업무 현황을 맞추는 데 초점이 있고, 1on1은 한 사람의 고민·성장까지 다루는 정기 대화입니다."
+    }
+   ]
+  },
+  {
+   "id": "wrap_up",
+   "term": "랩업",
+   "original": "Wrap-up",
+   "korean": "마무리, 정리",
+   "aliases": [
+    "wrap up",
+    "랩업 미팅",
+    "랩업하다",
+    "마무리 정리"
+   ],
+   "keywords": [
+    "끝내다",
+    "마무리",
+    "정리하다",
+    "요약"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "ecommerce",
+      "platform",
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "data",
+      "marketing",
+      "cx"
+     ],
+     "level": "입문",
+     "importance": 4,
+     "definition": "회의나 일을 정리하며 끝내는 것, 또는 끝에 핵심을 짧게 요약하는 것을 말합니다. 회의 끝에 '랩업할게요'라고 하면 결정 사항과 할 일을 정리하겠다는 뜻입니다.",
+     "formula": null,
+     "examples": [
+      "시간 다 됐으니 랩업할게요. 오늘 결정된 건 두 가지입니다.",
+      "이번 분기 프로젝트 랩업 문서는 금요일까지 올려 주세요."
+     ],
+     "sources": [
+      {
+       "title": "WRAP-UP Definition & Meaning | Dictionary.com",
+       "url": "https://www.dictionary.com/browse/wrap-up",
+       "kind": "company_guide",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "액션 아이템",
+     "note": "랩업 때 담당자와 기한이 붙은 할 일을 다시 확인합니다."
+    },
+    {
+     "term": "회의록",
+     "note": "랩업한 내용이 회의록의 결론 부분이 됩니다."
+    },
+    {
+     "term": "회고",
+     "note": "프로젝트를 마무리하며 회고를 함께 하기도 합니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "클로징",
+     "difference": "랩업은 정리·요약에 무게가 있고, 클로징은 일이나 기간을 공식적으로 닫고 마감하는 데 무게가 있습니다."
+    }
+   ]
+  },
+  {
+   "id": "action_item",
+   "term": "액션 아이템",
+   "original": "Action Item",
+   "korean": "후속 할 일",
+   "aliases": [
+    "액션아이템",
+    "action item",
+    "AI(액션 아이템 줄임)",
+    "후속 과제"
+   ],
+   "keywords": [
+    "할 일",
+    "후속 조치",
+    "담당자"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "ecommerce",
+      "platform",
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "data",
+      "marketing",
+      "cx"
+     ],
+     "level": "입문",
+     "importance": 4,
+     "definition": "회의나 논의 결과로 정해진 구체적인 할 일입니다. 보통 누가 맡는지(담당자)와 언제까지 하는지(기한)를 함께 적어야 흐지부지되지 않습니다.",
+     "formula": null,
+     "examples": [
+      "오늘 회의 액션 아이템은 담당자랑 기한까지 붙여서 회의록에 올려 둘게요.",
+      "지난주 액션 아이템 중에 아직 안 끝난 것부터 확인하죠."
+     ],
+     "sources": [
+      {
+       "title": "Meeting Minutes Template: Free & Customizable | Confluence",
+       "url": "https://www.atlassian.com/software/confluence/templates/meeting-notes",
+       "kind": "company_guide",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "회의록",
+     "note": "액션 아이템은 회의록에 담당자·기한과 함께 기록합니다."
+    },
+    {
+     "term": "팔로업",
+     "note": "액션 아이템이 끝났는지 팔로업으로 챙깁니다."
+    },
+    {
+     "term": "데드라인",
+     "note": "액션 아이템에는 데드라인을 붙입니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "어젠다",
+     "difference": "어젠다는 회의 전에 정한 논의 주제이고, 액션 아이템은 회의 뒤에 실행할 일입니다."
+    }
+   ]
+  },
+  {
+   "id": "follow_up",
+   "term": "팔로업",
+   "original": "Follow-up",
+   "korean": "후속 조치",
+   "aliases": [
+    "팔로우업",
+    "follow up",
+    "팔업",
+    "팔로업하다"
+   ],
+   "keywords": [
+    "후속",
+    "챙기다",
+    "이어서 확인",
+    "후속 연락"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "ecommerce",
+      "platform",
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "data",
+      "marketing",
+      "cx"
+     ],
+     "level": "입문",
+     "importance": 4,
+     "definition": "앞서 한 일이나 논의가 끝까지 잘 이어지도록 다시 확인하고 챙기는 일입니다. 회의 뒤 진행 상황을 묻거나, 답이 없는 메일에 다시 연락하는 것도 팔로업이라고 합니다.",
+     "formula": null,
+     "examples": [
+      "지난번 요청드린 자료 건으로 팔로업드립니다. 혹시 이번 주 안에 받아 볼 수 있을까요?",
+      "고객 문의 건은 제가 내일 팔로업할게요."
+     ],
+     "sources": [
+      {
+       "title": "FOLLOW-UP Definition & Meaning | Dictionary.com",
+       "url": "https://www.dictionary.com/browse/follow-up",
+       "kind": "company_guide",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "액션 아이템",
+     "note": "팔로업의 대상이 되는 대표적인 것이 액션 아이템입니다."
+    },
+    {
+     "term": "리마인드",
+     "note": "팔로업하면서 기한을 리마인드하기도 합니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "리마인드",
+     "difference": "리마인드는 잊지 않게 다시 알려 주는 것이고, 팔로업은 진행 상황을 확인하고 일을 이어서 챙기는 것까지 포함합니다."
+    }
+   ]
+  },
+  {
+   "id": "remind",
+   "term": "리마인드",
+   "original": "Remind",
+   "korean": "다시 알림",
+   "aliases": [
+    "리마인더",
+    "리마인드 메일",
+    "리마인딩",
+    "상기"
+   ],
+   "keywords": [
+    "다시 알리다",
+    "상기시키다",
+    "알림"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "ecommerce",
+      "platform",
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "data",
+      "marketing",
+      "cx"
+     ],
+     "level": "입문",
+     "importance": 3,
+     "definition": "잊지 않도록 일정이나 할 일을 다시 알려 주는 일입니다. 회의 전날이나 마감 직전에 보내는 안내 메시지를 흔히 리마인드라고 합니다. 영어에서는 remind가 동사이고 알림 자체는 reminder라고 합니다.",
+     "formula": null,
+     "examples": [
+      "내일 오전 회의 리마인드드립니다. 자료는 미리 확인 부탁드려요.",
+      "마감 하루 전에 슬랙으로 한 번 더 리마인드할게요."
+     ],
+     "sources": [
+      {
+       "title": "REMIND Definition & Meaning | Dictionary.com",
+       "url": "https://www.dictionary.com/browse/remind",
+       "kind": "company_guide",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "데드라인",
+     "note": "데드라인이 다가오면 리마인드를 보냅니다."
+    },
+    {
+     "term": "팔로업",
+     "note": "리마인드 뒤에도 답이 없으면 팔로업합니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "팔로업",
+     "difference": "리마인드는 다시 알려 주는 데서 끝나고, 팔로업은 결과까지 확인하며 챙기는 것입니다."
+    }
+   ]
+  },
+  {
+   "id": "deadline",
+   "term": "데드라인",
+   "original": "Deadline",
+   "korean": "마감 기한",
+   "aliases": [
+    "데드 라인",
+    "마감일",
+    "기한",
+    "듀데이트"
+   ],
+   "keywords": [
+    "마감",
+    "기한",
+    "마감일"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "ecommerce",
+      "platform",
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "data",
+      "marketing",
+      "cx"
+     ],
+     "level": "입문",
+     "importance": 4,
+     "definition": "일을 끝내거나 제출해야 하는 마지막 시점입니다. 더 넘길 수 없는 한계라는 뜻에서 왔으며, 회사에서는 '데드라인이 언제예요?'처럼 마감일을 물을 때 씁니다.",
+     "formula": null,
+     "examples": [
+      "이번 보고서 데드라인은 금요일 오후 6시예요.",
+      "데드라인 맞추기 어려우면 미리 말씀 주세요. 범위를 줄여 볼게요."
+     ],
+     "sources": [
+      {
+       "title": "표준국어대사전 '데드라인'",
+       "url": "https://stdict.korean.go.kr/search/searchResult.do?pageSize=10&searchKeyword=%EB%8D%B0%EB%93%9C%EB%9D%BC%EC%9D%B8",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
+      {
+       "title": "DEADLINE Definition & Meaning | Dictionary.com",
+       "url": "https://www.dictionary.com/browse/deadline",
+       "kind": "company_guide",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "EOD",
+     "note": "데드라인을 'EOD까지'처럼 짧게 말하기도 합니다."
+    },
+    {
+     "term": "ASAP",
+     "note": "데드라인을 못 박지 않고 최대한 빨리 해 달라는 말입니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "ASAP",
+     "difference": "데드라인은 정해진 마감 시점이고, ASAP은 정해진 시점 없이 가능한 한 빨리라는 뜻입니다."
+    }
+   ]
+  },
+  {
+   "id": "eod",
+   "term": "EOD",
+   "original": "End of Day",
+   "korean": "업무 종료 시점",
+   "aliases": [
+    "이오디",
+    "End of Business Day",
+    "EOB",
+    "COB"
+   ],
+   "keywords": [
+    "오늘 안",
+    "퇴근 전",
+    "하루 끝",
+    "오늘까지"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "ecommerce",
+      "platform",
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "data",
+      "marketing",
+      "cx"
+     ],
+     "level": "입문",
+     "importance": 4,
+     "definition": "그날 업무가 끝나는 시점, 즉 '오늘 퇴근 전까지'라는 뜻의 약어입니다. 메신저에서 마감 시점을 짧게 말할 때 씁니다. 회사나 상대방마다 몇 시를 뜻하는지 다를 수 있어 정확한 시각을 확인하는 것이 좋습니다.",
+     "formula": null,
+     "examples": [
+      "수정본 EOD까지 공유 부탁드려요.",
+      "EOD면 오늘 6시 기준으로 보면 될까요?"
+     ],
+     "sources": [
+      {
+       "title": "EOD Definition & Meaning | Dictionary.com",
+       "url": "https://www.dictionary.com/browse/eod",
+       "kind": "company_guide",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "데드라인",
+     "note": "EOD는 그날 업무 종료를 데드라인으로 삼는 표현입니다."
+    },
+    {
+     "term": "ASAP",
+     "note": "둘 다 메신저에서 마감을 짧게 말할 때 쓰는 약어입니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "ASAP",
+     "difference": "EOD는 '오늘 업무 끝까지'라는 정해진 시점이고, ASAP은 시점 없이 가능한 한 빨리라는 뜻입니다."
+    }
+   ]
+  },
+  {
+   "id": "asap",
+   "term": "ASAP",
+   "original": "As Soon As Possible",
+   "korean": "가능한 한 빨리",
+   "aliases": [
+    "에이에스에이피",
+    "아삽",
+    "A.S.A.P.",
+    "asap"
+   ],
+   "keywords": [
+    "빨리",
+    "급하게",
+    "가능한 한 빨리",
+    "즉시"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "ecommerce",
+      "platform",
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "data",
+      "marketing",
+      "cx"
+     ],
+     "level": "입문",
+     "importance": 4,
+     "definition": "'가능한 한 빨리'라는 뜻의 약어로, 급한 일을 부탁할 때 씁니다. 정확한 기한이 없어 받는 사람마다 급한 정도를 다르게 받아들일 수 있으므로, 가능하면 구체적인 시각을 함께 적는 것이 좋습니다.",
+     "formula": null,
+     "examples": [
+      "고객 장애 건이라 확인 ASAP으로 부탁드려요.",
+      "ASAP이 오늘 중이라는 뜻일까요, 아니면 오전 안일까요?"
+     ],
+     "sources": [
+      {
+       "title": "ASAP Definition & Meaning | Dictionary.com",
+       "url": "https://www.dictionary.com/browse/asap",
+       "kind": "company_guide",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "데드라인",
+     "note": "ASAP 대신 구체적인 데드라인을 정해 주면 오해가 줄어듭니다."
+    },
+    {
+     "term": "EOD",
+     "note": "급한 정도를 시점으로 밝힐 때 EOD를 함께 씁니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "EOD",
+     "difference": "ASAP은 시점 없이 최대한 빨리이고, EOD는 오늘 업무가 끝날 때까지라는 정해진 시점입니다."
+    }
+   ]
+  },
+  {
+   "id": "tbd",
+   "term": "TBD",
+   "original": "To Be Determined",
+   "korean": "미정",
+   "aliases": [
+    "티비디",
+    "TBA",
+    "To Be Decided",
+    "미확정"
+   ],
+   "keywords": [
+    "미정",
+    "나중에 정함",
+    "정해지지 않음"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "ecommerce",
+      "platform",
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "data",
+      "marketing",
+      "cx"
+     ],
+     "level": "입문",
+     "importance": 3,
+     "definition": "'아직 정해지지 않았고 나중에 정한다'는 뜻의 약어입니다. 일정표나 문서에서 담당자·날짜·내용이 아직 확정되지 않은 칸에 적습니다.",
+     "formula": null,
+     "examples": [
+      "오픈 일정은 TBD로 두고, 확정되면 바로 업데이트할게요.",
+      "담당자 TBD인 항목은 다음 회의에서 정하죠."
+     ],
+     "sources": [
+      {
+       "title": "TBD Definition & Meaning | Dictionary.com",
+       "url": "https://www.dictionary.com/browse/tbd",
+       "kind": "company_guide",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "데드라인",
+     "note": "TBD였던 일정이 정해지면 데드라인이 됩니다."
+    },
+    {
+     "term": "어젠다",
+     "note": "TBD 항목을 다음 회의 어젠다에 올려 정하곤 합니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "FYI",
+     "difference": "TBD는 아직 정해지지 않았다는 표시이고, FYI는 참고로 알려 드린다는 뜻입니다."
+    }
+   ]
+  },
+  {
+   "id": "fyi",
+   "term": "FYI",
+   "original": "For Your Information",
+   "korean": "참고로",
+   "aliases": [
+    "에프와이아이",
+    "fyi",
+    "참고용",
+    "공유드림"
+   ],
+   "keywords": [
+    "참고",
+    "알려 드림",
+    "참고하다"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "ecommerce",
+      "platform",
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "data",
+      "marketing",
+      "cx"
+     ],
+     "level": "입문",
+     "importance": 3,
+     "definition": "'참고로 알려 드립니다'라는 뜻의 약어입니다. 답장이나 조치를 꼭 요구하지 않고 알아 두면 좋을 정보를 공유할 때 메시지 앞에 붙입니다.",
+     "formula": null,
+     "examples": [
+      "FYI, 다음 주 화요일은 사내 점검으로 시스템 접속이 안 된대요.",
+      "FYI로 공유드려요. 따로 회신 안 주셔도 됩니다."
+     ],
+     "sources": [
+      {
+       "title": "FYI Definition & Meaning | Dictionary.com",
+       "url": "https://www.dictionary.com/browse/fyi",
+       "kind": "company_guide",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "리마인드",
+     "note": "FYI는 정보 공유, 리마인드는 이미 알린 일을 다시 알리는 것입니다."
+    },
+    {
+     "term": "레퍼런스",
+     "note": "참고 자료를 FYI로 공유하는 경우가 많습니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "액션 아이템",
+     "difference": "FYI는 조치를 요구하지 않는 정보 공유이고, 액션 아이템은 누군가 해야 할 일입니다."
+    }
+   ]
+  },
+  {
+   "id": "minutes",
+   "term": "회의록",
+   "original": "Meeting Minutes",
+   "korean": "회의록",
+   "aliases": [
+    "미팅 노트",
+    "미팅노트",
+    "회의 노트",
+    "의사록"
+   ],
+   "keywords": [
+    "회의 기록",
+    "미팅 노트"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "ecommerce",
+      "platform",
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "data",
+      "marketing",
+      "cx"
+     ],
+     "level": "입문",
+     "importance": 3,
+     "definition": "회의의 진행 과정, 논의한 내용, 결정 사항을 적은 기록입니다. 회사에서는 결정된 내용과 담당자·기한이 붙은 액션 아이템을 함께 적어 참석자와 관계자에게 공유합니다.",
+     "formula": null,
+     "examples": [
+      "오늘 회의록은 제가 정리해서 컨플루언스에 올릴게요.",
+      "회의록에 결정 사항이랑 액션 아이템 따로 표시해 주세요."
+     ],
+     "sources": [
+      {
+       "title": "표준국어대사전 '회의록'",
+       "url": "https://stdict.korean.go.kr/search/searchResult.do?pageSize=10&searchKeyword=%ED%9A%8C%EC%9D%98%EB%A1%9D",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
+      {
+       "title": "Meeting Minutes Template: Free & Customizable | Confluence",
+       "url": "https://www.atlassian.com/software/confluence/templates/meeting-notes",
+       "kind": "company_guide",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "액션 아이템",
+     "note": "회의록에는 담당자와 기한이 붙은 액션 아이템을 함께 남깁니다."
+    },
+    {
+     "term": "어젠다",
+     "note": "회의록은 보통 어젠다 순서를 따라 씁니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "랩업",
+     "difference": "랩업은 회의 끝에 말로 정리하는 것이고, 회의록은 회의 내용을 글로 남긴 문서입니다."
+    }
+   ]
+  },
+  {
+   "id": "brainstorming",
+   "term": "브레인스토밍",
+   "original": "Brainstorming",
+   "korean": "아이디어 회의",
+   "aliases": [
+    "브레인 스토밍",
+    "브레스토",
+    "브레인스토밍 회의",
+    "아이디어 발상"
+   ],
+   "keywords": [
+    "아이디어 회의",
+    "아이디어 내기"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "ecommerce",
+      "platform",
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "data",
+      "marketing",
+      "cx"
+     ],
+     "level": "입문",
+     "importance": 3,
+     "definition": "여러 사람이 비판을 미루고 자유롭게 아이디어를 쏟아내며 새로운 방안을 찾는 방법, 또는 그런 회의입니다. 나온 의견은 모두 적어 두고, 고르거나 버리는 일은 끝난 뒤에 합니다.",
+     "formula": null,
+     "examples": [
+      "이번 캠페인 이름은 30분 브레인스토밍으로 후보부터 뽑아 보죠.",
+      "브레인스토밍 땐 평가 없이 일단 다 적어 둘게요."
+     ],
+     "sources": [
+      {
+       "title": "표준국어대사전 '브레인스토밍'",
+       "url": "https://stdict.korean.go.kr/search/searchResult.do?pageSize=10&searchKeyword=%EB%B8%8C%EB%A0%88%EC%9D%B8%EC%8A%A4%ED%86%A0%EB%B0%8D",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
+      {
+       "title": "BRAINSTORMING Definition & Meaning | Dictionary.com",
+       "url": "https://www.dictionary.com/browse/brainstorming",
+       "kind": "company_guide",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "킥오프",
+     "note": "킥오프 뒤 방향을 잡을 때 브레인스토밍을 자주 합니다."
+    },
+    {
+     "term": "레퍼런스",
+     "note": "브레인스토밍 전에 레퍼런스를 모아 두면 아이디어가 잘 나옵니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "회고",
+     "difference": "브레인스토밍은 새 아이디어를 내는 자리이고, 회고는 지난 일을 돌아보며 개선점을 찾는 자리입니다."
+    }
+   ]
+  },
+  {
+   "id": "feedback",
+   "term": "피드백",
+   "original": "Feedback",
+   "korean": "의견, 반응",
+   "aliases": [
+    "피백",
+    "피드백하다",
+    "피드백 주다",
+    "FB"
+   ],
+   "keywords": [
+    "의견",
+    "평가 의견",
+    "되짚기"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "ecommerce",
+      "platform",
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "data",
+      "marketing",
+      "cx"
+     ],
+     "level": "입문",
+     "importance": 4,
+     "definition": "어떤 일이나 결과물에 대해 상대가 들려주는 의견과 반응입니다. 회사에서는 문서·디자인·업무 방식을 더 낫게 만들려고 주고받는 의견을 주로 뜻합니다. 원래는 출력이 다시 입력에 영향을 주는 현상을 가리키는 공학 용어입니다.",
+     "formula": null,
+     "examples": [
+      "기획안 초안 공유드려요. 내일까지 피드백 부탁드립니다.",
+      "고객 피드백 중에 반복되는 건 따로 묶어서 정리해 볼게요."
+     ],
+     "sources": [
+      {
+       "title": "FEEDBACK Definition & Meaning | Dictionary.com",
+       "url": "https://www.dictionary.com/browse/feedback",
+       "kind": "company_guide",
+       "checked_at": "2026-10-15"
+      },
+      {
+       "title": "국립국어원 상담 사례 '피드백하다', '피드백 하다'의 띄어쓰기",
+       "url": "https://www.korean.go.kr/front/mcfaq/mcfaqView.do?mn_id=62&mcfaq_seq=8147&pageIndex=114",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "1on1",
+     "note": "1on1은 피드백을 주고받는 대표적인 자리입니다."
+    },
+    {
+     "term": "VOC",
+     "note": "고객이 주는 피드백을 모아 VOC로 관리합니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "팔로업",
+     "difference": "피드백은 결과물에 대한 의견이고, 팔로업은 진행 상황을 다시 확인하며 챙기는 것입니다."
+    }
+   ]
+  },
+  {
+   "id": "reference",
+   "term": "레퍼런스",
+   "original": "Reference",
+   "korean": "참고 자료",
+   "aliases": [
+    "레퍼",
+    "레퍼런스 자료",
+    "참고 사례",
+    "ref"
+   ],
+   "keywords": [
+    "참고 자료",
+    "참고 사례",
+    "벤치마크"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "ecommerce",
+      "platform",
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "data",
+      "marketing",
+      "cx"
+     ],
+     "level": "입문",
+     "importance": 3,
+     "definition": "일을 할 때 기준이나 본보기로 삼는 참고 자료나 사례입니다. 회사에서는 '레퍼런스 찾아보자'처럼 다른 서비스·디자인·문서의 좋은 사례를 모을 때 많이 씁니다. 영어 reference는 원래 정보를 얻으려고 찾아보는 자료를 뜻합니다.",
+     "formula": null,
+     "examples": [
+      "온보딩 화면 레퍼런스 몇 개 모아서 공유드릴게요.",
+      "이 분석은 지난 분기 리포트를 레퍼런스로 삼아 구성했어요."
+     ],
+     "sources": [
+      {
+       "title": "REFERENCE Definition & Meaning | Dictionary.com",
+       "url": "https://www.dictionary.com/browse/reference",
+       "kind": "company_guide",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified",
+     "check_note": "실무 용법은 출처 없음"
+    }
+   ],
+   "related": [
+    {
+     "term": "브레인스토밍",
+     "note": "레퍼런스를 먼저 모으고 브레인스토밍을 하면 논의가 빨라집니다."
+    },
+    {
+     "term": "FYI",
+     "note": "레퍼런스는 FYI로 가볍게 공유하는 경우가 많습니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "피드백",
+     "difference": "레퍼런스는 참고할 바깥 사례이고, 피드백은 내 결과물에 대한 다른 사람의 의견입니다."
+    }
+   ]
+  },
+  {
+   "id": "approval",
+   "term": "결재",
+   "original": null,
+   "korean": "결재",
+   "aliases": [
+    "決裁",
+    "전자결재",
+    "결재 라인",
+    "결재받다"
+   ],
+   "keywords": [
+    "승인",
+    "허락",
+    "결재 올리다"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "ecommerce",
+      "platform",
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "data",
+      "marketing",
+      "cx"
+     ],
+     "level": "입문",
+     "importance": 4,
+     "definition": "결정할 권한이 있는 윗사람이 아랫사람이 올린 안건이나 문서를 검토하고 승인하는 일입니다. 회사에서는 문서를 올려 팀장·임원 등 결재 라인의 승인을 받는 과정을 말합니다. 돈을 치르는 '결제'와 다른 말입니다.",
+     "formula": null,
+     "examples": [
+      "예산 집행은 팀장님 결재 나면 바로 진행할게요.",
+      "전자결재 올렸는데 반려돼서 사유 반영해서 다시 올리겠습니다."
+     ],
+     "sources": [
+      {
+       "title": "표준국어대사전 '결재'",
+       "url": "https://stdict.korean.go.kr/search/searchResult.do?pageSize=10&searchKeyword=%EA%B2%B0%EC%9E%AC",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "기안",
+     "note": "기안한 문서를 올려 결재를 받습니다."
+    },
+    {
+     "term": "품의",
+     "note": "품의서도 결재를 거쳐 승인됩니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "결제",
+     "difference": "결재는 윗사람의 승인이고, 결제는 대금을 치러 거래를 끝내는 것입니다."
+    }
+   ]
+  },
+  {
+   "id": "drafting",
+   "term": "기안",
+   "original": null,
+   "korean": "기안",
+   "aliases": [
+    "기안서",
+    "기안하다",
+    "기안 올리다",
+    "기안문"
+   ],
+   "keywords": [
+    "문서 올리기",
+    "초안 작성",
+    "문서 작성"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "ecommerce",
+      "platform",
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "data",
+      "marketing",
+      "cx"
+     ],
+     "level": "실무",
+     "importance": 3,
+     "definition": "사업이나 활동 계획의 초안을 만드는 일, 또는 그렇게 만든 초안을 말합니다. 회사에서는 승인을 받기 위해 문서를 작성해 결재 라인에 올리는 첫 단계를 뜻합니다.",
+     "formula": null,
+     "examples": [
+      "행사 진행 건은 제가 기안해서 오늘 결재 올릴게요.",
+      "기안서에 예산 근거 자료도 첨부해 주세요."
+     ],
+     "sources": [
+      {
+       "title": "표준국어대사전 '기안'",
+       "url": "https://stdict.korean.go.kr/search/searchResult.do?pageSize=10&searchKeyword=%EA%B8%B0%EC%95%88",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "결재",
+     "note": "기안한 문서는 결재를 거쳐 확정됩니다."
+    },
+    {
+     "term": "품의",
+     "note": "품의서를 기안하는 식으로 함께 쓰입니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "품의",
+     "difference": "기안은 문서를 작성해 올리는 일 전반이고, 품의는 윗사람에게 승인을 여쭙는 일에 초점이 있습니다."
+    }
+   ]
+  },
+  {
+   "id": "pumui",
+   "term": "품의",
+   "original": null,
+   "korean": "품의",
+   "aliases": [
+    "품의서",
+    "품의하다",
+    "품의 올리다",
+    "지출 품의"
+   ],
+   "keywords": [
+    "승인 요청",
+    "허락 요청",
+    "구매 요청"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "ecommerce",
+      "platform",
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "data",
+      "marketing",
+      "cx"
+     ],
+     "level": "실무",
+     "importance": 3,
+     "definition": "윗사람에게 말이나 글로 여쭈어 의논하는 일입니다. 회사에서는 구매·지출·계약처럼 돈이나 권한이 걸린 일을 하기 전에 승인을 요청하는 문서(품의서)를 올리는 것을 말합니다.",
+     "formula": null,
+     "examples": [
+      "외주 계약 건은 품의 먼저 올리고 승인 나면 진행할게요.",
+      "이번 장비 구매 품의서에 견적서 두 곳 것 첨부해 주세요."
+     ],
+     "sources": [
+      {
+       "title": "표준국어대사전 '품의'",
+       "url": "https://stdict.korean.go.kr/search/searchResult.do?pageSize=10&searchKeyword=%ED%92%88%EC%9D%98",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "결재",
+     "note": "품의서는 결재를 받아야 실행할 수 있습니다."
+    },
+    {
+     "term": "기안",
+     "note": "품의서를 작성해 올리는 것도 기안의 한 형태입니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "기안",
+     "difference": "품의는 승인을 여쭙는 데 초점이 있고, 기안은 문서를 처음 작성해 올리는 일 전반입니다."
+    }
+   ]
+  },
+  {
+   "id": "closing",
+   "term": "클로징",
+   "original": "Closing",
+   "korean": "마감, 종료",
+   "aliases": [
+    "클로징하다",
+    "클로징 미팅",
+    "close",
+    "마감 작업"
+   ],
+   "keywords": [
+    "끝내다",
+    "마감",
+    "종료",
+    "결산"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "ecommerce",
+      "platform",
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "data",
+      "marketing",
+      "cx"
+     ],
+     "level": "실무",
+     "importance": 3,
+     "definition": "일이나 기간을 공식적으로 끝내고 닫는 것을 말합니다. 회사에서는 프로젝트를 마무리하거나, 월말·분기말 회계 장부를 마감하는 일을 가리킬 때 씁니다. 영어 closing은 원래 끝맺음이나 거래를 마무리하는 단계를 뜻합니다.",
+     "formula": null,
+     "examples": [
+      "이번 달 클로징 기간이라 회계팀 회신이 조금 늦을 수 있어요.",
+      "프로젝트 클로징 미팅에서 성과랑 남은 이슈 정리하죠."
+     ],
+     "sources": [
+      {
+       "title": "CLOSING Definition & Meaning | Dictionary.com",
+       "url": "https://www.dictionary.com/browse/closing",
+       "kind": "company_guide",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified",
+     "check_note": "실무 용법은 출처 없음"
+    }
+   ],
+   "related": [
+    {
+     "term": "랩업",
+     "note": "클로징 전에 결과를 랩업해 정리합니다."
+    },
+    {
+     "term": "회고",
+     "note": "프로젝트 클로징 뒤에 회고를 하곤 합니다."
+    },
+    {
+     "term": "매출",
+     "note": "회계 클로징이 끝나야 그달 매출이 확정됩니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "랩업",
+     "difference": "클로징은 일이나 기간을 공식적으로 닫는 것이고, 랩업은 회의나 일의 내용을 정리·요약하는 것입니다."
+    }
+   ]
+  },
+  {
+   "id": "align",
+   "term": "얼라인",
+   "original": "align",
+   "korean": "방향 맞추기",
+   "aliases": [
+    "얼라인먼트",
+    "얼라인하다",
+    "align",
+    "싱크 맞추기"
+   ],
+   "keywords": [
+    "맞추다",
+    "합의하다",
+    "방향 맞추기"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "ecommerce",
+      "platform",
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "data",
+      "marketing",
+      "cx"
+     ],
+     "level": "실무",
+     "importance": 4,
+     "definition": "여러 사람이나 팀이 목표·방향·우선순위에 대해 같은 생각을 갖도록 맞추는 일입니다. 영어 align의 '서로 일치시키다, 다른 사람이나 의견에 동조하다'라는 뜻에서 왔습니다.",
+     "formula": null,
+     "examples": [
+      "킥오프 전에 마케팅팀이랑 목표 지표부터 얼라인하고 갈게요.",
+      "이 건은 리더분들끼리 얼라인이 안 된 것 같아서 한 번 더 미팅 잡겠습니다."
+     ],
+     "sources": [
+      {
+       "title": "ALIGN | English meaning - Cambridge Dictionary",
+       "url": "https://dictionary.cambridge.org/dictionary/english/align",
+       "kind": "company_guide",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "싱크",
+     "note": "얼라인을 위해 정보를 서로 맞추는 짧은 회의를 싱크라고도 부릅니다."
+    },
+    {
+     "term": "R&R",
+     "note": "방향을 맞춘 뒤 누가 무엇을 맡을지 정하는 단계로 이어집니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "컨펌",
+     "difference": "컨펌은 결정권자가 승인하는 것이고, 얼라인은 관계자들이 같은 방향을 공유하는 것입니다."
+    }
+   ]
+  },
+  {
+   "id": "confirm",
+   "term": "컨펌",
+   "original": "confirm",
+   "korean": "확인·승인",
+   "aliases": [
+    "컨펌하다",
+    "컨펌 받기",
+    "confirm",
+    "컴펌"
+   ],
+   "keywords": [
+    "확인",
+    "승인",
+    "확정",
+    "결재"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "ecommerce",
+      "platform",
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "data",
+      "marketing",
+      "cx"
+     ],
+     "level": "입문",
+     "importance": 4,
+     "definition": "상사나 결정권자에게 내용·일정·안을 확인받아 확정하는 일입니다. 영어 confirm의 '계획·약속을 확정하다, 공식적으로 승인하다'라는 뜻에서 왔습니다.",
+     "formula": null,
+     "examples": [
+      "시안 두 개 올려 드렸는데 오늘 중으로 컨펌 부탁드려요.",
+      "팀장님 컨펌 나면 바로 배포 일정 공지할게요."
+     ],
+     "sources": [
+      {
+       "title": "CONFIRM | English meaning - Cambridge Dictionary",
+       "url": "https://dictionary.cambridge.org/dictionary/english/confirm",
+       "kind": "company_guide",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "픽스",
+     "note": "컨펌을 받으면 그 안이 픽스(확정)됩니다."
+    },
+    {
+     "term": "결재",
+     "note": "공식 문서로 승인받는 절차는 결재라고 합니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "얼라인",
+     "difference": "얼라인은 방향을 함께 맞추는 것이고, 컨펌은 결정권자의 승인을 받는 것입니다."
+    }
+   ]
+  },
+  {
+   "id": "handoff",
+   "term": "핸드오프",
+   "original": "handoff",
+   "korean": "인계",
+   "aliases": [
+    "핸드오버",
+    "hand-off",
+    "handover",
+    "핸드 오프"
+   ],
+   "keywords": [
+    "넘기다",
+    "인계",
+    "넘겨주다"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "ecommerce",
+      "platform",
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "data",
+      "marketing",
+      "cx"
+     ],
+     "level": "실무",
+     "importance": 3,
+     "definition": "맡던 일이나 책임, 산출물을 다음 담당자나 팀에 넘겨주는 일입니다. 디자인 완료 후 개발팀에 넘기거나, 상담을 다른 부서로 넘길 때 주로 씁니다.",
+     "formula": null,
+     "examples": [
+      "디자인 핸드오프는 금요일에 피그마 링크로 드릴게요.",
+      "휴가 전에 진행 중인 티켓들 핸드오프 문서 정리해 두겠습니다."
+     ],
+     "sources": [
+      {
+       "title": "HANDOFF | English meaning - Cambridge Dictionary",
+       "url": "https://dictionary.cambridge.org/dictionary/english/handoff",
+       "kind": "company_guide",
+       "checked_at": "2026-10-15"
+      },
+      {
+       "title": "HANDOVER | English meaning - Cambridge Dictionary",
+       "url": "https://dictionary.cambridge.org/dictionary/english/handover",
+       "kind": "company_guide",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "R&R",
+     "note": "인계할 때 넘겨받는 사람의 책임 범위가 함께 바뀝니다."
+    },
+    {
+     "term": "디펜던시",
+     "note": "앞 단계의 핸드오프가 늦으면 뒤 작업이 막힙니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "에스컬레이션",
+     "difference": "에스컬레이션은 상위 담당자에게 판단을 올리는 것이고, 핸드오프는 일 자체를 넘기는 것입니다."
+    }
+   ]
+  },
+  {
+   "id": "r_and_r",
+   "term": "R&R",
+   "original": "Roles and Responsibilities",
+   "korean": "역할과 책임",
+   "aliases": [
+    "알앤알",
+    "RnR",
+    "R and R",
+    "역할 분담"
+   ],
+   "keywords": [
+    "역할",
+    "담당",
+    "책임 범위",
+    "업무 분장"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "ecommerce",
+      "platform",
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "data",
+      "marketing",
+      "cx"
+     ],
+     "level": "실무",
+     "importance": 4,
+     "definition": "팀이나 프로젝트에서 누가 어떤 역할을 맡고 어디까지 책임지는지를 정리한 것입니다. 일을 시작할 때 정해 두면 빠지는 일이나 겹치는 일을 줄일 수 있습니다.",
+     "formula": null,
+     "examples": [
+      "이번 프로젝트는 R&R부터 먼저 정리하고 시작하죠.",
+      "이 업무가 누구 R&R인지 애매해서 확인 부탁드려요."
+     ],
+     "sources": [
+      {
+       "title": "How to Define Team Roles and Responsibilities | Atlassian",
+       "url": "https://www.atlassian.com/team-playbook/plays/roles-and-responsibilities",
+       "kind": "company_guide",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "오너십",
+     "note": "R&R로 맡은 일을 책임지고 끝까지 끌고 가는 태도가 오너십입니다."
+    },
+    {
+     "term": "KPI",
+     "note": "역할마다 성과를 볼 지표를 함께 정하기도 합니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "RACI",
+     "difference": "RACI는 실행·책임·자문·공유 대상을 표로 나눈 틀이고, R&R은 역할과 책임 전반을 부르는 말입니다."
+    }
+   ]
+  },
+  {
+   "id": "ownership",
+   "term": "오너십",
+   "original": "ownership",
+   "korean": "주인의식",
+   "aliases": [
+    "오너쉽",
+    "ownership",
+    "책임감",
+    "주도권"
+   ],
+   "keywords": [
+    "주인의식",
+    "책임지고 맡음"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "ecommerce",
+      "platform",
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "data",
+      "marketing",
+      "cx"
+     ],
+     "level": "실무",
+     "importance": 3,
+     "definition": "맡은 일이나 문제를 자기 일처럼 책임지고 끝까지 챙기는 태도입니다. 영어 ownership에는 '소유'라는 뜻 외에 '아이디어나 문제에 책임을 지는 것'이라는 뜻도 있습니다.",
+     "formula": null,
+     "examples": [
+      "이 기능은 지은님이 오너십 갖고 끝까지 챙겨 주세요.",
+      "오너십이 분명하지 않으니까 이슈가 계속 떠다니네요."
+     ],
+     "sources": [
+      {
+       "title": "OWNERSHIP | English meaning - Cambridge Dictionary",
+       "url": "https://dictionary.cambridge.org/dictionary/english/ownership",
+       "kind": "company_guide",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "R&R",
+     "note": "오너십은 보통 R&R로 맡은 범위에서 발휘됩니다."
+    },
+    {
+     "term": "DRI",
+     "note": "한 업무의 최종 책임자를 정하는 방식으로 함께 쓰입니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "권한",
+     "difference": "권한은 결정할 수 있는 자격이고, 오너십은 결과까지 책임지려는 태도입니다."
+    }
+   ]
+  },
+  {
+   "id": "blocker",
+   "term": "블로커",
+   "original": "blocker",
+   "korean": "걸림돌",
+   "aliases": [
+    "블로킹 이슈",
+    "blocker",
+    "블락커",
+    "막힌 일"
+   ],
+   "keywords": [
+    "막힘",
+    "걸림돌",
+    "진행 못 함"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "ecommerce",
+      "platform",
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "data",
+      "marketing",
+      "cx"
+     ],
+     "level": "실무",
+     "importance": 4,
+     "definition": "일이 더 진행되지 못하게 막고 있는 문제나 사람, 조건입니다. 스탠드업에서 '블로커 있나요?'라고 물으면 도움이 필요한 막힌 지점이 있는지 묻는 뜻입니다.",
+     "formula": null,
+     "examples": [
+      "API 스펙이 아직 안 나와서 이게 지금 제일 큰 블로커예요.",
+      "오늘 스탠드업에서 블로커 있으신 분 말씀해 주세요."
+     ],
+     "sources": [
+      {
+       "title": "BLOCKER | English meaning - Cambridge Dictionary",
+       "url": "https://dictionary.cambridge.org/dictionary/english/blocker",
+       "kind": "company_guide",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "디펜던시",
+     "note": "다른 작업에 의존하는 일이 늦어지면 그 작업이 블로커가 됩니다."
+    },
+    {
+     "term": "병목",
+     "note": "블로커가 반복되는 지점이 흐름 전체의 병목이 됩니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "이슈",
+     "difference": "이슈는 다룰 문제 전반이고, 블로커는 그중 진행을 아예 멈추게 하는 문제입니다."
+    }
+   ]
+  },
+  {
+   "id": "dependency",
+   "term": "디펜던시",
+   "original": "dependency",
+   "korean": "의존 관계",
+   "aliases": [
+    "디펜던시스",
+    "dependency",
+    "의존성",
+    "선후 관계"
+   ],
+   "keywords": [
+    "의존",
+    "선행 작업",
+    "선행 조건"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "ecommerce",
+      "platform",
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "data",
+      "marketing",
+      "cx"
+     ],
+     "level": "실무",
+     "importance": 3,
+     "definition": "어떤 작업이 다른 작업의 결과나 다른 팀의 일에 기대고 있어서, 그 일이 끝나야 진행할 수 있는 관계입니다. 일정을 짤 때 작업 순서를 정하는 기준이 됩니다.",
+     "formula": null,
+     "examples": [
+      "결제 기능은 정산팀 작업이랑 디펜던시가 있어서 일정 같이 봐야 해요.",
+      "디펜던시 정리해서 타임라인에 화살표로 연결해 둘게요."
+     ],
+     "sources": [
+      {
+       "title": "Project dependencies | Atlassian",
+       "url": "https://www.atlassian.com/agile/project-management/project-management-dependencies",
+       "kind": "company_guide",
+       "checked_at": "2026-10-15"
+      },
+      {
+       "title": "DEPENDENCY | English meaning - Cambridge Dictionary",
+       "url": "https://dictionary.cambridge.org/dictionary/english/dependency",
+       "kind": "company_guide",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "블로커",
+     "note": "의존하는 작업이 늦어지면 블로커가 생깁니다."
+    },
+    {
+     "term": "마일스톤",
+     "note": "의존 관계를 따라 단계별 마일스톤을 정합니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "병목",
+     "difference": "디펜던시는 작업 사이의 선후 관계이고, 병목은 흐름이 느려지는 특정 지점입니다."
+    }
+   ]
+  },
+  {
+   "id": "resource",
+   "term": "리소스",
+   "original": "resource",
+   "korean": "자원·인력",
+   "aliases": [
+    "리소스 부족",
+    "resource",
+    "공수",
+    "여유 인력"
+   ],
+   "keywords": [
+    "인력",
+    "자원",
+    "여력"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "ecommerce",
+      "platform",
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "data",
+      "marketing",
+      "cx"
+     ],
+     "level": "실무",
+     "importance": 3,
+     "definition": "일을 하는 데 쓸 수 있는 사람, 시간, 돈, 장비 같은 자원입니다. 회사에서는 특히 '투입할 수 있는 사람과 시간'을 가리키는 경우가 많습니다.",
+     "formula": null,
+     "examples": [
+      "이번 분기엔 디자인 리소스가 부족해서 우선순위 조정이 필요해요.",
+      "그 작업은 리소스 얼마나 들지 대략 산정해 주실 수 있을까요?"
+     ],
+     "sources": [
+      {
+       "title": "RESOURCE | English meaning - Cambridge Dictionary",
+       "url": "https://dictionary.cambridge.org/dictionary/english/resource",
+       "kind": "company_guide",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "우선순위",
+     "note": "리소스가 한정되어 있어서 우선순위를 정합니다."
+    },
+    {
+     "term": "트레이드오프",
+     "note": "리소스를 한쪽에 쓰면 다른 쪽을 포기해야 합니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "예산",
+     "difference": "예산은 쓸 수 있는 돈이고, 리소스는 사람·시간까지 포함하는 더 넓은 말입니다."
+    }
+   ]
+  },
+  {
+   "id": "issue",
+   "term": "이슈",
+   "original": "issue",
+   "korean": "쟁점·문제",
+   "aliases": [
+    "이슈사항",
+    "issue",
+    "이슈 티켓",
+    "현안"
+   ],
+   "keywords": [
+    "문제",
+    "사안",
+    "쟁점"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "ecommerce",
+      "platform",
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "data",
+      "marketing",
+      "cx"
+     ],
+     "level": "입문",
+     "importance": 4,
+     "definition": "함께 논의하거나 해결해야 할 문제, 또는 다툼의 중심이 되는 점입니다. 회사에서는 장애·버그나 일정 지연처럼 챙겨야 할 문제를 두루 '이슈'라고 부르고, 지라 같은 도구의 작업 단위를 가리키기도 합니다.",
+     "formula": null,
+     "examples": [
+      "배포 후에 결제 쪽 이슈 있으면 바로 공유해 주세요.",
+      "이건 이슈로 따로 올려서 담당자 지정할게요."
+     ],
+     "sources": [
+      {
+       "title": "표준국어대사전 '이슈' 찾기 결과",
+       "url": "https://stdict.korean.go.kr/search/searchResult.do?pageSize=10&searchKeyword=%EC%9D%B4%EC%8A%88",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
+      {
+       "title": "ISSUE | English meaning - Cambridge Dictionary",
+       "url": "https://dictionary.cambridge.org/dictionary/english/issue",
+       "kind": "company_guide",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "블로커",
+     "note": "이슈 가운데 진행을 막는 것을 블로커라고 합니다."
+    },
+    {
+     "term": "쟁점",
+     "note": "표준국어대사전은 이슈를 쟁점과 같은 말로 풉니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "리스크",
+     "difference": "리스크는 앞으로 생길 수 있는 문제이고, 이슈는 이미 생겨 다뤄야 하는 문제입니다."
+    }
+   ]
+  },
+  {
+   "id": "develop",
+   "term": "디벨롭",
+   "original": "develop",
+   "korean": "발전시키기",
+   "aliases": [
+    "디벨롭하다",
+    "디벨럽",
+    "develop",
+    "고도화"
+   ],
+   "keywords": [
+    "발전시키다",
+    "다듬다",
+    "구체화"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "ecommerce",
+      "platform",
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "data",
+      "marketing",
+      "cx"
+     ],
+     "level": "실무",
+     "importance": 3,
+     "definition": "아이디어·기획안·문서를 더 구체적이고 완성도 있게 다듬는 일입니다. 영어 develop은 '더 발전된 형태로 키우다, 개발하다'라는 뜻인데, 회사에서는 주로 '초안을 다듬다'로 씁니다.",
+     "formula": null,
+     "examples": [
+      "초안 괜찮네요, 이 방향으로 조금 더 디벨롭해서 다음 주에 다시 봐요.",
+      "아이디어 단계라 디벨롭이 더 필요할 것 같아요."
+     ],
+     "sources": [
+      {
+       "title": "DEVELOP | English meaning - Cambridge Dictionary",
+       "url": "https://dictionary.cambridge.org/dictionary/english/develop",
+       "kind": "company_guide",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified",
+     "check_note": "실무 용법('초안을 다듬다')은 출처 없음. 원어 뜻 출처만 붙임"
+    }
+   ],
+   "related": [
+    {
+     "term": "피드백",
+     "note": "피드백을 받아 디벨롭하는 흐름이 흔합니다."
+    },
+    {
+     "term": "컨펌",
+     "note": "디벨롭한 안을 결정권자에게 컨펌받습니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "개발",
+     "difference": "개발은 제품·기능을 만드는 일이고, 디벨롭은 회사 말투로 아이디어·문서를 다듬는 일입니다."
+    }
+   ]
+  },
+  {
+   "id": "fix",
+   "term": "픽스",
+   "original": "fix",
+   "korean": "확정",
+   "aliases": [
+    "픽스하다",
+    "fix",
+    "픽스됨",
+    "확정짓기"
+   ],
+   "keywords": [
+    "확정",
+    "정하다",
+    "고치다"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "ecommerce",
+      "platform",
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "data",
+      "marketing",
+      "cx"
+     ],
+     "level": "입문",
+     "importance": 3,
+     "definition": "일정·장소·가격·안 등을 더 바꾸지 않도록 확정하는 일입니다. 영어 fix의 '시간·장소·가격 등을 정하다'라는 뜻에서 왔고, 개발에서는 버그를 '고치다(수정)'라는 뜻으로도 씁니다.",
+     "formula": null,
+     "examples": [
+      "오픈 일정은 다음 달 3일로 픽스됐습니다.",
+      "문구는 이 버전으로 픽스할게요, 더 수정 없으면 디자인 넘깁니다."
+     ],
+     "sources": [
+      {
+       "title": "FIX | English meaning - Cambridge Dictionary",
+       "url": "https://dictionary.cambridge.org/dictionary/english/fix",
+       "kind": "company_guide",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "컨펌",
+     "note": "보통 컨펌을 받아야 픽스됩니다."
+    },
+    {
+     "term": "홀드",
+     "note": "픽스 전 단계에서 결정을 미루면 홀드가 됩니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "핫픽스",
+     "difference": "핫픽스는 운영 중 급히 고치는 수정이고, 회의에서 말하는 픽스는 대개 확정이라는 뜻입니다."
+    }
+   ]
+  },
+  {
+   "id": "hold",
+   "term": "홀드",
+   "original": "hold / on hold",
+   "korean": "보류",
+   "aliases": [
+    "홀딩",
+    "hold",
+    "on hold",
+    "보류 처리"
+   ],
+   "keywords": [
+    "보류",
+    "멈추다",
+    "잠시 중단"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "ecommerce",
+      "platform",
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "data",
+      "marketing",
+      "cx"
+     ],
+     "level": "실무",
+     "importance": 3,
+     "definition": "진행하던 일을 일부러 잠시 멈추고 미뤄 두는 일입니다. 취소가 아니라 나중에 다시 이어 갈 수 있다는 뜻이 담겨 있습니다.",
+     "formula": null,
+     "examples": [
+      "이 프로젝트는 예산 확정 전까지 홀드할게요.",
+      "해당 요청은 일단 홀드 상태로 두고 다음 주에 다시 볼게요."
+     ],
+     "sources": [
+      {
+       "title": "HOLD | English meaning - Cambridge Dictionary",
+       "url": "https://dictionary.cambridge.org/dictionary/english/hold",
+       "kind": "company_guide",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "드롭",
+     "note": "홀드가 길어지다 아예 접으면 드롭이 됩니다."
+    },
+    {
+     "term": "우선순위",
+     "note": "우선순위가 밀린 일은 홀드되기 쉽습니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "드롭",
+     "difference": "홀드는 잠시 멈춤이고, 드롭은 하지 않기로 뺀 것입니다."
+    }
+   ]
+  },
+  {
+   "id": "drop",
+   "term": "드롭",
+   "original": "drop",
+   "korean": "제외·취소",
+   "aliases": [
+    "드랍",
+    "drop",
+    "드롭하다",
+    "빼기"
+   ],
+   "keywords": [
+    "취소",
+    "빼다",
+    "접다",
+    "중단"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "ecommerce",
+      "platform",
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "data",
+      "marketing",
+      "cx"
+     ],
+     "level": "실무",
+     "importance": 3,
+     "definition": "하기로 했던 일이나 기능, 안건을 더 진행하지 않기로 빼는 일입니다. 영어 drop의 '하던 일이나 계획을 그만두다'라는 뜻에서 왔습니다.",
+     "formula": null,
+     "examples": [
+      "이번 스프린트에서 알림 기능은 드롭하고 다음에 다시 보죠.",
+      "그 안건은 지난 회의에서 드롭됐어요."
+     ],
+     "sources": [
+      {
+       "title": "DROP | English meaning - Cambridge Dictionary",
+       "url": "https://dictionary.cambridge.org/dictionary/english/drop",
+       "kind": "company_guide",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "스코프 크립",
+     "note": "범위가 불어날 때 일부를 드롭해 범위를 지킵니다."
+    },
+    {
+     "term": "우선순위",
+     "note": "우선순위가 낮은 일부터 드롭합니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "홀드",
+     "difference": "드롭은 하지 않기로 한 것이고, 홀드는 잠시 미룬 것입니다."
+    }
+   ]
+  },
+  {
+   "id": "milestone",
+   "term": "마일스톤",
+   "original": "milestone",
+   "korean": "중간 목표 시점",
+   "aliases": [
+    "마일스톤즈",
+    "milestone",
+    "MS",
+    "주요 일정"
+   ],
+   "keywords": [
+    "중간 목표",
+    "단계 목표",
+    "체크포인트"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "ecommerce",
+      "platform",
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "data",
+      "marketing",
+      "cx"
+     ],
+     "level": "실무",
+     "importance": 3,
+     "definition": "프로젝트 진행 중 중요한 단계가 끝났음을 확인하는 기준 시점입니다. 기간이 있는 작업이 아니라 '여기까지 왔다'를 표시하는 점으로, 진행 상황을 점검할 때 씁니다.",
+     "formula": null,
+     "examples": [
+      "첫 번째 마일스톤은 이달 말 베타 오픈입니다.",
+      "마일스톤별로 산출물이랑 담당자 표에 정리해 주세요."
+     ],
+     "sources": [
+      {
+       "title": "How to Achieve Project Milestones in 2026 | Atlassian",
+       "url": "https://www.atlassian.com/work-management/project-management/project-milestones",
+       "kind": "company_guide",
+       "checked_at": "2026-10-15"
+      },
+      {
+       "title": "MILESTONE | English meaning - Cambridge Dictionary",
+       "url": "https://dictionary.cambridge.org/dictionary/english/milestone",
+       "kind": "company_guide",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "런칭",
+     "note": "런칭이 대표적인 마일스톤입니다."
+    },
+    {
+     "term": "디펜던시",
+     "note": "마일스톤 사이 작업 순서는 의존 관계로 정합니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "데드라인",
+     "difference": "데드라인은 일을 끝내야 하는 마감 시점이고, 마일스톤은 프로젝트의 중요한 단계 완료 지점입니다."
+    }
+   ]
+  },
+  {
+   "id": "launch",
+   "term": "런칭",
+   "original": "launch",
+   "korean": "출시",
+   "aliases": [
+    "론칭",
+    "런치",
+    "launch",
+    "론치"
+   ],
+   "keywords": [
+    "출시",
+    "오픈",
+    "시작"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "ecommerce",
+      "platform",
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "data",
+      "marketing",
+      "cx"
+     ],
+     "level": "입문",
+     "importance": 4,
+     "definition": "새 제품·서비스·기능·캠페인을 세상에 처음 내놓는 일입니다. 영어 launch의 '새 제품이나 계획을 처음 선보이다'라는 뜻에서 왔으며 '론칭'으로도 씁니다.",
+     "formula": null,
+     "examples": [
+      "런칭 일정이 1주 밀려서 마케팅 캠페인도 같이 조정해야 해요.",
+      "런칭 후 첫 주 지표는 매일 아침 공유할게요."
+     ],
+     "sources": [
+      {
+       "title": "LAUNCH | English meaning - Cambridge Dictionary",
+       "url": "https://dictionary.cambridge.org/dictionary/english/launch",
+       "kind": "company_guide",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "마일스톤",
+     "note": "런칭은 프로젝트의 큰 마일스톤입니다."
+    },
+    {
+     "term": "GTM",
+     "note": "출시를 시장에 알리는 전략을 함께 준비합니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "배포",
+     "difference": "배포는 코드를 서버에 올리는 기술 작업이고, 런칭은 사용자에게 공식적으로 선보이는 일입니다."
+    }
+   ]
+  },
+  {
+   "id": "legacy",
+   "term": "레거시",
+   "original": "legacy",
+   "korean": "기존 시스템",
+   "aliases": [
+    "레거시 시스템",
+    "레거시 코드",
+    "legacy",
+    "구버전"
+   ],
+   "keywords": [
+    "옛 시스템",
+    "오래된 코드"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "ecommerce",
+      "platform",
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "data",
+      "marketing",
+      "cx"
+     ],
+     "level": "실무",
+     "importance": 3,
+     "definition": "예전에 만들어져 지금도 쓰이고 있지만 새 방식보다 오래된 시스템·코드·업무 방식입니다. 바꾸기 어렵고 유지 비용이 든다는 뉘앙스로 자주 씁니다.",
+     "formula": null,
+     "examples": [
+      "그 데이터는 레거시 시스템에 있어서 추출이 좀 오래 걸려요.",
+      "레거시 정리를 이번 분기 목표에 넣을지 논의해 보죠."
+     ],
+     "sources": [
+      {
+       "title": "LEGACY | English meaning - Cambridge Dictionary",
+       "url": "https://dictionary.cambridge.org/dictionary/english/legacy",
+       "kind": "company_guide",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "기술 부채",
+     "note": "레거시가 쌓이면 기술 부채가 됩니다."
+    },
+    {
+     "term": "병목",
+     "note": "오래된 시스템이 처리 속도의 병목이 되기도 합니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "유산",
+     "difference": "legacy의 원래 뜻은 유산이지만, 회사에서는 오래된 시스템을 가리킵니다."
+    }
+   ]
+  },
+  {
+   "id": "benchmarking",
+   "term": "벤치마킹",
+   "original": "benchmarking",
+   "korean": "본뜨기 분석",
+   "aliases": [
+    "벤치마크",
+    "benchmarking",
+    "벤치마킹하다",
+    "벤치마크 분석"
+   ],
+   "keywords": [
+    "본보기",
+    "비교 분석",
+    "따라 배우기",
+    "경쟁사 분석"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "ecommerce",
+      "platform",
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "data",
+      "marketing",
+      "cx"
+     ],
+     "level": "실무",
+     "importance": 3,
+     "definition": "잘하고 있는 다른 회사나 서비스를 기준으로 삼아 비교·분석하고 좋은 점을 우리 일에 가져오는 방법입니다. 표준국어대사전은 경쟁업체 경영 방식을 분석해 따라잡는 전략으로 풉니다.",
+     "formula": null,
+     "examples": [
+      "온보딩 화면은 해외 서비스 세 곳 벤치마킹해서 정리해 왔어요.",
+      "벤치마킹만 하지 말고 우리 사용자에 맞는지도 같이 봐 주세요."
+     ],
+     "sources": [
+      {
+       "title": "표준국어대사전 '벤치마킹' 찾기 결과",
+       "url": "https://stdict.korean.go.kr/search/searchResult.do?pageSize=10&searchKeyword=%EB%B2%A4%EC%B9%98%EB%A7%88%ED%82%B9",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
+      {
+       "title": "BENCHMARKING | English meaning - Cambridge Dictionary",
+       "url": "https://dictionary.cambridge.org/dictionary/english/benchmarking",
+       "kind": "company_guide",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "KPI",
+     "note": "벤치마크 수치를 목표 KPI의 기준으로 삼기도 합니다."
+    },
+    {
+     "term": "경쟁사 분석",
+     "note": "벤치마킹의 출발점이 되는 조사입니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "벤치마크",
+     "difference": "벤치마크는 비교 기준(값) 자체이고, 벤치마킹은 그 기준과 비교해 배우는 활동입니다."
+    }
+   ]
+  },
+  {
+   "id": "bottleneck",
+   "term": "병목",
+   "original": "bottleneck",
+   "korean": "병목 현상",
+   "aliases": [
+    "보틀넥",
+    "bottleneck",
+    "병목 구간",
+    "병목 지점"
+   ],
+   "keywords": [
+    "막힘",
+    "지연",
+    "느려지는 지점"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "ecommerce",
+      "platform",
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "data",
+      "marketing",
+      "cx"
+     ],
+     "level": "실무",
+     "importance": 3,
+     "definition": "일의 흐름에서 한 지점이 좁아져 전체 진행이 느려지거나 멈추는 곳, 또는 그런 문제입니다. 도로가 좁아지는 곳에서 차가 막히는 '병목 현상'에 빗댄 말입니다.",
+     "formula": null,
+     "examples": [
+      "요즘 QA가 병목이라 배포가 계속 밀리고 있어요.",
+      "승인 단계가 병목인지 데이터로 한번 확인해 보죠."
+     ],
+     "sources": [
+      {
+       "title": "BOTTLENECK | English meaning - Cambridge Dictionary",
+       "url": "https://dictionary.cambridge.org/dictionary/english/bottleneck",
+       "kind": "company_guide",
+       "checked_at": "2026-10-15"
+      },
+      {
+       "title": "표준국어대사전 '병목 현상' 찾기 결과",
+       "url": "https://stdict.korean.go.kr/search/searchResult.do?pageSize=10&searchKeyword=%EB%B3%91%EB%AA%A9%20%ED%98%84%EC%83%81",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "블로커",
+     "note": "병목 지점에서 블로커가 자주 생깁니다."
+    },
+    {
+     "term": "리소스",
+     "note": "병목 구간에 리소스를 더 넣어 풀기도 합니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "디펜던시",
+     "difference": "병목은 느려지는 지점이고, 디펜던시는 작업끼리의 선후 관계입니다."
+    }
+   ]
+  },
+  {
+   "id": "pivot",
+   "term": "피벗",
+   "original": "pivot",
+   "korean": "방향 전환",
+   "aliases": [
+    "피보팅",
+    "pivot",
+    "피벗하다",
+    "사업 전환"
+   ],
+   "keywords": [
+    "방향 전환",
+    "전략 변경"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "ecommerce",
+      "platform",
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "data",
+      "marketing",
+      "cx"
+     ],
+     "level": "심화",
+     "importance": 3,
+     "definition": "기존 계획이나 사업 방향이 통하지 않을 때 목표나 전략을 크게 바꾸는 일입니다. 영어 pivot의 '방향을 바꾸다, 다른 행동 방침으로 바꾸다'라는 뜻에서 왔고, 스타트업에서 사업 모델을 바꿀 때 자주 씁니다.",
+     "formula": null,
+     "examples": [
+      "B2C 반응이 약해서 B2B로 피벗하는 안을 검토 중이에요.",
+      "지금 데이터로는 피벗까지 갈 단계는 아닌 것 같아요."
+     ],
+     "sources": [
+      {
+       "title": "PIVOT | English meaning - Cambridge Dictionary",
+       "url": "https://dictionary.cambridge.org/dictionary/english/pivot",
+       "kind": "company_guide",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "PMF",
+     "note": "제품과 시장이 맞지 않을 때 피벗을 검토합니다."
+    },
+    {
+     "term": "트레이드오프",
+     "note": "방향을 바꾸면 기존 투자를 일부 포기하게 됩니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "피벗 테이블",
+     "difference": "피벗 테이블은 엑셀의 요약 표 기능이고, 회의에서 말하는 피벗은 방향 전환입니다."
+    }
+   ]
+  },
+  {
+   "id": "trade_off",
+   "term": "트레이드오프",
+   "original": "trade-off",
+   "korean": "맞바꿈",
+   "aliases": [
+    "트레이드 오프",
+    "tradeoff",
+    "trade-off",
+    "상충 관계"
+   ],
+   "keywords": [
+    "맞바꿈",
+    "득실",
+    "하나를 얻으면 하나를 잃음"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "ecommerce",
+      "platform",
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "data",
+      "marketing",
+      "cx"
+     ],
+     "level": "심화",
+     "importance": 3,
+     "definition": "하나를 얻으려면 다른 하나를 어느 정도 포기해야 하는 관계입니다. 속도와 품질, 비용과 범위처럼 동시에 다 가질 수 없을 때 무엇을 택할지 정할 때 씁니다.",
+     "formula": null,
+     "examples": [
+      "일정 맞추려면 품질 쪽 트레이드오프가 있어요, 어디까지 감수할지 정해 주세요.",
+      "이 옵션은 비용은 싸지만 확장성이 떨어지는 트레이드오프가 있어요."
+     ],
+     "sources": [
+      {
+       "title": "표준국어대사전 '트레이드오프' 찾기 결과",
+       "url": "https://stdict.korean.go.kr/search/searchResult.do?pageSize=10&searchKeyword=%ED%8A%B8%EB%A0%88%EC%9D%B4%EB%93%9C%EC%98%A4%ED%94%84",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
+      {
+       "title": "TRADEOFF | English meaning - Cambridge Dictionary",
+       "url": "https://dictionary.cambridge.org/dictionary/english/tradeoff",
+       "kind": "company_guide",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "리소스",
+     "note": "리소스가 한정되어 있어서 트레이드오프가 생깁니다."
+    },
+    {
+     "term": "우선순위",
+     "note": "트레이드오프를 판단하는 기준이 우선순위입니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "기회비용",
+     "difference": "기회비용은 포기한 것 중 가장 큰 가치이고, 트레이드오프는 둘 사이를 맞바꾸는 관계 자체입니다."
+    }
+   ]
+  },
+  {
+   "id": "scope_creep",
+   "term": "스코프 크립",
+   "original": "scope creep",
+   "korean": "범위 확장",
+   "aliases": [
+    "스코프크립",
+    "scope creep",
+    "범위 늘어남",
+    "요구사항 추가"
+   ],
+   "keywords": [
+    "범위가 늘어남",
+    "요구사항 증가"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "ecommerce",
+      "platform",
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "data",
+      "marketing",
+      "cx"
+     ],
+     "level": "심화",
+     "importance": 3,
+     "definition": "프로젝트 진행 중에 처음 합의한 범위 밖의 요구가 승인 없이 조금씩 붙어서, 일정·예산·인력은 그대로인데 할 일만 늘어나는 현상입니다.",
+     "formula": null,
+     "examples": [
+      "요청이 계속 붙는데 이거 스코프 크립 아닌가요? 범위 다시 정리하죠.",
+      "스코프 크립 막으려고 추가 요청은 다음 단계로 따로 받을게요."
+     ],
+     "sources": [
+      {
+       "title": "Scope Creep in Project Management: How to Manage It",
+       "url": "https://www.atlassian.com/work-management/project-management/scope-creep",
+       "kind": "company_guide",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "드롭",
+     "note": "늘어난 범위를 줄이려고 일부 기능을 드롭합니다."
+    },
+    {
+     "term": "마일스톤",
+     "note": "범위가 늘면 마일스톤 일정이 밀립니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "피벗",
+     "difference": "피벗은 의도적으로 방향을 바꾸는 것이고, 스코프 크립은 통제 없이 범위가 늘어나는 것입니다."
+    }
+   ]
   }
  ]
 };
