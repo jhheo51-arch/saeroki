@@ -5,7 +5,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/PRD-v1.5-40916C" alt="PRD v1.5">
   <img src="https://img.shields.io/badge/Agent_Ideas-17-90A955" alt="에이전트 후보 17개">
-  <img src="https://img.shields.io/badge/Tests-25_passing-31572C" alt="자동 검사 25개 통과">
+  <img src="https://img.shields.io/badge/Tests-28_passing-31572C" alt="자동 검사 28개 통과">
   <img src="https://img.shields.io/badge/Claude_%2B_Codex-shared_rules-40916C" alt="Claude와 Codex 공통 규칙">
 </p>
 
@@ -27,16 +27,42 @@
 
 ## 자라는 새록이
 
-새록이는 작은 묘목입니다. 이 저장소를 계속 쓰고 이 페이지를 찾아올수록 조금씩 자라 큰 나무가 됩니다.
+새록이는 작은 묘목입니다. 작업을 이어 가고, 사람들이 이 페이지를 찾아오고 스타를 누를수록 Lv.1 새싹에서 Lv.100 세계수까지 자랍니다. 생김새는 레벨마다 모두 다르고, 10레벨마다 새 특징이 하나씩 생깁니다.
 
 <p align="center">
-  <img src="assets/saeroki-stages.svg" alt="새싹, 묘목, 어린 나무, 나무, 큰 나무 다섯 단계" width="100%">
+  <img src="assets/saeroki-stages.svg" alt="Lv.1 새싹부터 Lv.100 세계수까지 10레벨마다 달라지는 모습" width="100%">
 </p>
 
-- 성장 점수는 `누적 조회수 + 커밋 수`입니다.
-- GitHub Actions가 매일 서울 자정과 `main`에 push할 때 [`growth.py`](growth.py)를 실행해 그림을 다시 그립니다.
-- 조회수는 GitHub가 최근 14일만 알려 주므로 날짜별로 [`data/growth.json`](data/growth.json)에 쌓아 둡니다. 불러오지 못한 날은 0으로 바꾸지 않고 `확인 전`으로 남깁니다.
-- 등록 전에는 커밋 수만으로 자랍니다. 조회수까지 반영하려면 아래처럼 토큰을 한 번 등록합니다.
+| 레벨 | 이름 | 새로 생기는 모습 |
+|---:|---|---|
+| 1~9 | 새싹 | 떡잎이 커지고 줄기가 올라옵니다 |
+| 10~19 | 묘목 | 줄기를 따라 잎이 번갈아 납니다 |
+| 20~29 | 어린 나무 | 둥근 잎 덩어리가 생깁니다 |
+| 30~39 | 가지 뻗는 나무 | 잎 사이로 가지가 보입니다 |
+| 40~49 | 꽃 피는 나무 | 분홍 꽃이 핍니다 |
+| 50~59 | 열매 맺는 나무 | 주황 열매가 열리고 빛 입자가 떠오릅니다 |
+| 60~69 | 새가 쉬는 나무 | 파랑새가 앉고 줄기가 굵어집니다 |
+| 70~79 | 층층이 자라는 나무 | 잎이 두 층으로 쌓이고 뿌리가 땅으로 퍼지며 후광이 비칩니다 |
+| 80~89 | 덩굴 드리운 고목 | 덩굴이 늘어지고 몸통에 이끼가 낍니다 |
+| 90~99 | 빛을 품은 나무 | 잎이 세 층이 되고 빛나는 잎과 발치의 새싹이 생깁니다 |
+| 100 | 세계수 | 밤하늘 아래 빛의 씨앗과 금빛 열매, 빛줄기가 생깁니다 |
+
+### 성장 점수
+
+`성장 점수 = 순방문자 + 스타 × 10 + 작업량`
+
+| 항목 | 세는 방법 |
+|---|---|
+| 순방문자 | GitHub traffic의 날짜별 순방문자를 더합니다. 한 사람은 새로고침을 여러 번 해도 하루 1점입니다. 저장소 주인의 방문도 포함됩니다. |
+| 스타 | 저장소 주인을 뺀 스타 1개당 10점입니다. |
+| 작업량 | 사람이 한 커밋마다 1점, 바뀐 줄 50줄마다 1점(커밋당 최대 4점), 작업한 날마다 3점입니다. 봇 커밋, 자동 생성 그림(`assets/`)과 `data/growth.json`은 세지 않습니다. |
+
+- 레벨이 오를수록 필요한 점수가 커집니다. Lv.10은 130점, Lv.20은 501점, Lv.50은 2,756점, Lv.100은 9,774점부터입니다.
+- 2026-10-14~15 이틀 동안 커밋 37개로 작업량 79점, Lv.7이 되었습니다. 지금처럼 꾸준히 작업하면 몇 달 안에 Lv.20~30, 해를 넘기면서 Lv.50 근처에 닿도록 맞췄습니다.
+- 100레벨 전체 모습은 `python growth.py --preview all-levels.svg`로 한 장에 모아 볼 수 있습니다.
+- GitHub Actions가 매일 서울 자정과 `main`에 push할 때 [`growth.py`](growth.py)를 실행해 그림을 다시 그립니다. 점수가 그대로면 기록을 바꾸지 않아 봇 커밋이 생기지 않습니다.
+- 순방문자는 GitHub가 최근 14일만 알려 주므로 날짜별로 [`data/growth.json`](data/growth.json)에 쌓아 둡니다. 불러오지 못한 값은 0으로 바꾸지 않고 `확인 전`으로 남깁니다.
+- 순방문자를 반영하려면 아래처럼 토큰을 한 번 등록합니다. 등록 전에는 스타와 작업량으로만 자랍니다.
   1. GitHub `Settings` → `Developer settings` → `Fine-grained tokens`에서 새 토큰을 만듭니다. 저장소는 `saeroki`만 고르고 권한은 `Administration: Read-only`만 줍니다.
   2. 저장소 `Settings` → `Secrets and variables` → `Actions`에 `TRAFFIC_TOKEN`이라는 이름으로 저장합니다.
   3. `Actions` 탭의 `새록이 성장`에서 `Run workflow`를 누르거나 다음 자정 실행을 기다립니다.
@@ -76,7 +102,7 @@
 | [`saeroki.py`](saeroki.py) | 취향 저장부터 자기 검토까지의 공통 기반 |
 | [`saeroki_cli.py`](saeroki_cli.py) | 터미널에서 전체 흐름을 실행하는 도구 |
 | [`source_collector.py`](source_collector.py) | 공개 웹페이지 메타데이터 확인 |
-| [`growth.py`](growth.py) | 성장 점수 계산과 픽셀 묘목 SVG 생성 |
+| [`growth.py`](growth.py) | 성장 점수, 100레벨 계산과 픽셀 묘목 SVG 생성 |
 | [`weather.py`](weather.py) | 서울 현재 날씨와 날씨 코드 확인 |
 | [`data/candidates.example.json`](data/candidates.example.json) | 실제 자료가 아닌 기능 확인용 후보 |
 | [`data/music-candidates.example.json`](data/music-candidates.example.json) | API 없이 직접 관리하는 YouTube Music 후보 양식 |
@@ -146,7 +172,7 @@ python saeroki_cli.py scheduled-recommend --profile data/profile.local.json --ca
 - [x] 계획 후 실행, 결과 자기 검토와 실행 기록
 - [x] 저장, 이미 앎, 관심 없음과 너무 유명함 피드백
 - [x] 콘텐츠 개인화 공통 기반의 자동 검사 21개
-- [x] 조회수와 커밋으로 자라는 픽셀 묘목 새록이
+- [x] 순방문자, 스타와 작업량으로 Lv.100 세계수까지 자라는 픽셀 묘목 새록이
 - [x] 서울 시간대별 추천 구성
 - [x] 서울 현재 날씨를 아침 음악 추천에 전달
 - [x] API 없이 수동 YouTube Music 후보 목록 사용

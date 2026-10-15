@@ -1,4 +1,5 @@
 {
+<<<<<<< Updated upstream
   "views_total": null,
   "commits": 38,
   "score": 38,
@@ -7,4 +8,19 @@
     "name": "묘목"
   },
   "updated_at": "2026-10-15T08:20:21+00:00"
+=======
+  "visitors_total": null,
+  "stars": 0,
+  "work": {
+    "commits": 37,
+    "active_days": 2,
+    "points": 79
+  },
+  "score": 79,
+  "stage": {
+    "level": 7,
+    "name": "새싹"
+  },
+  "updated_at": "2026-10-15T08:33:21+00:00"
+>>>>>>> Stashed changes
 }

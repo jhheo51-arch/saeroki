@@ -31,6 +31,7 @@ jobs:
       - name: 성장 상태 갱신
         env:
           TRAFFIC_TOKEN: ${{ secrets.TRAFFIC_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python growth.py
       - name: 바뀐 그림 커밋
         run: |
