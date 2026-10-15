@@ -33,7 +33,7 @@
 - 서울 고정 좌표의 현재 날씨는 Open-Meteo 공개 API에서 가져오며, API 키를 저장하지 않습니다.
 - 유명한 곡보다 잘 알려지지 않은 숨은 명곡을 우선합니다.
 - 현재는 아침 출근길에만 1개를 추천합니다.
-- API 없이 `data/music-candidates.example.json`에 등록한 YouTube Music 후보에서 고릅니다.
+- API 없이 `fruits/01-content-personalization/data/music-candidates.example.json`에 등록한 YouTube Music 후보에서 고릅니다.
 - 인기도 자료가 없으면 숨은 명곡이라고 단정하지 않고 확인 필요 상태를 표시합니다.
 
 ### 기술 블로그
@@ -109,13 +109,13 @@
 
 Claude 웹앱 프로젝트에는 다음 자료를 넣습니다.
 
-1. `claude/PROJECT-INSTRUCTIONS.md`
+1. `fruits/01-content-personalization/claude/PROJECT-INSTRUCTIONS.md`
 2. `docs/PRD-v1.6.md`
 3. `docs/PRD-v1.5.md`
 4. `AGENT-SPEC.md`
-5. `data/sources.example.json`
-6. `claude/session-input.template.json`
-7. `data/music-candidates.example.json`
+5. `fruits/01-content-personalization/data/sources.example.json`
+6. `fruits/01-content-personalization/claude/session-input.template.json`
+7. `fruits/01-content-personalization/data/music-candidates.example.json`
 8. 사용자 취향 파일
 9. 최신 후보 JSON
 

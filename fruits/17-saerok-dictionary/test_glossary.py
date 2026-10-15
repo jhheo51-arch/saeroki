@@ -15,7 +15,7 @@ from glossary import (
     validate,
 )
 
-CORE_JS = ROOT / "glossary" / "saerok-core.js"
+CORE_JS = ROOT / "web" / "saerok-core.js"
 NODE = shutil.which("node")
 
 

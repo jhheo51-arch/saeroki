@@ -1,7 +1,7 @@
 """새록 사전 용어집 검사와 화면용 데이터 파일 생성.
 
 python glossary.py check   # 형식·출처·칸별 개수 검사
-python glossary.py build   # glossary/data.js 다시 만들기
+python glossary.py build   # web/data.js 다시 만들기
 """
 
 from __future__ import annotations
@@ -13,9 +13,9 @@ from collections import Counter
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
-CATALOG_PATH = ROOT / "data" / "glossary" / "catalog.json"
-TERMS_PATH = ROOT / "data" / "glossary" / "terms.json"
-DATA_JS_PATH = ROOT / "glossary" / "data.js"
+CATALOG_PATH = ROOT / "data" / "catalog.json"
+TERMS_PATH = ROOT / "data" / "terms.json"
+DATA_JS_PATH = ROOT / "web" / "data.js"
 
 LEVELS = ("입문", "실무", "심화")
 STATUSES = ("verified", "needs_check")
@@ -149,7 +149,7 @@ def summary(catalog: dict, terms: list[dict]) -> dict:
 def render_data_js(catalog: dict, terms: list[dict]) -> str:
     payload = json.dumps({"catalog": catalog, "terms": terms}, ensure_ascii=False, indent=1)
     return (
-        "/* 자동 생성 파일입니다. data/glossary/*.json을 고친 뒤 `python glossary.py build`로 다시 만듭니다. */\n"
+        "/* 자동 생성 파일입니다. data/*.json을 고친 뒤 `python glossary.py build`로 다시 만듭니다. */\n"
         f"window.SAEROK_DATA = {payload};\n"
     )
 

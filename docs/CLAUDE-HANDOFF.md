@@ -10,17 +10,17 @@ git pull origin main
 
 그다음 Claude Code에 아래 파일을 먼저 읽도록 요청합니다.
 
-- `claude/PROJECT-INSTRUCTIONS.md`
+- `fruits/01-content-personalization/claude/PROJECT-INSTRUCTIONS.md`
 - `docs/PRD-v1.6.md`
 - `docs/PRD-v1.5.md`
 - `AGENT-SPEC.md`
-- `claude/session-input.template.json`
+- `fruits/01-content-personalization/claude/session-input.template.json`
 
 ## Claude 웹앱 프로젝트를 사용할 때
 
 Claude 웹앱 프로젝트는 이 저장소의 Git 브랜치를 자동으로 당겨오는 환경으로 가정하지 않습니다. Codex가 push한 뒤 다음 파일을 Claude 프로젝트에 최신본으로 업로드합니다.
 
-- `claude/PROJECT-INSTRUCTIONS.md`
+- `fruits/01-content-personalization/claude/PROJECT-INSTRUCTIONS.md`
 - `docs/PRD-v1.6.md`
 - `docs/PRD-v1.5.md`
 - `AGENT-SPEC.md`

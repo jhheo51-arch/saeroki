@@ -1,4 +1,4 @@
-/* 자동 생성 파일입니다. data/glossary/*.json을 고친 뒤 `python glossary.py build`로 다시 만듭니다. */
+/* 자동 생성 파일입니다. data/*.json을 고친 뒤 `python glossary.py build`로 다시 만듭니다. */
 window.SAEROK_DATA = {
  "catalog": {
   "version": 1,

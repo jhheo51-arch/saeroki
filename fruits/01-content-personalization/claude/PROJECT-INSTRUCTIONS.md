@@ -7,9 +7,9 @@
 1. `docs/PRD-v1.6.md`
 2. `docs/PRD-v1.5.md`
 3. `AGENT-SPEC.md`
-4. `data/sources.example.json`
-5. `claude/session-input.template.json` 또는 사용자가 제공한 최신 입력 파일
-6. `data/music-candidates.example.json` 또는 사용자가 제공한 최신 음악 후보 파일
+4. `fruits/01-content-personalization/data/sources.example.json`
+5. `fruits/01-content-personalization/claude/session-input.template.json` 또는 사용자가 제공한 최신 입력 파일
+6. `fruits/01-content-personalization/data/music-candidates.example.json` 또는 사용자가 제공한 최신 음악 후보 파일
 
 ## 역할
 

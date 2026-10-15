@@ -90,7 +90,7 @@
 검수한 기본 용어집을 먼저 만들고, AI 보충은 다음 단계에 붙입니다.
 
 - 규모: 산업×직무 한 칸에 30개(입문 10, 실무 15, 심화 5 정도). 2개 산업 × 4개 직무로 최대 240개이며, 여러 칸에 걸치는 용어는 하나로 합칩니다.
-- 위치: `data/glossary/catalog.json`(산업과 직무 목록), `data/glossary/terms.json`(용어)
+- 위치: `fruits/17-saerok-dictionary/data/catalog.json`(산업과 직무 목록), `fruits/17-saerok-dictionary/data/terms.json`(용어)
 
 용어 하나의 형식 초안은 다음과 같습니다.
 
@@ -123,7 +123,7 @@
 
 ## 10. 화면
 
-저장소 안 HTML 파일(`glossary/index.html`)을 브라우저로 엽니다. 저장소가 비공개라 GitHub Pages는 쓰지 않습니다.
+저장소 안 HTML 파일(`fruits/17-saerok-dictionary/web/index.html`)을 브라우저로 엽니다. 저장소가 비공개라 GitHub Pages는 쓰지 않습니다.
 
 `산업·직무 선택 → 오늘의 용어 → 검색창(단어 또는 목적) → 사전 항목 또는 10개 묶음 → 저장 → 내 단어장`
 

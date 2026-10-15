@@ -192,7 +192,7 @@
   var DATA = window.SAEROK_DATA;
 
   if (!Core || !DATA || !DATA.catalog || !Array.isArray(DATA.terms)) {
-    main.innerHTML = '<div class="notice">용어집을 불러오지 못했습니다. <code>glossary/data.js</code>와 <code>saerok-core.js</code>가 이 파일과 같은 폴더에 있는지 확인하고, 없으면 저장소에서 <code>python glossary.py build</code>를 실행해 주세요.</div>';
+    main.innerHTML = '<div class="notice">용어집을 불러오지 못했습니다. <code>data.js</code>와 <code>saerok-core.js</code>가 이 파일과 같은 <code>web</code> 폴더에 있는지 확인하고, 없으면 <code>fruits/17-saerok-dictionary</code> 폴더에서 <code>python glossary.py build</code>를 실행해 주세요.</div>';
     return;
   }
 

@@ -88,13 +88,15 @@
 
 ### 열매 12개
 
+열매마다 [`fruits/`](fruits) 아래에 폴더 하나를 둡니다. 씨앗 폴더에는 아직 설명만 있습니다.
+
 | 갈래 | 열매 |
 |---|---|
-| 추천 | 🌸 1 콘텐츠 개인화 · 🌱 6 레시피 · 🌱 11 도서 |
-| 기획 | 🌱 3 마케팅 전략 · 🌱 4 PRD 설계 지원 |
-| 조사와 분석 | 🌱 7 금융 · 🌱 8 미디어 트렌드 · 🌱 9 법률 문서(10번 통합) · 🌱 15 심층 연구 |
-| 데이터 | 🌱 5 데이터 시각화 · 🌱 16 자연어 SQL |
-| 학습 | 🌸 17 새록 사전(산업별 용어 사전) |
+| 추천 | 🌸 [1 콘텐츠 개인화](fruits/01-content-personalization) · 🌱 [6 레시피](fruits/06-recipe) · 🌱 [11 도서](fruits/11-book-recommendation) |
+| 기획 | 🌱 [3 마케팅 전략](fruits/03-marketing-strategy) · 🌱 [4 PRD 설계 지원](fruits/04-prd-assistant) |
+| 조사와 분석 | 🌱 [7 금융](fruits/07-finance) · 🌱 [8 미디어 트렌드](fruits/08-media-trend) · 🌱 [9 법률 문서(10번 통합)](fruits/09-legal-document) · 🌱 [15 심층 연구](fruits/15-deep-research) |
+| 데이터 | 🌱 [5 데이터 시각화](fruits/05-data-visualization) · 🌱 [16 자연어 SQL](fruits/16-natural-language-sql) |
+| 학습 | 🌸 [17 새록 사전(산업별 용어 사전)](fruits/17-saerok-dictionary) |
 
 ### 뿌리 4개
 
@@ -105,101 +107,45 @@
 | 🌸 13 계획 후 실행 | 실행 계획을 세우고 단계를 기록합니다 |
 | 🌸 14 결과 자기 검토 | 결과를 스스로 확인하고 고칩니다 |
 
-번호는 처음 정한 에이전트 번호입니다. 1번부터 16번까지의 원래 목록과 나중에 더한 17번은 [PRD v01](docs/PRD-v01.md)에, 현재 상태는 [PRD v1.5](docs/PRD-v1.5.md)에 보관합니다.
+번호는 처음 정한 에이전트 번호입니다. 1번부터 16번까지의 원래 목록과 나중에 더한 17번은 [PRD v01](docs/PRD-v01.md)에, 현재 상태는 [PRD v1.5](docs/PRD-v1.5.md)에 보관합니다. 뿌리 12~14는 지금 [1번 열매](fruits/01-content-personalization) 코드 안에 있으며, 다른 열매가 함께 쓰게 되면 따로 떼어 냅니다.
 
 ## 프로젝트 지도
 
+```text
+saeroki/
+├─ fruits/                 열매 12개, 열매마다 폴더 하나
+│  ├─ 01-content-personalization/   🌸 코드·데이터·검사·Claude 지침
+│  ├─ 17-saerok-dictionary/         🌸 사전 화면(web/)·용어집(data/)·검사
+│  └─ 03 ~ 16 …                     🌱 설명만 있는 씨앗 폴더
+├─ docs/                   PRD와 Claude 이어하기 안내
+├─ assets/ · data/growth.json · growth.py   자라는 새록이 그림과 성장 기록(Actions가 갱신)
+├─ AGENT-SPEC.md           모든 열매가 지킬 공통 원칙
+└─ AGENTS.md · CLAUDE.md   Codex·Claude 작업 안내
+```
+
 | 위치 | 내용 |
 |---|---|
+| [`fruits/01-content-personalization`](fruits/01-content-personalization) | 1번 콘텐츠 개인화. 실행 방법은 폴더 안 README |
+| [`fruits/17-saerok-dictionary`](fruits/17-saerok-dictionary) | 17번 새록 사전. 화면은 [`web/index.html`](fruits/17-saerok-dictionary/web/index.html) |
 | [`docs/PRD-v01.md`](docs/PRD-v01.md) | 제품 방향, 열매 12개와 뿌리 4개의 원래 목록, 위험과 개발 순서 |
-| [`docs/PRD-v1.5.md`](docs/PRD-v1.5.md) | 현재 구현 범위, 실행 방법, 열매와 뿌리의 씨앗·꽃·열매 상태, Claude 이어하기 안내 |
+| [`docs/PRD-v1.5.md`](docs/PRD-v1.5.md) | 현재 구현 범위, 열매와 뿌리의 씨앗·꽃·열매 상태, Claude 이어하기 안내 |
 | [`docs/PRD-v1.6.md`](docs/PRD-v1.6.md) | 1번 콘텐츠 개인화 에이전트의 스무고개 확정 설계 |
 | [`docs/PRD-v1.7.md`](docs/PRD-v1.7.md) | 17번 열매 새록 사전(산업별 용어 사전)의 스무고개 확정 설계 |
-| [`glossary/index.html`](glossary/index.html) | 새록 사전 화면. 브라우저로 바로 엽니다 |
-| [`glossary.py`](glossary.py) | 새록 사전 용어집 검사와 화면용 데이터(`glossary/data.js`) 생성 |
-| [`data/glossary/`](data/glossary) | 새록 사전 산업·직무 목록(`catalog.json`)과 출처를 붙인 용어집(`terms.json`) |
 | [`docs/CLAUDE-HANDOFF.md`](docs/CLAUDE-HANDOFF.md) | Codex push 후 Claude Code pull 또는 웹앱 프로젝트 업로드 절차 |
-| [`claude/PROJECT-INSTRUCTIONS.md`](claude/PROJECT-INSTRUCTIONS.md) | Claude 프로젝트에서 사용할 새록이 지침 |
-| [`claude/session-input.template.json`](claude/session-input.template.json) | 시간대, 날씨, 취향과 후보 입력 양식 |
 | [`AGENT-SPEC.md`](AGENT-SPEC.md) | 모든 에이전트가 함께 지킬 판단 원칙 |
-| [`AGENTS.md`](AGENTS.md) | Codex 작업 안내 |
-| [`CLAUDE.md`](CLAUDE.md) | Claude 작업 안내 |
-| [`saeroki.py`](saeroki.py) | 취향 저장부터 자기 검토까지의 공통 기반 |
-| [`saeroki_cli.py`](saeroki_cli.py) | 터미널에서 전체 흐름을 실행하는 도구 |
-| [`source_collector.py`](source_collector.py) | 공개 웹페이지 메타데이터 확인 |
+| [`AGENTS.md`](AGENTS.md) · [`CLAUDE.md`](CLAUDE.md) | Codex·Claude 작업 안내 |
 | [`growth.py`](growth.py) | 성장 점수, 100레벨 계산과 픽셀 묘목 SVG 생성 |
-| [`weather.py`](weather.py) | 서울 현재 날씨와 날씨 코드 확인 |
-| [`data/candidates.example.json`](data/candidates.example.json) | 실제 자료가 아닌 기능 확인용 후보 |
-| [`data/music-candidates.example.json`](data/music-candidates.example.json) | API 없이 직접 관리하는 YouTube Music 후보 양식 |
-| [`data/sources.example.json`](data/sources.example.json) | 공개 출처와 수집 허용 범위 초안 |
-| [`data/insight-bookmarks.example.json`](data/insight-bookmarks.example.json) | 이미지에서 옮긴 INSIGHT 북마크 이름 목록 |
+| [`test_fruits.py`](test_fruits.py) | 루트에서 열매별 검사를 함께 돌리는 연결 파일 |
 
 ## 직접 확인하기
 
-Python이 설치된 터미널에서 다음 명령을 실행합니다.
+Python이 설치된 터미널에서 저장소 루트에 서서 다음 명령을 실행하면 성장 계산과 모든 열매의 검사를 함께 돌립니다.
 
 ```powershell
 python -m unittest -v
 ```
 
-검사는 이미 아는 항목과 제외 태그를 거르는지, 인기도 자료가 없을 때 덜 유명하다고 단정하지 않는지 확인합니다.
-
-### 새록 사전 열기
-
-[`glossary/index.html`](glossary/index.html)을 브라우저로 바로 엽니다. 서버가 필요 없습니다. 산업과 직무를 고르면 오늘의 용어, 목적 버튼(입사 첫 주·면접 준비·지표 이해)과 검색을 쓸 수 있습니다. 내 단어장과 아직 없는 용어 기록은 이 브라우저에만 저장됩니다.
-
-용어를 고치거나 늘릴 때는 `data/glossary/terms.json`을 수정한 뒤 검사하고 화면용 데이터를 다시 만듭니다.
-
-```powershell
-python glossary.py check
-python glossary.py build
-```
-
-뜻마다 직접 확인한 출처와 확인 날짜를 붙입니다. 출처를 찾지 못한 뜻은 `status`를 `needs_check`로 두면 화면에 `확인 필요`로 표시됩니다.
-
-### 확인된 공개 출처에서 후보 만들기
-
-출처 목록에서 `status`가 `confirmed_public`인 주소만 읽어 제목과 게시 시각을 후보 파일로 만듭니다. 로그인이나 구독이 필요한 주소, 아직 확인하지 않은 주소는 자동으로 건너뜁니다.
-
-```powershell
-python saeroki_cli.py collect --sources data/sources.example.json --output data/candidates.collected.local.json
-```
-
-`data/candidates.collected.local.json`은 실행 때 만들어지는 로컬 결과라 GitHub에 올리지 않습니다. 수집에 실패한 주소는 명령 결과의 `errors`에 남깁니다.
-
-### 첫 추천 흐름 실행
-
-아래 명령은 기능 확인용 취향 파일을 만들고 예시 후보를 추천합니다. `data/profile.local.json`과 실행 기록은 GitHub에 올라가지 않도록 제외했습니다.
-
-```powershell
-python saeroki_cli.py init-profile --output data/profile.local.json --interest AI --interest 데이터 --exclude 광고
-python saeroki_cli.py recommend --profile data/profile.local.json --candidates data/candidates.example.json --log data/run-log.jsonl
-python saeroki_cli.py feedback --profile data/profile.local.json --candidate example-data-story --action saved
-```
-
-시간대별 추천 구성은 서울 시간 기준으로 아래처럼 실행할 수 있습니다. `--at`을 생략하면 현재 시각을 사용합니다.
-
-```powershell
-python saeroki_cli.py scheduled-recommend --profile data/profile.local.json --candidates data/candidates.example.json --at 2026-10-15T08:00:00+09:00
-python saeroki_cli.py scheduled-recommend --profile data/profile.local.json --candidates data/candidates.example.json --live-weather --at 2026-10-15T08:00:00+09:00
-python saeroki_cli.py scheduled-recommend --profile data/profile.local.json --candidates data/candidates.example.json --music-candidates data/music-candidates.example.json --live-weather --at 2026-10-15T08:00:00+09:00
-```
-
-음악 후보는 `data/music-candidates.example.json`에 직접 추가합니다. 각 항목에는 `content_type`을 `music`으로 쓰고 `music.youtube.com` 또는 YouTube 주소를 넣어야 합니다. 후보를 새록이가 자동으로 검색하지 않으므로 API 키가 필요하지 않습니다.
-
-```json
-{
-  "id": "artist-song",
-  "title": "곡 제목",
-  "url": "https://music.youtube.com/watch?v=VIDEO_ID",
-  "tags": ["발라드", "비"],
-  "source": "공식 아티스트 채널",
-  "checked_at": "2026-10-15T08:00:00+09:00",
-  "content_type": "music"
-}
-```
-
-현재 후보 자료는 흐름을 확인하기 위한 가상 예시입니다. 실제 기술 블로그와 뉴스레터를 수집한 결과가 아닙니다.
+열매별 실행 방법은 각 폴더의 README에 있습니다.
 
 ## 다음 잎사귀
 

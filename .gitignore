@@ -4,3 +4,5 @@ __pycache__/
 .venv/
 data/*.local.json
 data/*.jsonl
+fruits/*/data/*.local.json
+fruits/*/data/*.jsonl
