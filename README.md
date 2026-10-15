@@ -49,6 +49,7 @@
 |---|---|
 | [`docs/PRD-v01.md`](docs/PRD-v01.md) | 제품 방향, 16개 후보, 위험과 개발 순서 |
 | [`docs/PRD-v1.5.md`](docs/PRD-v1.5.md) | 현재 구현 범위, 실행 방법, 16개 상태와 Claude 이어하기 안내 |
+| [`docs/PRD-v1.6.md`](docs/PRD-v1.6.md) | 1번 콘텐츠 개인화 에이전트의 스무고개 확정 설계 |
 | [`AGENT-SPEC.md`](AGENT-SPEC.md) | 모든 에이전트가 함께 지킬 판단 원칙 |
 | [`AGENTS.md`](AGENTS.md) | Codex 작업 안내 |
 | [`CLAUDE.md`](CLAUDE.md) | Claude 작업 안내 |
