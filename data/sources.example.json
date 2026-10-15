@@ -42,5 +42,29 @@
     "access_status": "not_inspected",
     "feed_status": "unknown",
     "notes": "첨부 이미지에는 폴더 이름만 보입니다. 내부 링크를 받은 뒤 추가합니다."
+  },
+  {
+    "id": "aws-korea-tech-rss",
+    "name": "AWS 한국 기술 블로그",
+    "url": "https://aws.amazon.com/ko/blogs/tech/feed/",
+    "kind": "rss",
+    "content_type": "technology_blog",
+    "collection_mode": "rss",
+    "category": "기술 블로그",
+    "access_status": "confirmed_public",
+    "feed_status": "confirmed",
+    "notes": "AWS 공식 한국 기술 블로그 RSS. 확인일 2026-10-15."
+  },
+  {
+    "id": "aws-korea-news-rss",
+    "name": "AWS 한국 블로그",
+    "url": "https://aws.amazon.com/ko/blogs/korea/feed/",
+    "kind": "rss",
+    "content_type": "technology_blog",
+    "collection_mode": "rss",
+    "category": "기술 블로그",
+    "access_status": "confirmed_public",
+    "feed_status": "confirmed",
+    "notes": "AWS 공식 한국 블로그 RSS. 확인일 2026-10-15."
   }
 ]
