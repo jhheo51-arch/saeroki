@@ -1,26 +1,15 @@
 {
-<<<<<<< Updated upstream
-  "views_total": null,
-  "commits": 38,
-  "score": 38,
-  "stage": {
-    "level": 2,
-    "name": "묘목"
-  },
-  "updated_at": "2026-10-15T08:20:21+00:00"
-=======
   "visitors_total": null,
   "stars": 0,
   "work": {
-    "commits": 37,
+    "commits": 38,
     "active_days": 2,
-    "points": 79
+    "points": 84
   },
-  "score": 79,
+  "score": 84,
   "stage": {
-    "level": 7,
+    "level": 8,
     "name": "새싹"
   },
-  "updated_at": "2026-10-15T08:33:21+00:00"
->>>>>>> Stashed changes
+  "updated_at": "2026-10-15T08:36:45+00:00"
 }
