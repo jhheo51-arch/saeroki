@@ -6,7 +6,7 @@
   <img src="https://img.shields.io/badge/PRD-v1.5-40916C" alt="PRD v1.5">
   <img src="https://img.shields.io/badge/%EC%97%B4%EB%A7%A4-12-D97757" alt="열매 12개">
   <img src="https://img.shields.io/badge/%EB%BF%8C%EB%A6%AC-4-8A5A36" alt="뿌리 4개">
-  <img src="https://img.shields.io/badge/Tests-43_passing-31572C" alt="자동 검사 43개 통과">
+  <img src="https://img.shields.io/badge/Tests-44_passing-31572C" alt="자동 검사 44개 통과">
   <img src="https://img.shields.io/badge/Claude_%2B_Codex-shared_rules-40916C" alt="Claude와 Codex 공통 규칙">
 </p>
 
@@ -126,7 +126,7 @@ saeroki/
 | 위치 | 내용 |
 |---|---|
 | [`fruits/01-content-personalization`](fruits/01-content-personalization) | 1번 콘텐츠 개인화. 실행 방법은 폴더 안 README |
-| [`fruits/17-saerok-dictionary`](fruits/17-saerok-dictionary) | 17번 새록 사전. 화면은 [`web/index.html`](fruits/17-saerok-dictionary/web/index.html) |
+| [`fruits/17-saerok-dictionary`](fruits/17-saerok-dictionary) | 17번 새록 사전. 웹에서 바로 열기: [https://jhheo51-arch.github.io/saeroki/](https://jhheo51-arch.github.io/saeroki/) |
 | [`docs/PRD-v01.md`](docs/PRD-v01.md) | 제품 방향, 열매 12개와 뿌리 4개의 원래 목록, 위험과 개발 순서 |
 | [`docs/PRD-v1.5.md`](docs/PRD-v1.5.md) | 현재 구현 범위, 열매와 뿌리의 씨앗·꽃·열매 상태, Claude 이어하기 안내 |
 | [`docs/PRD-v1.6.md`](docs/PRD-v1.6.md) | 1번 콘텐츠 개인화 에이전트의 스무고개 확정 설계 |
@@ -155,6 +155,8 @@ python -m unittest -v
 - [x] 17번 새록 사전 스무고개 설계 확정(PRD v1.7)
 - [x] 새록 사전 첫 버전: 출처를 붙인 용어 132개와 사전 웹 화면
 - [x] 새록 사전 출처 재검토: 뜻 137개 중 113개에 공식 문서 출처, 나머지 24개는 기업 자료 기준임을 화면에 표시
+- [x] 새록 사전 금융·증권 산업 추가: 금융 용어 46개, 전체 용어 178개
+- [x] 새록 사전 GitHub Pages 배포
 - [ ] 새록 사전 사용자 확인
 - [ ] 새록 사전 Claude API 보충
 - [x] Claude와 Codex가 함께 읽는 공통 행동 원칙

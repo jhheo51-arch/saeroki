@@ -12,6 +12,11 @@ window.SAEROK_DATA = {
     "id": "platform",
     "name": "IT·플랫폼 서비스",
     "description": "앱·웹 서비스, 중개 플랫폼, SaaS"
+   },
+   {
+    "id": "finance",
+    "name": "금융·증권",
+    "description": "증권·은행·핀테크·연금. 용어는 학습용 설명이며 투자·법률 판단이 아닙니다"
    }
   ],
   "roles": [
@@ -114,7 +119,8 @@ window.SAEROK_DATA = {
     {
      "industries": [
       "ecommerce",
-      "platform"
+      "platform",
+      "finance"
      ],
      "roles": [
       "marketing",
@@ -171,7 +177,8 @@ window.SAEROK_DATA = {
     {
      "industries": [
       "ecommerce",
-      "platform"
+      "platform",
+      "finance"
      ],
      "roles": [
       "marketing",
@@ -395,7 +402,8 @@ window.SAEROK_DATA = {
     {
      "industries": [
       "ecommerce",
-      "platform"
+      "platform",
+      "finance"
      ],
      "roles": [
       "marketing",
@@ -452,7 +460,8 @@ window.SAEROK_DATA = {
     {
      "industries": [
       "ecommerce",
-      "platform"
+      "platform",
+      "finance"
      ],
      "roles": [
       "marketing",
@@ -681,7 +690,8 @@ window.SAEROK_DATA = {
     {
      "industries": [
       "ecommerce",
-      "platform"
+      "platform",
+      "finance"
      ],
      "roles": [
       "marketing",
@@ -745,7 +755,8 @@ window.SAEROK_DATA = {
     {
      "industries": [
       "ecommerce",
-      "platform"
+      "platform",
+      "finance"
      ],
      "roles": [
       "marketing",
@@ -809,7 +820,8 @@ window.SAEROK_DATA = {
     {
      "industries": [
       "ecommerce",
-      "platform"
+      "platform",
+      "finance"
      ],
      "roles": [
       "marketing",
@@ -1949,7 +1961,8 @@ window.SAEROK_DATA = {
    "senses": [
     {
      "industries": [
-      "platform"
+      "platform",
+      "finance"
      ],
      "roles": [
       "data",
@@ -2012,7 +2025,8 @@ window.SAEROK_DATA = {
    "senses": [
     {
      "industries": [
-      "platform"
+      "platform",
+      "finance"
      ],
      "roles": [
       "data",
@@ -2076,7 +2090,8 @@ window.SAEROK_DATA = {
     {
      "industries": [
       "ecommerce",
-      "platform"
+      "platform",
+      "finance"
      ],
      "roles": [
       "data",
@@ -2546,7 +2561,8 @@ window.SAEROK_DATA = {
     {
      "industries": [
       "ecommerce",
-      "platform"
+      "platform",
+      "finance"
      ],
      "roles": [
       "data",
@@ -2617,7 +2633,8 @@ window.SAEROK_DATA = {
     {
      "industries": [
       "ecommerce",
-      "platform"
+      "platform",
+      "finance"
      ],
      "roles": [
       "data",
@@ -2677,7 +2694,8 @@ window.SAEROK_DATA = {
     {
      "industries": [
       "ecommerce",
-      "platform"
+      "platform",
+      "finance"
      ],
      "roles": [
       "data",
@@ -2741,7 +2759,8 @@ window.SAEROK_DATA = {
     {
      "industries": [
       "ecommerce",
-      "platform"
+      "platform",
+      "finance"
      ],
      "roles": [
       "data",
@@ -3566,7 +3585,8 @@ window.SAEROK_DATA = {
     {
      "industries": [
       "ecommerce",
-      "platform"
+      "platform",
+      "finance"
      ],
      "roles": [
       "pm"
@@ -3626,7 +3646,8 @@ window.SAEROK_DATA = {
     {
      "industries": [
       "ecommerce",
-      "platform"
+      "platform",
+      "finance"
      ],
      "roles": [
       "pm",
@@ -3690,7 +3711,8 @@ window.SAEROK_DATA = {
     {
      "industries": [
       "ecommerce",
-      "platform"
+      "platform",
+      "finance"
      ],
      "roles": [
       "pm"
@@ -3773,7 +3795,8 @@ window.SAEROK_DATA = {
     {
      "industries": [
       "ecommerce",
-      "platform"
+      "platform",
+      "finance"
      ],
      "roles": [
       "pm"
@@ -5910,7 +5933,8 @@ window.SAEROK_DATA = {
     {
      "industries": [
       "ecommerce",
-      "platform"
+      "platform",
+      "finance"
      ],
      "roles": [
       "cx",
@@ -5969,7 +5993,8 @@ window.SAEROK_DATA = {
     {
      "industries": [
       "ecommerce",
-      "platform"
+      "platform",
+      "finance"
      ],
      "roles": [
       "cx"
@@ -6331,7 +6356,8 @@ window.SAEROK_DATA = {
     {
      "industries": [
       "ecommerce",
-      "platform"
+      "platform",
+      "finance"
      ],
      "roles": [
       "cx",
@@ -6468,7 +6494,8 @@ window.SAEROK_DATA = {
     {
      "industries": [
       "ecommerce",
-      "platform"
+      "platform",
+      "finance"
      ],
      "roles": [
       "cx",
@@ -8202,6 +8229,2815 @@ window.SAEROK_DATA = {
     {
      "term": "반품",
      "difference": "반품은 고객이 상품을 돌려보내는 거래 행위이고, 역물류는 그 상품을 실제로 옮기고 처리하는 물류 과정입니다."
+    }
+   ]
+  },
+  {
+   "id": "deposit_balance",
+   "term": "예수금",
+   "original": "Deposit (Cash Balance)",
+   "korean": "예수금",
+   "aliases": [
+    "예탁금",
+    "주문가능금액",
+    "D+2 예수금",
+    "위탁자예수금",
+    "계좌 현금"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "data",
+      "marketing",
+      "cx"
+     ],
+     "level": "입문",
+     "importance": 4,
+     "definition": "증권 계좌에 넣어 두었거나 주식을 판 뒤 들어온 현금으로, 아직 주식 등을 사는 데 쓰지 않은 돈입니다. 이 돈으로 주문을 내며, 법적으로는 증권사가 투자자에게서 맡아 둔 투자자예탁금의 한 종류로 분류됩니다.",
+     "formula": null,
+     "examples": [
+      "매도 체결 후 예수금이 D+2에 들어온다는 안내가 없어서 '돈이 왜 안 들어오냐'는 문의가 늘었어요.",
+      "예수금만 쌓아 두고 거래 안 하는 휴면 성향 고객을 따로 세그먼트로 뽑아 볼게요."
+     ],
+     "sources": [
+      {
+       "title": "[시사경제용어사전] 미수거래 | 기획재정부",
+       "url": "https://mofe.go.kr/sisa/dictionary/detail?idx=3207",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
+      {
+       "title": "금융용어사전: 투자자예탁금 | 금융소비자 정보포털 파인",
+       "url": "https://fine.fss.or.kr/fine/fnctip/fncDicary/list.do?menuNo=900021&searchCnd=2&searchStr=%ED%88%AC%EC%9E%90%EC%9E%90%EC%98%88%ED%83%81%EA%B8%88",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "증거금",
+     "note": "주문을 낼 때 예수금 중 일부가 증거금으로 묶입니다."
+    },
+    {
+     "term": "예금자보호",
+     "note": "증권 계좌에 현금으로 남은 예수금이 보호 대상에 들어가는지 함께 확인합니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "은행 예금",
+     "difference": "은행 예금은 이자를 받는 저축 상품이고, 예수금은 거래를 위해 증권 계좌에 대기 중인 현금입니다."
+    }
+   ]
+  },
+  {
+   "id": "etf",
+   "term": "ETF",
+   "original": "Exchange Traded Fund",
+   "korean": "상장지수펀드",
+   "aliases": [
+    "이티에프",
+    "상장지수집합투자기구",
+    "인덱스 ETF",
+    "상장지수 펀드"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "data",
+      "marketing",
+      "cx"
+     ],
+     "level": "입문",
+     "importance": 5,
+     "definition": "특정 지수나 자산 가격의 움직임을 따라가도록 만든 펀드를 거래소에 상장해, 주식처럼 실시간으로 사고팔 수 있게 한 상품입니다. 적은 돈으로 여러 종목에 나눠 투자하는 효과가 있고, 일반 펀드보다 보수가 낮은 편입니다.",
+     "formula": null,
+     "examples": [
+      "ETF 상세 화면에 PDF(구성 종목) 탭을 넣자는 요청이 CX 쪽에서 계속 올라와요.",
+      "이번 달 신규 매수 상위 종목 중 ETF 비중이 절반을 넘었어요."
+     ],
+     "sources": [
+      {
+       "title": "금융용어사전: 상장지수집합투자기구(ETF) | 금융소비자 정보포털 파인",
+       "url": "https://fine.fss.or.kr/fine/fnctip/fncDicary/list.do?menuNo=900021&searchCnd=2&searchStr=%EC%83%81%EC%9E%A5%EC%A7%80%EC%88%98",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
+      {
+       "title": "경제용어사전: 상장지수펀드(ETF) | 한국은행",
+       "url": "https://www.bok.or.kr/portal/ecEdu/ecWordDicary/search.do?menuNo=200688&query=%EC%83%81%EC%9E%A5%EC%A7%80%EC%88%98%ED%8E%80%EB%93%9C&ecWordSn=289",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "펀드",
+     "note": "ETF는 펀드의 한 종류로, 거래소 상장 여부가 가장 큰 차이입니다."
+    },
+    {
+     "term": "리밸런싱",
+     "note": "지수 구성이 바뀌면 ETF도 구성 종목 비중을 다시 맞춥니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "펀드",
+     "difference": "일반 펀드는 하루 한 번 정해진 기준가로 가입·환매하지만, ETF는 장중 시장 가격으로 바로 거래됩니다."
+    }
+   ]
+  },
+  {
+   "id": "fund",
+   "term": "펀드",
+   "original": "Fund (Collective Investment Scheme)",
+   "korean": "집합투자기구",
+   "aliases": [
+    "펀드",
+    "투자신탁",
+    "집합투자",
+    "공모펀드"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "data",
+      "marketing",
+      "cx"
+     ],
+     "level": "입문",
+     "importance": 4,
+     "definition": "여러 투자자에게서 모은 돈을 자산운용사가 주식·채권·부동산 등에 대신 투자하고, 그 결과를 투자한 몫만큼 나눠 주는 금융상품입니다. 법률상 이름은 집합투자기구이며, 운용 성과에 따라 손익이 그대로 투자자에게 돌아갑니다.",
+     "formula": null,
+     "examples": [
+      "펀드 환매 신청 후 입금일 안내가 화면마다 달라서 기준을 하나로 맞춰야 해요.",
+      "적립식 펀드 자동이체 해지율을 월별로 뽑아 주실 수 있을까요?"
+     ],
+     "sources": [
+      {
+       "title": "금융용어사전: 집합투자기구(펀드) | 금융소비자 정보포털 파인",
+       "url": "https://fine.fss.or.kr/fine/fnctip/fncDicary/list.do?menuNo=900021&searchCnd=2&searchStr=%EC%A7%91%ED%95%A9%ED%88%AC%EC%9E%90%EA%B8%B0%EA%B5%AC",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
+      {
+       "title": "경제용어사전: 펀드 | 한국은행",
+       "url": "https://www.bok.or.kr/portal/ecEdu/ecWordDicary/search.do?menuNo=200688&query=%ED%8E%80%EB%93%9C&ecWordSn=623",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "ETF",
+     "note": "상장되어 주식처럼 거래되는 펀드입니다."
+    },
+    {
+     "term": "AUM",
+     "note": "운용사의 펀드 규모를 말할 때 운용자산(AUM)을 씁니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "예금",
+     "difference": "예금은 원금과 약정 이자를 지급하지만, 펀드는 실적에 따라 원금 손실이 날 수 있고 예금자보호 대상이 아닙니다."
+    }
+   ]
+  },
+  {
+   "id": "irp",
+   "term": "IRP",
+   "original": "Individual Retirement Pension",
+   "korean": "개인형 퇴직연금",
+   "aliases": [
+    "아이알피",
+    "개인퇴직계좌",
+    "개인형퇴직연금",
+    "IRP 계좌"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "data",
+      "marketing",
+      "cx"
+     ],
+     "level": "입문",
+     "importance": 5,
+     "definition": "이직하거나 퇴직할 때 받은 퇴직급여를 모아 두거나 본인이 돈을 더 넣어 운용하다가 노후에 연금으로 받을 수 있게 한 개인 퇴직연금 계좌입니다. 넣은 돈은 연금계좌 세액공제 대상에 포함되며, 공제 한도와 비율은 해마다 세법에 따라 달라질 수 있습니다.",
+     "formula": null,
+     "examples": [
+      "IRP 신규 가입 퍼널에서 본인인증 단계 이탈이 커요.",
+      "연말정산 시즌 앞두고 IRP 추가 납입 안내 푸시 문구 검수 부탁드려요."
+     ],
+     "sources": [
+      {
+       "title": "금융용어사전: 개인퇴직계좌(IRP) | 금융소비자 정보포털 파인",
+       "url": "https://fine.fss.or.kr/fine/fnctip/fncDicary/list.do?menuNo=900021&searchCnd=2&searchStr=%EA%B0%9C%EC%9D%B8%ED%87%B4%EC%A7%81%EA%B3%84%EC%A2%8C",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
+      {
+       "title": "세액공제(연금계좌 세액공제) | 국세청",
+       "url": "https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?cntntsId=7875",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "DB형·DC형",
+     "note": "회사 퇴직연금 제도와 개인 IRP가 어떻게 이어지는지 함께 봐야 합니다."
+    },
+    {
+     "term": "세액공제",
+     "note": "IRP 납입액은 연금계좌 세액공제 대상입니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "연금저축",
+     "difference": "둘 다 연금계좌지만 IRP는 퇴직연금 제도에 속하고, 연금저축은 소득세법상 개인연금 상품입니다."
+    }
+   ]
+  },
+  {
+   "id": "pension_savings",
+   "term": "연금저축",
+   "original": "Pension Savings",
+   "korean": "연금저축",
+   "aliases": [
+    "연금저축펀드",
+    "연금저축보험",
+    "연금저축계좌",
+    "세제적격 개인연금"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "data",
+      "marketing",
+      "cx"
+     ],
+     "level": "입문",
+     "importance": 4,
+     "definition": "노후에 연금으로 받는 것을 목적으로 돈을 넣는 개인연금 계좌로, 납입액에 세액공제 혜택이 있는 세제적격 상품입니다. 펀드·보험 등 형태가 있고, 정해진 나이와 가입 기간 요건을 채운 뒤 연금으로 받으면 연금소득으로 과세됩니다.",
+     "formula": null,
+     "examples": [
+      "연금저축 계좌 이전(타사 → 당사) 신청 건수가 지난달보다 늘었어요.",
+      "연금저축펀드 상품 비교 화면에 수수료 항목을 먼저 보여 주자는 의견이 있어요."
+     ],
+     "sources": [
+      {
+       "title": "금융용어사전: 개인연금 | 금융소비자 정보포털 파인",
+       "url": "https://fine.fss.or.kr/fine/fnctip/fncDicary/list.do?menuNo=900021&searchCnd=2&searchStr=%EA%B0%9C%EC%9D%B8%EC%97%B0%EA%B8%88",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
+      {
+       "title": "노후준비와 연금제도 > 개인연금제도 > 연금저축 | 찾기쉬운 생활법령정보",
+       "url": "https://easylaw.go.kr/CSP/CnpClsMain.laf?popMenu=ov&csmSeq=2056&ccfNo=3&cciNo=2&cnpClsNo=1",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "IRP",
+     "note": "함께 연금계좌로 묶여 세액공제 한도를 나눠 씁니다."
+    },
+    {
+     "term": "세액공제",
+     "note": "연금저축 가입 동기의 상당 부분이 세액공제입니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "ISA",
+     "difference": "ISA는 여러 상품을 담아 비과세·분리과세 혜택을 받는 계좌이고, 연금저축은 노후 연금 수령을 전제로 한 연금계좌입니다."
+    }
+   ]
+  },
+  {
+   "id": "isa",
+   "term": "ISA",
+   "original": "Individual Savings Account",
+   "korean": "개인종합자산관리계좌",
+   "aliases": [
+    "아이에스에이",
+    "중개형 ISA",
+    "개인종합자산관리 계좌",
+    "만능통장"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "data",
+      "marketing",
+      "cx"
+     ],
+     "level": "입문",
+     "importance": 4,
+     "definition": "예금, 펀드, ETF 등 여러 금융상품을 한 계좌에 담아 운용하면서 계좌 안의 이익과 손실을 합친 순이익에 세제 혜택을 받을 수 있는 계좌입니다. 가입 자격, 납입 한도, 의무 가입 기간이 정해져 있으며 세부 기준은 제도 개편에 따라 바뀔 수 있습니다.",
+     "formula": null,
+     "examples": [
+      "ISA 만기 고객에게 연금계좌 전환 안내를 언제 보낼지 일정 잡아 주세요.",
+      "중개형 ISA 개설 후 첫 매수까지 걸리는 기간을 코호트로 보고 싶어요."
+     ],
+     "sources": [
+      {
+       "title": "금융용어사전: 개인종합자산관리계좌(ISA) | 금융소비자 정보포털 파인",
+       "url": "https://fine.fss.or.kr/fine/fnctip/fncDicary/list.do?menuNo=900021&searchCnd=2&searchStr=%EA%B0%9C%EC%9D%B8%EC%A2%85%ED%95%A9%EC%9E%90%EC%82%B0",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "연금저축",
+     "note": "ISA 만기 자금을 연금계좌로 옮기는 흐름이 자주 나옵니다."
+    },
+    {
+     "term": "ETF",
+     "note": "ISA 안에서 ETF를 사고파는 경우가 많습니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "IRP",
+     "difference": "IRP는 퇴직·노후 연금용 계좌이고, ISA는 중도 활용이 가능한 절세형 종합 투자 계좌입니다."
+    }
+   ]
+  },
+  {
+   "id": "db_dc",
+   "term": "DB형·DC형",
+   "original": "Defined Benefit / Defined Contribution",
+   "korean": "확정급여형·확정기여형 퇴직연금",
+   "aliases": [
+    "디비형",
+    "디씨형",
+    "DB형",
+    "DC형",
+    "확정급여형",
+    "확정기여형"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "data",
+      "marketing",
+      "cx"
+     ],
+     "level": "실무",
+     "importance": 4,
+     "definition": "DB형은 근로자가 받을 퇴직급여가 미리 정해져 있고 적립금 운용 책임을 회사가 지는 퇴직연금입니다. DC형은 회사가 정해진 금액을 넣어 주고 근로자가 직접 운용하므로, 운용 성과에 따라 받을 퇴직급여가 달라집니다.",
+     "formula": null,
+     "examples": [
+      "DC형 가입자 중 적립금을 원리금보장 상품에만 둔 비율이 얼마나 되는지 뽑아 볼게요.",
+      "DB형 고객은 직접 운용 메뉴가 필요 없으니 홈 화면 구성을 따로 가져가요."
+     ],
+     "sources": [
+      {
+       "title": "금융용어사전: 퇴직연금제도·확정급여형·확정기여형 | 금융소비자 정보포털 파인",
+       "url": "https://fine.fss.or.kr/fine/fnctip/fncDicary/list.do?menuNo=900021&searchCnd=2&searchStr=%ED%87%B4%EC%A7%81%EC%97%B0%EA%B8%88",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "IRP",
+     "note": "퇴직 시 DB·DC 적립금이 IRP로 옮겨지는 경우가 많습니다."
+    },
+    {
+     "term": "예금자보호",
+     "note": "DC형·IRP는 예금성 상품으로 운용한 적립금이 별도 한도로 보호되지만 DB형은 그렇지 않습니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "IRP",
+     "difference": "DB·DC는 회사가 도입하는 퇴직연금 제도이고, IRP는 근로자 개인 명의의 퇴직연금 계좌입니다."
+    }
+   ]
+  },
+  {
+   "id": "tax_credit",
+   "term": "세액공제",
+   "original": "Tax Credit",
+   "korean": "세액공제",
+   "aliases": [
+    "연금계좌 세액공제",
+    "연말정산 세액공제",
+    "세액 공제",
+    "13월의 월급"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "data",
+      "marketing",
+      "cx"
+     ],
+     "level": "실무",
+     "importance": 4,
+     "definition": "계산된 세금(산출세액)에서 일정 금액을 직접 빼 주는 제도입니다. 연금 맥락에서는 연금저축·IRP 등 연금계좌에 넣은 돈의 일정 비율을 세금에서 빼 주며, 공제 한도와 비율은 소득 수준과 해마다 바뀌는 세법에 따라 달라지므로 국세청 안내로 확인해야 합니다.",
+     "formula": null,
+     "examples": [
+      "세액공제 한도 안내 문구는 법무·세무 검토 끝난 버전으로만 배포해 주세요.",
+      "12월 연금계좌 납입액이 평소보다 크게 튀는 건 세액공제 수요 때문이에요."
+     ],
+     "sources": [
+      {
+       "title": "세액공제(연금계좌 세액공제) | 국세청",
+       "url": "https://www.nts.go.kr/nts/cm/cntnts/cntntsView.do?cntntsId=7875",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
+      {
+       "title": "노후준비와 연금제도 > 개인연금제도 > 연금저축 | 찾기쉬운 생활법령정보",
+       "url": "https://easylaw.go.kr/CSP/CnpClsMain.laf?popMenu=ov&csmSeq=2056&ccfNo=3&cciNo=2&cnpClsNo=1",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "연금저축",
+     "note": "세액공제를 받는 대표 연금계좌입니다."
+    },
+    {
+     "term": "IRP",
+     "note": "연금저축과 함께 연금계좌 세액공제 한도를 구성합니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "소득공제",
+     "difference": "소득공제는 세금을 매기는 소득 금액을 줄이고, 세액공제는 계산된 세금에서 바로 뺍니다."
+    }
+   ]
+  },
+  {
+   "id": "market_cap",
+   "term": "시가총액",
+   "original": "Market Capitalization",
+   "korean": "시가총액",
+   "aliases": [
+    "시총",
+    "마켓캡",
+    "market cap",
+    "시가 총액"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "data",
+      "marketing",
+      "cx"
+     ],
+     "level": "입문",
+     "importance": 4,
+     "definition": "상장된 주식을 현재 시장 가격으로 평가한 전체 가치로, 한 회사의 시장 규모를 보여 줍니다. 시장 전체의 시가총액은 그 주식시장의 크기를 나타내는 지표로도 쓰입니다.",
+     "formula": null,
+     "examples": [
+      "종목 리스트 기본 정렬을 거래대금 대신 시가총액 순으로 바꿔 볼까요?",
+      "시총 상위 10개 종목 보유 고객 비중을 대시보드에 추가해 주세요."
+     ],
+     "sources": [
+      {
+       "title": "[시사경제용어사전] 시가총액 | 기획재정부",
+       "url": "https://mofe.go.kr/sisa/dictionary/detail?idx=1617",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "PER",
+     "note": "시가총액을 순이익과 비교하면 PER와 같은 의미가 됩니다."
+    },
+    {
+     "term": "거래대금",
+     "note": "규모(시총)와 활발함(거래대금)을 함께 봅니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "거래대금",
+     "difference": "시가총액은 회사 전체 주식의 평가 가치이고, 거래대금은 일정 기간 실제로 사고판 금액의 합입니다."
+    }
+   ]
+  },
+  {
+   "id": "per",
+   "term": "PER",
+   "original": "Price Earnings Ratio",
+   "korean": "주가수익비율",
+   "aliases": [
+    "피이알",
+    "퍼",
+    "P/E",
+    "주가이익비율"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "data",
+      "marketing",
+      "cx"
+     ],
+     "level": "실무",
+     "importance": 4,
+     "definition": "주가가 1주당 순이익의 몇 배인지 나타내는 지표로, 이익에 비해 주가가 비싼지 싼지 가늠할 때 씁니다. 같은 업종의 다른 회사나 과거 수치와 비교해 해석합니다.",
+     "formula": "PER = 주가 ÷ 주당순이익(EPS)",
+     "examples": [
+      "종목 상세에 PER을 노출할 때 적자 기업은 '산출 불가'로 표시하기로 했어요.",
+      "PER 툴팁 문구가 너무 어렵다는 VOC가 있어서 쉬운 말로 다시 써 볼게요."
+     ],
+     "sources": [
+      {
+       "title": "경제용어사전: 주가수익비율(PER) | 한국은행",
+       "url": "https://www.bok.or.kr/portal/ecEdu/ecWordDicary/search.do?menuNo=200688&query=%EC%A3%BC%EA%B0%80%EC%88%98%EC%9D%B5%EB%B9%84%EC%9C%A8&ecWordSn=520",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
+      {
+       "title": "[시사경제용어사전] PBR/PER | 기획재정부",
+       "url": "https://mofe.go.kr/sisa/dictionary/detail?idx=191",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "PBR",
+     "note": "수익성(PER)과 자산가치(PBR)를 함께 봅니다."
+    },
+    {
+     "term": "ROE",
+     "note": "ROE가 높으면 주가도 높게 형성되는 경향이 있어 함께 봅니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "PBR",
+     "difference": "PER은 주가를 순이익과, PBR은 주가를 순자산과 비교합니다."
+    }
+   ]
+  },
+  {
+   "id": "pbr",
+   "term": "PBR",
+   "original": "Price to Book-value Ratio",
+   "korean": "주가순자산비율",
+   "aliases": [
+    "피비알",
+    "P/B",
+    "주가장부가치비율",
+    "주가순자산배율"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "data",
+      "marketing",
+      "cx"
+     ],
+     "level": "실무",
+     "importance": 3,
+     "definition": "주가가 1주당 순자산(장부가치)의 몇 배인지 보여 주는 지표로, 회사의 재무상태 면에서 주가 수준을 판단할 때 씁니다. 1보다 낮으면 주가가 장부상 순자산보다 낮게 거래된다는 뜻입니다.",
+     "formula": "PBR = 주가 ÷ 주당순자산(BPS)",
+     "examples": [
+      "저PBR 테마 필터를 넣을 때 기준 값은 리서치팀 정의를 그대로 따를게요.",
+      "PBR 1배 미만 종목 수를 업종별로 집계해 주세요."
+     ],
+     "sources": [
+      {
+       "title": "경제용어사전: 주가수익비율(PER) | 한국은행",
+       "url": "https://www.bok.or.kr/portal/ecEdu/ecWordDicary/search.do?menuNo=200688&query=%EC%A3%BC%EA%B0%80%EC%88%98%EC%9D%B5%EB%B9%84%EC%9C%A8&ecWordSn=520",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
+      {
+       "title": "[시사경제용어사전] PBR/PER | 기획재정부",
+       "url": "https://mofe.go.kr/sisa/dictionary/detail?idx=191",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "PER",
+     "note": "함께 쓰는 대표 가치평가 지표입니다."
+    },
+    {
+     "term": "ROE",
+     "note": "자본 대비 이익(ROE)과 함께 보며 저평가 여부를 판단합니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "PER",
+     "difference": "PBR은 자산(저량) 기준, PER은 이익(유량) 기준으로 주가를 봅니다."
+    }
+   ]
+  },
+  {
+   "id": "roe",
+   "term": "ROE",
+   "original": "Return on Equity",
+   "korean": "자기자본이익률",
+   "aliases": [
+    "알오이",
+    "자기자본순이익률",
+    "ROE(%)",
+    "자본수익률"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "data",
+      "marketing",
+      "cx"
+     ],
+     "level": "실무",
+     "importance": 3,
+     "definition": "주주가 낸 돈(자기자본)으로 회사가 1년에 얼마만큼 순이익을 냈는지 보여 주는 수익성 지표입니다. 높을수록 자본을 효율적으로 써서 이익을 많이 냈다는 뜻입니다.",
+     "formula": "ROE = 순이익 ÷ 자기자본 × 100",
+     "examples": [
+      "종목 비교 화면에 ROE를 넣을 때 기준 연도(최근 4분기 합산인지)를 꼭 표기해 주세요.",
+      "ROE 상위 종목 큐레이션 클릭률이 PER 큐레이션보다 높게 나왔어요."
+     ],
+     "sources": [
+      {
+       "title": "[시사경제용어사전] ROE/ROI | 기획재정부",
+       "url": "https://mofe.go.kr/sisa/dictionary/detail?idx=210",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "PBR",
+     "note": "ROE가 높은데 PBR이 낮으면 저평가 논의가 나옵니다."
+    },
+    {
+     "term": "수익률",
+     "note": "회사의 수익성(ROE)과 투자자의 수익률은 다른 개념입니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "ROA",
+     "difference": "ROA는 부채를 포함한 총자산 대비 이익이고, ROE는 자기자본 대비 이익입니다."
+    }
+   ]
+  },
+  {
+   "id": "dividend",
+   "term": "배당",
+   "original": "Dividend",
+   "korean": "배당",
+   "aliases": [
+    "배당금",
+    "이익배당",
+    "현금배당",
+    "주식배당"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "data",
+      "marketing",
+      "cx"
+     ],
+     "level": "입문",
+     "importance": 4,
+     "definition": "회사가 영업으로 번 이익을 주주에게 가진 주식 수에 따라 나눠 주는 것입니다. 현금으로 주면 현금배당, 새 주식으로 주면 주식배당이라고 합니다.",
+     "formula": null,
+     "examples": [
+      "배당 입금 알림이 배당락일 안내보다 먼저 나가서 혼란이 있었어요.",
+      "배당주 탭 진입 사용자 중 실제 매수 전환율이 얼마나 되는지 봐 주세요."
+     ],
+     "sources": [
+      {
+       "title": "[시사경제용어사전] 이익배당 | 기획재정부",
+       "url": "https://mofe.go.kr/sisa/dictionary/detail?idx=2029",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
+      {
+       "title": "[시사경제용어사전] 배당 | 기획재정부",
+       "url": "https://mofe.go.kr/sisa/dictionary/detail?idx=1149",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "수익률",
+     "note": "배당도 총수익률 계산에 포함됩니다."
+    },
+    {
+     "term": "ETF",
+     "note": "ETF도 분배금 형태로 배당을 나눠 줍니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "이자",
+     "difference": "이자는 돈을 빌려준 대가로 정해진 대로 받지만, 배당은 회사 이익과 결정에 따라 달라집니다."
+    }
+   ]
+  },
+  {
+   "id": "bond",
+   "term": "채권",
+   "original": "Bond",
+   "korean": "채권",
+   "aliases": [
+    "본드",
+    "국채",
+    "회사채",
+    "채권 투자"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "data",
+      "marketing",
+      "cx"
+     ],
+     "level": "입문",
+     "importance": 4,
+     "definition": "정부·공공기관·회사 등이 정해진 이자와 원금을 약속하고 돈을 빌리면서 발행하는 증권입니다. 투자자는 이자를 받거나, 만기 전에 시장에서 사고팔며 가격 변동에 따른 차익을 얻을 수도 있습니다.",
+     "formula": null,
+     "examples": [
+      "개인 채권 매수 화면에서 세전·세후 수익률 표기가 섞여 있어서 정리가 필요해요.",
+      "기준금리 발표 주간에 채권 상품 조회수가 확 늘었어요."
+     ],
+     "sources": [
+      {
+       "title": "경제용어사전: 채권시장 | 한국은행",
+       "url": "https://www.bok.or.kr/portal/ecEdu/ecWordDicary/search.do?menuNo=200688&query=%EC%B1%84%EA%B6%8C%EC%8B%9C%EC%9E%A5&ecWordSn=563",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
+      {
+       "title": "경제용어사전: 국채 | 한국은행",
+       "url": "https://www.bok.or.kr/portal/ecEdu/ecWordDicary/search.do?menuNo=200688&query=%EA%B5%AD%EC%B1%84&ecWordSn=100",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "기준금리",
+     "note": "금리가 오르면 이미 발행된 채권 가격은 대체로 내려갑니다."
+    },
+    {
+     "term": "펀드",
+     "note": "채권형 펀드나 채권 ETF로 간접 투자하기도 합니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "주식",
+     "difference": "채권은 돈을 빌려준 증서라 이자·원금 지급이 약속되고, 주식은 회사의 지분이라 이익과 위험을 함께 나눕니다."
+    }
+   ]
+  },
+  {
+   "id": "base_rate",
+   "term": "기준금리",
+   "original": "Base Rate",
+   "korean": "기준금리",
+   "aliases": [
+    "정책금리",
+    "한은 기준금리",
+    "기준 금리",
+    "금리 결정"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "data",
+      "marketing",
+      "cx"
+     ],
+     "level": "입문",
+     "importance": 4,
+     "definition": "한국은행 금융통화위원회가 정하는 정책 금리로, 한국은행과 금융기관 사이 거래의 기준이 됩니다. 기준금리가 바뀌면 시중 은행 예금·대출 금리 등 여러 금리가 따라 움직입니다.",
+     "formula": null,
+     "examples": [
+      "금통위 기준금리 발표일에는 CMA·발행어음 금리 변경 공지를 미리 준비해 둘게요.",
+      "기준금리 인하 뒤 예수금 이자율 문의가 늘어서 FAQ를 업데이트했어요."
+     ],
+     "sources": [
+      {
+       "title": "경제용어사전: 기준금리 | 한국은행",
+       "url": "https://www.bok.or.kr/portal/ecEdu/ecWordDicary/search.do?menuNo=200688&query=%EA%B8%B0%EC%A4%80%EA%B8%88%EB%A6%AC&ecWordSn=142",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
+      {
+       "title": "[시사경제용어사전] 기준금리 | 기획재정부",
+       "url": "https://mofe.go.kr/sisa/dictionary/detail?idx=730",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "채권",
+     "note": "기준금리 변화가 채권 가격과 금리에 바로 영향을 줍니다."
+    },
+    {
+     "term": "예금자보호",
+     "note": "금리 변화로 예금 쏠림이 생길 때 보호 한도 문의가 함께 늘어납니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "시장금리",
+     "difference": "기준금리는 중앙은행이 정하는 정책 목표이고, 시장금리는 실제 시장에서 수요와 공급으로 정해집니다."
+    }
+   ]
+  },
+  {
+   "id": "deposit_insurance",
+   "term": "예금자보호",
+   "original": "Deposit Insurance",
+   "korean": "예금자보호",
+   "aliases": [
+    "예금보험",
+    "예금자보호제도",
+    "예보",
+    "예금보호한도"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "data",
+      "marketing",
+      "cx"
+     ],
+     "level": "입문",
+     "importance": 4,
+     "definition": "금융회사가 문을 닫거나 예금을 돌려줄 수 없게 되면 예금보험공사가 대신 예금을 지급해 예금자를 보호하는 제도입니다. 원금과 소정의 이자를 합쳐 금융회사별·1인당 한도까지 보호하며, 확인 날짜 기준 예금보험공사 안내에 따르면 그 한도는 1억원입니다. 펀드처럼 실적에 따라 돈이 바뀌는 상품은 보호 대상이 아닙니다.",
+     "formula": null,
+     "examples": [
+      "상품 상세에 '예금자보호 대상 아님' 표기가 빠진 화면이 있는지 전수 점검해 주세요.",
+      "증권 계좌 예수금은 보호되지만 청약자예수금은 아니라서 CS 스크립트를 나눠야 해요."
+     ],
+     "sources": [
+      {
+       "title": "예금자보호제도 보호한도 | 예금보험공사",
+       "url": "https://www.kdic.or.kr/sp/dpstrprot/ProtSystProtLmts/selectScrn.do",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
+      {
+       "title": "예금자보호제도 보호대상 금융상품 개요 | 예금보험공사",
+       "url": "https://www.kdic.or.kr/sp/dpstrprot/selectProtSystProtTrgtPrdctSumr.do",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
+      {
+       "title": "경제용어사전: 예금보험제도 | 한국은행",
+       "url": "https://www.bok.or.kr/portal/ecEdu/ecWordDicary/search.do?menuNo=200688&query=%EC%98%88%EA%B8%88%EB%B3%B4%ED%97%98&ecWordSn=388",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "예수금",
+     "note": "증권사 계좌의 현금 잔액이 보호 대상인지 자주 문의됩니다."
+    },
+    {
+     "term": "펀드",
+     "note": "펀드·ETF 같은 실적배당 상품은 보호 대상이 아닙니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "원금보장",
+     "difference": "예금자보호는 금융회사 부실 때 한도까지 지급을 보장하는 제도이고, 원금보장은 상품 자체의 손익 구조를 말합니다."
+    }
+   ]
+  },
+  {
+   "id": "ipo",
+   "term": "공모주",
+   "original": "Initial Public Offering",
+   "korean": "공모주",
+   "aliases": [
+    "아이피오",
+    "기업공개",
+    "공모주 청약",
+    "IPO 청약",
+    "신규 상장주"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "data",
+      "marketing",
+      "cx"
+     ],
+     "level": "실무",
+     "importance": 3,
+     "definition": "회사가 거래소 상장을 앞두고 일반 투자자에게 새로 발행하거나 내놓는 주식을 공모주라고 하고, 이를 사겠다고 신청하는 것을 공모주 청약이라고 합니다. 기업 입장에서 이렇게 주식을 여러 투자자에게 나눠 팔고 상장하는 과정을 기업공개(IPO)라고 합니다.",
+     "formula": null,
+     "examples": [
+      "대형 공모주 청약 첫날에 MTS 접속이 몰릴 걸 대비해 대기열 화면을 준비했어요.",
+      "공모주 청약 후 미배정 증거금 환불 알림 도달률을 확인해 주세요."
+     ],
+     "sources": [
+      {
+       "title": "[시사경제용어사전] 공모주청약 | 기획재정부",
+       "url": "https://mofe.go.kr/sisa/dictionary/detail?idx=455",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
+      {
+       "title": "경제용어사전: 기업공개 | 한국은행",
+       "url": "https://www.bok.or.kr/portal/ecEdu/ecWordDicary/search.do?menuNo=200688&query=%EA%B8%B0%EC%97%85%EA%B3%B5%EA%B0%9C&ecWordSn=139",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "증거금",
+     "note": "청약할 때 청약증거금을 먼저 넣어야 합니다."
+    },
+    {
+     "term": "MTS",
+     "note": "대부분의 공모주 청약이 MTS에서 이루어집니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "유상증자",
+     "difference": "공모주는 상장 전 처음 공개하는 주식이고, 유상증자는 이미 상장된 회사가 주식을 추가로 발행하는 것입니다."
+    }
+   ]
+  },
+  {
+   "id": "margin",
+   "term": "증거금",
+   "original": "Margin",
+   "korean": "증거금",
+   "aliases": [
+    "위탁증거금",
+    "주문증거금",
+    "청약증거금",
+    "증거금률"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "data",
+      "marketing",
+      "cx"
+     ],
+     "level": "실무",
+     "importance": 3,
+     "definition": "주식이나 선물·옵션을 거래할 때 약속을 지키겠다는 담보로 증권사에 미리 맡겨 두는 돈입니다. 주식을 살 때는 매수 금액의 일정 비율을 먼저 증거금으로 내고, 나머지는 결제일에 냅니다.",
+     "formula": null,
+     "examples": [
+      "종목별 증거금률이 100%로 바뀌면 주문 화면에 바로 반영되는지 QA 해 주세요.",
+      "'주문가능금액이 예수금보다 적다'는 문의는 대부분 증거금 때문이에요."
+     ],
+     "sources": [
+      {
+       "title": "경제용어사전: 증거금 | 한국은행",
+       "url": "https://www.bok.or.kr/portal/ecEdu/ecWordDicary/search.do?menuNo=200688&query=%EC%A6%9D%EA%B1%B0%EA%B8%88&ecWordSn=535",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "예수금",
+     "note": "주문 시 예수금 일부가 증거금으로 묶입니다."
+    },
+    {
+     "term": "신용거래",
+     "note": "신용거래에는 보증금과 담보 비율 기준이 따로 있습니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "예수금",
+     "difference": "예수금은 계좌의 현금 전체이고, 증거금은 그중 주문 담보로 묶이는 부분입니다."
+    }
+   ]
+  },
+  {
+   "id": "credit_trading",
+   "term": "신용거래",
+   "original": "Margin Trading (Credit Trading)",
+   "korean": "신용거래",
+   "aliases": [
+    "신용융자",
+    "신용거래융자",
+    "신용대주",
+    "빚투",
+    "반대매매"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "data",
+      "marketing",
+      "cx"
+     ],
+     "level": "심화",
+     "importance": 3,
+     "definition": "증권사와 미리 약정을 맺고 주식 살 돈을 빌리거나(신용거래 융자) 팔 주식을 빌리는(신용거래 대주) 거래입니다. 빌린 돈을 약정한 날까지 갚지 못하면 증권사가 주식을 강제로 팔아 갚는 반대매매가 일어날 수 있습니다.",
+     "formula": null,
+     "examples": [
+      "담보비율 하락 알림을 반대매매 전날이 아니라 이틀 전에 보내도록 바꾸자는 안건이에요.",
+      "신용융자 잔고가 급증한 종목은 리스크팀에 일일 리포트로 공유해 주세요."
+     ],
+     "sources": [
+      {
+       "title": "금융용어사전: 신용거래 융자·신용거래 대주 | 금융소비자 정보포털 파인",
+       "url": "https://fine.fss.or.kr/fine/fnctip/fncDicary/list.do?menuNo=900021&searchCnd=2&searchStr=%EC%8B%A0%EC%9A%A9%EA%B1%B0%EB%9E%98",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
+      {
+       "title": "[시사경제용어사전] 미수거래 | 기획재정부",
+       "url": "https://mofe.go.kr/sisa/dictionary/detail?idx=3207",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "증거금",
+     "note": "신용거래에도 보증금·담보 비율 기준이 붙습니다."
+    },
+    {
+     "term": "VaR",
+     "note": "신용 잔고가 큰 계좌의 손실 위험을 따로 관리합니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "미수거래",
+     "difference": "미수거래는 결제일까지 잠시 외상으로 사는 것이고, 신용거래는 이자를 내고 약정 기간 동안 돈을 빌리는 것입니다."
+    }
+   ]
+  },
+  {
+   "id": "rebalancing",
+   "term": "리밸런싱",
+   "original": "Rebalancing",
+   "korean": "자산 비중 재조정",
+   "aliases": [
+    "리밸런스",
+    "포트폴리오 재조정",
+    "자산 재배분",
+    "비중 조절"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "data",
+      "marketing",
+      "cx"
+     ],
+     "level": "실무",
+     "importance": 3,
+     "definition": "시장 움직임으로 처음 정한 자산 비중(예: 주식과 채권 비율)이 달라졌을 때, 일부를 팔고 사서 원래 목표 비중으로 되돌리는 것입니다. 정해진 주기마다 하거나, 목표 비중에서 일정 폭 이상 벌어질 때 합니다.",
+     "formula": null,
+     "examples": [
+      "로보어드바이저 리밸런싱 실행 알림을 받은 고객의 앱 재방문율이 높았어요.",
+      "TDF 리밸런싱 주기 설명을 상품 상세 FAQ에 추가해 주세요."
+     ],
+     "sources": [
+      {
+       "title": "[3040 자산관리 팁 #04] 투자 타이밍과 종목 선택보다 중요한 것은? | 전국투자자교육협의회",
+       "url": "https://www.kcie.or.kr/mobile/guide/1/9/web_view?series_idx=&content_idx=787",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "ETF",
+     "note": "ETF로 자산군별 비중을 맞추는 경우가 많습니다."
+    },
+    {
+     "term": "변동성",
+     "note": "변동성이 큰 시기에는 목표 비중에서 빨리 벗어나 리밸런싱이 잦아집니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "손절매",
+     "difference": "손절매는 손실을 끊으려 파는 것이고, 리밸런싱은 손익과 상관없이 목표 비중을 맞추려고 사고파는 것입니다."
+    }
+   ]
+  },
+  {
+   "id": "aum",
+   "term": "AUM",
+   "original": "Assets Under Management",
+   "korean": "운용자산",
+   "aliases": [
+    "에이유엠",
+    "운용자산규모",
+    "수탁고",
+    "예탁자산",
+    "운용 규모"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "data",
+      "marketing",
+      "cx"
+     ],
+     "level": "실무",
+     "importance": 3,
+     "definition": "운용사나 금융회사가 고객을 대신해 운용하거나 투자 자문을 해 주는 자산의 전체 가치입니다. 무엇을 포함해 계산할지는 회사마다 기준이 다를 수 있어, 비교할 때는 산정 기준을 먼저 확인해야 합니다.",
+     "formula": null,
+     "examples": [
+      "이번 분기 AUM 증가분 중 시장 상승 효과와 순유입 효과를 나눠서 보여 주세요.",
+      "AUM 정의가 팀마다 달라서 예탁자산 기준으로 지표 사전을 통일할게요."
+     ],
+     "sources": [
+      {
+       "title": "Glossary | SEC.gov",
+       "url": "https://www.sec.gov/resources-small-businesses/glossary",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "펀드",
+     "note": "운용사 AUM의 큰 부분이 펀드 설정액입니다."
+    },
+    {
+     "term": "KPI",
+     "note": "자산관리 서비스의 핵심 성장 지표로 자주 쓰입니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "GMV",
+     "difference": "GMV는 일정 기간 거래된 금액의 합이고, AUM은 특정 시점에 맡아 둔 자산의 잔액입니다."
+    }
+   ]
+  },
+  {
+   "id": "mts",
+   "term": "MTS",
+   "original": "Mobile Trading System",
+   "korean": "모바일 트레이딩 시스템",
+   "aliases": [
+    "엠티에스",
+    "증권 앱",
+    "모바일 증권",
+    "주식 앱"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "data",
+      "marketing",
+      "cx"
+     ],
+     "level": "입문",
+     "importance": 4,
+     "definition": "증권사 모바일 앱으로 시세를 보고 주식 등을 사고파는 거래 시스템입니다. 집이나 사무실 PC로 거래하는 HTS(홈 트레이딩 시스템)와 짝을 이루는 말입니다.",
+     "formula": null,
+     "examples": [
+      "MTS 주문 화면 진입부터 체결까지의 단계별 이탈률을 퍼널로 그려 주세요.",
+      "HTS에는 있는데 MTS에 없는 기능 목록을 VOC 기준으로 정리했어요."
+     ],
+     "sources": [
+      {
+       "title": "[보도참고] 핀테크기업이 지정대리인 제도를 통해 금융회사와 협업하여 혁신적인 금융서비스를 제공합니다 | 금융위원회",
+       "url": "https://fsc.go.kr/po010101/77082?curPage=&srchBeginDt=&srchCtgry=1&srchEndDt=&srchKey=&srchText=",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
+      {
+       "title": "[시사경제용어사전] HTS(Home Trading System) | 기획재정부",
+       "url": "https://mofe.go.kr/sisa/dictionary/detail?idx=128",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "DAU",
+     "note": "MTS 활성 사용자 수가 증권사 플랫폼의 기본 지표입니다."
+    },
+    {
+     "term": "공모주",
+     "note": "대형 청약일에 MTS 접속이 몰립니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "HTS",
+     "difference": "HTS는 PC 프로그램, MTS는 스마트폰 앱 기반 거래 시스템입니다."
+    }
+   ]
+  },
+  {
+   "id": "kyc",
+   "term": "KYC",
+   "original": "Know Your Customer",
+   "korean": "고객확인제도",
+   "aliases": [
+    "케이와이씨",
+    "고객알기제도",
+    "CDD",
+    "고객확인의무",
+    "eKYC"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "cx"
+     ],
+     "level": "실무",
+     "importance": 4,
+     "definition": "금융회사가 고객과 거래할 때 신원과 실제 소유자를 확인하고, 필요하면 거래 목적과 자금 출처까지 확인하는 절차입니다. 금융 서비스가 자금세탁 같은 범죄에 쓰이지 않도록 막는 장치이며, 위험이 높은 고객은 더 강화된 확인을 거칩니다.",
+     "formula": null,
+     "examples": [
+      "비대면 계좌개설 퍼널에서 KYC 단계 신분증 촬영 이탈이 제일 커요.",
+      "법인 고객은 실제 소유자 확인 서류가 추가라서 KYC 안내 문구를 따로 만들어야 해요."
+     ],
+     "sources": [
+      {
+       "title": "고객확인제도 | 금융정보분석원",
+       "url": "https://www.kofiu.go.kr/kor/policy/amls05.do",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
+      {
+       "title": "금융용어설명: 고객확인제도 | 금융위원회",
+       "url": "https://www.fsc.go.kr/in090301/view?dicId=1822&curPage=11",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "AML",
+     "note": "KYC는 자금세탁방지 체계를 이루는 핵심 절차 중 하나입니다."
+    },
+    {
+     "term": "FDS",
+     "note": "KYC로 쌓은 고객 정보는 이상거래를 가려내는 바탕이 됩니다."
+    },
+    {
+     "term": "이탈률",
+     "note": "비대면 가입에서 KYC 단계는 이탈이 자주 생기는 구간이라 함께 봅니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "본인인증",
+     "difference": "본인인증은 지금 접속한 사람이 본인인지 확인하는 것이고, KYC는 법에 따라 신원·실제 소유자·거래 목적까지 확인하는 제도입니다."
+    }
+   ]
+  },
+  {
+   "id": "aml",
+   "term": "AML",
+   "original": "Anti-Money Laundering",
+   "korean": "자금세탁방지",
+   "aliases": [
+    "에이엠엘",
+    "자금세탁방지제도",
+    "AML/CFT",
+    "자금세탁 방지"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "cx",
+      "data"
+     ],
+     "level": "실무",
+     "importance": 4,
+     "definition": "범죄로 번 돈이 정상적인 돈처럼 보이도록 세탁되는 것을 찾아내고 막기 위한 법·제도와 금융회사 업무 체계입니다. 국내에서는 고객확인(CDD), 의심거래보고(STR), 고액현금거래보고(CTR) 등이 주요 구성 요소입니다.",
+     "formula": null,
+     "examples": [
+      "이 이체 패턴은 AML 모니터링 룰에 걸려서 의심거래보고 검토로 넘어갔어요.",
+      "신규 송금 기능 기획서에 AML 검토 항목부터 넣어 주세요."
+     ],
+     "sources": [
+      {
+       "title": "자금세탁방지제도 | 금융정보분석원",
+       "url": "https://www.kofiu.go.kr/kor/policy/amls01.do",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "KYC",
+     "note": "AML 체계에서 고객을 확인하는 첫 단계입니다."
+    },
+    {
+     "term": "FDS",
+     "note": "FDS가 걸러낸 이상거래가 AML 보고 검토로 이어지기도 합니다."
+    },
+    {
+     "term": "보이스피싱",
+     "note": "사기 피해금 이동 차단도 AML·FDS 업무와 맞닿아 있습니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "FDS",
+     "difference": "FDS는 사기 등 이상거래를 실시간으로 탐지·차단하는 시스템이고, AML은 자금세탁을 막기 위한 제도 전체를 가리킵니다."
+    }
+   ]
+  },
+  {
+   "id": "fds",
+   "term": "FDS",
+   "original": "Fraud Detection System",
+   "korean": "이상거래탐지시스템",
+   "aliases": [
+    "에프디에스",
+    "이상금융거래탐지시스템",
+    "이상거래 탐지",
+    "사기거래탐지"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "data",
+      "cx"
+     ],
+     "level": "실무",
+     "importance": 4,
+     "definition": "전자금융거래에서 단말기 정보, 접속 기록, 거래 내역 등을 모아 분석해 사기로 의심되는 거래를 찾아내고 막는 시스템입니다.",
+     "formula": null,
+     "examples": [
+      "새 기기 로그인 직후 고액 이체가 FDS에 걸려서 추가 인증으로 넘어갔어요.",
+      "FDS 오탐이 늘어서 정상 고객 문의가 CS에 몰리고 있어요."
+     ],
+     "sources": [
+      {
+       "title": "[보도참고] 금융위원장, 금융권 통합보안관제센터 운영현황 점검 | 금융위원회",
+       "url": "https://fsc.go.kr/po010101/71890?curPage=85&srchBeginDt=&srchCtgry=1&srchEndDt=&srchKey=&srchText=",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "보이스피싱",
+     "note": "FDS는 보이스피싱 피해 계좌를 찾아 이체를 막는 데 쓰입니다."
+    },
+    {
+     "term": "AML",
+     "note": "이상거래 탐지 결과가 자금세탁방지 업무와 연결됩니다."
+    },
+    {
+     "term": "VOC",
+     "note": "FDS 차단으로 불편을 겪은 고객의 문의가 VOC로 들어옵니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "AML",
+     "difference": "AML은 자금세탁 방지 제도 전체이고, FDS는 의심 거래를 실시간으로 잡아내는 탐지 시스템입니다."
+    }
+   ]
+  },
+  {
+   "id": "mydata",
+   "term": "마이데이터",
+   "original": "MyData",
+   "korean": "본인신용정보관리업",
+   "aliases": [
+    "MyData",
+    "마이 데이터",
+    "금융 마이데이터",
+    "본인신용정보관리"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "data",
+      "marketing"
+     ],
+     "level": "실무",
+     "importance": 4,
+     "definition": "여러 금융회사 등에 흩어진 본인의 신용정보를 고객이 동의한 범위에서 표준 API로 받아 한곳에 모아 보여 주는 서비스이자 그 사업입니다. 신용정보법 개정 뒤 금융위원회 허가를 받아야 하는 업종이 되었습니다.",
+     "formula": null,
+     "examples": [
+      "마이데이터로 연결한 계좌 수가 많은 고객일수록 리텐션이 높게 나와요.",
+      "마이데이터 연동 동의 화면 문구는 준법 검토 받고 바꿔야 해요."
+     ],
+     "sources": [
+      {
+       "title": "[보도자료] 새해부터 흩어진 내 금융정보를 더욱 안전하고 빠르고 편리하게 관리할 수 있게 됩니다 | 금융위원회",
+       "url": "https://fsc.go.kr/edu/news/77509?curPage=&srchCtgry=&srchKey=&srchText=",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
+      {
+       "title": "'22년 본인신용정보관리업(마이데이터) 허가심사방향 | 금융위원회",
+       "url": "https://www.fsc.go.kr/no010101/77665?srchCtgry=&curPage=&srchKey=&srchText=&srchBeginDt=&srchEndDt=",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "오픈뱅킹",
+     "note": "둘 다 금융 데이터와 기능을 표준 API로 여는 제도라 함께 언급됩니다."
+    },
+    {
+     "term": "리텐션",
+     "note": "자산 연결 수가 앱 재방문과 이어지는지 자주 분석합니다."
+    },
+    {
+     "term": "API",
+     "note": "마이데이터 정보는 표준 API 방식으로 전송됩니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "오픈뱅킹",
+     "difference": "오픈뱅킹은 여러 은행 계좌의 조회·이체 기능을 하나의 앱에서 쓰게 하는 결제 인프라이고, 마이데이터는 신용정보를 모아 보여 주는 허가 업종입니다."
+    }
+   ]
+  },
+  {
+   "id": "open_banking",
+   "term": "오픈뱅킹",
+   "original": "Open Banking",
+   "korean": "오픈뱅킹",
+   "aliases": [
+    "Open Banking",
+    "오픈 뱅킹",
+    "개방형 금융결제 플랫폼",
+    "공동결제시스템"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "finance"
+     ],
+     "roles": [
+      "pm"
+     ],
+     "level": "실무",
+     "importance": 3,
+     "definition": "핀테크 기업이나 금융회사가 하나의 앱에서 여러 은행의 조회·이체 같은 금융 기능을 제공할 수 있도록, 금융결제원이 표준 API로 거래를 중계해 주는 개방형 금융결제 플랫폼입니다.",
+     "formula": null,
+     "examples": [
+      "타행 계좌 등록은 오픈뱅킹 API로 붙이면 은행별 개별 연동이 필요 없어요.",
+      "오픈뱅킹 출금이체 실패 건이 늘어서 원인 코드를 나눠 봐야겠어요."
+     ],
+     "sources": [
+      {
+       "title": "오픈뱅킹 | 금융결제원 통합포털",
+       "url": "https://openapi.kftc.or.kr/service/openBanking",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "마이데이터",
+     "note": "금융 데이터 개방 정책으로 함께 다뤄집니다."
+    },
+    {
+     "term": "API",
+     "note": "오픈뱅킹은 참가기관 공통의 표준 API로 이용합니다."
+    },
+    {
+     "term": "PG",
+     "note": "간편결제·충전 서비스가 결제 연결 수단으로 오픈뱅킹을 쓰기도 합니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "마이데이터",
+     "difference": "오픈뱅킹은 조회·이체 기능을 중계하는 결제 인프라이고, 마이데이터는 본인 신용정보를 모아 보여 주는 허가 업종입니다."
+    }
+   ]
+  },
+  {
+   "id": "efta",
+   "term": "전자금융거래법",
+   "original": "Electronic Financial Transactions Act",
+   "korean": "전자금융거래법",
+   "aliases": [
+    "전금법",
+    "전자금융법",
+    "EFTA",
+    "전자금융거래 법"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "finance"
+     ],
+     "roles": [
+      "pm"
+     ],
+     "level": "심화",
+     "importance": 3,
+     "definition": "고객이 직원을 직접 만나지 않고 전자적 장치로 금융 서비스를 이용하는 거래의 법률관계를 정해, 거래의 안전성과 신뢰성을 높이고 전자금융업의 건전한 발전을 돕기 위한 법입니다. 접근매체 관리, 거래내용 확인, 오류정정 요구 같은 이용자 보호 내용을 담고 있습니다(학습용 설명이며 법률 판단이 아닙니다).",
+     "formula": null,
+     "examples": [
+      "간편송금 기능은 전자금융거래법상 어떤 업무에 해당하는지 준법팀 확인이 먼저예요.",
+      "오류정정 요청 처리 기한이 전금법에 있으니 CS 프로세스에 반영해 주세요."
+     ],
+     "sources": [
+      {
+       "title": "전자금융거래법 | 한국법제연구원 대한민국 영문법령",
+       "url": "https://elaw.klri.re.kr/kor_service/lawViewMultiContent.do?hseq=44455",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
+      {
+       "title": "전자금융거래 이용 | 찾기쉬운 생활법령정보",
+       "url": "https://easylaw.go.kr/CSP/CnpClsMain.laf?popMenu=ov&csmSeq=1771&ccfNo=2&cciNo=2&cnpClsNo=1",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "망분리",
+     "note": "전자금융 보안 규제 논의에서 함께 나옵니다."
+    },
+    {
+     "term": "FDS",
+     "note": "전자금융거래 사고를 막는 대표적인 보안 장치입니다."
+    },
+    {
+     "term": "오픈뱅킹",
+     "note": "전자금융 서비스 기획 시 함께 검토하는 인프라입니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "금융소비자보호법",
+     "difference": "전자금융거래법은 전자적 금융거래의 법률관계와 안전을 다루고, 금융소비자보호법은 금융상품 판매 과정의 소비자 보호를 다룹니다."
+    }
+   ]
+  },
+  {
+   "id": "fcpa_kr",
+   "term": "금융소비자보호법",
+   "original": "Financial Consumer Protection Act",
+   "korean": "금융소비자 보호에 관한 법률",
+   "aliases": [
+    "금소법",
+    "금융소비자법",
+    "금융소비자 보호법",
+    "6대 판매원칙"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "cx",
+      "marketing"
+     ],
+     "level": "실무",
+     "importance": 5,
+     "definition": "금융상품을 파는 쪽이 지켜야 할 판매 규칙을 정해 금융소비자를 보호하는 법입니다. 적합성 원칙, 적정성 원칙, 설명의무, 불공정영업 금지, 부당권유 금지, 허위·과장 광고 금지의 6대 판매원칙과 위법계약해지권 등이 핵심입니다(학습용 설명이며 법률 판단이 아닙니다).",
+     "formula": null,
+     "examples": [
+      "이번 상품 가입 화면은 금소법 6대 판매원칙 기준으로 체크리스트부터 돌려 볼게요.",
+      "배너 문구가 금소법상 과장 광고로 보일 수 있다고 준법감시 쪽 의견이 왔어요."
+     ],
+     "sources": [
+      {
+       "title": "금융상품 6대 판매원칙 | 찾기쉬운 생활법령정보",
+       "url": "https://easylaw.go.kr/CSP/CnpClsMain.laf?popMenu=ov&csmSeq=1771&ccfNo=1&cciNo=1&cnpClsNo=2",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
+      {
+       "title": "[금융소비자보호법] 관련 10문 10답 | 금융위원회",
+       "url": "https://www.fsc.go.kr/po020201/75644",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "적합성 원칙",
+     "note": "6대 판매원칙의 첫 번째 원칙입니다."
+    },
+    {
+     "term": "설명의무",
+     "note": "6대 판매원칙 중 하나로 상품 화면·설명서 설계에 직접 영향을 줍니다."
+    },
+    {
+     "term": "금융광고 심의",
+     "note": "허위·과장 광고 금지와 광고 규제가 이 법에 근거합니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "예금자보호",
+     "difference": "예금자보호는 금융회사가 망했을 때 예금을 일정 한도까지 돌려주는 제도이고, 금소법은 판매 과정의 규칙을 정한 법입니다."
+    }
+   ]
+  },
+  {
+   "id": "suitability",
+   "term": "적합성 원칙",
+   "original": "Suitability Rule",
+   "korean": "적합성 원칙",
+   "aliases": [
+    "적합성원칙",
+    "적합성",
+    "Suitability",
+    "투자성향 진단"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "finance"
+     ],
+     "roles": [
+      "cx",
+      "marketing",
+      "pm"
+     ],
+     "level": "실무",
+     "importance": 4,
+     "definition": "금융회사가 상품을 권유할 때 고객의 나이, 재산 상황 등을 먼저 파악하고, 그에 맞지 않는 상품은 권유하지 못하게 하는 판매원칙입니다. 금융소비자보호법의 6대 판매원칙 중 하나입니다(학습용 설명이며 법률 판단이 아닙니다).",
+     "formula": null,
+     "examples": [
+      "투자성향 진단 결과가 안정형인 고객에게는 고위험 상품 추천 카드가 뜨지 않게 막아 주세요.",
+      "적합성 원칙 때문에 개인화 추천 로직에 투자성향 필터를 꼭 넣어야 해요."
+     ],
+     "sources": [
+      {
+       "title": "금융상품 6대 판매원칙 | 찾기쉬운 생활법령정보",
+       "url": "https://easylaw.go.kr/CSP/CnpClsMain.laf?popMenu=ov&csmSeq=1771&ccfNo=1&cciNo=1&cnpClsNo=2",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "금융소비자보호법",
+     "note": "적합성 원칙의 근거 법입니다."
+    },
+    {
+     "term": "설명의무",
+     "note": "권유 단계에서 함께 지켜야 하는 판매원칙입니다."
+    },
+    {
+     "term": "불완전판매",
+     "note": "적합성 원칙을 어기면 불완전판매 문제로 이어집니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "적정성 원칙",
+     "difference": "적합성 원칙은 회사가 권유할 때, 적정성 원칙은 고객이 스스로 사려는 상품이 맞지 않을 때 알려 주는 원칙입니다."
+    }
+   ]
+  },
+  {
+   "id": "duty_to_explain",
+   "term": "설명의무",
+   "original": "Duty to Explain",
+   "korean": "설명의무",
+   "aliases": [
+    "설명 의무",
+    "상품설명의무",
+    "중요사항 설명",
+    "핵심설명서"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "finance"
+     ],
+     "roles": [
+      "cx",
+      "marketing"
+     ],
+     "level": "실무",
+     "importance": 4,
+     "definition": "금융상품을 팔 때 고객이 꼭 알아야 할 주요 내용을 이해할 수 있게 설명해야 하는 판매원칙입니다. 금융소비자보호법의 6대 판매원칙 중 하나입니다(학습용 설명이며 법률 판단이 아닙니다).",
+     "formula": null,
+     "examples": [
+      "비대면 가입 화면에서 설명의무 이행 확인 단계를 건너뛸 수 없게 해 주세요.",
+      "상담 스크립트에 원금 손실 가능성 안내가 빠져 있어서 설명의무 관점에서 보완이 필요해요."
+     ],
+     "sources": [
+      {
+       "title": "금융상품 6대 판매원칙 | 찾기쉬운 생활법령정보",
+       "url": "https://easylaw.go.kr/CSP/CnpClsMain.laf?popMenu=ov&csmSeq=1771&ccfNo=1&cciNo=1&cnpClsNo=2",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "적합성 원칙",
+     "note": "판매 과정에서 함께 지켜야 하는 원칙입니다."
+    },
+    {
+     "term": "불완전판매",
+     "note": "설명이 부족하면 불완전판매로 이어질 수 있습니다."
+    },
+    {
+     "term": "VOC",
+     "note": "설명을 못 들었다는 VOC는 설명의무 점검 신호입니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "금융광고 심의",
+     "difference": "설명의무는 계약 과정에서 고객에게 설명하는 의무이고, 광고 심의는 계약 전 광고물을 미리 검토하는 절차입니다."
+    }
+   ]
+  },
+  {
+   "id": "mis_selling",
+   "term": "불완전판매",
+   "original": "Mis-selling",
+   "korean": "불완전판매",
+   "aliases": [
+    "불판",
+    "불완전 판매",
+    "Mis-selling",
+    "미스셀링"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "finance"
+     ],
+     "roles": [
+      "cx",
+      "marketing"
+     ],
+     "level": "실무",
+     "importance": 4,
+     "definition": "고객에게 맞지 않는 위험한 상품을 팔거나 위험을 충분히 설명하지 않는 등, 판매원칙을 제대로 지키지 않은 채 금융상품을 판 경우를 말합니다. 금융당국은 이를 막기 위해 적합성 평가와 설명 절차를 강화해 왔습니다(학습용 설명이며 법률 판단이 아닙니다).",
+     "formula": null,
+     "examples": [
+      "이번 분기 민원 중 불완전판매 주장 건만 따로 태그 달아서 모아 주세요.",
+      "판매 실적 KPI만 보면 불완전판매 소지가 생기니 사후 해피콜 지표도 같이 봐요."
+     ],
+     "sources": [
+      {
+       "title": "고난도 금투상품 불완전판매 예방을 위한 금융소비자보호법 시행령·감독규정 개정 추진 | 금융위원회",
+       "url": "https://www.fsc.go.kr/no010101/84921?srchCtgry=&curPage=&srchKey=&srchText=&srchBeginDt=&srchEndDt=",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "적합성 원칙",
+     "note": "적합성 원칙 위반은 대표적인 불완전판매 유형입니다."
+    },
+    {
+     "term": "설명의무",
+     "note": "설명 부족도 불완전판매의 주요 원인입니다."
+    },
+    {
+     "term": "금융분쟁조정",
+     "note": "불완전판매 다툼은 분쟁조정으로 이어지기도 합니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "보이스피싱",
+     "difference": "보이스피싱은 외부 사기범의 범죄이고, 불완전판매는 금융회사가 판매 과정에서 원칙을 지키지 않은 문제입니다."
+    }
+   ]
+  },
+  {
+   "id": "dispute_mediation",
+   "term": "금융분쟁조정",
+   "original": "Financial Dispute Mediation",
+   "korean": "금융분쟁조정",
+   "aliases": [
+    "분쟁조정",
+    "금융분쟁조정위원회",
+    "분조위",
+    "금감원 분쟁조정"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "finance"
+     ],
+     "roles": [
+      "cx"
+     ],
+     "level": "심화",
+     "importance": 3,
+     "definition": "금융소비자와 금융회사 사이에 다툼이 생겼을 때 금융감독원장에게 신청해 합의 권고와 금융분쟁조정위원회 심의를 거쳐 해결을 시도하는 제도입니다. 양쪽이 조정안을 받아들이면 재판상 화해와 같은 효력이 생깁니다(학습용 설명이며 법률 판단이 아닙니다).",
+     "formula": null,
+     "examples": [
+      "이 민원은 고객이 금감원 분쟁조정까지 가겠다고 해서 상담 기록을 전부 정리해 둬야 해요.",
+      "분쟁조정 사례를 보면 설명 녹취가 없을 때 불리하게 판단된 경우가 많아요."
+     ],
+     "sources": [
+      {
+       "title": "금융분쟁조정위원회의 분쟁조정 | 찾기쉬운 생활법령정보",
+       "url": "https://easylaw.go.kr/CSP/CnpClsMain.laf?popMenu=ov&csmSeq=1771&ccfNo=4&cciNo=1&cnpClsNo=1",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "불완전판매",
+     "note": "분쟁조정 신청의 흔한 원인입니다."
+    },
+    {
+     "term": "VOC",
+     "note": "분쟁으로 번지기 전 단계의 고객 불만 신호입니다."
+    },
+    {
+     "term": "금융소비자보호법",
+     "note": "판매원칙 위반 여부가 조정의 주요 쟁점이 됩니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "민원",
+     "difference": "민원은 불만이나 요청을 접수하는 것이고, 분쟁조정은 위원회 심의를 거쳐 조정안을 내는 별도 절차입니다."
+    }
+   ]
+  },
+  {
+   "id": "voice_phishing",
+   "term": "보이스피싱",
+   "original": "Voice Phishing",
+   "korean": "전기통신금융사기",
+   "aliases": [
+    "보피",
+    "전화금융사기",
+    "전기통신금융사기",
+    "Voice Phishing"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "finance"
+     ],
+     "roles": [
+      "cx"
+     ],
+     "level": "입문",
+     "importance": 4,
+     "definition": "전화나 문자 같은 전기통신 수단으로 사람을 속이거나 위협해 돈을 보내게 하거나 개인정보를 빼내 돈을 가져가는 사기입니다. 법에서는 대출을 해 주겠다며 속이는 경우도 여기에 포함합니다.",
+     "formula": null,
+     "examples": [
+      "보이스피싱 의심 이체 문의가 오면 지급정지 안내 스크립트로 바로 넘겨 주세요.",
+      "고령 고객 고액 이체 전에 보이스피싱 경고 팝업을 한 번 더 띄우는 안을 검토 중이에요."
+     ],
+     "sources": [
+      {
+       "title": "전기통신금융사기 정의 | 금융감독원 보이스피싱지킴이",
+       "url": "https://www.fss.or.kr/fss/main/contents.do?menuNo=200354",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "FDS",
+     "note": "보이스피싱 의심 거래를 찾아 막는 데 FDS가 쓰입니다."
+    },
+    {
+     "term": "AML",
+     "note": "사기 피해금의 흐름을 막는 일은 자금세탁방지와도 이어집니다."
+    },
+    {
+     "term": "VOC",
+     "note": "피해 신고와 문의가 CS 채널로 들어옵니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "스미싱",
+     "difference": "스미싱은 문자 메시지 링크로 악성 앱 설치 등을 유도하는 수법이고, 보이스피싱은 전기통신 수단을 이용한 금융사기 전반을 가리킵니다."
+    }
+   ]
+  },
+  {
+   "id": "network_separation",
+   "term": "망분리",
+   "original": "Network Separation",
+   "korean": "망분리",
+   "aliases": [
+    "망 분리",
+    "물리적 망분리",
+    "논리적 망분리",
+    "Network Separation"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "finance"
+     ],
+     "roles": [
+      "pm"
+     ],
+     "level": "심화",
+     "importance": 3,
+     "definition": "외부 침입으로부터 내부 전산자원을 보호하려고 내부 업무망과 인터넷 같은 외부망을 나누어 쓰게 하는 네트워크 보안 방식입니다. 국내 금융권은 물리적 망분리를 적용해 왔고, 최근에는 클라우드·생성형 AI 활용을 위해 규제를 완화하는 방향이 논의되고 있습니다.",
+     "formula": null,
+     "examples": [
+      "망분리 때문에 사내 업무망에서는 이 SaaS 협업툴을 바로 못 써요.",
+      "개발 환경 망분리 예외 적용 여부는 보안팀 검토가 끝나야 일정이 나와요."
+     ],
+     "sources": [
+      {
+       "title": "「금융부문 망분리 T/F」 1차 회의 개최 | 금융위원회",
+       "url": "https://www.fsc.go.kr/no010101/82108",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
+      {
+       "title": "「금융분야 망분리 개선 로드맵」 발표 | 금융위원회",
+       "url": "https://www.fsc.go.kr/no010101/82885?srchCtgry=&curPage=&srchKey=&srchText=&srchBeginDt=&srchEndDt=",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "전자금융거래법",
+     "note": "전자금융 보안 규제 체계 안에서 함께 다뤄집니다."
+    },
+    {
+     "term": "규제 샌드박스",
+     "note": "망분리 예외를 샌드박스로 시험하는 경우가 있습니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "방화벽",
+     "difference": "방화벽은 정해진 규칙으로 트래픽을 걸러 내는 장비이고, 망분리는 아예 내부망과 외부망을 나누는 방식입니다."
+    }
+   ]
+  },
+  {
+   "id": "regulatory_sandbox",
+   "term": "규제 샌드박스",
+   "original": "Regulatory Sandbox",
+   "korean": "금융규제 샌드박스",
+   "aliases": [
+    "샌드박스",
+    "금융규제 샌드박스",
+    "혁신금융서비스",
+    "규제샌드박스"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "finance"
+     ],
+     "roles": [
+      "pm",
+      "marketing"
+     ],
+     "level": "심화",
+     "importance": 3,
+     "definition": "기존 금융서비스와 내용·방식이 다른 혁신적인 서비스가 현행 규제 때문에 출시가 어려울 때, 일정 기준을 거쳐 규제 적용의 특례를 인정해 시험해 볼 수 있게 하는 제도입니다. 금융 분야에서는 혁신금융서비스 지정이 대표적이며 지정대리인, 위탁테스트 같은 방식도 있습니다.",
+     "formula": null,
+     "examples": [
+      "이 기능은 현행 규정상 막혀 있어서 혁신금융서비스 지정을 받는 쪽으로 로드맵을 잡았어요.",
+      "샌드박스 지정 서비스라 부가조건 이행 현황을 분기마다 정리해야 해요."
+     ],
+     "sources": [
+      {
+       "title": "금융규제 샌드박스 | 한국핀테크지원센터",
+       "url": "https://sandbox.fintech.or.kr/",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "망분리",
+     "note": "망분리 규제 예외가 샌드박스로 시험되기도 합니다."
+    },
+    {
+     "term": "MVP",
+     "note": "규제 특례 기간 안에서 작은 범위로 먼저 시험하는 점이 닮았습니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "베타 테스트",
+     "difference": "베타 테스트는 회사가 자체적으로 하는 시험 운영이고, 규제 샌드박스는 당국이 규제 특례를 인정해 주는 제도입니다."
+    }
+   ]
+  },
+  {
+   "id": "ad_review",
+   "term": "금융광고 심의",
+   "original": "Financial Advertising Review",
+   "korean": "금융광고 심의",
+   "aliases": [
+    "광고심의",
+    "광고 심의",
+    "심의필",
+    "준법감시인 심의",
+    "협회 사전심의"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "finance"
+     ],
+     "roles": [
+      "marketing"
+     ],
+     "level": "실무",
+     "importance": 4,
+     "definition": "금융상품 광고를 내기 전에 회사 내부(원칙적으로 준법감시인)의 심의를 거치고, 업권에 따라 협회의 사전심의도 받는 절차입니다. 허위·과장 광고로 소비자가 피해를 보지 않도록 하는 장치입니다(학습용 설명이며 법률 판단이 아닙니다).",
+     "formula": null,
+     "examples": [
+      "배너 문구 하나 바뀌어도 광고 심의 다시 받아야 하니 일정에 여유를 두세요.",
+      "심의필 번호가 소재에 들어갔는지 집행 전에 꼭 확인해 주세요."
+     ],
+     "sources": [
+      {
+       "title": "금융소비자의 광고 피해가 없도록 금융업권 협회와 함께 블로거·유튜버의 뒷광고까지도 확인하겠습니다 | 금융위원회",
+       "url": "https://www.fsc.go.kr/po010101/76045?srchCtgry=&curPage=46&srchKey=&srchText=&srchBeginDt=&srchEndDt=",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "금융소비자보호법",
+     "note": "허위·과장 광고 금지와 광고 규제의 근거 법입니다."
+    },
+    {
+     "term": "CTR",
+     "note": "광고 문구를 A/B 테스트할 때도 심의를 거친 소재만 쓸 수 있습니다."
+    },
+    {
+     "term": "설명의무",
+     "note": "광고와 상품 설명 내용이 서로 어긋나지 않아야 합니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "설명의무",
+     "difference": "광고 심의는 광고물을 집행 전에 검토하는 절차이고, 설명의무는 계약할 때 고객에게 내용을 설명하는 의무입니다."
+    }
+   ]
+  },
+  {
+   "id": "dormant_account",
+   "term": "휴면계좌",
+   "original": "Dormant Account",
+   "korean": "휴면예금",
+   "aliases": [
+    "휴면예금",
+    "휴면 계좌",
+    "잠자는 돈",
+    "Dormant Account"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "finance"
+     ],
+     "roles": [
+      "cx",
+      "marketing"
+     ],
+     "level": "실무",
+     "importance": 3,
+     "definition": "오랫동안 찾아가지 않아 법이나 약관에 따라 청구권의 소멸시효가 지난 예금 등이 남아 있는 계좌를 말하며, 그 돈을 휴면예금이라고 합니다. 금융회사가 서민금융진흥원에 출연한 휴면예금도 원래 주인이 청구하면 돌려받을 수 있습니다.",
+     "formula": null,
+     "examples": [
+      "휴면계좌 고객 대상 재활성화 캠페인 메시지는 사칭 오해가 없게 공식 채널만 써요.",
+      "휴면예금 조회 문의가 늘어서 FAQ에 서민금융진흥원 조회 경로를 추가했어요."
+     ],
+     "sources": [
+      {
+       "title": "나의 휴면예금 찾기 | 찾기쉬운 생활법령정보",
+       "url": "https://m.easylaw.go.kr/MOB/CsmInfoRetrieve.laf?csmSeq=1771&ccfNo=2&cciNo=3&cnpClsNo=1",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "리텐션",
+     "note": "휴면 전환을 줄이는 일은 고객 유지 지표와 이어집니다."
+    },
+    {
+     "term": "보이스피싱",
+     "note": "휴면예금 찾아 준다는 사칭 사기에 주의해야 합니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "이탈 고객",
+     "difference": "이탈 고객은 서비스 이용을 멈춘 고객을 넓게 부르는 말이고, 휴면계좌는 소멸시효가 지난 예금 등이 남은 계좌를 가리킵니다."
+    }
+   ]
+  },
+  {
+   "id": "return_rate_fin",
+   "term": "수익률",
+   "original": "Rate of Return",
+   "korean": "수익률",
+   "aliases": [
+    "리턴",
+    "투자수익률",
+    "수익율",
+    "연환산 수익률",
+    "ROR"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "finance"
+     ],
+     "roles": [
+      "data",
+      "marketing",
+      "cx"
+     ],
+     "level": "입문",
+     "importance": 5,
+     "definition": "투자한 돈에 비해 얼마를 벌었거나 잃었는지를 비율로 나타낸 값입니다. 펀드는 원칙적으로 살 때와 지금의 기준가격 차이로 계산하며, 기간이 다른 상품을 비교할 때는 1년 기준으로 바꾼 연환산 수익률을 쓰기도 합니다.",
+     "formula": "수익률 = (총수익 − 총비용) ÷ 운용평잔 (국민연금 금액가중수익률 산정기준)",
+     "examples": [
+      "이번 리포트는 누적 수익률 말고 연환산 수익률로 맞춰서 비교해 주세요.",
+      "수익률 화면에 기준가 기준인지 평가금액 기준인지 표기가 없어서 문의가 늘고 있어요."
+     ],
+     "sources": [
+      {
+       "title": "수익률 산정기준 - 국민연금기금운용본부",
+       "url": "https://fund.nps.or.kr/oprtprcn/oprtotcm/getOHED0012M0.do",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
+      {
+       "title": "금융 FAQ - 펀드투자정보 쉽게 찾는 방법(금융감독원)",
+       "url": "https://fss.or.kr/fss/bbs/B0000172/view.do?menuNo=200202&nttId=48390&pageIndex=1&viewType=",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
+      {
+       "title": "국내 로보어드바이저 현황과 성과 분석(연구보고서 21-05, 자본시장연구원)",
+       "url": "https://www.kcmi.re.kr/kcmifile/report_data/1471/reportpdf_1471_1.pdf",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "변동성",
+     "note": "같은 수익률이라도 얼마나 출렁이며 냈는지 함께 봐야 위험을 알 수 있습니다."
+    },
+    {
+     "term": "샤프 지수",
+     "note": "수익률을 위험(표준편차)으로 나눠 위험 대비 성과를 봅니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "MDD",
+     "difference": "수익률은 기간 전체 성과, MDD는 그 사이 고점 대비 가장 크게 떨어진 폭입니다."
+    }
+   ]
+  },
+  {
+   "id": "volatility",
+   "term": "변동성",
+   "original": "Volatility",
+   "korean": "변동성",
+   "aliases": [
+    "볼래틸리티",
+    "변동폭",
+    "수익률 표준편차",
+    "볼"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "finance"
+     ],
+     "roles": [
+      "data"
+     ],
+     "level": "실무",
+     "importance": 3,
+     "definition": "가격이나 수익률이 평균에서 얼마나 크게 오르내리는지를 나타내는 정도입니다. 보통 수익률의 표준편차로 재며, 값이 클수록 위험이 크다고 봅니다.",
+     "formula": null,
+     "examples": [
+      "이 상품은 변동성이 커서 위험등급 안내 문구를 더 눈에 띄게 넣어야 할 것 같아요.",
+      "대시보드에 최근 1년 수익률 표준편차로 변동성 지표 하나 추가할게요."
+     ],
+     "sources": [
+      {
+       "title": "국내 로보어드바이저 현황과 성과 분석(연구보고서 21-05, 자본시장연구원)",
+       "url": "https://www.kcmi.re.kr/kcmifile/report_data/1471/reportpdf_1471_1.pdf",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      },
+      {
+       "title": "금융용어사전 - 최대예상손실액(VaR) (금융소비자 정보포털 파인)",
+       "url": "https://fine.fss.or.kr/fine/fnctip/fncDicary/list.do?menuNo=900021&searchCnd=1&searchStr=VaR",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "샤프 지수",
+     "note": "변동성(표준편차)이 샤프 지수의 분모로 쓰입니다."
+    },
+    {
+     "term": "VaR",
+     "note": "위험요소의 변동성을 통계적으로 분석해 최대 손실을 추정합니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "MDD",
+     "difference": "변동성은 평소 출렁임의 크기, MDD는 고점에서 저점까지 실제로 떨어진 가장 큰 폭입니다."
+    }
+   ]
+  },
+  {
+   "id": "var",
+   "term": "VaR",
+   "original": "Value at Risk",
+   "korean": "최대예상손실액",
+   "aliases": [
+    "밸류앳리스크",
+    "브이에이알",
+    "최대예상손실",
+    "VAR",
+    "바"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "finance"
+     ],
+     "roles": [
+      "data"
+     ],
+     "level": "심화",
+     "importance": 3,
+     "definition": "주가·금리·환율 같은 위험요소의 변동성을 통계적으로 분석해, 정해진 보유기간과 신뢰수준에서 자산가치가 잃을 수 있는 최대 손실을 추정한 값입니다. 보유기간이나 신뢰수준을 바꾸면 값이 달라집니다.",
+     "formula": null,
+     "examples": [
+      "리스크팀에서 보유기간 10일, 신뢰수준 99% 기준으로 VaR 다시 뽑아 달래요.",
+      "VaR는 신뢰수준 밖 손실 크기는 안 보여 주니까 스트레스 테스트 결과도 같이 붙일게요."
+     ],
+     "sources": [
+      {
+       "title": "금융용어사전 - 최대예상손실액(VaR) (금융소비자 정보포털 파인)",
+       "url": "https://fine.fss.or.kr/fine/fnctip/fncDicary/list.do?menuNo=900021&searchCnd=1&searchStr=VaR",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "변동성",
+     "note": "VaR 계산의 바탕이 되는 값입니다."
+    },
+    {
+     "term": "MDD",
+     "note": "함께 쓰이는 대표적인 하방 위험 지표입니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "MDD",
+     "difference": "VaR는 앞으로의 손실을 확률로 추정하고, MDD는 과거에 실제로 겪은 최대 낙폭입니다."
+    }
+   ]
+  },
+  {
+   "id": "delinquency_rate",
+   "term": "연체율",
+   "original": "Delinquency Rate",
+   "korean": "연체율",
+   "aliases": [
+    "연체비율",
+    "대출 연체율",
+    "딜린퀀시",
+    "30일 이상 연체율"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "finance"
+     ],
+     "roles": [
+      "data",
+      "cx"
+     ],
+     "level": "실무",
+     "importance": 4,
+     "definition": "전체 대출 잔액 가운데 상환일이 지나 일정 기간 이상 밀린 금액이 차지하는 비율입니다. 통상 30일 이상 연체된 금액을 기준으로 계산하며, 연체한 사람의 대출 전체가 아니라 실제 연체된 금액만 분자에 넣습니다.",
+     "formula": "연체율 = 30일 이상 연체금액 ÷ 전체 대출 잔액",
+     "examples": [
+      "이번 달 연체율 리포트에서 분자를 연체차주 전체 잔액으로 잡았는지 다시 확인해 주세요.",
+      "연체율이 오른 구간 고객 대상으로 상환 안내 알림톡 문구 검토 부탁드려요."
+     ],
+     "sources": [
+      {
+       "title": "[보도설명] 자영업자 연체율은 연체금액을 기준으로 산정합니다 (금융위원회, 2024-03-04)",
+       "url": "https://fsc.go.kr/no010102/81827",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "신용점수",
+     "note": "연체 이력은 신용점수와 대출 심사에 함께 반영됩니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "무수익여신",
+     "difference": "연체율은 연체금액 비중, 무수익여신은 3개월 이상 연체 등 이자가 들어오지 않는 여신 개념입니다."
+    }
+   ]
+  },
+  {
+   "id": "credit_score",
+   "term": "신용점수",
+   "original": "Credit Score",
+   "korean": "개인신용평점",
+   "aliases": [
+    "신용평점",
+    "크레딧스코어",
+    "신용 점수",
+    "CB 점수"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "finance"
+     ],
+     "roles": [
+      "data",
+      "marketing",
+      "cx"
+     ],
+     "level": "입문",
+     "importance": 4,
+     "definition": "개인신용평가회사(CB사)가 개인의 신용도를 1~1,000점으로 매긴 점수입니다. 2021년 1월 1일부터 기존 1~10등급 대신 전 금융권에서 점수로 바뀌었고, 금융회사는 이 점수를 참고해 자체 심사를 합니다.",
+     "formula": null,
+     "examples": [
+      "신용점수 조회 후 대출 한도 화면으로 넘어가는 단계에서 이탈이 커요.",
+      "고객센터에 등급이 아니라 점수로 안내하도록 상담 스크립트 수정했어요."
+     ],
+     "sources": [
+      {
+       "title": "'21.1.1일부터는 신용점수로 자신의 신용을 확인하세요 (금융위원회 보도자료, 2020-12-28)",
+       "url": "https://www.fsc.go.kr/no010101/75101",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "연체율",
+     "note": "연체 발생은 신용점수 하락과 함께 연체율 지표에도 반영됩니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "신용등급",
+     "difference": "신용등급은 2020년까지 쓰던 1~10등급 구간, 신용점수는 1~1,000점 단위 점수입니다."
+    }
+   ]
+  },
+  {
+   "id": "trading_volume",
+   "term": "거래대금",
+   "original": "Trading Value",
+   "korean": "거래대금",
+   "aliases": [
+    "거래 금액",
+    "매매대금",
+    "트레이딩 밸류",
+    "거래대금 순위"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "finance"
+     ],
+     "roles": [
+      "data",
+      "marketing"
+     ],
+     "level": "입문",
+     "importance": 3,
+     "definition": "일정 기간 동안 체결된 거래를 금액으로 합친 값입니다. 체결된 주식 수를 세는 거래량과 달리 원 단위로 집계합니다.",
+     "formula": null,
+     "examples": [
+      "오늘 앱 홈 랭킹은 거래량 말고 거래대금 상위 종목으로 바꿔서 보여 주죠.",
+      "거래대금이 몰린 날 주문 트래픽이 같이 튀었는지 로그 확인 부탁드려요."
+     ],
+     "sources": [],
+     "status": "needs_check",
+     "check_note": "KRX(kind·data·tip), 금융투자협회 증권용어사전(스캔 PDF라 본문 추출 불가), 파인·한국은행 용어사전, 미래에셋 증권용어사전, JPX를 확인했으나 거래대금 정의 문장을 찾지 못함"
+    }
+   ],
+   "related": [
+    {
+     "term": "수익률",
+     "note": "거래대금이 많은 종목일수록 시장 관심이 커 수익률 변동도 함께 봅니다."
+    },
+    {
+     "term": "변동성",
+     "note": "거래가 적은 종목은 적은 거래로도 가격이 크게 흔들릴 수 있습니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "거래량",
+     "difference": "거래량은 체결된 주식 수(주), 거래대금은 체결 금액 합계(원)입니다."
+    }
+   ]
+  },
+  {
+   "id": "mdd",
+   "term": "MDD",
+   "original": "Maximum Drawdown",
+   "korean": "최대낙폭",
+   "aliases": [
+    "엠디디",
+    "최대 낙폭",
+    "최대손실낙폭",
+    "드로다운"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "finance"
+     ],
+     "roles": [
+      "data"
+     ],
+     "level": "심화",
+     "importance": 3,
+     "definition": "투자 기간 중 가장 높았던 시점에 사서 그 뒤 가장 낮은 시점에 팔았다고 가정할 때 생기는 누적 손실입니다. 하락 구간(드로다운)은 여러 번 있을 수 있지만 MDD는 그중 가장 큰 하나입니다.",
+     "formula": null,
+     "examples": [
+      "백테스트 리포트에 수익률만 있고 MDD가 빠졌어요. 같이 넣어 주세요.",
+      "MDD 기준을 고점 대비 종가로 잡았는지 장중 저가로 잡았는지 정의서에 적어 두죠."
+     ],
+     "sources": [
+      {
+       "title": "Sculpting Investment Portfolios: Maximum Drawdown and Optimal Portfolio Strategy (CFA Institute Enterprising Investor)",
+       "url": "https://rpc.cfainstitute.org/blogs/enterprising-investor/2013/sculpting-investment-portfolios-maximum-drawdown-and-optimal-portfolio-strategy",
+       "kind": "company_guide",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "변동성",
+     "note": "둘 다 위험 지표지만 MDD는 실제 하락 경로를 보여 줍니다."
+    },
+    {
+     "term": "샤프 지수",
+     "note": "위험 대비 성과를 볼 때 함께 비교합니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "VaR",
+     "difference": "MDD는 과거 실제 최대 하락폭, VaR는 신뢰수준 기준으로 추정한 앞으로의 최대 손실입니다."
+    }
+   ]
+  },
+  {
+   "id": "sharpe",
+   "term": "샤프 지수",
+   "original": "Sharpe Ratio",
+   "korean": "샤프 지수",
+   "aliases": [
+    "샤프지수",
+    "샤프 비율",
+    "샤프비율",
+    "Sharpe ratio"
+   ],
+   "senses": [
+    {
+     "industries": [
+      "finance"
+     ],
+     "roles": [
+      "data"
+     ],
+     "level": "심화",
+     "importance": 3,
+     "definition": "위험 한 단위를 감수한 대가로 얼마만큼의 초과수익을 냈는지 보여 주는 성과 지표입니다. 평균 수익률에서 무위험수익률(예: 국고채 금리)을 뺀 값을 수익률의 표준편차로 나눠 구하며, 클수록 위험 대비 성과가 좋다고 봅니다.",
+     "formula": "샤프 지수 = (평균 수익률 − 무위험수익률) ÷ 수익률의 표준편차",
+     "examples": [
+      "무위험수익률을 국고채 3년물로 쓸지 정해야 샤프 지수 비교가 가능해요.",
+      "포트폴리오별 샤프 지수 계산할 때 연환산 수익률 기준으로 통일해 주세요."
+     ],
+     "sources": [
+      {
+       "title": "국내 로보어드바이저 현황과 성과 분석(연구보고서 21-05, 자본시장연구원)",
+       "url": "https://www.kcmi.re.kr/kcmifile/report_data/1471/reportpdf_1471_1.pdf",
+       "kind": "official",
+       "checked_at": "2026-10-15"
+      }
+     ],
+     "status": "verified"
+    }
+   ],
+   "related": [
+    {
+     "term": "변동성",
+     "note": "분모인 표준편차가 곧 변동성입니다."
+    },
+    {
+     "term": "수익률",
+     "note": "분자에 들어가는 값입니다."
+    }
+   ],
+   "confusable": [
+    {
+     "term": "수익률",
+     "difference": "수익률은 번 비율만, 샤프 지수는 그 수익을 위험으로 나눈 효율입니다."
     }
    ]
   }

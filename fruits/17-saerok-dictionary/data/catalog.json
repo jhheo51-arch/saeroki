@@ -10,6 +10,11 @@
       "id": "platform",
       "name": "IT·플랫폼 서비스",
       "description": "앱·웹 서비스, 중개 플랫폼, SaaS"
+    },
+    {
+      "id": "finance",
+      "name": "금융·증권",
+      "description": "증권·은행·핀테크·연금. 용어는 학습용 설명이며 투자·법률 판단이 아닙니다"
     }
   ],
   "roles": [

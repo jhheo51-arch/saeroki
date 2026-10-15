@@ -316,6 +316,9 @@
       levelBadge(s.level) + checkBadge(s) + "<span>" + esc(where) + "</span></div>" +
       '<p class="def">' + esc(s.definition) + "</p>";
     if (s.formula) html += '<div class="formula">' + esc(s.formula) + "</div>";
+    if (s.industries.length === 1 && s.industries[0] === "finance") {
+      html += '<div class="notice" style="margin:8px 0">학습용 설명입니다. 투자·세금·법률 판단이나 상품 권유가 아니며, 숫자와 제도는 확인 날짜 기준이라 바뀔 수 있습니다.</div>';
+    }
     if (s.examples && s.examples.length) {
       html += '<ul class="examples">' + s.examples.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</ul>";
     }

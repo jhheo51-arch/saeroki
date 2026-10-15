@@ -107,7 +107,7 @@ class GlossaryDataTest(unittest.TestCase):
         cls.terms = load_terms()
 
     def test_catalog_lists_first_industries_and_roles(self):
-        self.assertEqual([x["id"] for x in self.catalog["industries"]], ["ecommerce", "platform"])
+        self.assertEqual([x["id"] for x in self.catalog["industries"]], ["ecommerce", "platform", "finance"])
         self.assertEqual([x["id"] for x in self.catalog["roles"]], ["pm", "data", "marketing", "cx"])
         self.assertEqual({p["id"] for p in self.catalog["purposes"]}, {"first_week", "interview", "metrics"})
 
@@ -223,6 +223,14 @@ class GlossaryCoreTest(unittest.TestCase):
         self.assertEqual(nxt, "roas")
         self.assertEqual((practice, level), ("cac", "실무"))
         self.assertIsNone(none)
+
+    def test_today_term_prefers_industry_specific_term_within_level(self):
+        terms = FIXTURE + [term("cpm", "CPM", [sense(E, ["marketing"], "입문", 3)], "Cost Per Mille", "노출당 비용")]
+        script = (
+            "return core.todayCandidates(data, 'ecommerce', 'marketing', ['aov']).map(x => x.term.id).slice(0, 3);"
+        )
+        # 입문 중 이커머스 전용인 cpm(중요도 3)이 공통 용어 roas(중요도 5)보다 먼저입니다.
+        self.assertEqual(run_core(script, terms), ["cpm", "roas", "bounce_churn"])
 
     def test_purpose_lists_are_ordered_and_paged_by_ten(self):
         catalog = CATALOG_FIXTURE

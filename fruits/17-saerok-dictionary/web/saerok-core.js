@@ -125,6 +125,7 @@
     var items = cellTerms(terms, industry, role).filter(function (item) { return !seen[item.term.id]; });
     items.sort(function (a, b) {
       return levelIndex(a.sense.level) - levelIndex(b.sense.level) ||
+        (a.sense.industries.length === 1 ? 0 : 1) - (b.sense.industries.length === 1 ? 0 : 1) ||
         (b.sense.importance || 0) - (a.sense.importance || 0) ||
         (a.sense.status === "verified" ? 0 : 1) - (b.sense.status === "verified" ? 0 : 1) ||
         (a.term.id < b.term.id ? -1 : a.term.id > b.term.id ? 1 : 0);
@@ -132,7 +133,8 @@
     return items;
   }
 
-  // 오늘의 용어: 같은 날·같은 칸에서 이미 고른 용어가 있으면 그대로, 없으면 안 본 용어를 입문→실무→심화, 중요도 순으로 고릅니다.
+  // 오늘의 용어: 같은 날·같은 칸에서 이미 고른 용어가 있으면 그대로, 없으면 안 본 용어를 입문→실무→심화 순으로,
+  // 같은 난이도에서는 고른 산업 전용 용어를 먼저, 그다음 중요도 순으로 고릅니다.
   function pickToday(terms, industry, role, seenIds, previous, today) {
     if (previous && previous.date === today && previous.industry === industry && previous.role === role) {
       var kept = terms.filter(function (t) { return t.id === previous.id; })[0];
