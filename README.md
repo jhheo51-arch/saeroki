@@ -5,7 +5,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/PRD-v1.5-40916C" alt="PRD v1.5">
   <img src="https://img.shields.io/badge/Agent_Ideas-16-90A955" alt="에이전트 후보 16개">
-  <img src="https://img.shields.io/badge/Tests-18_passing-31572C" alt="자동 검사 18개 통과">
+  <img src="https://img.shields.io/badge/Tests-20_passing-31572C" alt="자동 검사 20개 통과">
   <img src="https://img.shields.io/badge/Claude_%2B_Codex-shared_rules-40916C" alt="Claude와 Codex 공통 규칙">
 </p>
 
@@ -126,7 +126,7 @@ python saeroki_cli.py scheduled-recommend --profile data/profile.local.json --ca
 - [x] 취향 저장, 출처 검사, 중복 제거와 추천 이유
 - [x] 계획 후 실행, 결과 자기 검토와 실행 기록
 - [x] 저장, 이미 앎, 관심 없음과 너무 유명함 피드백
-- [x] 콘텐츠 개인화 공통 기반의 자동 검사 18개
+- [x] 콘텐츠 개인화 공통 기반의 자동 검사 20개
 - [x] 서울 시간대별 추천 구성
 - [x] 서울 현재 날씨를 아침 음악 추천에 전달
 - [x] API 없이 수동 YouTube Music 후보 목록 사용

@@ -7,6 +7,7 @@
 from __future__ import annotations
 
 import json
+import re
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, time, timedelta, timezone
 from pathlib import Path
@@ -118,6 +119,11 @@ def canonical_url(url: str) -> str:
     )
 
 
+def canonical_title(title: str) -> str:
+    """RSS마다 조금씩 다른 공백과 기호를 정리해 같은 제목을 비교합니다."""
+    return re.sub(r"\s+", " ", re.sub(r"[^\w가-힣 ]", "", title.casefold())).strip()
+
+
 def candidate_issues(candidate: Candidate) -> list[str]:
     """추천 후보가 최소한의 출처 정보를 갖췄는지 확인합니다."""
     issues: list[str] = []
@@ -143,14 +149,18 @@ def prepare_candidates(
     rejected: list[dict[str, object]] = []
     seen_ids: set[str] = set()
     seen_urls: set[str] = set()
+    seen_titles: set[str] = set()
 
     for candidate in candidates:
         issues = candidate_issues(candidate)
         normalized_url = canonical_url(candidate.url)
+        normalized_title = canonical_title(candidate.title)
         if candidate.id in seen_ids:
             issues.append("같은 id의 후보가 이미 있습니다")
         if normalized_url in seen_urls:
             issues.append("같은 웹 주소의 후보가 이미 있습니다")
+        if normalized_title and normalized_title in seen_titles:
+            issues.append("같은 제목의 후보가 이미 있습니다")
 
         if issues:
             rejected.append({"id": candidate.id, "reasons": issues})
@@ -159,6 +169,7 @@ def prepare_candidates(
         prepared.append(candidate)
         seen_ids.add(candidate.id)
         seen_urls.add(normalized_url)
+        seen_titles.add(normalized_title)
 
     return prepared, rejected
 

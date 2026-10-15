@@ -237,6 +237,13 @@ class SaerokiTest(unittest.TestCase):
         self.assertEqual(candidates[0].content_type, "technology_blog")
         self.assertEqual(candidates[0].title, "기술 글")
 
+    def test_prepare_candidates_rejects_same_title_from_two_feeds(self):
+        first = Candidate("one", "같은 글", "https://one.example/a", ["기술"], "one", "2026-10-15")
+        second = Candidate("two", "같은 글!", "https://two.example/b", ["기술"], "two", "2026-10-15")
+        prepared, rejected = prepare_candidates([first, second])
+        self.assertEqual([item.id for item in prepared], ["one"])
+        self.assertIn("같은 제목의 후보가 이미 있습니다", rejected[0]["reasons"])
+
     def test_weather_payload_maps_open_meteo_code(self):
         observation = parse_weather_payload({
             "current": {
