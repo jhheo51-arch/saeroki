@@ -42,6 +42,15 @@ class SaerokiTest(unittest.TestCase):
         result = recommend(self.candidates, self.preference, {"known"})
         self.assertEqual([item.candidate.id for item in result], ["rain", "ai"])
 
+    def test_interest_and_excluded_keywords_are_matched_in_title(self):
+        profile = Preference(["기획"], excluded=["광고성"])
+        candidates = [
+            Candidate("good", "기획 실험 기록", "https://example.com/good", [], "기술 블로그", "2026-10-15"),
+            Candidate("bad", "광고성 기획 안내", "https://example.com/bad", [], "기술 블로그", "2026-10-15"),
+        ]
+        result = recommend(candidates, profile, allow_unmatched=False)
+        self.assertEqual([item.candidate.id for item in result], ["good"])
+
     def test_unknown_popularity_is_not_claimed_as_obscure(self):
         result = recommend(self.candidates, self.preference)
         rain = next(item for item in result if item.candidate.id == "rain")

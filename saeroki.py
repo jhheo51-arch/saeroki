@@ -196,7 +196,9 @@ def recommend(
             continue
 
         tags = {tag.casefold() for tag in candidate.tags}
-        if tags & excluded_set:
+        searchable = " ".join([candidate.title, candidate.source, *candidate.tags]).casefold()
+        excluded_matches = sorted(keyword for keyword in excluded_set if keyword in searchable)
+        if excluded_matches:
             continue
         if (
             preference.max_popularity is not None
@@ -205,8 +207,8 @@ def recommend(
         ):
             continue
 
-        interest_matches = sorted(tags & interest_set)
-        context_matches = sorted(tags & context_set)
+        interest_matches = sorted(keyword for keyword in interest_set if keyword in searchable)
+        context_matches = sorted(keyword for keyword in context_set if keyword in searchable)
         score = len(interest_matches) * 2 + len(context_matches)
         if score == 0 and not allow_unmatched:
             continue
