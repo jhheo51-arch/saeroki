@@ -33,6 +33,7 @@
 - 서울 고정 좌표의 현재 날씨는 Open-Meteo 공개 API에서 가져오며, API 키를 저장하지 않습니다.
 - 유명한 곡보다 잘 알려지지 않은 숨은 명곡을 우선합니다.
 - 현재는 아침 출근길에만 1개를 추천합니다.
+- API 없이 `data/music-candidates.example.json`에 등록한 YouTube Music 후보에서 고릅니다.
 - 인기도 자료가 없으면 숨은 명곡이라고 단정하지 않고 확인 필요 상태를 표시합니다.
 
 ### 기술 블로그
@@ -114,8 +115,9 @@ Claude 웹앱 프로젝트에는 다음 자료를 넣습니다.
 4. `AGENT-SPEC.md`
 5. `data/sources.example.json`
 6. `claude/session-input.template.json`
-7. 사용자 취향 파일
-8. 최신 후보 JSON
+7. `data/music-candidates.example.json`
+8. 사용자 취향 파일
+9. 최신 후보 JSON
 
 Claude의 역할은 후보를 새로 지어내는 것이 아니라, 수집기가 만든 후보를 시간대와 취향에 맞춰 비교하고 추천 이유를 한 문장으로 작성하는 것입니다. Claude API로 확장할 때도 이 역할과 데이터 구조를 유지합니다.
 

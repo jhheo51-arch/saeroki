@@ -61,6 +61,7 @@
 | [`source_collector.py`](source_collector.py) | 공개 웹페이지 메타데이터 확인 |
 | [`weather.py`](weather.py) | 서울 현재 날씨와 날씨 코드 확인 |
 | [`data/candidates.example.json`](data/candidates.example.json) | 실제 자료가 아닌 기능 확인용 후보 |
+| [`data/music-candidates.example.json`](data/music-candidates.example.json) | API 없이 직접 관리하는 YouTube Music 후보 양식 |
 | [`data/sources.example.json`](data/sources.example.json) | 공개 출처와 수집 허용 범위 초안 |
 | [`data/insight-bookmarks.example.json`](data/insight-bookmarks.example.json) | 이미지에서 옮긴 INSIGHT 북마크 이름 목록 |
 
@@ -99,6 +100,21 @@ python saeroki_cli.py feedback --profile data/profile.local.json --candidate exa
 ```powershell
 python saeroki_cli.py scheduled-recommend --profile data/profile.local.json --candidates data/candidates.example.json --at 2026-10-15T08:00:00+09:00
 python saeroki_cli.py scheduled-recommend --profile data/profile.local.json --candidates data/candidates.example.json --live-weather --at 2026-10-15T08:00:00+09:00
+python saeroki_cli.py scheduled-recommend --profile data/profile.local.json --candidates data/candidates.example.json --music-candidates data/music-candidates.example.json --live-weather --at 2026-10-15T08:00:00+09:00
+```
+
+음악 후보는 `data/music-candidates.example.json`에 직접 추가합니다. 각 항목에는 `content_type`을 `music`으로 쓰고 `music.youtube.com` 또는 YouTube 주소를 넣어야 합니다. 후보를 새록이가 자동으로 검색하지 않으므로 API 키가 필요하지 않습니다.
+
+```json
+{
+  "id": "artist-song",
+  "title": "곡 제목",
+  "url": "https://music.youtube.com/watch?v=VIDEO_ID",
+  "tags": ["발라드", "비"],
+  "source": "공식 아티스트 채널",
+  "checked_at": "2026-10-15T08:00:00+09:00",
+  "content_type": "music"
+}
 ```
 
 현재 후보 자료는 흐름을 확인하기 위한 가상 예시입니다. 실제 기술 블로그와 뉴스레터를 수집한 결과가 아닙니다.
@@ -113,6 +129,7 @@ python saeroki_cli.py scheduled-recommend --profile data/profile.local.json --ca
 - [x] 콘텐츠 개인화 공통 기반의 자동 검사 15개
 - [x] 서울 시간대별 추천 구성
 - [x] 서울 현재 날씨를 아침 음악 추천에 전달
+- [x] API 없이 수동 YouTube Music 후보 목록 사용
 - [x] 공개 웹페이지 메타데이터 파서
 - [x] 확인된 공개 출처에서 후보 JSON 만들기
 - [x] 공개 목록의 개별 링크를 후보로 바꾸는 기본 추출기

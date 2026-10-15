@@ -46,6 +46,7 @@ def build_parser() -> argparse.ArgumentParser:
     scheduled.add_argument("--at", help="ISO 시간, 생략하면 현재 시각")
     scheduled.add_argument("--weather-condition", help="아침 음악에 사용할 서울 날씨")
     scheduled.add_argument("--live-weather", action="store_true", help="서울 현재 날씨 조회")
+    scheduled.add_argument("--music-candidates", help="수동으로 관리하는 음악 후보 JSON")
 
     feedback = commands.add_parser("feedback", help="추천에 반응 남기기")
     feedback.add_argument("--profile", required=True)
@@ -108,6 +109,10 @@ def main() -> None:
     if args.command == "scheduled-recommend":
         profile = load_profile(args.profile)
         candidates = load_candidates(args.candidates)
+        if args.music_candidates:
+            from music_candidates import load_music_candidates
+
+            candidates.extend(load_music_candidates(args.music_candidates))
         current = datetime.fromisoformat(args.at) if args.at else datetime.now(timezone.utc)
         weather_condition = args.weather_condition
         if args.live_weather:

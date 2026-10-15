@@ -19,6 +19,7 @@ from saeroki import (
 )
 from source_collector import PublicLink, collect_confirmed_sources, parse_public_metadata
 from weather import parse_weather_payload, weather_code_label
+from music_candidates import load_music_candidates, validate_music_candidate
 
 
 class SaerokiTest(unittest.TestCase):
@@ -234,6 +235,20 @@ class SaerokiTest(unittest.TestCase):
         self.assertEqual(weather_code_label(61), "비")
         self.assertEqual(observation.condition, "비")
         self.assertEqual(observation.temperature_c, 18.5)
+
+    def test_manual_music_candidate_requires_youtube_link(self):
+        candidate = Candidate(
+            "song", "숨은 발라드", "https://music.youtube.com/watch?v=abc",
+            ["발라드", "비"], "수동 목록", "2026-10-15", content_type="music",
+        )
+        self.assertEqual(validate_music_candidate(candidate), [])
+
+    def test_manual_music_candidate_rejects_other_sites(self):
+        candidate = Candidate(
+            "song", "숨은 발라드", "https://example.com/song",
+            ["발라드"], "수동 목록", "2026-10-15", content_type="music",
+        )
+        self.assertIn("YouTube 또는 YouTube Music 주소가 아닙니다", validate_music_candidate(candidate))
 
 
 if __name__ == "__main__":
