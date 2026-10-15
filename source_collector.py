@@ -6,6 +6,7 @@ from dataclasses import dataclass
 from html.parser import HTMLParser
 from datetime import datetime, timezone
 import json
+import xml.etree.ElementTree as ET
 from pathlib import Path
 from urllib.parse import urljoin, urlparse
 from urllib.request import Request, urlopen
@@ -25,6 +26,42 @@ class PublicMetadata:
 class PublicLink:
     url: str
     title: str
+
+
+def parse_rss(xml_text: str, source_name: str, category: str, checked_at: str) -> list[Candidate]:
+    """RSS 2.0 또는 Atom의 글 항목을 후보로 바꿉니다."""
+    root = ET.fromstring(xml_text)
+    candidates: list[Candidate] = []
+    for index, item in enumerate(root.iter()):
+        if item.tag.rsplit("}", 1)[-1] not in {"item", "entry"}:
+            continue
+        values: dict[str, str] = {}
+        for child in item:
+            key = child.tag.rsplit("}", 1)[-1]
+            text = (child.text or "").strip()
+            if key == "link" and not text:
+                text = str(child.attrib.get("href") or "").strip()
+            if text and key not in values:
+                values[key] = text
+        url = values.get("link") or values.get("id")
+        title = values.get("title")
+        if not url or not title or not url.startswith(("http://", "https://")):
+            continue
+        content_type = "newsletter" if "뉴스레터" in category else "technology_blog" if "기술" in category or "블로그" in category else None
+        candidates.append(Candidate(
+            id=f"rss-{index + 1}", title=title, url=url.split("#", 1)[0], tags=[category],
+            source=source_name, checked_at=checked_at,
+            published_at=values.get("pubDate") or values.get("published") or values.get("updated"),
+            content_type=content_type,
+        ))
+    return candidates
+
+
+def fetch_rss(url: str, source_name: str, category: str, timeout: int = 10) -> list[Candidate]:
+    request = Request(url, headers={"User-Agent": "Saeroki/0.1 RSS check"})
+    with urlopen(request, timeout=timeout) as response:
+        xml_text = response.read().decode(response.headers.get_content_charset() or "utf-8", "replace")
+    return parse_rss(xml_text, source_name, category, datetime.now(timezone.utc).isoformat())
 
 
 def content_type_for_record(record: dict[str, object]) -> str | None:
@@ -181,6 +218,9 @@ def collect_confirmed_sources(
         if status != "confirmed_public":
             continue
         try:
+            if record.get("collection_mode") == "rss":
+                candidates.extend(fetch_rss(url, str(record.get("name") or url), str(record.get("category") or "미분류"), timeout))
+                continue
             if record.get("collection_mode") == "json_articles":
                 api_url = record.get("api_url")
                 if not isinstance(api_url, str):

@@ -17,7 +17,7 @@ from saeroki import (
     schedule_for_time,
     scheduled_recommend,
 )
-from source_collector import PublicLink, collect_confirmed_sources, parse_public_metadata
+from source_collector import PublicLink, collect_confirmed_sources, parse_public_metadata, parse_rss
 from weather import parse_weather_payload, weather_code_label
 from music_candidates import load_music_candidates, validate_music_candidate
 
@@ -230,6 +230,12 @@ class SaerokiTest(unittest.TestCase):
             [candidate], profile, datetime.fromisoformat("2026-10-15T08:00:00+09:00"), "비"
         )
         self.assertIn("서울 날씨: 비", run.recommendations["music"][0].reasons)
+
+    def test_rss_parser_creates_typed_candidates(self):
+        xml = "<rss><channel><item><title>기술 글</title><link>https://example.com/post</link><pubDate>2026-10-15</pubDate></item></channel></rss>"
+        candidates = parse_rss(xml, "예시 기술 블로그", "기술 블로그", "2026-10-15")
+        self.assertEqual(candidates[0].content_type, "technology_blog")
+        self.assertEqual(candidates[0].title, "기술 글")
 
     def test_weather_payload_maps_open_meteo_code(self):
         observation = parse_weather_payload({
