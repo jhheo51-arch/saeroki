@@ -4,7 +4,8 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/PRD-v1.5-40916C" alt="PRD v1.5">
-  <img src="https://img.shields.io/badge/Agent_Ideas-17-90A955" alt="에이전트 후보 17개">
+  <img src="https://img.shields.io/badge/%EC%97%B4%EB%A7%A4-12-D97757" alt="열매 12개">
+  <img src="https://img.shields.io/badge/%EB%BF%8C%EB%A6%AC-4-8A5A36" alt="뿌리 4개">
   <img src="https://img.shields.io/badge/Tests-28_passing-31572C" alt="자동 검사 28개 통과">
   <img src="https://img.shields.io/badge/Claude_%2B_Codex-shared_rules-40916C" alt="Claude와 Codex 공통 규칙">
 </p>
@@ -73,25 +74,45 @@
 |---|---|---|
 | 관심사와 현재 상황에 맞는 후보를 찾습니다. | 저장, 이미 앎, 관심 없음과 너무 유명함을 기록합니다. | 출처, 날짜와 추천 이유가 없으면 결과를 확정하지 않습니다. |
 
-## 17개 에이전트 지도
+## 새록이 열매 지도
 
-| 제품군 | 포함 항목 |
+새록이는 나무라서 에이전트도 나무의 말로 부릅니다. 사용자가 직접 쓰는 에이전트는 **열매**, 열매를 받치는 공통 기반은 **뿌리**입니다.
+
+**열매 12개 · 뿌리 4개**
+
+| 상태 | 뜻 |
 |---|---|
-| 추천 | 콘텐츠 개인화, 레시피, 도서 |
-| 기획 | 마케팅 전략, PRD 설계 지원 |
-| 조사와 분석 | 금융, 미디어 트렌드, 법률 문서, 심층 연구 |
-| 데이터 | 데이터 시각화, 자연어 SQL |
-| 학습 | 산업별 용어 사전 |
-| 공통 기반 | 정보 수집, 계획 후 실행, 결과 자기 검토, Agno 검토 |
+| 🌱 씨앗 | 기획만 저장했습니다 |
+| 🌸 꽃 | 만드는 중입니다 |
+| 🍎 열매 | 첫 버전을 완성했습니다 |
 
-초기 방향과 1번부터 16번까지의 원래 목록과 나중에 더한 17번은 [PRD v01](docs/PRD-v01.md)에, 현재 구현 상태는 [PRD v1.5](docs/PRD-v1.5.md)에 보관합니다.
+### 열매 12개
+
+| 갈래 | 열매 |
+|---|---|
+| 추천 | 🌸 1 콘텐츠 개인화 · 🌱 6 레시피 · 🌱 11 도서 |
+| 기획 | 🌱 3 마케팅 전략 · 🌱 4 PRD 설계 지원 |
+| 조사와 분석 | 🌱 7 금융 · 🌱 8 미디어 트렌드 · 🌱 9 법률 문서(10번 통합) · 🌱 15 심층 연구 |
+| 데이터 | 🌱 5 데이터 시각화 · 🌱 16 자연어 SQL |
+| 학습 | 🌱 17 산업별 용어 사전 |
+
+### 뿌리 4개
+
+| 뿌리 | 하는 일 |
+|---|---|
+| 🌱 2 Agno | 열매들을 실행하는 공통 운영 기반(미도입) |
+| 🌸 12 정보 수집 | 공개 출처에서 후보를 모읍니다 |
+| 🌸 13 계획 후 실행 | 실행 계획을 세우고 단계를 기록합니다 |
+| 🌸 14 결과 자기 검토 | 결과를 스스로 확인하고 고칩니다 |
+
+번호는 처음 정한 에이전트 번호입니다. 1번부터 16번까지의 원래 목록과 나중에 더한 17번은 [PRD v01](docs/PRD-v01.md)에, 현재 상태는 [PRD v1.5](docs/PRD-v1.5.md)에 보관합니다.
 
 ## 프로젝트 지도
 
 | 위치 | 내용 |
 |---|---|
-| [`docs/PRD-v01.md`](docs/PRD-v01.md) | 제품 방향, 17개 후보, 위험과 개발 순서 |
-| [`docs/PRD-v1.5.md`](docs/PRD-v1.5.md) | 현재 구현 범위, 실행 방법, 17개 상태와 Claude 이어하기 안내 |
+| [`docs/PRD-v01.md`](docs/PRD-v01.md) | 제품 방향, 열매 12개와 뿌리 4개의 원래 목록, 위험과 개발 순서 |
+| [`docs/PRD-v1.5.md`](docs/PRD-v1.5.md) | 현재 구현 범위, 실행 방법, 열매와 뿌리의 씨앗·꽃·열매 상태, Claude 이어하기 안내 |
 | [`docs/PRD-v1.6.md`](docs/PRD-v1.6.md) | 1번 콘텐츠 개인화 에이전트의 스무고개 확정 설계 |
 | [`docs/CLAUDE-HANDOFF.md`](docs/CLAUDE-HANDOFF.md) | Codex push 후 Claude Code pull 또는 웹앱 프로젝트 업로드 절차 |
 | [`claude/PROJECT-INSTRUCTIONS.md`](claude/PROJECT-INSTRUCTIONS.md) | Claude 프로젝트에서 사용할 새록이 지침 |
@@ -167,6 +188,7 @@ python saeroki_cli.py scheduled-recommend --profile data/profile.local.json --ca
 
 - [x] 제품군과 16개 후보를 정리한 PRD v01
 - [x] 17번 산업별 용어 사전 에이전트 후보 추가
+- [x] 에이전트를 열매 12개와 뿌리 4개로 정리
 - [x] Claude와 Codex가 함께 읽는 공통 행동 원칙
 - [x] 취향 저장, 출처 검사, 중복 제거와 추천 이유
 - [x] 계획 후 실행, 결과 자기 검토와 실행 기록

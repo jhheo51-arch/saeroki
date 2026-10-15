@@ -59,27 +59,29 @@ python saeroki_cli.py init-profile --output data/profile.local.json --interest A
 python saeroki_cli.py recommend --profile data/profile.local.json --candidates data/candidates.collected.local.json --log data/run-log.jsonl
 ```
 
-## 4. 17개 에이전트 현재 상태
+## 4. 열매와 뿌리 현재 상태
 
-| 번호 | 에이전트 | v1.5 상태 |
-|---:|---|---|
-| 1 | Content Personalization Agent | 공통 기반과 뉴닉 공개 아티클 수집 구현 중 |
-| 2 | Agno | 별도 제품이 아닌 전체 에이전트 운영 기반으로 설계, 미도입 |
-| 3 | Marketing Strategy Generator | 기획만 저장 |
-| 4 | PRD 설계 지원 에이전트 | 기획만 저장 |
-| 5 | Data Visualization Group Chat | 기획만 저장 |
-| 6 | Recipe Creator | 기획만 저장 |
-| 7 | Finance Agent (고급) | 기획만 저장, 금융 판단 보호 기준만 기록 |
-| 8 | Media Trend Analysis Agent | 기획만 저장 |
-| 9 | Legal Document Analysis | 10번과 통합한 하나의 제품으로 기획만 저장 |
-| 10 | Legal Document Analysis | 9번과 중복되어 별도 구현하지 않음 |
-| 11 | Book Recommendation Agent | 기획만 저장 |
-| 12 | Information Gathering Prompting | 공개 출처 수집 기능 일부 구현 |
-| 13 | Plan-and-Execute Agent | 추천 실행 계획과 단계 기록 일부 구현 |
-| 14 | Reflection Agent | 결과 자기 검토 일부 구현 |
-| 15 | Research Agent | 기획만 저장 |
-| 16 | SQL 관련 Agent | 기획만 저장, 첫 버전은 읽기 전용으로 예정 |
-| 17 | 산업별 용어 정리 사전 | 2026-10-15 추가, 첫 메모만 저장 |
+열매 12개와 뿌리 4개의 진행 상태입니다. 🌱 씨앗은 기획만 저장, 🌸 꽃은 만드는 중, 🍎 열매는 첫 버전 완성입니다. 아직 열매 상태에 닿은 항목은 없습니다.
+
+| 번호 | 에이전트 | 구분 | 상태 | v1.5 메모 |
+|---:|---|---|---|---|
+| 1 | Content Personalization Agent | 열매 | 🌸 꽃 | 공통 기반과 뉴닉 공개 아티클 수집 구현 중 |
+| 2 | Agno | 뿌리 | 🌱 씨앗 | 별도 제품이 아닌 전체 에이전트 운영 기반으로 설계, 미도입 |
+| 3 | Marketing Strategy Generator | 열매 | 🌱 씨앗 | 기획만 저장 |
+| 4 | PRD 설계 지원 에이전트 | 열매 | 🌱 씨앗 | 기획만 저장 |
+| 5 | Data Visualization Group Chat | 열매 | 🌱 씨앗 | 기획만 저장 |
+| 6 | Recipe Creator | 열매 | 🌱 씨앗 | 기획만 저장 |
+| 7 | Finance Agent (고급) | 열매 | 🌱 씨앗 | 기획만 저장, 금융 판단 보호 기준만 기록 |
+| 8 | Media Trend Analysis Agent | 열매 | 🌱 씨앗 | 기획만 저장 |
+| 9 | Legal Document Analysis | 열매 | 🌱 씨앗 | 10번과 통합한 하나의 제품으로 기획만 저장 |
+| 10 | Legal Document Analysis | 9번 열매에 통합 | 9번에 통합 | 9번과 중복되어 별도 구현하지 않음 |
+| 11 | Book Recommendation Agent | 열매 | 🌱 씨앗 | 기획만 저장 |
+| 12 | Information Gathering Prompting | 뿌리 | 🌸 꽃 | 공개 출처 수집 기능 일부 구현 |
+| 13 | Plan-and-Execute Agent | 뿌리 | 🌸 꽃 | 추천 실행 계획과 단계 기록 일부 구현 |
+| 14 | Reflection Agent | 뿌리 | 🌸 꽃 | 결과 자기 검토 일부 구현 |
+| 15 | Research Agent | 열매 | 🌱 씨앗 | 기획만 저장 |
+| 16 | SQL 관련 Agent | 열매 | 🌱 씨앗 | 기획만 저장, 첫 버전은 읽기 전용으로 예정 |
+| 17 | 산업별 용어 정리 사전 | 열매 | 🌱 씨앗 | 2026-10-15 추가, 첫 메모만 저장 |
 
 17개 목록과 원래 목적은 축약하지 않고 [PRD v01](PRD-v01.md)에 보존합니다. 실제 독립 제품 수를 셀 때는 9번과 10번을 하나로 관리합니다.
 
