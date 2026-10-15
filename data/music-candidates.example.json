@@ -10,5 +10,29 @@
     "author": "youra",
     "published_at": "2025-03-21",
     "content_type": "music"
+  },
+  {
+    "id": "music-1415-surfer",
+    "title": "1415 - SURFER",
+    "url": "https://music.youtube.com/watch?v=AspK0HBwPmY",
+    "tags": ["음악", "인디", "맑은 날", "출근길"],
+    "source": "1415 Official 공식 아티스트 채널",
+    "checked_at": "2026-10-15",
+    "popularity": 130376,
+    "author": "1415",
+    "published_at": "2018-08-12",
+    "content_type": "music"
+  },
+  {
+    "id": "music-hello-gayoung-feelings",
+    "title": "안녕하신가영 - 좋아하는 마음",
+    "url": "https://music.youtube.com/watch?v=eJu41EtCFSs",
+    "tags": ["음악", "인디", "따뜻한 날", "출근길"],
+    "source": "안녕음악hello eumak 공식 채널",
+    "checked_at": "2026-10-15",
+    "popularity": 222252,
+    "author": "안녕하신가영",
+    "published_at": "2016-01-19",
+    "content_type": "music"
   }
 ]
