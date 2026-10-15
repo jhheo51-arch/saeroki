@@ -59,7 +59,7 @@ python saeroki_cli.py init-profile --output data/profile.local.json --interest A
 python saeroki_cli.py recommend --profile data/profile.local.json --candidates data/candidates.collected.local.json --log data/run-log.jsonl
 ```
 
-## 4. 16개 에이전트 현재 상태
+## 4. 17개 에이전트 현재 상태
 
 | 번호 | 에이전트 | v1.5 상태 |
 |---:|---|---|
@@ -79,8 +79,9 @@ python saeroki_cli.py recommend --profile data/profile.local.json --candidates d
 | 14 | Reflection Agent | 결과 자기 검토 일부 구현 |
 | 15 | Research Agent | 기획만 저장 |
 | 16 | SQL 관련 Agent | 기획만 저장, 첫 버전은 읽기 전용으로 예정 |
+| 17 | 산업별 용어 정리 사전 | 2026-10-15 추가, 첫 메모만 저장 |
 
-16개 목록과 원래 목적은 축약하지 않고 [PRD v01](PRD-v01.md)에 보존합니다. 실제 독립 제품 수를 셀 때는 9번과 10번을 하나로 관리합니다.
+17개 목록과 원래 목적은 축약하지 않고 [PRD v01](PRD-v01.md)에 보존합니다. 실제 독립 제품 수를 셀 때는 9번과 10번을 하나로 관리합니다.
 
 ## 5. Claude에서 이어서 작업하는 방법
 

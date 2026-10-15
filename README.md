@@ -4,7 +4,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/PRD-v1.5-40916C" alt="PRD v1.5">
-  <img src="https://img.shields.io/badge/Agent_Ideas-16-90A955" alt="에이전트 후보 16개">
+  <img src="https://img.shields.io/badge/Agent_Ideas-17-90A955" alt="에이전트 후보 17개">
   <img src="https://img.shields.io/badge/Tests-25_passing-31572C" alt="자동 검사 25개 통과">
   <img src="https://img.shields.io/badge/Claude_%2B_Codex-shared_rules-40916C" alt="Claude와 Codex 공통 규칙">
 </p>
@@ -36,7 +36,10 @@
 - 성장 점수는 `누적 조회수 + 커밋 수`입니다.
 - GitHub Actions가 매일 서울 자정과 `main`에 push할 때 [`growth.py`](growth.py)를 실행해 그림을 다시 그립니다.
 - 조회수는 GitHub가 최근 14일만 알려 주므로 날짜별로 [`data/growth.json`](data/growth.json)에 쌓아 둡니다. 불러오지 못한 날은 0으로 바꾸지 않고 `확인 전`으로 남깁니다.
-- 조회수를 읽으려면 저장소 `Administration: Read` 권한이 있는 fine-grained 토큰을 `TRAFFIC_TOKEN` 시크릿으로 등록해야 합니다. 등록 전에는 커밋 수만으로 자랍니다.
+- 등록 전에는 커밋 수만으로 자랍니다. 조회수까지 반영하려면 아래처럼 토큰을 한 번 등록합니다.
+  1. GitHub `Settings` → `Developer settings` → `Fine-grained tokens`에서 새 토큰을 만듭니다. 저장소는 `saeroki`만 고르고 권한은 `Administration: Read-only`만 줍니다.
+  2. 저장소 `Settings` → `Secrets and variables` → `Actions`에 `TRAFFIC_TOKEN`이라는 이름으로 저장합니다.
+  3. `Actions` 탭의 `새록이 성장`에서 `Run workflow`를 누르거나 다음 자정 실행을 기다립니다.
 
 ## 지금의 새록이
 
@@ -44,7 +47,7 @@
 |---|---|---|
 | 관심사와 현재 상황에 맞는 후보를 찾습니다. | 저장, 이미 앎, 관심 없음과 너무 유명함을 기록합니다. | 출처, 날짜와 추천 이유가 없으면 결과를 확정하지 않습니다. |
 
-## 16개 에이전트 지도
+## 17개 에이전트 지도
 
 | 제품군 | 포함 항목 |
 |---|---|
@@ -52,16 +55,17 @@
 | 기획 | 마케팅 전략, PRD 설계 지원 |
 | 조사와 분석 | 금융, 미디어 트렌드, 법률 문서, 심층 연구 |
 | 데이터 | 데이터 시각화, 자연어 SQL |
+| 학습 | 산업별 용어 사전 |
 | 공통 기반 | 정보 수집, 계획 후 실행, 결과 자기 검토, Agno 검토 |
 
-초기 방향과 1번부터 16번까지의 원래 목록은 [PRD v01](docs/PRD-v01.md)에, 현재 구현 상태는 [PRD v1.5](docs/PRD-v1.5.md)에 보관합니다.
+초기 방향과 1번부터 16번까지의 원래 목록과 나중에 더한 17번은 [PRD v01](docs/PRD-v01.md)에, 현재 구현 상태는 [PRD v1.5](docs/PRD-v1.5.md)에 보관합니다.
 
 ## 프로젝트 지도
 
 | 위치 | 내용 |
 |---|---|
-| [`docs/PRD-v01.md`](docs/PRD-v01.md) | 제품 방향, 16개 후보, 위험과 개발 순서 |
-| [`docs/PRD-v1.5.md`](docs/PRD-v1.5.md) | 현재 구현 범위, 실행 방법, 16개 상태와 Claude 이어하기 안내 |
+| [`docs/PRD-v01.md`](docs/PRD-v01.md) | 제품 방향, 17개 후보, 위험과 개발 순서 |
+| [`docs/PRD-v1.5.md`](docs/PRD-v1.5.md) | 현재 구현 범위, 실행 방법, 17개 상태와 Claude 이어하기 안내 |
 | [`docs/PRD-v1.6.md`](docs/PRD-v1.6.md) | 1번 콘텐츠 개인화 에이전트의 스무고개 확정 설계 |
 | [`docs/CLAUDE-HANDOFF.md`](docs/CLAUDE-HANDOFF.md) | Codex push 후 Claude Code pull 또는 웹앱 프로젝트 업로드 절차 |
 | [`claude/PROJECT-INSTRUCTIONS.md`](claude/PROJECT-INSTRUCTIONS.md) | Claude 프로젝트에서 사용할 새록이 지침 |
@@ -136,6 +140,7 @@ python saeroki_cli.py scheduled-recommend --profile data/profile.local.json --ca
 ## 다음 잎사귀
 
 - [x] 제품군과 16개 후보를 정리한 PRD v01
+- [x] 17번 산업별 용어 사전 에이전트 후보 추가
 - [x] Claude와 Codex가 함께 읽는 공통 행동 원칙
 - [x] 취향 저장, 출처 검사, 중복 제거와 추천 이유
 - [x] 계획 후 실행, 결과 자기 검토와 실행 기록
