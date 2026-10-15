@@ -107,14 +107,18 @@
 
 Claude 웹앱 프로젝트에는 다음 자료를 넣습니다.
 
-1. `docs/PRD-v1.6.md`
-2. `docs/PRD-v1.5.md`
-3. `AGENT-SPEC.md`
-4. `data/sources.example.json`
-5. 사용자 취향 파일
-6. 최신 후보 JSON
+1. `claude/PROJECT-INSTRUCTIONS.md`
+2. `docs/PRD-v1.6.md`
+3. `docs/PRD-v1.5.md`
+4. `AGENT-SPEC.md`
+5. `data/sources.example.json`
+6. `claude/session-input.template.json`
+7. 사용자 취향 파일
+8. 최신 후보 JSON
 
 Claude의 역할은 후보를 새로 지어내는 것이 아니라, 수집기가 만든 후보를 시간대와 취향에 맞춰 비교하고 추천 이유를 한 문장으로 작성하는 것입니다. Claude API로 확장할 때도 이 역할과 데이터 구조를 유지합니다.
+
+Codex에서 GitHub에 push한 뒤 Claude Code는 `git pull origin main`으로 최신 상태를 가져옵니다. Claude 웹앱 프로젝트는 저장소가 자동으로 동기화된다고 가정하지 않고, 변경된 지침과 후보 파일을 다시 업로드합니다. 자세한 절차는 [Claude 인수인계 안내](CLAUDE-HANDOFF.md)에 기록합니다.
 
 ## 10. 완료 기준
 

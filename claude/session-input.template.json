@@ -1,0 +1,21 @@
+{
+  "now": "2026-10-15T08:00:00+09:00",
+  "timezone": "Asia/Seoul",
+  "weather": {
+    "city": "서울",
+    "condition": "맑음",
+    "temperature_c": null
+  },
+  "preferences": {
+    "interests": ["기획", "데이터 분석", "마케팅", "발라드", "스포츠"],
+    "type_preferences": {
+      "music": [],
+      "technology_blog": [],
+      "newsletter": []
+    },
+    "excluded": ["투자 권유", "유료 콘텐츠", "광고성 글"]
+  },
+  "feedback": [],
+  "candidates_path": "data/candidates.collected.local.json",
+  "request": "현재 시간대에 맞는 추천을 만들어 주세요."
+}
