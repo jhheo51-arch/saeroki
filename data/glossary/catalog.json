@@ -1,0 +1,98 @@
+{
+  "version": 1,
+  "industries": [
+    {
+      "id": "ecommerce",
+      "name": "이커머스·리테일",
+      "description": "온라인 쇼핑몰, 오픈마켓, 리테일 커머스"
+    },
+    {
+      "id": "platform",
+      "name": "IT·플랫폼 서비스",
+      "description": "앱·웹 서비스, 중개 플랫폼, SaaS"
+    }
+  ],
+  "roles": [
+    {
+      "id": "pm",
+      "name": "기획(PM·PO)",
+      "description": "제품 기획, 서비스 기획, 프로덕트 오너"
+    },
+    {
+      "id": "data",
+      "name": "데이터 분석",
+      "description": "지표 설계, 분석, 실험"
+    },
+    {
+      "id": "marketing",
+      "name": "마케팅·그로스",
+      "description": "퍼포먼스 마케팅, CRM, 그로스"
+    },
+    {
+      "id": "cx",
+      "name": "CX·운영",
+      "description": "고객 상담, 서비스 운영, 물류·주문 운영"
+    }
+  ],
+  "levels": [
+    "입문",
+    "실무",
+    "심화"
+  ],
+  "purposes": [
+    {
+      "id": "first_week",
+      "name": "입사 첫 주",
+      "keywords": [
+        "입사",
+        "첫 주",
+        "첫주",
+        "온보딩",
+        "신입",
+        "기초",
+        "입문"
+      ],
+      "levels": [
+        "입문",
+        "실무"
+      ],
+      "description": "회의에서 바로 들리는 입문 용어부터 중요도 순",
+      "level_first": true
+    },
+    {
+      "id": "interview",
+      "name": "면접 준비",
+      "keywords": [
+        "면접",
+        "취업",
+        "지원",
+        "인터뷰",
+        "자소서"
+      ],
+      "levels": [
+        "실무",
+        "심화"
+      ],
+      "description": "실무·심화 용어를 중요도 순"
+    },
+    {
+      "id": "metrics",
+      "name": "지표 이해",
+      "keywords": [
+        "지표",
+        "공식",
+        "계산",
+        "메트릭",
+        "KPI",
+        "수치"
+      ],
+      "levels": [
+        "입문",
+        "실무",
+        "심화"
+      ],
+      "requires_formula": true,
+      "description": "계산식이 있는 지표만 중요도 순"
+    }
+  ]
+}

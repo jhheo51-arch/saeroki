@@ -50,6 +50,10 @@
 | `data/candidates.example.json` | 기능 확인용 가상 후보 |
 | `data/insight-bookmarks.example.json` | 이미지에서 옮긴 INSIGHT 북마크와 주소 상태 |
 | `test_saeroki.py` | 공통 로직과 수집 흐름 자동 검사 |
+| `glossary.py` | 새록 사전 용어집 형식 검사와 화면용 `glossary/data.js` 생성 |
+| `data/glossary/catalog.json`, `data/glossary/terms.json` | 새록 사전 산업·직무·목적 목록과 출처를 붙인 용어집 |
+| `glossary/index.html`, `glossary/saerok-core.js` | 브라우저로 여는 새록 사전 화면과 검색·뜻 순서·오늘의 용어 로직 |
+| `test_glossary.py` | 새록 사전 데이터 형식과 화면 로직 자동 검사 |
 | `AGENT-SPEC.md` | Claude와 Codex가 공유하는 판단 원칙 |
 
 ```powershell
@@ -81,7 +85,7 @@ python saeroki_cli.py recommend --profile data/profile.local.json --candidates d
 | 14 | Reflection Agent | 뿌리 | 🌸 꽃 | 결과 자기 검토 일부 구현 |
 | 15 | Research Agent | 열매 | 🌱 씨앗 | 기획만 저장 |
 | 16 | SQL 관련 Agent | 열매 | 🌱 씨앗 | 기획만 저장, 첫 버전은 읽기 전용으로 예정 |
-| 17 | 산업별 용어 정리 사전 | 열매 | 🌱 씨앗 | 2026-10-15 추가, 이름 새록 사전, 설계 확정([PRD v1.7](PRD-v1.7.md)) |
+| 17 | 산업별 용어 정리 사전 | 열매 | 🌸 꽃 | 이름 새록 사전, [PRD v1.7](PRD-v1.7.md) 첫 버전 구현 중: 검수 용어집, 사전 웹 화면(`glossary/index.html`), 자동 검사 |
 
 17개 목록과 원래 목적은 축약하지 않고 [PRD v01](PRD-v01.md)에 보존합니다. 실제 독립 제품 수를 셀 때는 9번과 10번을 하나로 관리합니다.
 

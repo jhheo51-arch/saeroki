@@ -6,7 +6,7 @@
   <img src="https://img.shields.io/badge/PRD-v1.5-40916C" alt="PRD v1.5">
   <img src="https://img.shields.io/badge/%EC%97%B4%EB%A7%A4-12-D97757" alt="열매 12개">
   <img src="https://img.shields.io/badge/%EB%BF%8C%EB%A6%AC-4-8A5A36" alt="뿌리 4개">
-  <img src="https://img.shields.io/badge/Tests-28_passing-31572C" alt="자동 검사 28개 통과">
+  <img src="https://img.shields.io/badge/Tests-43_passing-31572C" alt="자동 검사 43개 통과">
   <img src="https://img.shields.io/badge/Claude_%2B_Codex-shared_rules-40916C" alt="Claude와 Codex 공통 규칙">
 </p>
 
@@ -94,7 +94,7 @@
 | 기획 | 🌱 3 마케팅 전략 · 🌱 4 PRD 설계 지원 |
 | 조사와 분석 | 🌱 7 금융 · 🌱 8 미디어 트렌드 · 🌱 9 법률 문서(10번 통합) · 🌱 15 심층 연구 |
 | 데이터 | 🌱 5 데이터 시각화 · 🌱 16 자연어 SQL |
-| 학습 | 🌱 17 새록 사전(산업별 용어 사전) |
+| 학습 | 🌸 17 새록 사전(산업별 용어 사전) |
 
 ### 뿌리 4개
 
@@ -115,6 +115,9 @@
 | [`docs/PRD-v1.5.md`](docs/PRD-v1.5.md) | 현재 구현 범위, 실행 방법, 열매와 뿌리의 씨앗·꽃·열매 상태, Claude 이어하기 안내 |
 | [`docs/PRD-v1.6.md`](docs/PRD-v1.6.md) | 1번 콘텐츠 개인화 에이전트의 스무고개 확정 설계 |
 | [`docs/PRD-v1.7.md`](docs/PRD-v1.7.md) | 17번 열매 새록 사전(산업별 용어 사전)의 스무고개 확정 설계 |
+| [`glossary/index.html`](glossary/index.html) | 새록 사전 화면. 브라우저로 바로 엽니다 |
+| [`glossary.py`](glossary.py) | 새록 사전 용어집 검사와 화면용 데이터(`glossary/data.js`) 생성 |
+| [`data/glossary/`](data/glossary) | 새록 사전 산업·직무 목록(`catalog.json`)과 출처를 붙인 용어집(`terms.json`) |
 | [`docs/CLAUDE-HANDOFF.md`](docs/CLAUDE-HANDOFF.md) | Codex push 후 Claude Code pull 또는 웹앱 프로젝트 업로드 절차 |
 | [`claude/PROJECT-INSTRUCTIONS.md`](claude/PROJECT-INSTRUCTIONS.md) | Claude 프로젝트에서 사용할 새록이 지침 |
 | [`claude/session-input.template.json`](claude/session-input.template.json) | 시간대, 날씨, 취향과 후보 입력 양식 |
@@ -140,6 +143,19 @@ python -m unittest -v
 ```
 
 검사는 이미 아는 항목과 제외 태그를 거르는지, 인기도 자료가 없을 때 덜 유명하다고 단정하지 않는지 확인합니다.
+
+### 새록 사전 열기
+
+[`glossary/index.html`](glossary/index.html)을 브라우저로 바로 엽니다. 서버가 필요 없습니다. 산업과 직무를 고르면 오늘의 용어, 목적 버튼(입사 첫 주·면접 준비·지표 이해)과 검색을 쓸 수 있습니다. 내 단어장과 아직 없는 용어 기록은 이 브라우저에만 저장됩니다.
+
+용어를 고치거나 늘릴 때는 `data/glossary/terms.json`을 수정한 뒤 검사하고 화면용 데이터를 다시 만듭니다.
+
+```powershell
+python glossary.py check
+python glossary.py build
+```
+
+뜻마다 직접 확인한 출처와 확인 날짜를 붙입니다. 출처를 찾지 못한 뜻은 `status`를 `needs_check`로 두면 화면에 `확인 필요`로 표시됩니다.
 
 ### 확인된 공개 출처에서 후보 만들기
 
@@ -191,7 +207,9 @@ python saeroki_cli.py scheduled-recommend --profile data/profile.local.json --ca
 - [x] 17번 산업별 용어 사전 에이전트 후보 추가
 - [x] 에이전트를 열매 12개와 뿌리 4개로 정리
 - [x] 17번 새록 사전 스무고개 설계 확정(PRD v1.7)
-- [ ] 새록 사전 첫 버전: 용어집과 사전 웹 화면
+- [x] 새록 사전 첫 버전: 출처를 붙인 용어 128개와 사전 웹 화면
+- [ ] 새록 사전 사용자 확인과 출처 재검토(공식 문서가 아닌 기업 가이드 출처 교체)
+- [ ] 새록 사전 Claude API 보충
 - [x] Claude와 Codex가 함께 읽는 공통 행동 원칙
 - [x] 취향 저장, 출처 검사, 중복 제거와 추천 이유
 - [x] 계획 후 실행, 결과 자기 검토와 실행 기록

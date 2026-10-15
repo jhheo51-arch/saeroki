@@ -1,0 +1,541 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>새록 사전</title>
+<style>
+  :root {
+    --bg: #FAF9F6;
+    --surface: #FFFFFF;
+    --ink: #1F2A1C;
+    --muted: #5B6656;
+    --line: #E2E4DA;
+    --brand: #40916C;
+    --brand-deep: #31572C;
+    --leaf: #90A955;
+    --lime: #ECF39E;
+    --warn-bg: #FFF4D6;
+    --warn-ink: #7A4B00;
+    --chip: #EEF3E6;
+    --shadow: 0 1px 2px rgba(31, 42, 28, .06), 0 4px 16px rgba(31, 42, 28, .05);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #141A13;
+      --surface: #1C241A;
+      --ink: #E9EEE3;
+      --muted: #A3AE9C;
+      --line: #2F3A2C;
+      --brand: #6CC195;
+      --brand-deep: #A6D98A;
+      --leaf: #90A955;
+      --lime: #3A4A1E;
+      --warn-bg: #3A2F14;
+      --warn-ink: #F3D27A;
+      --chip: #24301F;
+      --shadow: none;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 16px/1.6 "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--brand); }
+  button { font: inherit; color: inherit; cursor: pointer; }
+  .wrap { max-width: 860px; margin: 0 auto; padding: 0 16px; }
+
+  header.top { background: var(--surface); border-bottom: 1px solid var(--line); }
+  .brand-row { display: flex; align-items: center; gap: 12px; padding: 18px 0 12px; }
+  .logo { display: flex; align-items: baseline; gap: 8px; text-decoration: none; color: var(--brand-deep); }
+  .logo b { font-size: 24px; letter-spacing: -0.5px; }
+  .logo span { font-size: 13px; color: var(--muted); }
+  .nav { margin-left: auto; display: flex; gap: 4px; }
+  .nav a { text-decoration: none; color: var(--muted); padding: 6px 10px; border-radius: 8px; font-size: 14px; }
+  .nav a.on, .nav a:hover { background: var(--chip); color: var(--brand-deep); }
+
+  form.search { display: flex; border: 2px solid var(--brand); border-radius: 12px; background: var(--surface); overflow: hidden; }
+  form.search input {
+    flex: 1; min-width: 0; border: 0; outline: 0; padding: 13px 16px; font: inherit; font-size: 17px;
+    background: transparent; color: var(--ink);
+  }
+  form.search button { border: 0; background: var(--brand); color: #fff; padding: 0 20px; font-weight: 700; }
+  .suggest { position: relative; }
+  .suggest ul {
+    position: absolute; z-index: 5; left: 0; right: 0; top: 4px; margin: 0; padding: 6px 0; list-style: none;
+    background: var(--surface); border: 1px solid var(--line); border-radius: 10px; box-shadow: var(--shadow);
+  }
+  .suggest li button { width: 100%; text-align: left; border: 0; background: none; padding: 8px 16px; }
+  .suggest li button:hover, .suggest li button:focus { background: var(--chip); outline: none; }
+  .suggest small { color: var(--muted); margin-left: 6px; }
+
+  .setting { display: flex; flex-wrap: wrap; gap: 8px 16px; padding: 12px 0 14px; align-items: center; }
+  .setting .group { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .setting .label { font-size: 13px; color: var(--muted); margin-right: 2px; }
+  .chip {
+    border: 1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 4px 12px; font-size: 14px;
+  }
+  .chip[aria-pressed="true"] { background: var(--brand); border-color: var(--brand); color: #fff; font-weight: 600; }
+
+  main { padding: 20px 0 48px; }
+  .notice { border-radius: 10px; padding: 10px 14px; margin-bottom: 16px; font-size: 14px; background: var(--warn-bg); color: var(--warn-ink); }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; margin-bottom: 16px; box-shadow: var(--shadow); }
+  .card h2 { margin: 0 0 4px; font-size: 15px; color: var(--muted); font-weight: 600; }
+  .purpose-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+  .purpose-row button { border: 1px solid var(--brand); background: transparent; color: var(--brand-deep); border-radius: 10px; padding: 8px 14px; font-weight: 600; }
+  .purpose-row button:hover { background: var(--chip); }
+  .purpose-row small { display: block; font-weight: 400; color: var(--muted); font-size: 12px; }
+
+  .today { border-left: 5px solid var(--leaf); }
+  .today .word { font-size: 26px; font-weight: 800; margin: 2px 0; }
+  .today button.open { border: 0; background: none; padding: 0; text-align: left; }
+
+  .badge { display: inline-block; font-size: 12px; font-weight: 700; border-radius: 6px; padding: 1px 7px; vertical-align: middle; }
+  .lv-입문 { background: #E3F2E9; color: #1E6B47; }
+  .lv-실무 { background: #FFF0D9; color: #8A5300; }
+  .lv-심화 { background: #F5E3F0; color: #7A2A63; }
+  @media (prefers-color-scheme: dark) {
+    .lv-입문 { background: #1E3B2C; color: #8FE0B5; }
+    .lv-실무 { background: #3D2E12; color: #F5C46B; }
+    .lv-심화 { background: #3A1F33; color: #E9A2D6; }
+  }
+  .badge.check { background: var(--warn-bg); color: var(--warn-ink); }
+  .muted { color: var(--muted); }
+
+  .entry-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 10px; }
+  .entry-head h1 { margin: 0; font-size: 34px; letter-spacing: -0.5px; }
+  .entry-head .save { margin-left: auto; border: 1px solid var(--brand); background: transparent; color: var(--brand-deep); border-radius: 10px; padding: 6px 14px; font-weight: 700; }
+  .entry-head .save[aria-pressed="true"] { background: var(--brand); color: #fff; }
+  .origin { margin: 6px 0 2px; font-size: 17px; }
+  .origin b { color: var(--brand-deep); }
+  .aliases { font-size: 14px; color: var(--muted); }
+
+  .sense { border-top: 1px solid var(--line); padding: 16px 0 6px; }
+  .sense:first-of-type { border-top: 0; }
+  .sense-top { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; font-size: 14px; color: var(--muted); }
+  .sense-top .num { font-size: 20px; color: var(--brand-deep); font-weight: 800; margin-right: 2px; }
+  .sense p.def { font-size: 17px; margin: 8px 0; }
+  .sense.other p.def { font-size: 16px; }
+  .formula { background: var(--chip); border-radius: 8px; padding: 8px 12px; font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-size: 14px; margin: 8px 0; overflow-wrap: anywhere; }
+  .examples { margin: 8px 0; padding-left: 0; list-style: none; }
+  .examples li { padding-left: 14px; position: relative; color: var(--ink); }
+  .examples li::before { content: "“"; position: absolute; left: 0; color: var(--leaf); font-weight: 800; }
+  .sources { font-size: 13px; color: var(--muted); margin: 8px 0 4px; }
+  .sources ul { margin: 2px 0 0; padding-left: 18px; }
+  .sources a { overflow-wrap: anywhere; }
+  h3.sub { font-size: 15px; margin: 18px 0 6px; color: var(--brand-deep); }
+  dl.rel { margin: 0; display: grid; grid-template-columns: max-content 1fr; gap: 4px 12px; font-size: 15px; }
+  dl.rel dt { font-weight: 700; }
+  dl.rel dd { margin: 0; color: var(--muted); }
+  .linkish { border: 0; background: none; padding: 0; color: var(--brand); font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+
+  ol.list, ul.list { list-style: none; margin: 0; padding: 0; }
+  .list li { border-top: 1px solid var(--line); }
+  .list li:first-child { border-top: 0; }
+  .list button.row { display: block; width: 100%; text-align: left; border: 0; background: none; padding: 12px 4px; }
+  .list button.row:hover { background: var(--chip); }
+  .list .t { font-weight: 800; font-size: 17px; margin-right: 6px; }
+  .list .one { display: block; color: var(--muted); font-size: 14px; margin-top: 2px; }
+  .list .rank { display: inline-block; min-width: 26px; color: var(--leaf); font-weight: 800; }
+  .more { margin-top: 12px; width: 100%; border: 1px solid var(--line); background: var(--surface); border-radius: 10px; padding: 10px; font-weight: 700; color: var(--brand-deep); }
+  .actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  .actions button { border: 1px solid var(--line); background: var(--surface); border-radius: 10px; padding: 8px 14px; }
+  .remove { border: 0; background: none; color: var(--muted); font-size: 13px; padding: 4px 8px; }
+  table.missing { width: 100%; border-collapse: collapse; font-size: 14px; }
+  table.missing th, table.missing td { text-align: left; padding: 8px 6px; border-top: 1px solid var(--line); }
+  footer { font-size: 12px; color: var(--muted); padding: 0 0 32px; }
+  @media (max-width: 560px) {
+    .entry-head h1 { font-size: 28px; }
+    .nav a { padding: 6px 7px; }
+    .logo span { display: none; }
+  }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="brand-row">
+      <a class="logo" href="#/"><b>새록 사전</b><span>산업·직무 용어 온보딩 사전</span></a>
+      <nav class="nav" aria-label="메뉴">
+        <a href="#/" data-nav="home">홈</a>
+        <a href="#/wordbook" data-nav="wordbook">내 단어장</a>
+        <a href="#/missing" data-nav="missing">없는 용어</a>
+      </nav>
+    </div>
+    <form class="search" id="search-form" role="search" autocomplete="off">
+      <input id="q" type="search" placeholder="LTV, 엘티브이, 고객 생애 가치 또는 ‘면접 전에 볼 지표’" aria-label="용어 또는 목적 검색">
+      <button type="submit">검색</button>
+    </form>
+    <div class="suggest"><ul id="suggest" hidden></ul></div>
+    <div class="setting" id="setting"></div>
+  </div>
+</header>
+
+<main class="wrap" id="main" tabindex="-1"></main>
+
+<footer class="wrap">
+  학습용 설명입니다. 금융·법률과 닿는 용어는 판단이나 조언이 아니며, 실제 업무에서는 원문 출처와 회사 기준을 확인해 주세요.
+  출처가 확인되지 않은 뜻은 <span class="badge check">확인 필요</span>로 표시합니다.
+</footer>
+
+<script src="data.js"></script>
+<script src="saerok-core.js"></script>
+<script>
+(function () {
+  "use strict";
+  var main = document.getElementById("main");
+  var Core = window.SaerokCore;
+  var DATA = window.SAEROK_DATA;
+
+  if (!Core || !DATA || !DATA.catalog || !Array.isArray(DATA.terms)) {
+    main.innerHTML = '<div class="notice">용어집을 불러오지 못했습니다. <code>glossary/data.js</code>와 <code>saerok-core.js</code>가 이 파일과 같은 폴더에 있는지 확인하고, 없으면 저장소에서 <code>python glossary.py build</code>를 실행해 주세요.</div>';
+    return;
+  }
+
+  var catalog = DATA.catalog;
+  var terms = DATA.terms;
+  var byId = {};
+  terms.forEach(function (t) { byId[t.id] = t; });
+  var nameOf = {};
+  catalog.industries.concat(catalog.roles).forEach(function (x) { nameOf[x.id] = x.name; });
+
+  // ---- 브라우저 저장소: 실패해도 화면은 동작하고, 저장되지 않는다는 사실을 알립니다 ----
+  var memory = {};
+  var storageOk = true;
+  function load(key, fallback) {
+    try {
+      var raw = window.localStorage.getItem("saerok." + key);
+      return raw == null ? (key in memory ? memory[key] : fallback) : JSON.parse(raw);
+    } catch (e) {
+      storageOk = false;
+      return key in memory ? memory[key] : fallback;
+    }
+  }
+  function save(key, value) {
+    memory[key] = value;
+    try {
+      window.localStorage.setItem("saerok." + key, JSON.stringify(value));
+    } catch (e) {
+      storageOk = false;
+    }
+  }
+
+  function todayStr() {
+    var d = new Date();
+    var p = function (n) { return (n < 10 ? "0" : "") + n; };
+    return d.getFullYear() + "-" + p(d.getMonth() + 1) + "-" + p(d.getDate());
+  }
+
+  var settings = load("settings", null) || {};
+  if (!nameOf[settings.industry]) settings.industry = catalog.industries[0].id;
+  if (!nameOf[settings.role]) settings.role = catalog.roles[0].id;
+
+  function esc(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+  function safeUrl(u) { return /^https:\/\//.test(u || "") ? u : null; }
+  function firstSentence(text) {
+    var m = String(text).match(/^.*?[.!?다요](\s|$)/);
+    return (m ? m[0] : String(text)).trim();
+  }
+  function levelBadge(level) { return '<span class="badge lv-' + esc(level) + '">' + esc(level) + "</span>"; }
+  function checkBadge(sense) { return sense.status === "verified" ? "" : ' <span class="badge check">확인 필요</span>'; }
+  function cellLabel() { return esc(nameOf[settings.industry]) + " · " + esc(nameOf[settings.role]); }
+
+  // ---- 설정 막대 ----
+  function renderSetting() {
+    var html = '<div class="group"><span class="label">산업</span>';
+    catalog.industries.forEach(function (x) {
+      html += '<button type="button" class="chip" data-industry="' + esc(x.id) + '" aria-pressed="' + (x.id === settings.industry) + '" title="' + esc(x.description || "") + '">' + esc(x.name) + "</button>";
+    });
+    html += '</div><div class="group"><span class="label">직무</span>';
+    catalog.roles.forEach(function (x) {
+      html += '<button type="button" class="chip" data-role="' + esc(x.id) + '" aria-pressed="' + (x.id === settings.role) + '" title="' + esc(x.description || "") + '">' + esc(x.name) + "</button>";
+    });
+    document.getElementById("setting").innerHTML = html + "</div>";
+  }
+  document.getElementById("setting").addEventListener("click", function (e) {
+    var b = e.target.closest("button");
+    if (!b) return;
+    if (b.dataset.industry) settings.industry = b.dataset.industry;
+    if (b.dataset.role) settings.role = b.dataset.role;
+    save("settings", settings);
+    renderSetting();
+    route();
+  });
+
+  // ---- 화면들 ----
+  function storageNotice() {
+    return storageOk ? "" : '<div class="notice">이 브라우저에서는 저장소를 쓸 수 없어 단어장과 기록이 이 창을 닫으면 사라집니다.</div>';
+  }
+
+  function rowHtml(term, sense, rank) {
+    return '<li><button class="row" data-open="' + esc(term.id) + '">' +
+      (rank ? '<span class="rank">' + rank + "</span>" : "") +
+      '<span class="t">' + esc(term.term) + "</span>" + levelBadge(sense.level) + checkBadge(sense) +
+      '<span class="one">' + esc(firstSentence(sense.definition)) + "</span></button></li>";
+  }
+
+  function viewHome() {
+    var seen = load("seen", []);
+    var previous = load("today", null);
+    var today = todayStr();
+    var pick = Core.pickToday(terms, settings.industry, settings.role, seen, previous, today);
+    var html = storageNotice();
+    if (pick) {
+      if (!pick.kept) save("today", { date: today, industry: settings.industry, role: settings.role, id: pick.term.id });
+      var left = Core.todayCandidates(terms, settings.industry, settings.role, seen).length;
+      html += '<section class="card today"><h2>오늘의 용어 · ' + cellLabel() + "</h2>" +
+        '<button class="open" data-open="' + esc(pick.term.id) + '"><div class="word">' + esc(pick.term.term) + " " + levelBadge(pick.sense.level) + checkBadge(pick.sense) + "</div>" +
+        "<div>" + esc(firstSentence(pick.sense.definition)) + '</div><div class="muted" style="font-size:14px;margin-top:6px">눌러서 자세히 보기 · 이 칸에서 아직 안 본 용어 ' + left + "개</div></button></section>";
+    } else {
+      html += '<section class="card today"><h2>오늘의 용어 · ' + cellLabel() + "</h2><p>이 산업·직무의 용어를 모두 봤습니다. 다른 직무를 고르거나 내 단어장으로 복습해 보세요.</p></section>";
+    }
+    html += '<section class="card"><h2>목적으로 찾기</h2><div class="purpose-row">';
+    catalog.purposes.forEach(function (p) {
+      html += '<button data-purpose="' + esc(p.id) + '">' + esc(p.name) + "<small>" + esc(p.description || "") + "</small></button>";
+    });
+    html += "</div></section>";
+    var cell = Core.cellTerms(terms, settings.industry, settings.role);
+    var unchecked = cell.filter(function (x) { return x.sense.status !== "verified"; }).length;
+    html += '<p class="muted" style="font-size:14px">' + cellLabel() + " 용어 " + cell.length + "개" +
+      (unchecked ? " · 그중 확인 필요 " + unchecked + "개" : "") + "</p>";
+    main.innerHTML = html;
+  }
+
+  function senseHtml(item, isFirst) {
+    var s = item.sense;
+    var where = s.industries.map(function (i) { return nameOf[i] || i; }).join("·") + " / " + s.roles.map(function (r) { return nameOf[r] || r; }).join("·");
+    var html = '<div class="sense' + (isFirst ? "" : " other") + '"><div class="sense-top"><span class="num">' + item.number + "</span>" +
+      levelBadge(s.level) + checkBadge(s) + "<span>" + esc(where) + "</span></div>" +
+      '<p class="def">' + esc(s.definition) + "</p>";
+    if (s.formula) html += '<div class="formula">' + esc(s.formula) + "</div>";
+    if (s.examples && s.examples.length) {
+      html += '<ul class="examples">' + s.examples.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</ul>";
+    }
+    html += '<div class="sources">';
+    if (s.sources && s.sources.length) {
+      html += "출처<ul>" + s.sources.map(function (src) {
+        var u = safeUrl(src.url);
+        var kind = { official: "공식 문서", company_guide: "기업 가이드", tech_blog: "기술 블로그" }[src.kind] || src.kind;
+        return "<li>" + (u ? '<a href="' + esc(u) + '" target="_blank" rel="noopener noreferrer">' + esc(src.title) + "</a>" : esc(src.title)) +
+          " · " + esc(kind) + " · 확인 " + esc(src.checked_at) + "</li>";
+      }).join("") + "</ul>";
+    } else {
+      html += "출처를 아직 확인하지 못했습니다. 확정된 정의로 쓰지 말고 원문을 찾아 확인해 주세요.";
+    }
+    if (s.status !== "verified" && s.check_note) html += '<div>메모: ' + esc(s.check_note) + "</div>";
+    return html + "</div></div>";
+  }
+
+  function termRef(name) {
+    var found = Core.search(terms, name).exact[0];
+    return found ? '<button class="linkish" data-open="' + esc(found.id) + '">' + esc(name) + "</button>" : esc(name);
+  }
+
+  function viewEntry(id) {
+    var term = byId[id];
+    if (!term) {
+      main.innerHTML = '<div class="notice">용어를 찾지 못했습니다: ' + esc(id) + "</div>";
+      return;
+    }
+    var seen = load("seen", []);
+    if (seen.indexOf(id) < 0) save("seen", seen.concat([id]));
+    var book = load("wordbook", []);
+    var saved = book.some(function (x) { return x.id === id; });
+    var senses = Core.orderSenses(term, settings.industry, settings.role);
+    var origin = [term.original, term.korean].filter(function (x) { return x && x !== term.term; });
+    var html = storageNotice() + '<article class="card"><div class="entry-head"><h1>' + esc(term.term) + "</h1>" + levelBadge(senses[0].sense.level) +
+      '<button class="save" data-save="' + esc(id) + '" aria-pressed="' + saved + '">' + (saved ? "★ 저장됨" : "☆ 저장") + "</button></div>";
+    if (origin.length) html += '<div class="origin"><b>' + esc(term.term) + "</b> → " + esc(origin.join(", ")) + "</div>";
+    if (term.aliases && term.aliases.length) html += '<div class="aliases">다른 이름 · ' + esc(term.aliases.join(", ")) + "</div>";
+    if (!senses[0].matched) {
+      html += '<div class="notice" style="margin:12px 0 0">' + cellLabel() + "에 맞춘 뜻은 아직 없습니다. 가까운 뜻부터 보여 줍니다.</div>";
+    }
+    html += senses.map(function (item, i) { return senseHtml(item, i === 0); }).join("");
+    if (term.related && term.related.length) {
+      html += '<h3 class="sub">관련어</h3><dl class="rel">' + term.related.map(function (r) { return "<dt>" + termRef(r.term) + "</dt><dd>" + esc(r.note) + "</dd>"; }).join("") + "</dl>";
+    }
+    if (term.confusable && term.confusable.length) {
+      html += '<h3 class="sub">헷갈리는 말</h3><dl class="rel">' + term.confusable.map(function (r) { return "<dt>" + termRef(r.term) + "</dt><dd>" + esc(r.difference) + "</dd>"; }).join("") + "</dl>";
+    }
+    main.innerHTML = html + "</article>";
+  }
+
+  var purposePage = 0;
+  function viewPurpose(id, pageCount) {
+    var purpose = catalog.purposes.filter(function (p) { return p.id === id; })[0];
+    if (!purpose) { main.innerHTML = '<div class="notice">알 수 없는 목적입니다.</div>'; return; }
+    var all = Core.purposeList(terms, purpose, settings.industry, settings.role);
+    var shown = all.slice(0, (pageCount + 1) * 10);
+    var html = '<section class="card"><h2>' + esc(purpose.name) + " · " + cellLabel() + "</h2>" +
+      '<p class="muted" style="margin:0 0 8px;font-size:14px">' + esc(purpose.description || "") + " · 전체 " + all.length + "개</p>";
+    if (!all.length) {
+      html += "<p>이 산업·직무에는 조건에 맞는 용어가 아직 없습니다.</p>";
+    } else {
+      html += '<ol class="list">' + shown.map(function (x, i) { return rowHtml(x.term, x.sense, i + 1); }).join("") + "</ol>";
+      if (all.length > shown.length) html += '<button class="more" data-more="' + esc(id) + '">더 보기 (' + shown.length + " / " + all.length + ")</button>";
+    }
+    main.innerHTML = html + "</section>";
+  }
+
+  function viewSearch(query) {
+    var q = String(query || "").trim();
+    document.getElementById("q").value = q;
+    if (!q) { location.hash = "#/"; return; }
+    var result = Core.search(terms, q);
+    if (result.exact.length === 1) { location.replace("#/term/" + encodeURIComponent(result.exact[0].id)); return; }
+    if (!result.exact.length) {
+      var purpose = Core.matchPurpose(catalog, q);
+      if (purpose) { location.replace("#/purpose/" + encodeURIComponent(purpose.id)); return; }
+    }
+    var html = storageNotice() + '<section class="card"><h2>“' + esc(q) + "” 검색 결과</h2>";
+    var list = result.exact.concat(result.partial);
+    if (list.length) {
+      html += '<ul class="list">' + list.map(function (t) {
+        return rowHtml(t, Core.orderSenses(t, settings.industry, settings.role)[0].sense);
+      }).join("") + "</ul>";
+    } else {
+      html += "<p>용어집에 아직 없는 단어입니다. <b>없는 용어</b> 목록에 기록해 두었습니다. 다음 용어집을 늘릴 때 씁니다.</p>" +
+        '<p class="muted" style="font-size:14px">목적으로 찾으려면 ‘입사 첫 주’, ‘면접 준비’, ‘지표’ 같은 말을 넣어 보세요.</p>';
+    }
+    main.innerHTML = html + "</section>";
+  }
+
+  function viewWordbook() {
+    var book = load("wordbook", []);
+    var html = storageNotice() + '<section class="card"><h2>내 단어장</h2>';
+    var items = book.filter(function (x) { return byId[x.id]; });
+    if (!items.length) {
+      html += "<p>아직 저장한 용어가 없습니다. 단어 항목에서 ☆ 저장을 눌러 모아 보세요.</p>";
+    } else {
+      html += '<ul class="list">' + items.map(function (x) {
+        var t = byId[x.id];
+        var s = Core.orderSenses(t, settings.industry, settings.role)[0].sense;
+        return rowHtml(t, s).replace("</li>", '<button class="remove" data-unsave="' + esc(t.id) + '">빼기 · ' + esc(x.saved_at) + " 저장</button></li>");
+      }).join("") + "</ul>";
+    }
+    var gone = book.length - items.length;
+    if (gone) html += '<p class="muted" style="font-size:14px">용어집에서 빠진 저장 항목 ' + gone + "개는 표시하지 않았습니다.</p>";
+    main.innerHTML = html + "</section>";
+  }
+
+  function viewMissing() {
+    var list = load("missing", []);
+    var html = storageNotice() + '<section class="card"><h2>아직 없는 용어</h2>' +
+      '<p class="muted" style="margin:0 0 8px;font-size:14px">검색했지만 용어집에 없던 단어입니다. 내보내서 다음 용어집 추가에 씁니다.</p>';
+    if (!list.length) {
+      html += "<p>기록된 단어가 없습니다.</p>";
+    } else {
+      html += '<table class="missing"><thead><tr><th>단어</th><th>검색 횟수</th><th>처음</th><th>마지막</th></tr></thead><tbody>' +
+        list.map(function (x) { return "<tr><td>" + esc(x.query) + "</td><td>" + esc(x.count || 1) + "</td><td>" + esc(x.first_seen) + "</td><td>" + esc(x.last_seen) + "</td></tr>"; }).join("") +
+        '</tbody></table><div class="actions"><button data-export="csv">CSV로 내보내기</button><button data-export="json">JSON으로 내보내기</button><button data-clear-missing>기록 비우기</button></div>';
+    }
+    main.innerHTML = html + "</section>";
+  }
+
+  function download(name, text, type) {
+    var blob = new Blob([text], { type: type + ";charset=utf-8" });
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(function () { URL.revokeObjectURL(a.href); a.remove(); }, 0);
+  }
+
+  // ---- 클릭 처리 ----
+  main.addEventListener("click", function (e) {
+    var b = e.target.closest("button");
+    if (!b) return;
+    if (b.dataset.open) { location.hash = "#/term/" + encodeURIComponent(b.dataset.open); return; }
+    if (b.dataset.purpose) { location.hash = "#/purpose/" + encodeURIComponent(b.dataset.purpose); return; }
+    if (b.dataset.more) { purposePage += 1; viewPurpose(b.dataset.more, purposePage); return; }
+    if (b.dataset.save) {
+      var book = load("wordbook", []);
+      var id = b.dataset.save;
+      book = book.some(function (x) { return x.id === id; }) ? book.filter(function (x) { return x.id !== id; }) : book.concat([{ id: id, saved_at: todayStr() }]);
+      save("wordbook", book);
+      viewEntry(id);
+      return;
+    }
+    if (b.dataset.unsave) {
+      save("wordbook", load("wordbook", []).filter(function (x) { return x.id !== b.dataset.unsave; }));
+      viewWordbook();
+      return;
+    }
+    if (b.dataset.export) {
+      var list = load("missing", []);
+      if (b.dataset.export === "csv") download("saerok-missing-" + todayStr() + ".csv", "﻿" + Core.missingCsv(list), "text/csv");
+      else download("saerok-missing-" + todayStr() + ".json", JSON.stringify(list, null, 2) + "\n", "application/json");
+      return;
+    }
+    if (b.hasAttribute("data-clear-missing")) {
+      if (window.confirm("없는 용어 기록을 모두 비울까요? 먼저 내보내기를 권합니다.")) { save("missing", []); viewMissing(); }
+    }
+  });
+
+  // ---- 검색창과 추천 목록 ----
+  var input = document.getElementById("q");
+  var suggest = document.getElementById("suggest");
+  document.getElementById("search-form").addEventListener("submit", function (e) {
+    e.preventDefault();
+    suggest.hidden = true;
+    var q = input.value.trim();
+    if (!q) return;
+    var r = Core.search(terms, q);
+    if (!r.exact.length && !r.partial.length && !Core.matchPurpose(catalog, q)) {
+      save("missing", Core.addMissing(load("missing", []), q, todayStr()));
+    }
+    var target = "#/search/" + encodeURIComponent(q);
+    if (location.hash === target) route(); else location.hash = target;
+  });
+  input.addEventListener("input", function () {
+    var r = Core.search(terms, input.value);
+    var list = r.exact.concat(r.partial).slice(0, 8);
+    if (!list.length) { suggest.hidden = true; return; }
+    suggest.innerHTML = list.map(function (t) {
+      return '<li><button type="button" data-open="' + esc(t.id) + '">' + esc(t.term) + "<small>" + esc([t.original, t.korean].filter(Boolean).join(" · ")) + "</small></button></li>";
+    }).join("");
+    suggest.hidden = false;
+  });
+  suggest.addEventListener("click", function (e) {
+    var b = e.target.closest("button");
+    if (!b) return;
+    suggest.hidden = true;
+    location.hash = "#/term/" + encodeURIComponent(b.dataset.open);
+  });
+  document.addEventListener("click", function (e) {
+    if (!e.target.closest(".suggest") && e.target !== input) suggest.hidden = true;
+  });
+  input.addEventListener("keydown", function (e) { if (e.key === "Escape") suggest.hidden = true; });
+
+  // ---- 주소(#)로 화면 고르기: 뒤로 가기가 됩니다 ----
+  function route() {
+    var parts = location.hash.replace(/^#\/?/, "").split("/");
+    var name = parts[0] || "home";
+    var arg = decodeURIComponent(parts.slice(1).join("/") || "");
+    document.querySelectorAll("[data-nav]").forEach(function (a) {
+      a.classList.toggle("on", a.dataset.nav === name || (name === "home" && a.dataset.nav === "home"));
+    });
+    if (name === "term") viewEntry(arg);
+    else if (name === "purpose") { purposePage = 0; viewPurpose(arg, 0); }
+    else if (name === "search") viewSearch(arg);
+    else if (name === "wordbook") viewWordbook();
+    else if (name === "missing") viewMissing();
+    else viewHome();
+    window.scrollTo(0, 0);
+  }
+  window.addEventListener("hashchange", route);
+  renderSetting();
+  route();
+})();
+</script>
+</body>
+</html>
