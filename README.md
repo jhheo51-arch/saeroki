@@ -5,7 +5,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/PRD-v1.5-40916C" alt="PRD v1.5">
   <img src="https://img.shields.io/badge/Agent_Ideas-16-90A955" alt="에이전트 후보 16개">
-  <img src="https://img.shields.io/badge/Tests-15_passing-31572C" alt="자동 검사 15개 통과">
+  <img src="https://img.shields.io/badge/Tests-17_passing-31572C" alt="자동 검사 17개 통과">
   <img src="https://img.shields.io/badge/Claude_%2B_Codex-shared_rules-40916C" alt="Claude와 Codex 공통 규칙">
 </p>
 

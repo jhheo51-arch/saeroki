@@ -1,1 +1,14 @@
-[]
+[
+  {
+    "id": "music-youra-that-love-ballad",
+    "title": "유라(youra) - 어떤 발라드",
+    "url": "https://music.youtube.com/watch?v=mAThdyXeUfY",
+    "tags": ["음악", "발라드", "흐린 날", "퇴근길"],
+    "source": "youra 유라 공식 아티스트 채널",
+    "checked_at": "2026-10-15",
+    "popularity": 44776,
+    "author": "youra",
+    "published_at": "2025-03-21",
+    "content_type": "music"
+  }
+]
