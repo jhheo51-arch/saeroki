@@ -260,6 +260,7 @@ def scheduled_recommend(
     candidates: list[Candidate],
     profile: Profile,
     now: datetime,
+    weather_condition: str | None = None,
 ) -> ScheduledRun:
     """현재 서울 시간대에 맞는 유형별 추천을 만듭니다."""
     mode, slots = schedule_for_time(now)
@@ -275,13 +276,31 @@ def scheduled_recommend(
     results: dict[str, list[Recommendation]] = {}
     for slot in slots:
         typed = [item for item in prepared if _content_type(item) == slot.content_type]
-        results[slot.content_type] = recommend(
+        if slot.content_type == "music" and weather_condition:
+            weather_matches = [
+                item for item in typed
+                if weather_condition.casefold() in " ".join(item.tags).casefold()
+            ]
+            if weather_matches:
+                typed = weather_matches
+        recommendations = recommend(
             typed,
             profile.preference,
             known_ids=known_ids,
             limit=slot.limit,
             allow_unmatched=True,
         )
+        if slot.content_type == "music" and weather_condition:
+            recommendations = [
+                Recommendation(
+                    candidate=item.candidate,
+                    score=item.score,
+                    reasons=[*item.reasons, f"서울 날씨: {weather_condition}"],
+                    cautions=item.cautions,
+                )
+                for item in recommendations
+            ]
+        results[slot.content_type] = recommendations
     return ScheduledRun(mode, slots, results)
 
 

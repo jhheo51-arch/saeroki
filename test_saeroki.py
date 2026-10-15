@@ -18,6 +18,7 @@ from saeroki import (
     scheduled_recommend,
 )
 from source_collector import PublicLink, collect_confirmed_sources, parse_public_metadata
+from weather import parse_weather_payload, weather_code_label
 
 
 class SaerokiTest(unittest.TestCase):
@@ -210,6 +211,29 @@ class SaerokiTest(unittest.TestCase):
         )
         self.assertEqual(set(run.recommendations), {"music", "technology_blog", "newsletter"})
         self.assertEqual([item.candidate.id for item in run.recommendations["music"]], ["music"])
+
+    def test_weather_condition_is_added_to_music_reason(self):
+        profile = Profile("나", Preference(["발라드"]))
+        candidate = Candidate(
+            "rain-song", "비 오는 날의 발라드", "https://example.com/rain-song",
+            ["발라드", "비"], "음악", "2026-10-15", content_type="music",
+        )
+        run = scheduled_recommend(
+            [candidate], profile, datetime.fromisoformat("2026-10-15T08:00:00+09:00"), "비"
+        )
+        self.assertIn("서울 날씨: 비", run.recommendations["music"][0].reasons)
+
+    def test_weather_payload_maps_open_meteo_code(self):
+        observation = parse_weather_payload({
+            "current": {
+                "weather_code": 61,
+                "temperature_2m": 18.5,
+                "time": "2026-10-15T08:00",
+            }
+        })
+        self.assertEqual(weather_code_label(61), "비")
+        self.assertEqual(observation.condition, "비")
+        self.assertEqual(observation.temperature_c, 18.5)
 
 
 if __name__ == "__main__":

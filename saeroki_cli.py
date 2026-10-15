@@ -44,6 +44,8 @@ def build_parser() -> argparse.ArgumentParser:
     scheduled.add_argument("--profile", required=True)
     scheduled.add_argument("--candidates", required=True)
     scheduled.add_argument("--at", help="ISO 시간, 생략하면 현재 시각")
+    scheduled.add_argument("--weather-condition", help="아침 음악에 사용할 서울 날씨")
+    scheduled.add_argument("--live-weather", action="store_true", help="서울 현재 날씨 조회")
 
     feedback = commands.add_parser("feedback", help="추천에 반응 남기기")
     feedback.add_argument("--profile", required=True)
@@ -107,7 +109,12 @@ def main() -> None:
         profile = load_profile(args.profile)
         candidates = load_candidates(args.candidates)
         current = datetime.fromisoformat(args.at) if args.at else datetime.now(timezone.utc)
-        run = scheduled_recommend(candidates, profile, current)
+        weather_condition = args.weather_condition
+        if args.live_weather:
+            from weather import fetch_seoul_weather
+
+            weather_condition = fetch_seoul_weather().condition
+        run = scheduled_recommend(candidates, profile, current, weather_condition)
         print(json.dumps({
             "mode": run.mode,
             "slots": [asdict(slot) for slot in run.slots],
