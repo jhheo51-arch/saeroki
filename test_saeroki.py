@@ -87,6 +87,13 @@ class SaerokiTest(unittest.TestCase):
         self.assertEqual(loaded.feedback["ai"], "known")
         self.assertIn("ai", loaded.known_ids)
 
+    def test_feedback_is_applied_to_the_next_recommendation(self):
+        profile = Profile("나", self.preference)
+        apply_feedback(profile, "rain", "not_interested")
+        run = run_discovery(self.candidates, profile, limit=5)
+        self.assertNotIn("rain", [item.candidate.id for item in run.recommendations])
+        self.assertEqual(profile.feedback["rain"], "not_interested")
+
     def test_discovery_run_reviews_and_hides_rejected_candidates(self):
         profile = Profile("나", self.preference, known_ids=["known"])
         invalid = Candidate(

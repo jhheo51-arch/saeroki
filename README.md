@@ -5,7 +5,7 @@
 <p align="center">
   <img src="https://img.shields.io/badge/PRD-v1.5-40916C" alt="PRD v1.5">
   <img src="https://img.shields.io/badge/Agent_Ideas-16-90A955" alt="에이전트 후보 16개">
-  <img src="https://img.shields.io/badge/Tests-17_passing-31572C" alt="자동 검사 17개 통과">
+  <img src="https://img.shields.io/badge/Tests-18_passing-31572C" alt="자동 검사 18개 통과">
   <img src="https://img.shields.io/badge/Claude_%2B_Codex-shared_rules-40916C" alt="Claude와 Codex 공통 규칙">
 </p>
 
@@ -126,7 +126,7 @@ python saeroki_cli.py scheduled-recommend --profile data/profile.local.json --ca
 - [x] 취향 저장, 출처 검사, 중복 제거와 추천 이유
 - [x] 계획 후 실행, 결과 자기 검토와 실행 기록
 - [x] 저장, 이미 앎, 관심 없음과 너무 유명함 피드백
-- [x] 콘텐츠 개인화 공통 기반의 자동 검사 15개
+- [x] 콘텐츠 개인화 공통 기반의 자동 검사 18개
 - [x] 서울 시간대별 추천 구성
 - [x] 서울 현재 날씨를 아침 음악 추천에 전달
 - [x] API 없이 수동 YouTube Music 후보 목록 사용
@@ -140,6 +140,8 @@ python saeroki_cli.py scheduled-recommend --profile data/profile.local.json --ca
 - [x] 뉴닉 공개 목록에서 실제 아티클 링크 연결
 - [ ] 날씨에 맞는 실제 음악 후보 출처 연결
 - [ ] Claude 또는 OpenAI API 연결
+
+현재 1번 콘텐츠 개인화 에이전트의 첫 작동 버전은 여기까지 구현했습니다. 서울 시간대별 추천, 날씨를 반영한 음악 후보, 출처가 확인된 글, 추천 이유, 피드백 저장과 다음 추천 반영을 포함합니다. 실제 RSS 자동 수집과 Claude API 연결은 다음 확장 범위입니다.
 
 공통 기반이 실제 첫 추천 흐름에서 부족할 때만 다음 기술을 추가합니다.
 
