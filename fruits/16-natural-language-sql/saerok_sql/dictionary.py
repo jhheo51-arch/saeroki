@@ -56,5 +56,9 @@ def render(dictionary: dict, schema: dict[str, list[tuple[str, str]]]) -> str:
 
 
 def tables_in_sql(sql: str, dictionary: dict) -> list[str]:
+    """FROM·JOIN 뒤에 나온 표만 셉니다. 'dong'처럼 컬럼과 이름이 같은 표를 잘못 세지 않게 합니다."""
     lowered = sql.lower()
-    return [t for t in sorted(dictionary["tables"]) if re.search(rf"\b{re.escape(t)}\b", lowered)]
+    return [
+        t for t in sorted(dictionary["tables"])
+        if re.search(rf"\b(from|join)\s+(main\.)?\"?{re.escape(t)}\"?(\s|$|,|\))", lowered)
+    ]

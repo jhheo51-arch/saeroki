@@ -107,6 +107,12 @@ class SaerokSqlTest(unittest.TestCase):
         self.assertIn("## subway_daily", text)
         self.assertIn("board (BIGINT)", text)
 
+    def test_tables_in_sql_reads_from_and_join_only(self):
+        sql = "SELECT gu, dong FROM bike_dong_hourly b JOIN weather_daily w ON b.year = w.year WHERE dong = '여의동'"
+        self.assertEqual(dict_mod.tables_in_sql(sql, self.dictionary), ["bike_dong_hourly", "weather_daily"])
+        self.assertEqual(dict_mod.tables_in_sql("SELECT * FROM dong", self.dictionary), ["dong"])
+        self.assertEqual(dict_mod.tables_in_sql('SELECT 1 FROM "cafes",dong', self.dictionary), ["cafes"])
+
     def test_every_table_has_source_and_license(self):
         for name, info in self.dictionary["tables"].items():
             self.assertTrue(info["source"].strip(), name)
@@ -220,6 +226,37 @@ class SaerokSqlTest(unittest.TestCase):
         out = console.export_text()
         for text in ("subway_daily", "avg_rides_per_day", "claude-haiku-5-5", "모르는 명령"):
             self.assertIn(text, out)
+
+    # Claude Code 스킬용 명령(AI 없이)
+    def test_run_json_executes_safely_and_logs_without_values(self):
+        from saerok_sql.tools import run_json
+
+        with tempfile.TemporaryDirectory() as tmp:
+            history = History(Path(tmp) / "h.jsonl")
+            ok = run_json(self.db, 'SELECT gu AS "구" FROM dong GROUP BY gu ORDER BY 1', "구 목록", history)
+            self.assertEqual((ok["status"], ok["row_count"], ok["rows_shown"], ok["columns"]), ("ok", 25, 25, ["구"]))
+            json.dumps(ok, ensure_ascii=False)
+            big = run_json(self.db, "SELECT * FROM weather_daily")
+            self.assertEqual((big["row_count"], big["rows_shown"], big["truncated_at_1000"]), (1000, 50, True))
+            self.assertTrue(any("1,000행" in r for r in big["review"]))
+            self.assertIsInstance(big["rows"][0][0], str)
+            bad = run_json(self.db, "DELETE FROM dong", "", history)
+            self.assertEqual(bad["status"], "blocked")
+            self.assertNotIn("rows", bad)
+            entries = history.all()
+            self.assertEqual([(e["mode"], e["status"], e["model"]) for e in entries],
+                             [("question", "ok", "claude-code"), ("sql", "blocked", "claude-code")])
+
+    def test_skill_file_uses_only_safe_commands(self):
+        from saerok_sql.tools import SKILL_SOURCE, install_skill
+
+        text = SKILL_SOURCE.read_text(encoding="utf-8")
+        self.assertTrue(text.startswith("---\nname: saerok-sql\n"))
+        for needle in ("saerok-sql --schema", "saerok-sql --run -", "최대 2번", "검토 필요", "$ARGUMENTS"):
+            self.assertIn(needle, text)
+        with tempfile.TemporaryDirectory() as tmp:
+            installed = install_skill(Path(tmp))
+            self.assertEqual(installed.read_text(encoding="utf-8"), text)
 
     def test_response_schemas_are_strict(self):
         for schema in (GENERATE_SCHEMA, EXPLAIN_SCHEMA):

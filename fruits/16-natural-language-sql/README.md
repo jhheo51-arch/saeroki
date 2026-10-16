@@ -4,7 +4,9 @@
 
 - 설계: [PRD v1.8](../../docs/PRD-v1.8.md)
 - 공통 원칙: [AGENT-SPEC.md](../../AGENT-SPEC.md)
-- 두뇌: Claude API(기본 Claude Sonnet 5.5). 질문할 때마다 API 사용량만큼 요금이 듭니다.
+- 두뇌는 두 가지 중 고릅니다.
+  - **Claude Code 스킬(무료, 추천)**: Claude Code에서 `/saerok-sql 질문`. 지금 쓰는 Claude 요금제 안에서 돌아가 API 키와 추가 요금이 없습니다.
+  - **`saerok-sql` 터미널**: Claude API(기본 Claude Sonnet 5.5)를 직접 불러 질문마다 API 요금이 듭니다.
 
 ```text
 PS> saerok-sql
@@ -24,7 +26,23 @@ python -m pip install -e fruits/16-natural-language-sql
 
 이제 어느 폴더에서든 `saerok-sql`로 엽니다. 처음 열 때 데이터 파일을 한 번 묶느라 몇 초 걸립니다.
 
-## API 키
+## 무료로 쓰기: Claude Code 스킬
+
+설치한 뒤 스킬을 한 번 설치합니다.
+
+```powershell
+saerok-sql --install-skill
+```
+
+Claude Code를 다시 열고 `/saerok-sql 2025년에 비 온 날과 안 온 날 따릉이 대여를 비교해 줘`처럼 묻습니다. Claude Code가 데이터 사전(`saerok-sql --schema`)을 읽고 SQL을 쓴 뒤, 아래 명령으로만 실행합니다. 안전 검사·읽기 전용·최대 1,000행·기록은 터미널과 똑같이 적용되고, 결과는 JSON으로 받아 표·풀이·한계로 정리해 보여 줍니다.
+
+```powershell
+saerok-sql --run - --label "질문"   # 표준 입력의 SQL을 안전하게 실행해 JSON 출력
+```
+
+스킬 원본은 [`claude-skill/SKILL.md`](claude-skill/SKILL.md)입니다. 다른 PC에서도 설치 후 `saerok-sql --install-skill`만 하면 됩니다.
+
+## API 키(터미널을 쓸 때만)
 
 처음 질문하면 Claude API 키를 묻습니다. https://console.anthropic.com 의 API Keys에서 만든 `sk-ant-…` 키를 붙여 넣으면 Windows 자격 증명 관리자에 저장되고, 파일·기록·화면에는 남지 않습니다. 다시 등록하려면 `/key`를 입력합니다.
 
@@ -74,5 +92,6 @@ python eval/run_eval.py              # 예시 질문 20개 채점(API 비용 발
 | [`saerok_sql/db.py`](saerok_sql/db.py) | 데이터 준비와 읽기 전용 실행 |
 | [`saerok_sql/dictionary.py`](saerok_sql/dictionary.py) | 데이터 사전 읽기·검사·프롬프트용 글 |
 | [`saerok_sql/history.py`](saerok_sql/history.py), [`keystore.py`](saerok_sql/keystore.py) | 기록, API 키 보관 |
+| [`saerok_sql/tools.py`](saerok_sql/tools.py), [`claude-skill/SKILL.md`](claude-skill/SKILL.md) | AI 없이 쓰는 사전 출력·안전 실행 명령과 Claude Code 스킬 |
 | [`scripts/build_data.py`](scripts/build_data.py) | 태블로 프로젝트 정제 CSV를 Parquet으로 다시 만들기 |
 | [`test_saerok_sql.py`](test_saerok_sql.py) | 자동 검사 |

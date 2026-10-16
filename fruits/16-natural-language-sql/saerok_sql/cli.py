@@ -271,6 +271,17 @@ class App:
         self.console.print("[dim]새록 SQL을 닫습니다.[/]")
 
 
+def _read_stdin() -> str:
+    """Windows에서는 표준 입력 기본 인코딩이 cp949라 한글이 깨지므로 바이트로 읽어 UTF-8부터 시도합니다."""
+    data = sys.stdin.buffer.read()
+    for encoding in ("utf-8-sig", "cp949"):
+        try:
+            return data.decode(encoding)
+        except UnicodeDecodeError:
+            continue
+    return data.decode("utf-8", errors="replace")
+
+
 def main(argv: list[str] | None = None) -> int:
     for stream in (sys.stdout, sys.stderr):
         if hasattr(stream, "reconfigure"):
@@ -280,8 +291,33 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--explain", type=Path, help="SQL 파일을 풀이하고 끝내기")
     parser.add_argument("--model", choices=sorted(MODELS), help="모델(기본 sonnet)")
     parser.add_argument("--no-history", action="store_true", help="기록을 남기지 않기")
+    tool = parser.add_argument_group("AI 없이 쓰기(Claude Code 스킬용)")
+    tool.add_argument("--schema", action="store_true", help="데이터 사전 글 출력")
+    tool.add_argument("--run", metavar="SQL", help="SQL을 안전 검사 후 실행해 JSON으로 출력. '-'면 표준 입력에서 읽음")
+    tool.add_argument("--label", default="", help="--run 기록에 남길 원래 질문")
+    tool.add_argument("--install-skill", action="store_true", help="Claude Code 스킬 설치(~/.claude/skills/saerok-sql)")
     args = parser.parse_args(argv)
     console = Console()
+    if args.install_skill:
+        from .tools import install_skill
+
+        console.print(f"Claude Code 스킬을 설치했습니다: {install_skill()}")
+        console.print("Claude Code를 다시 열고 /saerok-sql 뒤에 질문을 붙여 쓰세요.")
+        return 0
+    if args.schema or args.run:
+        from .tools import dumps, run_json, schema_text
+
+        db = Database()
+        try:
+            if args.schema:
+                sys.stdout.write(schema_text(db))
+                return 0
+            sql = _read_stdin() if args.run == "-" else args.run
+            result = run_json(db, sql, args.label, None if args.no_history else History())
+            sys.stdout.write(dumps(result) + "\n")
+            return 0 if result["status"] in ("ok", "review") else 1
+        finally:
+            db.close()
     try:
         app = App(console, MODELS[args.model] if args.model else DEFAULT_MODEL, keep_history=not args.no_history)
     except FileNotFoundError as e:
