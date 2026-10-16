@@ -6,7 +6,7 @@
   <img src="https://img.shields.io/badge/PRD-v1.5-40916C" alt="PRD v1.5">
   <img src="https://img.shields.io/badge/%EC%97%B4%EB%A7%A4-12-D97757" alt="열매 12개">
   <img src="https://img.shields.io/badge/%EB%BF%8C%EB%A6%AC-4-8A5A36" alt="뿌리 4개">
-  <img src="https://img.shields.io/badge/Tests-46_passing-31572C" alt="자동 검사 46개 통과">
+  <img src="https://img.shields.io/badge/Tests-64_passing-31572C" alt="자동 검사 64개 통과">
   <img src="https://img.shields.io/badge/Claude_%2B_Codex-shared_rules-40916C" alt="Claude와 Codex 공통 규칙">
 </p>
 
@@ -95,7 +95,7 @@
 | 추천 | 🌸 [1 콘텐츠 개인화](fruits/01-content-personalization) · 🌱 [6 레시피](fruits/06-recipe) · 🌱 [11 도서](fruits/11-book-recommendation) |
 | 기획 | 🌱 [3 마케팅 전략](fruits/03-marketing-strategy) · 🌱 [4 PRD 설계 지원](fruits/04-prd-assistant) |
 | 조사와 분석 | 🌱 [7 금융](fruits/07-finance) · 🌱 [8 미디어 트렌드](fruits/08-media-trend) · 🌱 [9 법률 문서(10번 통합)](fruits/09-legal-document) · 🌱 [15 심층 연구](fruits/15-deep-research) |
-| 데이터 | 🌱 [5 데이터 시각화](fruits/05-data-visualization) · 🌱 [16 자연어 SQL](fruits/16-natural-language-sql) |
+| 데이터 | 🌱 [5 데이터 시각화](fruits/05-data-visualization) · 🌸 [16 새록 SQL(자연어 SQL)](fruits/16-natural-language-sql) |
 | 학습 | 🌸 [17 새록 사전(산업별 용어 사전)](fruits/17-saerok-dictionary) |
 
 ### 뿌리 4개
@@ -115,8 +115,9 @@
 saeroki/
 ├─ fruits/                 열매 12개, 열매마다 폴더 하나
 │  ├─ 01-content-personalization/   🌸 코드·데이터·검사·Claude 지침
+│  ├─ 16-natural-language-sql/      🌸 saerok-sql 터미널·서울 데이터(data/)·검사
 │  ├─ 17-saerok-dictionary/         🌸 사전 화면(web/)·용어집(data/)·검사
-│  └─ 03 ~ 16 …                     🌱 설명만 있는 씨앗 폴더
+│  └─ 03 ~ 15 …                     🌱 설명만 있는 씨앗 폴더
 ├─ docs/                   PRD와 Claude 이어하기 안내
 ├─ assets/ · data/growth.json · growth.py   자라는 새록이 그림과 성장 기록(Actions가 갱신)
 ├─ AGENT-SPEC.md           모든 열매가 지킬 공통 원칙
@@ -126,11 +127,13 @@ saeroki/
 | 위치 | 내용 |
 |---|---|
 | [`fruits/01-content-personalization`](fruits/01-content-personalization) | 1번 콘텐츠 개인화. 실행 방법은 폴더 안 README |
+| [`fruits/16-natural-language-sql`](fruits/16-natural-language-sql) | 16번 새록 SQL. 설치 후 PowerShell에서 `saerok-sql` |
 | [`fruits/17-saerok-dictionary`](fruits/17-saerok-dictionary) | 17번 새록 사전. 웹에서 바로 열기: [https://jhheo51-arch.github.io/saeroki/](https://jhheo51-arch.github.io/saeroki/) |
 | [`docs/PRD-v01.md`](docs/PRD-v01.md) | 제품 방향, 열매 12개와 뿌리 4개의 원래 목록, 위험과 개발 순서 |
 | [`docs/PRD-v1.5.md`](docs/PRD-v1.5.md) | 현재 구현 범위, 열매와 뿌리의 씨앗·꽃·열매 상태, Claude 이어하기 안내 |
 | [`docs/PRD-v1.6.md`](docs/PRD-v1.6.md) | 1번 콘텐츠 개인화 에이전트의 스무고개 확정 설계 |
 | [`docs/PRD-v1.7.md`](docs/PRD-v1.7.md) | 17번 열매 새록 사전(산업별 용어 사전)의 스무고개 확정 설계 |
+| [`docs/PRD-v1.8.md`](docs/PRD-v1.8.md) | 16번 열매 새록 SQL(자연어 SQL)의 스무고개 확정 설계 |
 | [`docs/CLAUDE-HANDOFF.md`](docs/CLAUDE-HANDOFF.md) | Codex push 후 Claude Code pull 또는 웹앱 프로젝트 업로드 절차 |
 | [`AGENT-SPEC.md`](AGENT-SPEC.md) | 모든 에이전트가 함께 지킬 판단 원칙 |
 | [`AGENTS.md`](AGENTS.md) · [`CLAUDE.md`](CLAUDE.md) | Codex·Claude 작업 안내 |
@@ -158,6 +161,9 @@ python -m unittest -v
 - [x] 새록 사전 금융·증권 산업 추가: 금융 용어 46개, 전체 용어 178개
 - [x] 새록 사전 GitHub Pages 배포
 - [x] 새록 사전 업무 공통 용어 42개, 뜻으로 찾기, 표준국어대사전 연결(전체 용어 220개)
+- [x] 16번 새록 SQL 스무고개 설계 확정(PRD v1.8)
+- [x] 새록 SQL 첫 버전: `saerok-sql` 대화형 터미널, 서울 생활 데이터 13개 표, 읽기 전용 안전 검사, 자동 수정, 기록 옮기기
+- [ ] 새록 SQL API 키 등록 후 실제 질문 확인과 예시 질문 20개 채점
 - [ ] 새록 사전 사용자 확인
 - [ ] 새록 사전 Claude API 보충
 - [x] Claude와 Codex가 함께 읽는 공통 행동 원칙

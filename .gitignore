@@ -6,3 +6,5 @@ data/*.local.json
 data/*.jsonl
 fruits/*/data/*.local.json
 fruits/*/data/*.jsonl
+fruits/*/*.egg-info/
+fruits/*/eval/*.local.json

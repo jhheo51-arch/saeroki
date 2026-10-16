@@ -85,7 +85,7 @@ python saeroki_cli.py recommend --profile data/profile.local.json --candidates d
 | 13 | Plan-and-Execute Agent | 뿌리 | 🌸 꽃 | 추천 실행 계획과 단계 기록 일부 구현 |
 | 14 | Reflection Agent | 뿌리 | 🌸 꽃 | 결과 자기 검토 일부 구현 |
 | 15 | Research Agent | 열매 | 🌱 씨앗 | 기획만 저장 |
-| 16 | SQL 관련 Agent | 열매 | 🌱 씨앗 | 기획만 저장, 첫 버전은 읽기 전용으로 예정 |
+| 16 | SQL 관련 Agent | 열매 | 🌸 꽃 | 이름 새록 SQL, [PRD v1.8](PRD-v1.8.md) 첫 버전 구현 중: `saerok-sql` 대화형 터미널, Claude API, DuckDB 읽기 전용, 서울 생활 데이터 13개 표 |
 | 17 | 산업별 용어 정리 사전 | 열매 | 🌸 꽃 | 이름 새록 사전, [PRD v1.7](PRD-v1.7.md) 첫 버전 구현 중: 산업 3개(금융·증권 포함) 용어 178개, 사전 웹 화면(GitHub Pages 배포), 자동 검사 |
 
 17개 목록과 원래 목적은 축약하지 않고 [PRD v01](PRD-v01.md)에 보존합니다. 실제 독립 제품 수를 셀 때는 9번과 10번을 하나로 관리합니다.

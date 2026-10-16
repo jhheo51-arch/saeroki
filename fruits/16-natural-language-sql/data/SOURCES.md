@@ -1,0 +1,24 @@
+# 새록 SQL 데이터 출처와 이용 조건
+
+이 폴더의 Parquet 파일은 아래 공공 데이터를 태블로 프로젝트(TTJ)에서 정제·집계한 결과입니다. 원본을 고친 가공본이며 공식 통계가 아닙니다. 이용 조건은 2026-10-16 각 출처 페이지에서 확인했습니다.
+
+| 표 | 원본 | 이용 조건 | 출처 표시 |
+|---|---|---|---|
+| `subway_daily` | 서울 열린데이터광장 OA-12914 서울시 지하철 호선별 역별 승하차 인원 정보 | 공공누리 제1유형(출처표시) | 서울특별시·한국철도공사·공항철도, 서울 열린데이터광장 |
+| `bike_stations`, `subway_stations` | 서울 열린데이터광장 OA-13252 서울시 공공자전거 대여소 정보 | 공공누리 제1유형(출처표시) | 서울특별시, 서울 열린데이터광장 |
+| `bike_city_hourly`, `bike_dong_hourly` | 서울 열린데이터광장 OA-15245 서울시 공공자전거 이용정보(시간대별) | 공공누리 제1유형(출처표시) | 서울특별시, 서울 열린데이터광장 |
+| `delivery_monthly`, `delivery_age_monthly` | 서울 열린데이터광장 OA-22267 행정동 단위 29개 통신정보(서울 시민생활 데이터) | 공공누리 제1유형(출처표시) | 서울특별시, 서울 열린데이터광장 |
+| `cafes`, `cafe_brand_dong`, `stores_dong` | 공공데이터포털 15083033 소상공인시장진흥공단 상가(상권)정보 | 이용허락범위 제한 없음 | 소상공인시장진흥공단, 공공데이터포털 |
+| `weather_daily`, `weather_hourly` | Open-Meteo Historical Weather API | CC BY 4.0 | Weather data by [Open-Meteo.com](https://open-meteo.com/) ([CC BY 4.0](https://creativecommons.org/licenses/by/4.0/)). 시간 자료를 하루 단위로 집계하고 기온 구간을 더하는 등 변경했습니다 |
+| `dong` | 위 표들의 행정동 코드·이름을 모은 목록 | 원본 표의 조건을 따름 | 위 출처 |
+
+## 넣지 않은 데이터
+
+- 서울교통공사 역별 일별 시간대별 승하차인원(OA-12921): 공공누리 제3유형(변경금지)이라 집계한 가공본을 다시 배포하지 않습니다.
+- 보안등·가로등(전국보안등정보표준데이터 15017320 등): 쓴 파일 전체의 이용 조건을 확인하지 못해 넣지 않았습니다.
+
+## 다시 만들기
+
+```powershell
+python scripts/build_data.py --clean "C:/STA Track/Claude/tableau-project/clean"
+```

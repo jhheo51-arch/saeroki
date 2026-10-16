@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "saerok-sql"
+version = "0.1.0"
+description = "새록 SQL: 우리말로 묻고 SQL로 답하는 터미널 에이전트 (새록이 16번 열매)"
+requires-python = ">=3.10"
+dependencies = [
+    "anthropic>=1.15",
+    "duckdb>=1.5",
+    "keyring>=25",
+    "prompt_toolkit>=3.0",
+    "rich>=13",
+]
+
+[project.scripts]
+saerok-sql = "saerok_sql.cli:main"
+
+[tool.setuptools]
+packages = ["saerok_sql"]
