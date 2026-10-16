@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="saerok-token" content="__SAEROK_TOKEN__">
+<title>새록 파수꾼</title>
+<link rel="icon" href="character.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand">
+    <img class="sentry" src="character.svg" alt="K-2 소총을 든 파수꾼 새록이" onerror="this.replaceWith('🪖')">
+    <div>
+      <h1>새록 파수꾼</h1>
+      <p class="sub">새록이 18번 열매 · Claude Code 토큰 사용량을 지켜봅니다</p>
+    </div>
+  </div>
+  <div class="meta"><span id="updated">불러오는 중…</span> <button id="refresh" class="ghost">새로 고침</button></div>
+</header>
+
+<nav class="tabs" role="tablist">
+  <button role="tab" data-tab="now" aria-selected="true">지금</button>
+  <button role="tab" data-tab="trend">추이</button>
+  <button role="tab" data-tab="advice">제안 <span id="advice-count" class="pill"></span></button>
+  <button role="tab" data-tab="apply">적용</button>
+</nav>
+
+<main>
+  <section id="tab-now" class="tab">
+    <div id="cards" class="cards"></div>
+    <h2>진행 중인 세션 <small>최근 30분 안에 기록이 바뀐 세션</small></h2>
+    <div id="live"></div>
+    <h2>파수꾼 경고 이력</h2>
+    <div id="alerts"></div>
+  </section>
+
+  <section id="tab-trend" class="tab" hidden>
+    <h2>날짜별 처리량 <small>짙은 부분은 컨텍스트 30만 이상 응답에서 나온 몫</small></h2>
+    <div id="daily" class="chart"></div>
+    <h2>컨텍스트 크기 구간별 처리량</h2>
+    <div id="buckets"></div>
+    <h2>세션별 사용량 <small>처리량이 큰 순서</small></h2>
+    <div id="sessions"></div>
+  </section>
+
+  <section id="tab-advice" class="tab" hidden>
+    <p class="note">측정값은 이 PC의 기록에서 센 숫자, 추정값은 그 숫자로 어림한 값입니다. 여기서는 아무것도 바꾸지 않습니다.</p>
+    <div id="advice"></div>
+  </section>
+
+  <section id="tab-apply" class="tab" hidden>
+    <p class="note">버튼을 누르면 파일을 백업한 뒤 바꾸고, 아래 이력에서 그 항목만 되돌릴 수 있습니다. 바뀐 설정은 새로 여는 Claude Code 세션부터 반영됩니다.</p>
+    <h2>적용할 수 있는 조치</h2>
+    <div id="actions"></div>
+    <h2>경고 기준</h2>
+    <form id="config" class="config">
+      <label>주의 <input type="number" name="caution" min="10000" step="10000"> 토큰</label>
+      <label>경고 <input type="number" name="warn" min="20000" step="10000"> 토큰</label>
+      <label><input type="checkbox" name="toast"> Windows 알림도 띄우기</label>
+      <button type="submit">저장</button>
+      <button type="button" id="test-toast" class="ghost">알림 시험</button>
+    </form>
+    <h2>적용 이력</h2>
+    <div id="log"></div>
+  </section>
+</main>
+
+<div id="toast" role="status" aria-live="polite"></div>
+<script src="app.js"></script>
+</body>
+</html>

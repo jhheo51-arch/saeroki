@@ -1,0 +1,55 @@
+{
+  "about": "새록 파수꾼 공개 집계: 날짜별 Claude Code 처리 토큰(응답마다 읽은 컨텍스트의 합)과 스크린샷 수",
+  "fields": {
+    "processed": "그날 응답들이 읽은 컨텍스트 토큰 합",
+    "max_ctx": "그날 가장 컸던 컨텍스트",
+    "over300_share": "처리량 중 컨텍스트 30만 이상 응답의 비율"
+  },
+  "days": [
+    {
+      "date": "2026-10-12",
+      "sessions": 1,
+      "responses": 55,
+      "processed": 4764516,
+      "max_ctx": 132935,
+      "images": 0,
+      "over300_share": 0.0
+    },
+    {
+      "date": "2026-10-13",
+      "sessions": 5,
+      "responses": 469,
+      "processed": 95113822,
+      "max_ctx": 370081,
+      "images": 56,
+      "over300_share": 0.295
+    },
+    {
+      "date": "2026-10-14",
+      "sessions": 12,
+      "responses": 2366,
+      "processed": 973809431,
+      "max_ctx": 965870,
+      "images": 346,
+      "over300_share": 0.84
+    },
+    {
+      "date": "2026-10-15",
+      "sessions": 14,
+      "responses": 2448,
+      "processed": 1152441335,
+      "max_ctx": 965144,
+      "images": 358,
+      "over300_share": 0.857
+    },
+    {
+      "date": "2026-10-16",
+      "sessions": 15,
+      "responses": 1428,
+      "processed": 515086441,
+      "max_ctx": 964469,
+      "images": 80,
+      "over300_share": 0.802
+    }
+  ]
+}
