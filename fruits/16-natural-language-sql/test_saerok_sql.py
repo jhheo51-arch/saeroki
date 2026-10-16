@@ -277,6 +277,28 @@ class SaerokSqlTest(unittest.TestCase):
         self.assertFalse(run_eval.matches(gold, [("강남", 100), ("잠실", 80)], True))
         self.assertFalse(run_eval.matches(gold, [("강남", 100)], True))
         self.assertTrue(run_eval.matches([(1.0,)], [(1.004,)], False))
+        rainy = [(False, 113254.3), (True, 81428.8)]
+        labelled = [("비 안 온 날", 245, 113254.3), ("비 온 날", 108, 81428.8)]
+        self.assertFalse(run_eval.matches(rainy, labelled, False))
+        self.assertTrue(run_eval.matches(rainy, labelled, False, [1]))
+
+    def test_score_answers_without_api(self):
+        import importlib.util
+
+        spec = importlib.util.spec_from_file_location("run_eval", HERE / "eval" / "run_eval.py")
+        run_eval = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(run_eval)
+        questions = [q for q in json.loads((HERE / "eval" / "questions.json").read_text(encoding="utf-8")) if q["id"] in ("q19", "q04", "q16")]
+        answers = {
+            "q19": {"sql": "SELECT count(*) AS \"동 수\" FROM dong WHERE gu = '마포구'", "attempts": 1},
+            "q04": {"sql": "SELECT count(*) FROM weather_daily WHERE year = 2024 AND rainy_day", "attempts": 1},
+        }
+        passed, report = run_eval.score_answers(self.db, questions, answers)
+        by_id = {r["id"]: r for r in report}
+        self.assertEqual(passed, 1)
+        self.assertTrue(by_id["q19"]["pass"])
+        self.assertFalse(by_id["q04"]["pass"])
+        self.assertEqual(by_id["q16"]["status"], "missing")
 
     def test_eval_gold_sql_runs_and_returns_rows(self):
         questions = json.loads((HERE / "eval" / "questions.json").read_text(encoding="utf-8"))

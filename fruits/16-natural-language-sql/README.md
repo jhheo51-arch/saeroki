@@ -79,7 +79,7 @@ python -m unittest -v                # API 없이 도는 자동 검사
 python eval/run_eval.py              # 예시 질문 20개 채점(API 비용 발생)
 ```
 
-채점은 [`eval/questions.json`](eval/questions.json)의 정답 SQL 결과와 새록 SQL이 만든 결과를 비교합니다. 정답 SQL은 Claude가 작성하고 실행해 결과를 확인한 초안이라, 사람이 한 번 더 검토해야 합니다.
+채점은 [`eval/questions.json`](eval/questions.json)의 정답 SQL 결과와 새록 SQL이 만든 결과를 비교합니다. Claude Code 스킬로 받은 답안은 `python eval/run_eval.py --answers 답안.json`으로 API 없이 채점합니다. 2026-10-16 스킬 방식 결과는 20/20입니다([RESULTS.md](eval/RESULTS.md)). 정답 SQL은 Claude가 작성하고 실행해 결과를 확인한 초안이라, 사람이 한 번 더 검토해야 합니다.
 
 ## 파일
 

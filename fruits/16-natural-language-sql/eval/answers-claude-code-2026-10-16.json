@@ -1,0 +1,179 @@
+{
+ "model": "claude-opus-5-5",
+ "answers": [
+  {
+   "id": "q01",
+   "sql": "SELECT station AS \"역\", SUM(board) AS \"승차 인원\" FROM subway_daily WHERE year = 2025 GROUP BY station ORDER BY \"승차 인원\" DESC LIMIT 5",
+   "attempts": 1,
+   "assumptions": [
+    "같은 역 이름은 노선과 관계없이 station으로 묶어 합산",
+    "승차 인원은 board(교통카드 기준)"
+   ]
+  },
+  {
+   "id": "q02",
+   "sql": "SELECT AVG(alight) AS \"평일 하루 평균 하차 인원\" FROM subway_daily WHERE year = 2024 AND line = '2호선' AND station = '강남' AND day_type = '평일'",
+   "attempts": 1,
+   "assumptions": [
+    "강남역은 subway_daily의 station='강남', line='2호선'",
+    "평일은 day_type='평일'(공휴일 구분은 원본 기준)",
+    "하루 평균은 해당 날짜들의 alight 평균"
+   ]
+  },
+  {
+   "id": "q03",
+   "sql": "SELECT month(date) AS \"월\", SUM(rides) AS \"대여 건수\" FROM bike_city_hourly WHERE year = 2025 GROUP BY month(date) ORDER BY \"월\"",
+   "attempts": 1,
+   "assumptions": [
+    "대여 건수는 bike_city_hourly.rides 합계(대여 시작 기준)",
+    "2025년 2월은 원본이 1~16일만 있어 합계가 작게 나옴"
+   ]
+  },
+  {
+   "id": "q04",
+   "sql": "SELECT COUNT(*) AS \"비 온 날 수\" FROM weather_daily WHERE year = 2025 AND rainy_day",
+   "attempts": 1,
+   "assumptions": [
+    "비 온 날은 rainy_day(하루 강수량 1mm 이상)"
+   ]
+  },
+  {
+   "id": "q05",
+   "sql": "SELECT date AS \"날짜\", temp_max AS \"최고 기온\" FROM weather_daily WHERE year = 2024 ORDER BY temp_max DESC LIMIT 1",
+   "attempts": 1,
+   "assumptions": [
+    "최고 기온은 weather_daily.temp_max(재분석 자료)",
+    "동률이면 한 날만 표시"
+   ]
+  },
+  {
+   "id": "q06",
+   "sql": "SELECT gu AS \"구\", dong AS \"행정동\", SUM(avg_rides_per_day) AS \"하루 평균 대여 건수\" FROM bike_dong_hourly WHERE quarter = '2025-Q2' AND day_type = '평일' GROUP BY adm_cd, gu, dong ORDER BY \"하루 평균 대여 건수\" DESC LIMIT 3",
+   "attempts": 1,
+   "assumptions": [
+    "2분기는 quarter='2025-Q2', 평일은 day_type='평일'",
+    "행정동 하루 평균은 시간대별 avg_rides_per_day를 24시간 합산"
+   ]
+  },
+  {
+   "id": "q07",
+   "sql": "SELECT gu AS \"구\", COUNT(*) AS \"매장 수\" FROM cafes WHERE quarter = '2026-Q2' AND brand = '메가MGC커피' GROUP BY gu ORDER BY \"매장 수\" DESC LIMIT 3",
+   "attempts": 1,
+   "assumptions": [
+    "매장 수는 cafes 표에서 quarter='2026-Q2' 한 분기만 세어 구별로 집계"
+   ]
+  },
+  {
+   "id": "q08",
+   "sql": "SELECT COUNT(*) AS \"저가 커피 매장 수\" FROM cafes WHERE quarter = '2026-Q2' AND tier = '저가'",
+   "attempts": 1,
+   "assumptions": [
+    "저가 커피는 tier='저가'(메가MGC커피·컴포즈커피·빽다방·매머드커피·더벤티)",
+    "2026-Q2 스냅샷 한 분기만 셈"
+   ]
+  },
+  {
+   "id": "q09",
+   "sql": "SELECT gu AS \"구\", dong AS \"행정동\", delivery_days AS \"배달 서비스 사용일수\" FROM delivery_monthly WHERE month = DATE '2025-12-01' ORDER BY delivery_days DESC LIMIT 5",
+   "attempts": 1,
+   "assumptions": [
+    "배달 값은 주문 건수가 아니라 한 달 배달앱 사용일수 평균(delivery_monthly.delivery_days)",
+    "2025년 12월은 month=2025-12-01"
+   ]
+  },
+  {
+   "id": "q10",
+   "sql": "SELECT gu AS \"구\", dong AS \"행정동\", single_household_ratio AS \"1인 가구 비율\" FROM delivery_monthly WHERE month = DATE '2025-12-01' ORDER BY single_household_ratio DESC LIMIT 3",
+   "attempts": 1,
+   "assumptions": [
+    "1인 가구 비율은 delivery_monthly.single_household_ratio",
+    "2025년 12월은 month=2025-12-01"
+   ]
+  },
+  {
+   "id": "q11",
+   "sql": "SELECT COUNT(*) FILTER (WHERE quarter = '2024-Q4') AS \"2024-Q4 매장 수\", COUNT(*) FILTER (WHERE quarter = '2026-Q2') AS \"2026-Q2 매장 수\", COUNT(*) FILTER (WHERE quarter = '2026-Q2') - COUNT(*) FILTER (WHERE quarter = '2024-Q4') AS \"증가 수\" FROM cafes WHERE brand = '메가MGC커피' AND quarter IN ('2024-Q4', '2026-Q2')",
+   "attempts": 1,
+   "assumptions": [
+    "각 분기 스냅샷에서 brand='메가MGC커피' 매장 수를 세어 뺌"
+   ]
+  },
+  {
+   "id": "q12",
+   "sql": "WITH d AS (SELECT date, SUM(rides) AS rides FROM bike_city_hourly WHERE year = 2025 GROUP BY date)\nSELECT CASE WHEN w.rainy_day THEN '비 온 날' ELSE '비 안 온 날' END AS \"구분\", COUNT(*) AS \"날 수\", AVG(d.rides) AS \"하루 평균 대여 건수\" FROM d JOIN weather_daily w ON d.date = w.date GROUP BY w.rainy_day ORDER BY \"구분\"",
+   "attempts": 1,
+   "assumptions": [
+    "따릉이 하루 대여 건수는 날짜별 rides 합계, 비 온 날은 rainy_day(1mm 이상)",
+    "2025년 2월 17일 이후 원본 누락일은 데이터가 없어 비교에서 빠짐"
+   ]
+  },
+  {
+   "id": "q13",
+   "sql": "WITH d AS (SELECT date, weekday, SUM(board) AS board FROM subway_daily WHERE year = 2025 GROUP BY date, weekday)\nSELECT weekday AS \"요일 번호\", CASE weekday WHEN 0 THEN '월' WHEN 1 THEN '화' WHEN 2 THEN '수' WHEN 3 THEN '목' WHEN 4 THEN '금' WHEN 5 THEN '토' ELSE '일' END AS \"요일\", AVG(board) AS \"하루 평균 승차 인원\" FROM d GROUP BY weekday ORDER BY weekday",
+   "attempts": 1,
+   "assumptions": [
+    "하루 평균은 날짜별 서울 전체 승차 합계를 요일별로 평균",
+    "weekday 0=월요일 ~ 6=일요일"
+   ]
+  },
+  {
+   "id": "q14",
+   "sql": "SELECT gu AS \"구\", dong AS \"행정동\", COUNT(DISTINCT station_id) AS \"대여소 수\" FROM bike_stations GROUP BY adm_cd, gu, dong ORDER BY \"대여소 수\" DESC LIMIT 3",
+   "attempts": 1,
+   "assumptions": [
+    "기간을 말하지 않아 bike_stations 전체(2024-12~2026-06 공개본 합본) 사용",
+    "대여소 수는 station_id 중복 제거 후 셈"
+   ]
+  },
+  {
+   "id": "q15",
+   "sql": "SELECT AVG(temp_avg) AS \"평균 기온\" FROM weather_daily WHERE date >= DATE '2025-07-01' AND date < DATE '2025-08-01'",
+   "attempts": 1,
+   "assumptions": [
+    "서울 평균 기온은 2025-07 일별 temp_avg의 평균(재분석 자료)"
+   ]
+  },
+  {
+   "id": "q16",
+   "sql": "SELECT SUM(board) AS \"승차 인원 합계\" FROM subway_daily WHERE year = 2025 AND line = '2호선'",
+   "attempts": 1,
+   "assumptions": [
+    "2호선은 line='2호선', 승차는 board 합계"
+   ]
+  },
+  {
+   "id": "q17",
+   "sql": "SELECT gu AS \"구\", dong AS \"행정동\", store_count AS \"상가 수\" FROM stores_dong WHERE quarter = '2026-Q2' ORDER BY store_count DESC LIMIT 3",
+   "attempts": 1,
+   "assumptions": [
+    "상가 수는 stores_dong.store_count, quarter='2026-Q2'"
+   ]
+  },
+  {
+   "id": "q18",
+   "sql": "SELECT gu AS \"구\", dong AS \"행정동\", SUM(population) AS \"30대 인구\" FROM delivery_age_monthly WHERE month = DATE '2025-12-01' AND age IN (30, 35) GROUP BY adm_cd, gu, dong ORDER BY \"30대 인구\" DESC LIMIT 3",
+   "attempts": 1,
+   "assumptions": [
+    "30대는 age 30(30~34세)과 35(35~39세)",
+    "인구는 delivery_age_monthly.population(추정 인구), 남녀 합산",
+    "2025년 12월은 month=2025-12-01"
+   ]
+  },
+  {
+   "id": "q19",
+   "sql": "SELECT COUNT(*) AS \"행정동 수\" FROM dong WHERE gu = '마포구'",
+   "attempts": 1,
+   "assumptions": [
+    "dong 표(2024~2026에 나온 행정동 전체) 기준, 분동·개칭된 동이 함께 들어 있을 수 있음"
+   ]
+  },
+  {
+   "id": "q20",
+   "sql": "SELECT COUNT(DISTINCT adm_cd) AS \"스타벅스가 있는 행정동 수\" FROM cafes WHERE quarter = '2026-Q2' AND brand = '스타벅스'",
+   "attempts": 1,
+   "assumptions": [
+    "cafes 표 quarter='2026-Q2', brand='스타벅스' 매장이 있는 adm_cd 수"
+   ]
+  }
+ ]
+}

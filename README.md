@@ -6,7 +6,7 @@
   <img src="https://img.shields.io/badge/PRD-v1.5-40916C" alt="PRD v1.5">
   <img src="https://img.shields.io/badge/%EC%97%B4%EB%A7%A4-12-D97757" alt="열매 12개">
   <img src="https://img.shields.io/badge/%EB%BF%8C%EB%A6%AC-4-8A5A36" alt="뿌리 4개">
-  <img src="https://img.shields.io/badge/Tests-67_passing-31572C" alt="자동 검사 67개 통과">
+  <img src="https://img.shields.io/badge/Tests-68_passing-31572C" alt="자동 검사 68개 통과">
   <img src="https://img.shields.io/badge/Claude_%2B_Codex-shared_rules-40916C" alt="Claude와 Codex 공통 규칙">
 </p>
 
@@ -164,7 +164,8 @@ python -m unittest -v
 - [x] 16번 새록 SQL 스무고개 설계 확정(PRD v1.8)
 - [x] 새록 SQL 첫 버전: `saerok-sql` 대화형 터미널, 서울 생활 데이터 13개 표, 읽기 전용 안전 검사, 자동 수정, 기록 옮기기
 - [x] 새록 SQL 무료 방식: Claude Code 스킬 `/saerok-sql`(API 키 없이 질문·풀이)
-- [ ] 새록 SQL 예시 질문 20개 채점(스킬 방식 또는 API)
+- [x] 새록 SQL 예시 질문 20개 채점: Claude Code 스킬 방식 20/20([결과](fruits/16-natural-language-sql/eval/RESULTS.md))
+- [ ] 새록 SQL 채점 정답 사람 검토, 애매한·복잡한 질문 채점 세트 추가
 - [ ] 새록 사전 사용자 확인
 - [ ] 새록 사전 Claude API 보충
 - [x] Claude와 Codex가 함께 읽는 공통 행동 원칙
