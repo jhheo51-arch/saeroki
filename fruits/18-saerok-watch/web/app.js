@@ -135,6 +135,15 @@ function renderTrend() {
     : `<div class="empty">최근 14일에 급증이 없습니다.</div>`;
 }
 
+function effectCell(f) {
+  if (!f) return "";
+  const mark = { better: ["l0", "효과 있음"], worse: ["l2", "나빠짐"], same: ["plain", "변화 없음"], early: ["plain", "측정 중"] }[f.status];
+  const badge = mark ? `<span class="badge ${mark[0]}">${mark[1]}</span> ` : "";
+  const detail = f.before && f.after && f.after.sessions
+    ? `<div class="small">세션 ${f.before.sessions}개 → ${f.after.sessions}개 · 기본 부담 ${man(f.before.first_ctx)} → ${man(f.after.first_ctx)} · 최대 ${man(f.before.max_ctx)} → ${man(f.after.max_ctx)} · 30만 이상 ${pct(f.before.over300 * 1000, 1000)} → ${pct(f.after.over300 * 1000, 1000)}</div>` : "";
+  return `${badge}<span class="small">${esc(f.text)}</span>${detail}`;
+}
+
 async function showSession(id) {
   selected = id;
   document.querySelectorAll("[data-session]").forEach((r) => r.classList.toggle("on", r.dataset.session === id));
@@ -207,8 +216,9 @@ function renderApply() {
   }
 
   $("log").innerHTML = data.apply_log.length ? `<div class="table-wrap"><table>
-    <tr><th>시각</th><th>조치</th><th>바뀐 키</th><th></th></tr>
+    <tr><th>시각</th><th>조치</th><th>바뀐 키</th><th>효과(전후 7일 비교)</th><th></th></tr>
     ${data.apply_log.map((e) => `<tr><td>${esc(e.at)}</td><td>${esc(e.label)}</td><td class="small">${e.changes.map((c) => esc(c.path.slice(-2).join(" › "))).join("<br>")}</td>
+      <td>${effectCell((data.effects || {})[e.id])}</td>
       <td>${e.undone_at ? `<span class="small">${esc(e.undone_at)} 되돌림</span>` : `<button class="ghost" data-undo="${esc(e.id)}" data-label="${esc(e.label)}">되돌리기</button>`}</td></tr>`).join("")}
   </table></div>` : `<div class="empty">아직 적용한 조치가 없습니다.</div>`;
 }

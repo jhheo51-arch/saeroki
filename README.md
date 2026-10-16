@@ -6,7 +6,7 @@
   <img src="https://img.shields.io/badge/PRD-v1.9-40916C" alt="PRD v1.9">
   <img src="https://img.shields.io/badge/%EC%97%B4%EB%A7%A4-13-D97757" alt="열매 13개">
   <img src="https://img.shields.io/badge/%EB%BF%8C%EB%A6%AC-4-8A5A36" alt="뿌리 4개">
-  <img src="https://img.shields.io/badge/Tests-92_passing-31572C" alt="자동 검사 92개 통과">
+  <img src="https://img.shields.io/badge/Tests-94_passing-31572C" alt="자동 검사 94개 통과">
   <img src="https://img.shields.io/badge/Claude_%2B_Codex-shared_rules-40916C" alt="Claude와 Codex 공통 규칙">
 </p>
 

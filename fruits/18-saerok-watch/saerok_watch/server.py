@@ -7,7 +7,7 @@ import webbrowser
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
-from . import advise, apply, character, notify, scan
+from . import advise, apply, character, effect, notify, scan
 from .paths import data_home
 from .store import load_config, read_json, save_config
 
@@ -43,6 +43,7 @@ def summary() -> dict:
     sessions = scan.scan_all()
     config = load_config()
     now = time.time()
+    log = apply.load_log()
     hook_state = read_json(data_home() / "hook-state.json", {}) or {}
     live = []
     for s in sessions:
@@ -63,7 +64,8 @@ def summary() -> dict:
         "environment": advise.environment(),
         "alerts": recent_alerts(),
         "hook_sessions": len(hook_state),
-        "apply_log": list(reversed(apply.load_log())),
+        "apply_log": list(reversed(log)),
+        "effects": effect.effects(sessions, log),
     }
 
 

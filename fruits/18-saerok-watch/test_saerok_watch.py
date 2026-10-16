@@ -6,6 +6,7 @@ import os
 import sys
 import tempfile
 import threading
+import time
 import unittest
 import urllib.error
 import urllib.request
@@ -15,7 +16,7 @@ from unittest import mock
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from saerok_watch import apply, export, hook, scan, server, statusline  # noqa: E402
+from saerok_watch import apply, effect, export, hook, scan, server, statusline  # noqa: E402
 
 
 def assistant(msg_id, ctx, ts="2026-10-16T01:00:00Z", tools=()):
@@ -318,6 +319,48 @@ class StatuslineTest(Sandbox):
         self.assertEqual(json.loads(settings.read_text(encoding="utf-8"))["statusLine"], old)
 
 
+class EffectTest(unittest.TestCase):
+    @staticmethod
+    def session(first_ts, first_ctx, max_ctx=200_000):
+        return {"first_ts": first_ts, "last_ts": first_ts, "responses": 10, "processed": 1_000_000, "first_ctx": first_ctx,
+                "max_ctx": max_ctx, "buckets": [0, 1_000_000, 0, 0]}
+
+    def entry(self, action, at="2026-10-10 12:00:00", **kw):
+        return {"id": action, "action": action, "at": at, "undone_at": None, **kw}
+
+    def test_compares_sessions_started_before_and_after(self):
+        at = time.mktime(time.strptime("2026-10-10 12:00:00", "%Y-%m-%d %H:%M:%S"))
+        iso = lambda days: time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime(at + days * 86400))
+        sessions = ([self.session(iso(-d), 40_000) for d in (1, 2, 3)]
+                    + [self.session(iso(d), 30_000) for d in (0.5, 1, 2)]
+                    + [{**self.session(iso(2.5), 1), "last_ts": iso(30)}]  # 아직 진행 중
+                    + [self.session(iso(-10), 999_999), self.session(iso(9), 1)])  # 7일 밖은 빼기
+        e = self.entry("mcp_off:rea")
+        f = effect.effect(e, sessions, [e], now=at + 30 * 86400)
+        self.assertEqual((f["before"]["sessions"], f["after"]["sessions"]), (3, 3))
+        self.assertEqual(f["metric"], "first_ctx")
+        self.assertEqual(f["status"], "better")
+        self.assertIn("4.0만에서 3.0만으로 줄었습니다(-25%)", f["text"])
+        self.assertTrue(f["text"].startswith("세션 기본 부담(첫 응답 크기) 평균이"))
+
+        # 되돌린 뒤 시작한 세션은 '적용 뒤'에 넣지 않습니다.
+        undone = self.entry("mcp_off:rea", undone_at=time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(at + 0.8 * 86400)))
+        f = effect.effect(undone, sessions, [undone], now=at + 30 * 86400)
+        self.assertEqual(f["after"]["sessions"], 1)
+        self.assertEqual(f["status"], "early")
+
+        # 적용 뒤 3일이 지나지 않았으면 세션이 모여도 판정하지 않습니다.
+        f = effect.effect(e, sessions, [e], now=at + 2.9 * 86400)
+        self.assertEqual(f["status"], "early")
+
+    def test_overlap_and_metric_choice(self):
+        log = [self.entry("hook_install"), self.entry("autocompact:200000", at="2026-10-11 09:00:00")]
+        f = effect.effect(log[0], [], log)
+        self.assertEqual((f["status"], f["overlaps"], f["metric"]), ("early", 1, "max_ctx"))
+        self.assertEqual(effect.primary_metric("autocompact:200000"), "over300")
+        self.assertEqual(effect.effect({"id": "x", "at": "bad"}, [], [])["status"], "unknown")
+
+
 class ServerTest(Sandbox):
     def setUp(self):
         super().setUp()
@@ -341,6 +384,7 @@ class ServerTest(Sandbox):
     def test_summary_and_page_token(self):
         summary = json.loads(urllib.request.urlopen(self.base + "/api/summary", timeout=10).read())
         self.assertEqual(summary["totals"]["responses"], 1)
+        self.assertIn("effects", summary)
         page = urllib.request.urlopen(self.base + "/", timeout=5).read().decode("utf-8")
         self.assertIn("secret-token", page)
 
