@@ -70,6 +70,19 @@ def plan(action: str) -> tuple[str, list[dict]]:
             changes.append({"file": "settings", "path": ["hooks", "Stop"], "after": after})
         return "새록 파수꾼 훅 설치", changes
 
+    if name == "hook_remove":
+        # 플러그인과 직접 넣은 훅이 함께 돌면 직접 넣은 쪽만 뺍니다.
+        before = _get(settings, ["hooks", "Stop"])
+        if isinstance(before, list):
+            after = []
+            for group in before:
+                kept = [h for h in group.get("hooks") or [] if HOOK_MARK not in str(h.get("command", ""))]
+                if kept:
+                    after.append({**group, "hooks": kept})
+            if after != before:
+                changes.append({"file": "settings", "path": ["hooks", "Stop"], "after": after})
+        return "직접 넣은 파수꾼 훅 빼기", changes
+
     if name == "autocompact":
         value = int(arg)
         if not 100_000 <= value <= 1_000_000:

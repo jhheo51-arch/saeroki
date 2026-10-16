@@ -1,6 +1,6 @@
 """태블로 프로젝트(TTJ)의 정제 CSV를 새록 SQL용 Parquet으로 바꿉니다.
 
-python scripts/build_data.py --clean "C:/STA Track/Claude/tableau-project/clean"
+python scripts/build_data.py --clean "<TTJ 정제 데이터 폴더>/clean"
 """
 
 from __future__ import annotations

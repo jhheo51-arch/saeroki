@@ -32,7 +32,7 @@ Claude Code는 매 응답마다 지금까지의 대화 전체를 다시 읽습�
 
 ### 3-1. 어느 컴퓨터든 설치(2026-10-16)
 
-사용자가 다른 컴퓨터에서도 바로 쓰기를 원해, 저장소를 Claude Code 플러그인 마켓플레이스(`.claude-plugin/marketplace.json`)로 만들고 18번 열매 폴더를 플러그인 `saerok-watch`로 묶었습니다. `/plugin install saerok-watch --marketplace jhheo51-arch/saeroki` 한 줄로 설치하면 `Stop` 훅이 자동으로 켜지고, `/saerok-watch:dashboard`로 대시보드를 엽니다. GitHub README의 링크는 클릭만으로 프로그램을 실행할 수 없어서 복사해 붙여 넣는 한 줄로 정했습니다. 플러그인 설치본에는 `growth.py`가 없으므로 파수꾼 그림은 레벨 10 모습을 내장해 씁니다. 대시보드 색은 사용자 요청으로 주황·갈색 강조를 초록 계열로 바꿨습니다.
+사용자가 다른 컴퓨터에서도 바로 쓰기를 원해, 저장소를 Claude Code 플러그인 마켓플레이스(`.claude-plugin/marketplace.json`)로 만들고 18번 열매 폴더를 플러그인 `saerok-watch`로 묶었습니다. 터미널의 `claude plugin install saerok-watch --marketplace jhheo51-arch/saeroki` 한 줄(대화창에서는 `/plugin marketplace add jhheo51-arch/saeroki` 뒤 `/plugin install saerok-watch@saeroki`)로 설치하면 `Stop` 훅이 자동으로 켜지고, `/saerok-watch:dashboard`로 대시보드를 엽니다. GitHub README의 링크는 클릭만으로 프로그램을 실행할 수 없어서 복사해 붙여 넣는 한 줄로 정했습니다. 플러그인 설치본에는 `growth.py`가 없으므로 파수꾼 그림은 레벨 10 모습을 내장해 씁니다. 대시보드 색은 사용자 요청으로 주황·갈색 강조를 초록 계열로 바꿨습니다.
 
 ## 4. 무엇을 재는가
 
@@ -48,7 +48,7 @@ Claude Code는 매 응답마다 지금까지의 대화 전체를 다시 읽습�
 
 ## 5. 경고 흐름
 
-1. 사용자가 적용 탭에서 `파수꾼 훅 설치`를 누르면 `~/.claude/settings.json`의 `hooks.Stop`에 `saerok-watch hook`이 추가됩니다.
+1. 사용자가 적용 탭에서 `파수꾼 훅 설치`를 누르면 `~/.claude/settings.json`의 `hooks.Stop`에 `PYTHONPATH=<열매 폴더> <python> -m saerok_watch hook` 명령이 추가됩니다. 플러그인으로 설치하면 대신 `hooks/sentry hook`이 자동 등록됩니다.
 2. Claude가 응답을 끝낼 때마다 훅이 그 세션 기록의 마지막 `usage`를 읽습니다.
 3. 주의(20만)나 경고(40만)를 처음 넘으면 대화에 한 줄을 띄우고, 파수꾼 새록이 그림이 든 Windows 알림을 보내고(대시보드에서 끌 수 있음), `~/.saerok-watch/alerts.jsonl`에 남깁니다.
 4. 압축이나 `/clear`로 작아지면 단계를 내려, 다시 커질 때 또 알립니다.

@@ -12,13 +12,13 @@
 
 ## 왜 필요한가
 
-Claude Code는 응답마다 지금까지의 대화 전체를 다시 읽습니다. 2026-10-16 이 PC의 기록(세션 29개, 응답 6,605번)을 세어 보니 처리량의 82%가 컨텍스트 30만 토큰을 넘은 응답에서 나왔습니다. 세션을 언제 끊을지만 잘 정해도 사용량이 크게 줄어듭니다.
+Claude Code는 응답마다 지금까지의 대화 전체를 다시 읽습니다. 2026-10-16 오전 측정 시점에 이 PC의 기록(세션 29개, 응답 6,605번)을 세어 보니 처리량의 82%가 컨텍스트 30만 토큰을 넘은 응답에서 나왔습니다. 세션을 언제 끊을지만 잘 정해도 사용량이 크게 줄어듭니다.
 
 ## 설치와 실행
 
 ### 어느 컴퓨터든: Claude Code 플러그인(추천)
 
-Claude Code 대화창에서 `/plugin install saerok-watch --marketplace jhheo51-arch/saeroki`, 또는 터미널에서 아래 한 줄이면 됩니다. 훅이 자동으로 켜지고 대시보드는 `/saerok-watch:dashboard`로 엽니다. Python 3.10 이상이 필요합니다.
+터미널에서 아래 한 줄, 또는 Claude Code 대화창에서 `/plugin marketplace add jhheo51-arch/saeroki` 뒤 `/plugin install saerok-watch@saeroki`면 됩니다. 훅이 자동으로 켜지고 대시보드는 `/saerok-watch:dashboard`로 엽니다. Python 3.10 이상이 필요합니다.
 
 ```bash
 claude plugin install saerok-watch --marketplace jhheo51-arch/saeroki
@@ -61,6 +61,7 @@ saerok-watch test-alert # Windows 알림 미리 보기
 | 조치 | 바꾸는 곳 |
 |---|---|
 | 파수꾼 훅 설치 | `settings.json` › `hooks.Stop` |
+| 직접 넣은 훅 빼기(플러그인과 겹칠 때) | `settings.json` › `hooks.Stop`에서 파수꾼 훅만 |
 | 자동 압축 창 200K로 | `settings.json` › `autoCompactWindow` |
 | 안 쓰는 MCP 서버 끄기 | `~/.claude.json` › 프로젝트별 `disabledMcpServers` |
 | 안 쓰는 플러그인 끄기 | `settings.json` › `enabledPlugins`(직접 설치한 플러그인만) |
@@ -79,7 +80,7 @@ claude.ai 계정에서 동기화된 플러그인과 프로젝트 `CLAUDE.md` 필
 | `~/.saerok-watch/` | 분석 캐시(세션 첫 문장 60자와 폴더 이름 포함), 경고 이력, 적용 이력, 백업. 내 PC에만 있습니다 |
 | [`data/public-daily.json`](data) | 날짜별 처리량·응답 수·세션 수·최대 컨텍스트·30만 이상 비율·스크린샷 수. 제목·원문·경로·세션 ID는 없습니다 |
 
-공개 집계는 `saerok-watch export`로 만든 뒤 내용을 확인하고 직접 커밋합니다.
+공개 집계는 `saerok-watch export`로 만든 뒤 내용을 확인하고 직접 커밋합니다. `export`는 이 저장소에서 설치(`pip install -e`)했을 때만 저장소 안 `data/`에 쓰므로, 플러그인 설치본에서는 `--out 파일경로`로 위치를 정해 주세요.
 
 ## 측정 방법과 한계
 

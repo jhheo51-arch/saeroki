@@ -20,5 +20,5 @@
 ## 다시 만들기
 
 ```powershell
-python scripts/build_data.py --clean "C:/STA Track/Claude/tableau-project/clean"
+python scripts/build_data.py --clean "<TTJ 정제 데이터 폴더>/clean"
 ```

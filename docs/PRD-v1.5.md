@@ -66,6 +66,8 @@ python saeroki_cli.py recommend --profile data/profile.local.json --candidates d
 
 ## 4. 열매와 뿌리 현재 상태
 
+> 2026-10-16부터 최신 상태는 [README 열매 지도](../README.md#새록이-열매-지도)에서 관리합니다(18번 새록 파수꾼이 더해져 열매 13개). 아래는 2026-10-14 시점 기록입니다.
+
 열매 12개와 뿌리 4개의 진행 상태입니다. 🌱 씨앗은 기획만 저장, 🌸 꽃은 만드는 중, 🍎 열매는 첫 버전 완성입니다. 아직 열매 상태에 닿은 항목은 없습니다.
 
 | 번호 | 에이전트 | 구분 | 상태 | v1.5 메모 |
@@ -92,12 +94,7 @@ python saeroki_cli.py recommend --profile data/profile.local.json --candidates d
 
 ## 5. Claude에서 이어서 작업하는 방법
 
-Claude는 작업 전에 아래 순서로 읽습니다.
-
-1. `README.md`
-2. `docs/PRD-v1.5.md`
-3. `docs/PRD-v01.md`
-4. `AGENT-SPEC.md`
+Claude가 먼저 읽을 문서는 저장소 루트의 [`CLAUDE.md`](../CLAUDE.md)가 기준입니다(공통 문서와 작업할 열매의 PRD만).
 
 제품 규칙은 특정 AI 서비스의 기억이나 설정에 두지 않고 Markdown, Python과 JSON 파일에 보관합니다. 따라서 Claude에서는 `CLAUDE.md`의 안내에 따라 v1.5와 공통 원칙을 읽고, 같은 명령으로 검사할 수 있습니다.
 

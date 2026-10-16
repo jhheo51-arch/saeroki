@@ -3,10 +3,10 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/PRD-v1.5-40916C" alt="PRD v1.5">
+  <img src="https://img.shields.io/badge/PRD-v1.9-40916C" alt="PRD v1.9">
   <img src="https://img.shields.io/badge/%EC%97%B4%EB%A7%A4-13-D97757" alt="열매 13개">
   <img src="https://img.shields.io/badge/%EB%BF%8C%EB%A6%AC-4-8A5A36" alt="뿌리 4개">
-  <img src="https://img.shields.io/badge/Tests-83_passing-31572C" alt="자동 검사 83개 통과">
+  <img src="https://img.shields.io/badge/Tests-84_passing-31572C" alt="자동 검사 84개 통과">
   <img src="https://img.shields.io/badge/Claude_%2B_Codex-shared_rules-40916C" alt="Claude와 Codex 공통 규칙">
 </p>
 
@@ -24,16 +24,17 @@
 
 Claude Code 대화가 길어져 토큰이 새기 시작하면 파수꾼 새록이가 알려 줍니다. Claude Code가 깔린 컴퓨터라면 어디서든 아래 한 줄을 복사해 붙여 넣으면 끝입니다(코드 칸 오른쪽 위 복사 버튼).
 
-Claude Code 대화창에서:
-
-```text
-/plugin install saerok-watch --marketplace jhheo51-arch/saeroki
-```
-
-또는 터미널에서:
+터미널에서:
 
 ```bash
 claude plugin install saerok-watch --marketplace jhheo51-arch/saeroki
+```
+
+또는 Claude Code 대화창에서 두 줄을 차례로:
+
+```text
+/plugin marketplace add jhheo51-arch/saeroki
+/plugin install saerok-watch@saeroki
 ```
 
 - 설치 뒤 Claude Code를 다시 열면 바로 지켜보기 시작합니다. 컨텍스트가 20만 토큰을 넘으면 주의, 40만을 넘으면 경고를 대화 안 한 줄로 띄우고, Windows에서는 파수꾼 새록이 그림이 든 알림도 띄웁니다.
@@ -132,7 +133,7 @@ claude plugin install saerok-watch --marketplace jhheo51-arch/saeroki
 | 🌸 13 계획 후 실행 | 실행 계획을 세우고 단계를 기록합니다 |
 | 🌸 14 결과 자기 검토 | 결과를 스스로 확인하고 고칩니다 |
 
-번호는 처음 정한 에이전트 번호입니다. 1번부터 16번까지의 원래 목록과 나중에 더한 17번은 [PRD v01](docs/PRD-v01.md)에, 18번은 [PRD v1.9](docs/PRD-v1.9.md)에, 현재 상태는 [PRD v1.5](docs/PRD-v1.5.md)에 보관합니다. 뿌리 12~14는 지금 [1번 열매](fruits/01-content-personalization) 코드 안에 있으며, 다른 열매가 함께 쓰게 되면 따로 떼어 냅니다.
+번호는 처음 정한 에이전트 번호입니다. 1번부터 16번까지의 원래 목록과 나중에 더한 17번은 [PRD v01](docs/PRD-v01.md)에, 18번은 [PRD v1.9](docs/PRD-v1.9.md)에 있습니다. 최신 상태는 이 열매 지도가 기준이고, 2026-10-14 시점 구현 기록은 [PRD v1.5](docs/PRD-v1.5.md)에 남겨 둡니다. 뿌리 12~14는 지금 [1번 열매](fruits/01-content-personalization) 코드 안에 있으며, 다른 열매가 함께 쓰게 되면 따로 떼어 냅니다.
 
 ## 프로젝트 지도
 
@@ -157,7 +158,7 @@ saeroki/
 | [`fruits/17-saerok-dictionary`](fruits/17-saerok-dictionary) | 17번 새록 사전. 웹에서 바로 열기: [https://jhheo51-arch.github.io/saeroki/](https://jhheo51-arch.github.io/saeroki/) |
 | [`fruits/18-saerok-watch`](fruits/18-saerok-watch) | 18번 새록 파수꾼. 설치 후 `saerok-watch`로 대시보드 |
 | [`docs/PRD-v01.md`](docs/PRD-v01.md) | 제품 방향, 열매 12개와 뿌리 4개의 원래 목록, 위험과 개발 순서 |
-| [`docs/PRD-v1.5.md`](docs/PRD-v1.5.md) | 현재 구현 범위, 열매와 뿌리의 씨앗·꽃·열매 상태, Claude 이어하기 안내 |
+| [`docs/PRD-v1.5.md`](docs/PRD-v1.5.md) | 2026-10-14 시점 구현 범위와 상태 기록(최신 상태는 위 열매 지도) |
 | [`docs/PRD-v1.6.md`](docs/PRD-v1.6.md) | 1번 콘텐츠 개인화 에이전트의 스무고개 확정 설계 |
 | [`docs/PRD-v1.7.md`](docs/PRD-v1.7.md) | 17번 열매 새록 사전(산업별 용어 사전)의 스무고개 확정 설계 |
 | [`docs/PRD-v1.8.md`](docs/PRD-v1.8.md) | 16번 열매 새록 SQL(자연어 SQL)의 스무고개 확정 설계 |

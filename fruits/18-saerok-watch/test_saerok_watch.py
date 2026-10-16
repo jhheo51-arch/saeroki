@@ -180,6 +180,22 @@ class ApplyTest(Sandbox):
         (self.claude / "settings.json").write_text(json.dumps({"enabledPlugins": {"saerok-watch@saeroki": True}}), encoding="utf-8")
         self.assertIn("이미", apply.apply("hook_install")["message"])
 
+    def test_hook_remove_keeps_other_hooks(self):
+        settings = self.claude / "settings.json"
+        other = {"hooks": [{"type": "command", "command": "echo other"}]}
+        settings.write_text(json.dumps({"hooks": {"Stop": [other]}, "enabledPlugins": {}}), encoding="utf-8")
+        apply.apply("hook_install")
+        s = json.loads(settings.read_text(encoding="utf-8"))
+        s["enabledPlugins"]["saerok-watch@saeroki"] = True
+        settings.write_text(json.dumps(s), encoding="utf-8")
+        from saerok_watch import advise
+        self.assertIn("hook-duplicate", [x["id"] for x in advise.suggestions([], {"caution": 200_000, "warn": 400_000})])
+        entry = apply.apply("hook_remove")["entry"]
+        s = json.loads(settings.read_text(encoding="utf-8"))
+        self.assertEqual(s["hooks"]["Stop"], [other])
+        apply.undo(entry["id"])
+        self.assertTrue(apply.hook_installed(json.loads(settings.read_text(encoding="utf-8"))))
+
     def test_rejects_unknown_or_bad_actions(self):
         with self.assertRaises(ValueError):
             apply.apply("rm -rf")

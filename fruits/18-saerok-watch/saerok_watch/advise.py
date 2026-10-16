@@ -109,6 +109,19 @@ def suggestions(sessions: list[dict], config: dict) -> list[dict]:
             "action": "hook_install", "action_label": "파수꾼 훅 설치",
         })
 
+    # 2-1. 플러그인과 직접 넣은 훅이 함께 돔
+    settings = read_json(files()["settings"], {}) or {}
+    if plugin_active(settings) and hook_installed(settings):
+        out.append({
+            "id": "hook-duplicate", "size": "작음",
+            "title": "파수꾼 훅이 두 번 돎(플러그인 + 직접 설치)",
+            "measured": "settings.json의 Stop 훅과 saerok-watch 플러그인 훅이 모두 켜져 있음",
+            "estimate": "알림은 한 번만 뜨지만 응답마다 같은 확인을 두 번 함",
+            "how": "직접 넣은 훅을 빼고 플러그인 훅만 남깁니다.",
+            "loss": "없음. 플러그인을 끄면 훅도 함께 꺼지니 그때는 다시 설치하세요.",
+            "action": "hook_remove", "action_label": "직접 넣은 훅 빼기",
+        })
+
     # 3. 스크린샷
     recent = _recent(sessions)
     heavy = [s for s in recent if s["images"] >= 20]

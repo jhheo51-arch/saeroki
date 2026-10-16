@@ -5,8 +5,8 @@
   --muted: #6f655d;
   --line: #eadfd4;
   --track: #ece5dc;
-  --orange: #2f7d4f;      /* 강조(탭·버튼): 초록 */
-  --orange-soft: #d9eedf;
+  --accent: #2f7d4f;      /* 강조(탭·버튼·효과 배지): 초록 */
+  --accent-soft: #d9eedf;
   --total: #a8d5b5;       /* 차트: 전체 처리량(연초록) */
   --hot: #1f6b3d;         /* 차트: 30만 이상 몫(짙은 초록) */
   --safe: #3fa66a;        /* 여유 */
@@ -22,8 +22,8 @@
     --muted: #b3a597;
     --line: #3a332c;
     --track: #3a332c;
-    --orange: #5cc786;
-    --orange-soft: #1f3a2a;
+    --accent: #5cc786;
+    --accent-soft: #1f3a2a;
     --total: #3d6b4c;
     --hot: #7ee0a0;
     --safe: #5cc786;
@@ -42,7 +42,7 @@ h1 { margin: 0; font-size: 22px; }
 .meta { color: var(--muted); font-size: 13px; }
 .tabs { display: flex; gap: 4px; max-width: 1100px; margin: 8px auto 0; padding: 0 24px; border-bottom: 1px solid var(--line); overflow-x: auto; }
 .tabs button { border: 0; background: none; color: var(--muted); padding: 10px 16px; font: inherit; cursor: pointer; border-bottom: 3px solid transparent; white-space: nowrap; }
-.tabs button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--orange); font-weight: 600; }
+.tabs button[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--accent); font-weight: 600; }
 main { max-width: 1100px; margin: 0 auto; padding: 8px 24px 48px; }
 h2 { font-size: 16px; margin: 28px 0 10px; }
 h2 small { color: var(--muted); font-weight: 400; font-size: 12px; margin-left: 6px; }
@@ -63,10 +63,13 @@ h2 small { color: var(--muted); font-weight: 400; font-size: 12px; margin-left: 
 .gauge .mark { position: absolute; top: 0; bottom: 0; width: 2px; background: var(--ink); opacity: .35; }
 .small { font-size: 12px; color: var(--muted); }
 .badge { display: inline-block; font-size: 12px; padding: 1px 8px; border-radius: 999px; font-weight: 600; background: var(--safe); color: var(--on-color); }
-.badge.l2, .size-큼 { background: var(--warn); color: var(--on-color); }
-.badge.l1, .size-중간 { background: var(--caution); color: #1c1f24; }
-.size-작음 { background: var(--track); color: var(--ink); }
-.pill { font-size: 11px; background: var(--orange); color: var(--on-color); border-radius: 999px; padding: 0 7px; }
+/* 빨강·노랑은 주의·경고 상태에만 씁니다. 제안의 효과 크기는 강조색(초록) 진하기로 나눕니다. */
+.badge.l2 { background: var(--warn); color: #fff; }
+.badge.l1 { background: var(--caution); color: #1c1f24; }
+.size-큼 { background: var(--accent); color: var(--on-color); }
+.size-중간 { background: var(--accent-soft); color: var(--ink); box-shadow: inset 0 0 0 1px var(--accent); }
+.size-작음 { background: var(--track); color: var(--muted); }
+.pill { font-size: 11px; background: var(--accent); color: var(--on-color); border-radius: 999px; padding: 0 7px; }
 table { width: 100%; border-collapse: collapse; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; font-size: 13px; }
 th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
 th { color: var(--muted); font-weight: 500; }
@@ -77,7 +80,7 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-sp
 .legend { display: flex; gap: 16px; font-size: 12px; color: var(--muted); margin: 0 0 8px; }
 .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 6px; vertical-align: -1px; }
 .bucket { display: grid; grid-template-columns: 90px 1fr 48px; gap: 10px; align-items: center; margin: 6px 0; font-size: 13px; }
-.bucket .bar { height: 14px; background: var(--orange); border-radius: 7px; }
+.bucket .bar { height: 14px; background: var(--accent); border-radius: 7px; }
 .bucket:nth-child(n+3) .bar { background: var(--hot); }
 .bucket .track { background: var(--track); border-radius: 7px; }
 .advice { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; margin-bottom: 12px; }
@@ -85,7 +88,7 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-sp
 .advice dl { display: grid; grid-template-columns: 64px 1fr; gap: 4px 10px; margin: 8px 0 0; font-size: 13px; }
 .advice dt { color: var(--muted); }
 .advice dd { margin: 0; overflow-wrap: anywhere; }
-button { font: inherit; cursor: pointer; border-radius: 8px; border: 1px solid var(--orange); background: var(--orange); color: var(--on-color); font-weight: 600; padding: 6px 14px; }
+button { font: inherit; cursor: pointer; border-radius: 8px; border: 1px solid var(--accent); background: var(--accent); color: var(--on-color); font-weight: 600; padding: 6px 14px; }
 button.ghost { background: none; color: var(--ink); border-color: var(--line); }
 button:disabled { opacity: .5; cursor: default; }
 .action { display: flex; justify-content: space-between; align-items: center; gap: 12px; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 12px 16px; margin-bottom: 10px; flex-wrap: wrap; }
