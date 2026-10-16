@@ -30,6 +30,10 @@ Claude Code는 매 응답마다 지금까지의 대화 전체를 다시 읽습�
 | 9 | 대시보드 탭 | 지금 · 추이 · 제안 · 적용 |
 | 10 | 적용 항목 | Claude가 상황에 맞게 고름(아래 6절) |
 
+### 3-1. 어느 컴퓨터든 설치(2026-10-16)
+
+사용자가 다른 컴퓨터에서도 바로 쓰기를 원해, 저장소를 Claude Code 플러그인 마켓플레이스(`.claude-plugin/marketplace.json`)로 만들고 18번 열매 폴더를 플러그인 `saerok-watch`로 묶었습니다. `/plugin install saerok-watch --marketplace jhheo51-arch/saeroki` 한 줄로 설치하면 `Stop` 훅이 자동으로 켜지고, `/saerok-watch:dashboard`로 대시보드를 엽니다. GitHub README의 링크는 클릭만으로 프로그램을 실행할 수 없어서 복사해 붙여 넣는 한 줄로 정했습니다. 플러그인 설치본에는 `growth.py`가 없으므로 파수꾼 그림은 레벨 10 모습을 내장해 씁니다. 대시보드 색은 사용자 요청으로 주황·갈색 강조를 초록 계열로 바꿨습니다.
+
 ## 4. 무엇을 재는가
 
 | 항목 | 출처 | 비고 |

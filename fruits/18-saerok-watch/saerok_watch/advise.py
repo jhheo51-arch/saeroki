@@ -4,7 +4,7 @@ import re
 import time
 from pathlib import Path
 
-from .apply import files, hook_installed
+from .apply import files, hook_installed, plugin_active
 from .paths import claude_home
 from .scan import simulate_cap, totals
 from .store import read_json
@@ -37,7 +37,7 @@ def environment() -> dict:
             disabled.setdefault(server, []).append(project)
     return {
         "auto_compact_window": settings.get("autoCompactWindow"),
-        "hook_installed": hook_installed(settings),
+        "hook_installed": hook_installed(settings) or plugin_active(settings),
         "enabled_plugins": settings.get("enabledPlugins") or {},
         "installed_plugins": sorted((installed.get("plugins") or {}).keys()),
         "synced_plugins": sorted(synced, key=lambda p: p["name"]),
@@ -168,7 +168,7 @@ def suggestions(sessions: list[dict], config: dict) -> list[dict]:
             skill_uses[prefix] = skill_uses.get(prefix, 0) + n
     for plugin, on in env["enabled_plugins"].items():
         short = plugin.split("@")[0]
-        if on is True and not skill_uses.get(short):
+        if on is True and short != "saerok-watch" and not skill_uses.get(short):
             out.append({
                 "id": f"plugin-{short}", "size": "작음",
                 "title": f"플러그인 {short}의 스킬을 최근 쓰지 않음",

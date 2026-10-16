@@ -24,6 +24,25 @@ RIFLE = (
 )
 RIFLE_COLORS = {"f": "#1A1C1E", "g": "#3A3F44", "h": "#7A828A"}
 
+# 플러그인으로 설치해 growth.py가 없는 컴퓨터에서 쓰는 레벨 10 파수꾼 새록이
+FALLBACK = (
+    "         L          ",
+    "       LGGLGL       ",
+    "        DKDD        ",
+    "       LGKD         ",
+    "        DKD         ",
+    "         KD         ",
+    "      BBBBBBBb      ",
+    "      BEBBBEBb      ",
+    "      BEBBhEBb   g  ",
+    "ffffgBggggggggbggggh",
+    "f   gggggffBBb      ",
+    "      f bggb b      ",
+    "          g         ",
+)
+FALLBACK_COLORS = {"L": "#ECF39E", "G": "#90A955", "D": "#40916C", "K": "#31572C",
+                   "B": "#B07A4F", "b": "#8A5A36", "E": "#1F2A1F", **RIFLE_COLORS}
+
 
 def _growth():
     if str(REPO) not in sys.path:
@@ -39,7 +58,10 @@ def current_level() -> int:
 
 def sentry_sprite(level: int | None = None) -> tuple[list[str], dict]:
     """(잘라 낸 픽셀 줄, 글자→색) 을 돌려줍니다."""
-    growth = _growth()
+    try:
+        growth = _growth()
+    except ImportError:
+        return list(FALLBACK), FALLBACK_COLORS
     level = level or current_level()
     grid = [list(row) for row in growth.sprite_for(level)]
     grid += [[" "] * len(grid[0]) for _ in range(2)]  # 탄창이 발아래로 내려올 자리

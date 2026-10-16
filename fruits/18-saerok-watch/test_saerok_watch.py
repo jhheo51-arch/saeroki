@@ -176,6 +176,10 @@ class ApplyTest(Sandbox):
         self.assertEqual(result["skipped"], ["autoCompactWindow"])
         self.assertEqual(json.loads(settings.read_text(encoding="utf-8"))["autoCompactWindow"], 300000)
 
+    def test_plugin_counts_as_installed_hook(self):
+        (self.claude / "settings.json").write_text(json.dumps({"enabledPlugins": {"saerok-watch@saeroki": True}}), encoding="utf-8")
+        self.assertIn("이미", apply.apply("hook_install")["message"])
+
     def test_rejects_unknown_or_bad_actions(self):
         with self.assertRaises(ValueError):
             apply.apply("rm -rf")
@@ -194,6 +198,15 @@ class CharacterTest(unittest.TestCase):
             self.assertTrue(set(text) - {" "} <= set(colors))
         self.assertTrue(character.render_png(10).startswith(b"\x89PNG"))
         self.assertIn("K-2", character.render_svg(10))
+
+    def test_falls_back_without_growth(self):
+        # 플러그인으로 설치한 컴퓨터에는 저장소 루트의 growth.py가 없습니다.
+        from saerok_watch import character
+        with mock.patch.object(character, "_growth", side_effect=ImportError):
+            rows, colors = character.sentry_sprite()
+            self.assertEqual(rows, list(character.FALLBACK))
+            self.assertTrue(set("".join(rows)) - {" "} <= set(colors))
+            self.assertTrue(character.render_png().startswith(bytes([0x89]) + b"PNG"))
 
 
 class ExportTest(Sandbox):

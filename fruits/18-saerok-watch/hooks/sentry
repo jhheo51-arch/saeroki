@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# 이 컴퓨터의 Python 3.10 이상을 찾아 새록 파수꾼을 실행합니다.
+# 사용: sentry hook | sentry serve | sentry status
+# Python이 없으면 훅은 조용히 끝나 Claude Code를 방해하지 않습니다.
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+if command -v cygpath >/dev/null 2>&1; then
+  ROOT="$(cygpath -w "$ROOT")"  # Windows Git Bash에서는 Windows 경로로 넘깁니다.
+fi
+for py in python3 python py; do
+  if command -v "$py" >/dev/null 2>&1 &&
+    "$py" -c "import sys; sys.exit(0 if sys.version_info >= (3, 10) else 1)" >/dev/null 2>&1; then
+    PYTHONPATH="$ROOT" exec "$py" -m saerok_watch "$@"
+  fi
+done
+if [ "$1" != "hook" ]; then
+  echo "새록 파수꾼을 실행하려면 Python 3.10 이상이 필요합니다: https://www.python.org/downloads/" >&2
+  exit 1
+fi
+exit 0

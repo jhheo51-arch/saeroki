@@ -40,6 +40,14 @@ def _set(obj, path, value):
         obj[path[-1]] = value
 
 
+PLUGIN_PREFIX = "saerok-watch@"
+
+
+def plugin_active(settings: dict) -> bool:
+    """플러그인으로 설치해 훅이 이미 돌고 있는지."""
+    return any(k.startswith(PLUGIN_PREFIX) and v is True for k, v in (settings.get("enabledPlugins") or {}).items())
+
+
 def hook_installed(settings: dict) -> bool:
     for group in (settings.get("hooks") or {}).get("Stop") or []:
         for hook in group.get("hooks") or []:
@@ -55,7 +63,7 @@ def plan(action: str) -> tuple[str, list[dict]]:
     changes = []
 
     if name == "hook_install":
-        if not hook_installed(settings):
+        if not hook_installed(settings) and not plugin_active(settings):
             before = _get(settings, ["hooks", "Stop"])
             after = list(before) if isinstance(before, list) else []
             after.append({"hooks": [{"type": "command", "command": hook_command(), "shell": "bash"}]})

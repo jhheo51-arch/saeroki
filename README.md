@@ -6,7 +6,7 @@
   <img src="https://img.shields.io/badge/PRD-v1.5-40916C" alt="PRD v1.5">
   <img src="https://img.shields.io/badge/%EC%97%B4%EB%A7%A4-13-D97757" alt="열매 13개">
   <img src="https://img.shields.io/badge/%EB%BF%8C%EB%A6%AC-4-8A5A36" alt="뿌리 4개">
-  <img src="https://img.shields.io/badge/Tests-81_passing-31572C" alt="자동 검사 81개 통과">
+  <img src="https://img.shields.io/badge/Tests-83_passing-31572C" alt="자동 검사 83개 통과">
   <img src="https://img.shields.io/badge/Claude_%2B_Codex-shared_rules-40916C" alt="Claude와 Codex 공통 규칙">
 </p>
 
@@ -17,6 +17,30 @@
 <p align="center">
   <img src="assets/saeroki-tree.svg" alt="지금까지 자란 새록이 묘목" width="100%">
 </p>
+
+## 🪖 새록 파수꾼 바로 설치
+
+<img src="assets/saeroki-sentry.png" alt="K-2 소총을 든 파수꾼 새록이" width="140" align="right">
+
+Claude Code 대화가 길어져 토큰이 새기 시작하면 파수꾼 새록이가 알려 줍니다. Claude Code가 깔린 컴퓨터라면 어디서든 아래 한 줄을 복사해 붙여 넣으면 끝입니다(코드 칸 오른쪽 위 복사 버튼).
+
+Claude Code 대화창에서:
+
+```text
+/plugin install saerok-watch --marketplace jhheo51-arch/saeroki
+```
+
+또는 터미널에서:
+
+```bash
+claude plugin install saerok-watch --marketplace jhheo51-arch/saeroki
+```
+
+- 설치 뒤 Claude Code를 다시 열면 바로 지켜보기 시작합니다. 컨텍스트가 20만 토큰을 넘으면 주의, 40만을 넘으면 경고를 대화 안 한 줄로 띄우고, Windows에서는 파수꾼 새록이 그림이 든 알림도 띄웁니다.
+- 대시보드는 대화창에 `/saerok-watch:dashboard`라고 입력하면 열립니다(`http://127.0.0.1:8718`).
+- Python 3.10 이상이 필요합니다. 설정은 대시보드 적용 탭에서 내가 고른 것만 백업한 뒤 바뀝니다.
+- 그만 쓰려면 `claude plugin disable saerok-watch`를 실행합니다.
+- 자세한 내용: [18 새록 파수꾼](fruits/18-saerok-watch)
 
 ## 이름과 약속
 

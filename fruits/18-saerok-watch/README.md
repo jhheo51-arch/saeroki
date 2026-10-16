@@ -16,6 +16,18 @@ Claude Code는 응답마다 지금까지의 대화 전체를 다시 읽습니다
 
 ## 설치와 실행
 
+### 어느 컴퓨터든: Claude Code 플러그인(추천)
+
+Claude Code 대화창에서 `/plugin install saerok-watch --marketplace jhheo51-arch/saeroki`, 또는 터미널에서 아래 한 줄이면 됩니다. 훅이 자동으로 켜지고 대시보드는 `/saerok-watch:dashboard`로 엽니다. Python 3.10 이상이 필요합니다.
+
+```bash
+claude plugin install saerok-watch --marketplace jhheo51-arch/saeroki
+```
+
+플러그인으로 설치하면 적용 탭의 `파수꾼 훅 설치`는 이미 켜진 것으로 보고 나오지 않습니다.
+
+### 이 저장소에서 직접
+
 저장소 루트에서 한 번만 설치합니다.
 
 ```powershell

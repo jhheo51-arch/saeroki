@@ -109,10 +109,10 @@ function renderTrend() {
       const x = pad + i * bw + 2, w = Math.max(2, bw - 4);
       const label = i % Math.ceil(days.length / 10) === 0 ? `<text x="${x + w / 2}" y="${H - 12}" text-anchor="middle">${d.date.slice(5)}</text>` : "";
       return `<g><title>${d.date} · 처리 ${man(d.processed)} · 30만 이상 ${pct(d.over300, d.processed)} · 응답 ${d.responses} · 스크린샷 ${d.images}</title>
-        <rect x="${x}" y="${y(d.processed)}" width="${w}" height="${H - pad - y(d.processed)}" fill="var(--orange-soft)"/>
-        <rect x="${x}" y="${y(d.over300)}" width="${w}" height="${H - pad - y(d.over300)}" fill="var(--orange)"/>${label}</g>`;
+        <rect x="${x}" y="${y(d.processed)}" width="${w}" height="${H - pad - y(d.processed)}" fill="var(--total)"/>
+        <rect x="${x}" y="${y(d.over300)}" width="${w}" height="${H - pad - y(d.over300)}" fill="var(--hot)"/>${label}</g>`;
     }).join("");
-    $("daily").innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="날짜별 처리량">
+    $("daily").innerHTML = `<div class="legend"><span><i style="background:var(--total)"></i>30만 미만 응답</span><span><i style="background:var(--hot)"></i>30만 이상 응답</span></div><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="날짜별 처리량">
       <text x="${pad}" y="16">최대 ${man(top)}</text>
       <line x1="${pad}" x2="${W - pad}" y1="${H - pad}" y2="${H - pad}" stroke="var(--line)"/>${bars}</svg>`;
   }
