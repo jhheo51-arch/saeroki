@@ -10,17 +10,30 @@ from .store import read_json, write_json
 
 MISSING = {"__missing__": True}
 HOOK_MARK = "saerok_watch hook"
+STATUS_MARK = "saerok_watch statusline"
 
 
 def files() -> dict[str, Path]:
     return {"settings": claude_home() / "settings.json", "claude_json": claude_json()}
 
 
-def hook_command() -> str:
-    """bash에서 실행할 훅 명령. 설치(pip install -e) 여부와 관계없이 이 폴더의 코드를 씁니다."""
+def _command(mark: str) -> str:
+    """bash에서 실행할 명령. 설치(pip install -e) 여부와 관계없이 이 폴더의 코드를 씁니다."""
     python = sys.executable.replace("\\", "/")
     fruit = str(Path(__file__).resolve().parent.parent).replace("\\", "/")
-    return f'PYTHONPATH="{fruit}" "{python}" -m {HOOK_MARK}'
+    return f'PYTHONPATH="{fruit}" "{python}" -m {mark}'
+
+
+def hook_command() -> str:
+    return _command(HOOK_MARK)
+
+
+def statusline_command() -> str:
+    return _command(STATUS_MARK)
+
+
+def statusline_installed(settings: dict) -> bool:
+    return STATUS_MARK in str((settings.get("statusLine") or {}).get("command", ""))
 
 
 def _get(obj, path):
@@ -69,6 +82,13 @@ def plan(action: str) -> tuple[str, list[dict]]:
             after.append({"hooks": [{"type": "command", "command": hook_command(), "shell": "bash"}]})
             changes.append({"file": "settings", "path": ["hooks", "Stop"], "after": after})
         return "새록 파수꾼 훅 설치", changes
+
+    if name == "statusline_install":
+        # Claude Code는 Windows에서 Git Bash가 있으면 상태줄 명령을 bash로 실행합니다.
+        if not statusline_installed(settings):
+            changes.append({"file": "settings", "path": ["statusLine"],
+                            "after": {"type": "command", "command": statusline_command(), "padding": 0}})
+        return "파수꾼 상태줄 켜기", changes
 
     if name == "hook_remove":
         # 플러그인과 직접 넣은 훅이 함께 돌면 직접 넣은 쪽만 뺍니다.

@@ -41,8 +41,12 @@
     <div id="daily" class="chart"></div>
     <h2>컨텍스트 크기 구간별 처리량</h2>
     <div id="buckets"></div>
-    <h2>세션별 사용량 <small>처리량이 큰 순서</small></h2>
+    <h2>세션별 사용량 <small>처리량이 큰 순서 · 줄을 누르면 아래에 컨텍스트 곡선</small></h2>
     <div id="sessions"></div>
+    <h2>세션 컨텍스트 곡선 <small>응답 한 번에 2만 토큰 이상 커진 곳(급증)에 점과 원인 표시</small></h2>
+    <div id="session-detail" class="chart"><div class="empty">위 표에서 세션을 누르세요.</div></div>
+    <h2>급증 원인 <small>최근 14일, 글자 수로 어림</small></h2>
+    <div id="spike-kinds"></div>
   </section>
 
   <section id="tab-advice" class="tab" hidden>

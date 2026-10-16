@@ -13,7 +13,21 @@ from .store import read_json, write_json
 
 # 컨텍스트 크기 구간: 10만 미만, 10~30만, 30~60만, 60만 이상
 BUCKET_EDGES = (100_000, 300_000, 600_000)
-CACHE_VERSION = 3
+CACHE_VERSION = 5
+# 직전 응답보다 이만큼 이상 커지면 '급증'으로 보고 원인을 짚습니다.
+SPIKE_TOKENS = 20_000
+SPIKE_KEEP = 30
+IMAGE_TOKENS = 1_300
+CHARS_PER_TOKEN = 3
+OTHER = "기록에 안 남은 부분(도구 정의 등)"
+# Claude Code가 대화 사이에 끼워 넣는 첨부(attachment 줄)의 종류별 묶음
+ATTACH_KINDS = {
+    "file": "파일 읽기", "compact_file_reference": "파일 읽기",
+    "edited_text_file": "파일 변경 알림",
+    "deferred_tools_delta": "도구·스킬·지침 목록", "mcp_instructions_delta": "도구·스킬·지침 목록",
+    "skill_listing": "도구·스킬·지침 목록", "agent_listing_delta": "도구·스킬·지침 목록",
+    "instructions": "도구·스킬·지침 목록", "hook_additional_context": "훅 추가 안내",
+}
 
 
 def bucket_of(ctx: int) -> int:
@@ -58,6 +72,57 @@ def _result_size(content) -> tuple[int, int]:
     return len(str(content or "")), 0
 
 
+def kind_of(tool: str) -> str:
+    """도구 이름을 급증 원인 종류로 묶습니다."""
+    if tool in ("Read", "NotebookRead"):
+        return "파일 읽기"
+    if tool in ("Bash", "PowerShell"):
+        return "명령 출력"
+    if tool in ("Grep", "Glob"):
+        return "검색 결과"
+    if tool in ("Agent", "Task"):
+        return "서브에이전트 결과"
+    if tool == "Skill":
+        return "스킬 안내문"
+    low = tool.lower()
+    if tool in ("WebFetch", "WebSearch") or "browser" in low or "chrome" in low:
+        return "웹 페이지"
+    if tool.startswith("mcp__"):
+        return "MCP 도구"
+    return "기타 도구"
+
+
+def target_of(tool: str, args: dict) -> str:
+    """원인 표시에 쓸 짧은 대상(파일 이름, 명령 앞부분 등). 내 PC 캐시에만 둡니다."""
+    if not isinstance(args, dict):
+        return ""
+    for key in ("file_path", "notebook_path", "path"):
+        if args.get(key):
+            return Path(str(args[key])).name[:60]
+    for key in ("command", "url", "query", "pattern", "description", "skill", "prompt"):
+        if args.get(key):
+            return " ".join(str(args[key]).split())[:60]
+    return ""
+
+
+def explain(delta: int, pending: list[dict]) -> list[dict]:
+    """직전 응답 뒤에 들어온 것들로 급증 원인을 어림합니다(글자 수/3, 이미지 1장 1,300토큰).
+
+    어림값 합이 실제 증가보다 크면 비율대로 줄이고, 모자라면 나머지를 '기타'로 둡니다.
+    """
+    causes = {}
+    for p in pending:
+        key = (p["kind"], p.get("tool", ""), p.get("target", ""))
+        causes[key] = causes.get(key, 0) + p["tokens"]
+    total = sum(causes.values())
+    scale = delta / total if total > delta else 1
+    out = [{"kind": k, "tool": t, "target": g, "tokens": int(v * scale)} for (k, t, g), v in causes.items() if v]
+    rest = delta - sum(c["tokens"] for c in out)
+    if rest > delta * 0.1:
+        out.append({"kind": OTHER, "tool": "", "target": "", "tokens": rest})
+    return sorted(out, key=lambda c: -c["tokens"])
+
+
 def _title_from(content) -> str | None:
     texts = [content] if isinstance(content, str) else [
         b.get("text") or "" for b in content or [] if isinstance(b, dict) and b.get("type") == "text"]
@@ -91,9 +156,15 @@ def scan_file(path: Path) -> dict:
         "mcp_used": {},
         "skills_used": {},
         "days": {},
+        "timeline": [],
+        "spikes": [],
+        "spike_kinds": {},
     }
     seen = set()
     tool_names = {}
+    tool_targets = {}
+    # 직전 응답 뒤에 대화에 들어온 것들(급증 원인 후보)
+    pending = []
     with open(path, encoding="utf-8", errors="replace") as f:
         for line in f:
             try:
@@ -121,6 +192,7 @@ def scan_file(path: Path) -> dict:
                         continue
                     name = block.get("name") or "?"
                     tool_names[block.get("id")] = name
+                    tool_targets[block.get("id")] = target_of(name, block.get("input") or {})
                     if name.startswith("mcp__"):
                         server = name.split("__")[1]
                         s["mcp_used"][server] = s["mcp_used"].get(server, 0) + 1
@@ -134,6 +206,15 @@ def scan_file(path: Path) -> dict:
                 if not ctx or key in seen:
                     continue
                 seen.add(key)
+                delta = ctx - s["last_ctx"]
+                if s["responses"] and delta >= SPIKE_TOKENS:
+                    causes = explain(delta, pending)
+                    for c in causes:
+                        s["spike_kinds"][c["kind"]] = s["spike_kinds"].get(c["kind"], 0) + c["tokens"]
+                    s["spikes"].append({"n": s["responses"] + 1, "ts": ts, "ctx": ctx, "delta": delta, "causes": causes[:3]})
+                out_tokens = int(usage.get("output_tokens") or 0)
+                pending = [{"kind": "Claude 응답", "tokens": out_tokens}] if out_tokens else []
+                s["timeline"].append(ctx)
                 s["responses"] += 1
                 s["processed"] += ctx
                 s["output"] += int(usage.get("output_tokens") or 0)
@@ -149,10 +230,19 @@ def scan_file(path: Path) -> dict:
                     if ctx >= 300_000:
                         dd["over300"] += ctx
 
+            elif kind == "attachment":
+                att = d.get("attachment") or {}
+                rendered = d.get("rendered")
+                chars = len(json.dumps(rendered, ensure_ascii=False)) if rendered else 0
+                if chars:
+                    pending.append({"kind": ATTACH_KINDS.get(att.get("type"), "시스템 안내"),
+                                    "tool": str(att.get("type") or ""), "tokens": chars // CHARS_PER_TOKEN})
             elif kind == "user":
                 content = msg.get("content")
                 if s["title"] is None and not d.get("isMeta") and not d.get("isCompactSummary"):
                     s["title"] = _title_from(content)
+                if isinstance(content, str) and not d.get("isMeta"):
+                    pending.append({"kind": "사용자 입력·붙여 넣기", "tokens": len(content) // CHARS_PER_TOKEN})
                 if not isinstance(content, list):
                     continue
                 for block in content:
@@ -162,14 +252,25 @@ def scan_file(path: Path) -> dict:
                     if block.get("type") == "tool_result":
                         name = tool_names.get(block.get("tool_use_id"), "?")
                         chars, images = _result_size(block.get("content"))
+                        target = tool_targets.get(block.get("tool_use_id"), "")
+                        if chars:
+                            pending.append({"kind": kind_of(name), "tool": name, "target": target,
+                                            "tokens": chars // CHARS_PER_TOKEN})
+                        if images:
+                            pending.append({"kind": "스크린샷·이미지", "tool": name, "target": target,
+                                            "tokens": images * IMAGE_TOKENS})
                         s["tool_chars"][name] = s["tool_chars"].get(name, 0) + chars
                         s["tool_counts"][name] = s["tool_counts"].get(name, 0) + 1
                     elif block.get("type") == "image":
                         images = 1
+                        pending.append({"kind": "스크린샷·이미지", "tool": "붙여 넣은 이미지", "tokens": IMAGE_TOKENS})
+                    elif block.get("type") == "text" and not d.get("isMeta"):
+                        pending.append({"kind": "사용자 입력·붙여 넣기", "tokens": len(block.get("text") or "") // CHARS_PER_TOKEN})
                     if images:
                         s["images"] += images
                         if day:
                             s["days"].setdefault(day, _new_day())["images"] += images
+    s["spikes"] = sorted(s["spikes"], key=lambda x: -x["delta"])[:SPIKE_KEEP]
     return s
 
 
@@ -233,6 +334,28 @@ def daily(sessions: list[dict]) -> list[dict]:
                 d[k] += v[k]
             d["max_ctx"] = max(d["max_ctx"], v["max_ctx"])
     return [days[k] for k in sorted(days)]
+
+
+def spike_summary(sessions: list[dict]) -> dict:
+    """급증 원인 종류별 토큰 합."""
+    kinds = {}
+    for s in sessions:
+        for k, v in (s.get("spike_kinds") or {}).items():
+            kinds[k] = kinds.get(k, 0) + v
+    return dict(sorted(kinds.items(), key=lambda kv: -kv[1]))
+
+
+def downsample(values: list[int], points: int = 600) -> list[list[int]]:
+    """그래프용 [응답 번호, 크기] 목록. 많으면 구간마다 가장 큰 값만 남깁니다."""
+    if len(values) <= points:
+        return [[i + 1, v] for i, v in enumerate(values)]
+    step = len(values) / points
+    out = []
+    for b in range(points):
+        lo, hi = int(b * step), max(int((b + 1) * step), int(b * step) + 1)
+        i = max(range(lo, min(hi, len(values))), key=lambda j: values[j])
+        out.append([i + 1, values[i]])
+    return out
 
 
 def simulate_cap(sessions: list[dict], cap: int, restart: int = 100_000) -> float:

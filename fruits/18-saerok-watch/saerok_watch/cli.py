@@ -33,16 +33,20 @@ def main(argv=None) -> int:
     p.add_argument("--no-browser", action="store_true")
     sub.add_parser("status", help="터미널에 요약 출력")
     sub.add_parser("hook", help="Claude Code Stop 훅(직접 실행하지 않음)")
+    sub.add_parser("statusline", help="Claude Code 상태줄(직접 실행하지 않음)")
     sub.add_parser("test-alert", help="파수꾼 새록이 Windows 알림 시험")
     e = sub.add_parser("export", help="공개용 날짜별 집계 파일 만들기")
     e.add_argument("--out", default=None)
     args = parser.parse_args(argv)
-    if args.cmd != "hook":
+    if args.cmd not in ("hook", "statusline"):
         # 파이프로 받는 cp949 콘솔에서도 막대 글자 때문에 멈추지 않게 합니다.
         sys.stdout.reconfigure(errors="replace")
 
     if args.cmd == "hook":
         return hook.main()
+    if args.cmd == "statusline":
+        from . import statusline
+        return statusline.main()
     if args.cmd == "test-alert":
         from . import notify
         ok = notify.toast(*notify.TEST, wait=True)

@@ -15,7 +15,7 @@ from unittest import mock
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from saerok_watch import apply, export, hook, scan, server  # noqa: E402
+from saerok_watch import apply, export, hook, scan, server, statusline  # noqa: E402
 
 
 def assistant(msg_id, ctx, ts="2026-10-16T01:00:00Z", tools=()):
@@ -239,6 +239,85 @@ class ExportTest(Sandbox):
         self.assertEqual(day["over300_share"], 1.0)
 
 
+class SpikeTest(Sandbox):
+    def test_finds_spike_and_its_cause(self):
+        # 파일 읽기 결과 9만 글자(약 3만 토큰)가 들어온 뒤 컨텍스트가 3만 커지면 급증으로 잡습니다.
+        path = self.write_transcript("s1", [
+            user("시작"),
+            assistant("m1", 50_000, tools=[("t1", "Read", {"file_path": "C:/big/data.csv"})]),
+            user([{"type": "tool_result", "tool_use_id": "t1", "content": "x" * 90_000}]),
+            assistant("m2", 80_000),
+            user("작은 질문"),
+            assistant("m3", 81_000),
+            {"type": "attachment", "attachment": {"type": "deferred_tools_delta"}, "rendered": [{"content": "t" * 120_000}]},
+            assistant("m4", 125_000),
+        ])
+        s = scan.scan_file(path)
+        self.assertEqual(s["timeline"], [50_000, 80_000, 81_000, 125_000])
+        self.assertEqual(len(s["spikes"]), 2)
+        # Claude Code가 끼워 넣은 도구 목록(첨부)도 원인으로 잡습니다.
+        self.assertEqual(s["spikes"][0]["causes"][0]["kind"], "도구·스킬·지침 목록")
+        spike = s["spikes"][1]
+        self.assertEqual((spike["n"], spike["delta"]), (2, 30_000))
+        self.assertEqual(spike["causes"][0]["kind"], "파일 읽기")
+        self.assertEqual(spike["causes"][0]["target"], "data.csv")
+        self.assertIn("파일 읽기", scan.spike_summary([s]))
+
+    def test_explain_scales_down_and_fills_rest(self):
+        big = scan.explain(10_000, [{"kind": "명령 출력", "tokens": 40_000}])
+        self.assertEqual(big[0]["tokens"], 10_000)
+        small = scan.explain(30_000, [{"kind": "명령 출력", "tokens": 5_000}])
+        self.assertEqual([c["kind"] for c in small], [scan.OTHER, "명령 출력"])
+        self.assertEqual(sum(c["tokens"] for c in small), 30_000)
+
+    def test_downsample_keeps_peaks(self):
+        values = [1] * 1000
+        values[517] = 99
+        out = scan.downsample(values, points=100)
+        self.assertEqual(len(out), 100)
+        self.assertIn([518, 99], out)
+        self.assertEqual(scan.downsample([5, 6]), [[1, 5], [2, 6]])
+
+
+class StatuslineTest(Sandbox):
+    config = {"caution": 200_000, "warn": 300_000}
+
+    def test_line_by_level(self):
+        self.assertEqual(statusline.line(182_000, self.config, color=False), "🪖 18.2만 █████░░░ 주의까지 1.8만")
+        self.assertIn("경고까지 5.0만", statusline.line(250_000, self.config, color=False))
+        over = statusline.line(340_000, self.config, color=False)
+        self.assertIn("████████ 경고 넘음 +4.0만 · 새 세션 권장", over)
+        self.assertIn("[31m", statusline.line(340_000, self.config))
+
+    def test_context_from_payload_or_transcript(self):
+        usage = {"input_tokens": 10, "cache_read_input_tokens": 100_000, "cache_creation_input_tokens": 90}
+        self.assertEqual(statusline.context_from({"context_window": {"current_usage": usage}}), 100_100)
+        path = self.write_transcript("s1", [user("hi"), assistant("m1", 120_000)])
+        payload = {"context_window": {"current_usage": None}, "transcript_path": str(path)}
+        self.assertEqual(statusline.context_from(payload), 120_000)
+        self.assertEqual(statusline.context_from({}), 0)
+
+    def test_main_never_fails(self):
+        out = io.BytesIO()
+        with mock.patch.object(sys, "stdin", io.TextIOWrapper(io.BytesIO(b"not json"))),                 mock.patch.object(sys, "stdout", io.TextIOWrapper(out)):
+            self.assertEqual(statusline.main(), 0)
+            sys.stdout.flush()
+            text = out.getvalue().decode("utf-8")
+        self.assertIn("파수꾼 대기 중", text)
+
+    def test_install_and_undo(self):
+        settings = self.claude / "settings.json"
+        old = {"type": "command", "command": "my-line"}
+        settings.write_text(json.dumps({"statusLine": old}), encoding="utf-8")
+        entry = apply.apply("statusline_install")["entry"]
+        s = json.loads(settings.read_text(encoding="utf-8"))
+        self.assertTrue(apply.statusline_installed(s))
+        self.assertIn("saerok_watch statusline", s["statusLine"]["command"])
+        self.assertIn("이미", apply.apply("statusline_install")["message"])
+        apply.undo(entry["id"])
+        self.assertEqual(json.loads(settings.read_text(encoding="utf-8"))["statusLine"], old)
+
+
 class ServerTest(Sandbox):
     def setUp(self):
         super().setUp()
@@ -271,6 +350,14 @@ class ServerTest(Sandbox):
         self.assertEqual(err.exception.code, 403)
         res = json.loads(self.post("/api/apply", {"action": "autocompact:200000"}, "secret-token").read())
         self.assertTrue(res["ok"])
+
+    def test_session_detail(self):
+        sid = json.loads(urllib.request.urlopen(self.base + "/api/summary", timeout=10).read())["sessions"][0]["session_id"]
+        d = json.loads(urllib.request.urlopen(self.base + "/api/session?id=" + sid, timeout=10).read())
+        self.assertEqual(d["timeline"], [[1, 120_000]])
+        with self.assertRaises(urllib.error.HTTPError) as err:
+            urllib.request.urlopen(self.base + "/api/session?id=nope", timeout=5)
+        self.assertEqual(err.exception.code, 404)
 
     def test_blocks_path_traversal(self):
         with self.assertRaises(urllib.error.HTTPError) as err:

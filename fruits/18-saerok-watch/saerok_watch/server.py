@@ -29,6 +29,16 @@ def recent_alerts(limit: int = 30) -> list[dict]:
     return list(reversed(rows))
 
 
+def session_detail(session_id: str) -> dict | None:
+    """추이 탭 세션 그래프: 응답별 컨텍스트 곡선과 급증 지점."""
+    for s in scan.scan_all():
+        if s["session_id"] == session_id:
+            return {"session_id": session_id, "title": s["title"], "project": s["project"],
+                    "responses": s["responses"], "timeline": scan.downsample(s.get("timeline") or []),
+                    "spikes": sorted(s.get("spikes") or [], key=lambda x: x["n"])}
+    return None
+
+
 def summary() -> dict:
     sessions = scan.scan_all()
     config = load_config()
@@ -49,6 +59,7 @@ def summary() -> dict:
         "daily": scan.daily(sessions),
         "sessions": table,
         "suggestions": advise.suggestions(sessions, config),
+        "spike_kinds": scan.spike_summary(advise._recent(sessions)),
         "environment": advise.environment(),
         "alerts": recent_alerts(),
         "hook_sessions": len(hook_state),
@@ -80,7 +91,11 @@ class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
         if not self._local_host():
             return self._send(403, b"forbidden", "text/plain")
-        path = self.path.split("?")[0]
+        path, _, query = self.path.partition("?")
+        if path == "/api/session":
+            from urllib.parse import parse_qs
+            detail = session_detail((parse_qs(query).get("id") or [""])[0])
+            return self._json(200, detail) if detail else self._json(404, {"error": "세션을 찾지 못했습니다."})
         if path == "/api/summary":
             try:
                 return self._json(200, summary())

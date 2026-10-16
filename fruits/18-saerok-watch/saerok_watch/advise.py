@@ -4,9 +4,9 @@ import re
 import time
 from pathlib import Path
 
-from .apply import files, hook_installed, plugin_active
+from .apply import files, hook_installed, plugin_active, statusline_installed
 from .paths import claude_home
-from .scan import simulate_cap, totals
+from .scan import OTHER, simulate_cap, spike_summary, totals
 from .store import read_json
 
 RECENT_DAYS = 14
@@ -38,6 +38,8 @@ def environment() -> dict:
     return {
         "auto_compact_window": settings.get("autoCompactWindow"),
         "hook_installed": hook_installed(settings) or plugin_active(settings),
+        "statusline_installed": statusline_installed(settings),
+        "statusline_other": bool(settings.get("statusLine")) and not statusline_installed(settings),
         "enabled_plugins": settings.get("enabledPlugins") or {},
         "installed_plugins": sorted((installed.get("plugins") or {}).keys()),
         "synced_plugins": sorted(synced, key=lambda p: p["name"]),
@@ -109,6 +111,19 @@ def suggestions(sessions: list[dict], config: dict) -> list[dict]:
             "action": "hook_install", "action_label": "파수꾼 훅 설치",
         })
 
+    # 2-2. 상태줄 상시 표시
+    if not env["statusline_installed"]:
+        out.append({
+            "id": "statusline", "size": "중간",
+            "title": "기준을 넘기 전에는 컨텍스트 크기가 보이지 않음",
+            "measured": "Claude Code 상태줄에 파수꾼이 없음",
+            "estimate": "입력창 아래에 '🪖 18.2만 ████░░░░ 주의까지 1.8만'처럼 늘 보여 미리 끊을 때를 잡음",
+            "how": "settings.json의 statusLine에 파수꾼 명령을 넣습니다. 응답이 올 때마다 다시 그립니다.",
+            "loss": ("지금 쓰는 다른 상태줄이 파수꾼으로 바뀝니다(되돌리기로 복구)." if env["statusline_other"]
+                     else "응답마다 짧은 Python 실행이 하나 더해집니다."),
+            "action": "statusline_install", "action_label": "파수꾼 상태줄 켜기",
+        })
+
     # 2-1. 플러그인과 직접 넣은 훅이 함께 돔
     settings = read_json(files()["settings"], {}) or {}
     if plugin_active(settings) and hook_installed(settings):
@@ -122,8 +137,42 @@ def suggestions(sessions: list[dict], config: dict) -> list[dict]:
             "action": "hook_remove", "action_label": "직접 넣은 훅 빼기",
         })
 
-    # 3. 스크린샷
     recent = _recent(sessions)
+
+    # 2-3. 급증 원인 요약
+    kinds = spike_summary(recent)
+    spike_total = sum(kinds.values())
+    if spike_total:
+        top = [(k, v) for k, v in kinds.items() if k != OTHER][:3]
+        tips = {
+            "파일 읽기": "큰 파일은 필요한 줄만(offset·limit) 읽게 하고, 여러 파일 훑기는 서브에이전트에 맡깁니다.",
+            "명령 출력": "긴 로그는 head·tail·grep으로 줄여서 받게 합니다.",
+            "스크린샷·이미지": "확인은 read_page·get_page_text로 먼저, 스크린샷은 마지막 증거로만 씁니다.",
+            "웹 페이지": "페이지 전체 대신 필요한 부분만 찾게(find) 하거나 서브에이전트로 요약만 받습니다.",
+            "서브에이전트 결과": "서브에이전트에게 결론만 짧게 돌려 달라고 요청합니다.",
+            "검색 결과": "검색 범위와 결과 수(head_limit)를 좁힙니다.",
+            "사용자 입력·붙여 넣기": "긴 글은 파일로 두고 경로만 알려 줍니다.",
+            "Claude 응답": "긴 설명 대신 요약을 요청하거나 생각 깊이(effort)를 낮춥니다.",
+            "MCP 도구": "MCP 도구 결과가 크면 필요한 항목만 요청합니다.",
+            "도구·스킬·지침 목록": "MCP 서버를 켜고 끌 때마다 도구 목록이 다시 들어옵니다. 안 쓰는 MCP·플러그인을 끄면 줄어듭니다.",
+            "파일 변경 알림": "Claude가 읽은 파일을 밖에서 고치면 바뀐 내용이 다시 들어옵니다. 큰 파일은 작업 중 밖에서 고치지 않습니다.",
+        }
+        if top:
+            first = top[0][0]
+            out.append({
+                "id": "spikes", "size": "중간",
+                "title": f"컨텍스트를 한 번에 크게 키운 원인 1위: {first}",
+                "measured": f"최근 {RECENT_DAYS}일 급증(응답 한 번에 2만 토큰 이상 증가) 합계 {_man(spike_total)} 중 "
+                            + ", ".join(f"{k} {v / spike_total:.0%}" for k, v in top)
+                            + (f". 나머지 {kinds[OTHER] / spike_total:.0%}는 기록에 안 남은 부분(도구 정의 등)으로 원인을 짚을 수 없음"
+                               if kinds.get(OTHER) else ""),
+                "estimate": "한 번 들어온 내용은 세션이 끝날 때까지 매 응답 다시 읽힙니다. 원인은 글자 수로 어림한 값입니다.",
+                "how": tips.get(first, "추이 탭의 세션 그래프에서 급증 지점을 확인합니다."),
+                "loss": "필요한 내용을 나눠 읽느라 도구 호출이 조금 늘 수 있습니다.",
+                "action": None, "manual": "추이 탭에서 세션을 눌러 급증 지점과 원인을 확인하세요.",
+            })
+
+    # 3. 스크린샷
     heavy = [s for s in recent if s["images"] >= 20]
     if heavy:
         imgs = sum(s["images"] for s in heavy)

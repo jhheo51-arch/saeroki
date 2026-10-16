@@ -83,6 +83,20 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-sp
 .bucket .bar { height: 14px; background: var(--accent); border-radius: 7px; }
 .bucket:nth-child(n+3) .bar { background: var(--hot); }
 .bucket .track { background: var(--track); border-radius: 7px; }
+.bucket.wide { grid-template-columns: minmax(120px, 230px) 1fr 48px; }
+.bucket.wide .bar { background: var(--accent); }
+tr.pick { cursor: pointer; }
+tr.pick:hover td, tr.pick:focus td { background: var(--accent-soft); }
+tr.pick.on td { background: var(--accent-soft); box-shadow: inset 0 -1px 0 var(--accent); }
+.chart .curve { fill: none; stroke: var(--accent); stroke-width: 2; }
+.chart .guide { stroke-dasharray: 4 4; stroke-width: 1; }
+.chart .guide.l1 { stroke: var(--caution); }
+.chart .guide.l2 { stroke: var(--warn); }
+.chart .spike { fill: var(--safe); stroke: var(--panel); stroke-width: 2; }
+.chart .spike.l1 { fill: var(--caution); }
+.chart .spike.l2 { fill: var(--warn); }
+.sub-h { font-size: 14px; margin: 16px 0 8px; }
+.sub-h small { color: var(--muted); font-weight: 400; font-size: 12px; margin-left: 6px; }
 .advice { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; margin-bottom: 12px; }
 .advice h3 { margin: 0 0 6px; font-size: 15px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
 .advice dl { display: grid; grid-template-columns: 64px 1fr; gap: 4px 10px; margin: 8px 0 0; font-size: 13px; }

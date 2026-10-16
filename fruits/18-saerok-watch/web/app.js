@@ -4,6 +4,7 @@ const TOKEN = document.querySelector('meta[name="saerok-token"]').content;
 const REFRESH_MS = 60_000;
 const BUCKET_LABELS = ["10만 미만", "10~30만", "30~60만", "60만 이상"];
 let data = null;
+let selected = null;
 
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -124,8 +125,57 @@ function renderTrend() {
   const rows = [...data.sessions].sort((a, b) => b.processed - a.processed).slice(0, 30);
   $("sessions").innerHTML = `<div class="table-wrap"><table>
     <tr><th>세션</th><th>폴더</th><th class="num">응답</th><th class="num">처리량</th><th class="num">최대</th><th class="num">스크린샷</th><th>마지막</th></tr>
-    ${rows.map((s) => `<tr><td>${esc(s.title || s.session_id.slice(0, 8))}</td><td>${esc(s.project || "")}</td><td class="num">${s.responses}</td><td class="num">${man(s.processed)}</td><td class="num"><span class="badge l${levelOf(s.max_ctx)}">${man(s.max_ctx)}</span></td><td class="num">${s.images}</td><td>${when(s.last_ts)}</td></tr>`).join("")}
+    ${rows.map((s) => `<tr class="pick${s.session_id === selected ? " on" : ""}" data-session="${esc(s.session_id)}" tabindex="0"><td>${esc(s.title || s.session_id.slice(0, 8))}</td><td>${esc(s.project || "")}</td><td class="num">${s.responses}</td><td class="num">${man(s.processed)}</td><td class="num"><span class="badge l${levelOf(s.max_ctx)}">${man(s.max_ctx)}</span></td><td class="num">${s.images}</td><td>${when(s.last_ts)}</td></tr>`).join("")}
   </table></div>`;
+
+  const kinds = Object.entries(data.spike_kinds || {});
+  const kindTotal = kinds.reduce((a, [, v]) => a + v, 0) || 1;
+  $("spike-kinds").innerHTML = kinds.length ? kinds.map(([k, v]) =>
+    `<div class="bucket wide"><span>${esc(k)}</span><div class="track"><div class="bar" style="width:${(v / kindTotal) * 100}%"></div></div><span class="small">${pct(v, kindTotal)}</span></div>`).join("")
+    : `<div class="empty">최근 14일에 급증이 없습니다.</div>`;
+}
+
+async function showSession(id) {
+  selected = id;
+  document.querySelectorAll("[data-session]").forEach((r) => r.classList.toggle("on", r.dataset.session === id));
+  const box = $("session-detail");
+  box.innerHTML = `<div class="empty">불러오는 중…</div>`;
+  try {
+    const res = await fetch("/api/session?id=" + encodeURIComponent(id), { cache: "no-store" });
+    const d = await res.json();
+    if (!res.ok) throw new Error(d.error || "실패");
+    box.innerHTML = sessionChart(d);
+  } catch (e) {
+    box.innerHTML = `<div class="empty">불러오기 실패: ${esc(e.message)}</div>`;
+  }
+}
+
+function causeText(c) {
+  return `${esc(c.kind)}${c.target ? ` · ${esc(c.target)}` : c.tool ? ` · ${esc(c.tool)}` : ""} 약 ${man(c.tokens)}`;
+}
+
+function sessionChart(d) {
+  if (!d.timeline.length) return `<div class="empty">응답 기록이 없습니다.</div>`;
+  const W = 760, H = 240, pad = 40;
+  const last = d.timeline[d.timeline.length - 1][0];
+  const top = Math.max(data.config.warn * 1.1, ...d.timeline.map((p) => p[1]));
+  const x = (n) => pad + ((n - 1) / Math.max(1, last - 1)) * (W - pad * 2);
+  const y = (v) => H - pad - (v / top) * (H - pad * 2);
+  const path = d.timeline.map((p, i) => `${i ? "L" : "M"}${x(p[0]).toFixed(1)},${y(p[1]).toFixed(1)}`).join("");
+  const guide = (v, cls, label) => `<line x1="${pad}" x2="${W - pad}" y1="${y(v)}" y2="${y(v)}" class="guide ${cls}"/><text x="${W - pad}" y="${y(v) - 4}" text-anchor="end">${label} ${man(v)}</text>`;
+  const dots = d.spikes.map((s) => `<circle cx="${x(s.n)}" cy="${y(s.ctx)}" r="5" class="spike l${levelOf(s.ctx)}"><title>응답 ${s.n} · +${man(s.delta)} → ${man(s.ctx)}&#10;${s.causes.map((c) => `${esc(c.kind)}${c.target ? " · " + esc(c.target) : ""} 약 ${man(c.tokens)}`).join("&#10;")}</title></circle>`).join("");
+  const svg = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="응답별 컨텍스트 크기">
+    <text x="${pad}" y="16">${esc(d.title || d.session_id.slice(0, 8))} · 응답 ${d.responses}번</text>
+    <line x1="${pad}" x2="${W - pad}" y1="${H - pad}" y2="${H - pad}" stroke="var(--line)"/>
+    <text x="${pad}" y="${H - 16}">응답 1</text><text x="${W - pad}" y="${H - 16}" text-anchor="end">응답 ${last}</text>
+    ${guide(data.config.caution, "l1", "주의")}${guide(data.config.warn, "l2", "경고")}
+    <path d="${path}" class="curve"/>${dots}</svg>`;
+  const top5 = [...d.spikes].sort((a, b) => b.delta - a.delta).slice(0, 10);
+  const table = top5.length ? `<div class="table-wrap"><table>
+    <tr><th class="num">응답</th><th>시각</th><th class="num">증가</th><th class="num">그 뒤 크기</th><th>원인(어림)</th></tr>
+    ${top5.map((s) => `<tr><td class="num">${s.n}</td><td>${when(s.ts)}</td><td class="num">+${man(s.delta)}</td><td class="num"><span class="badge l${levelOf(s.ctx)}">${man(s.ctx)}</span></td><td>${s.causes.map(causeText).join("<br>")}</td></tr>`).join("")}
+  </table></div>` : `<div class="empty">이 세션에는 급증이 없습니다.</div>`;
+  return svg + `<h3 class="sub-h">크게 뛴 곳 <small>증가량 순 최대 10개</small></h3>` + table;
 }
 
 function renderAdvice() {
@@ -170,6 +220,8 @@ document.addEventListener("click", async (ev) => {
     document.querySelectorAll(".tab").forEach((s) => (s.hidden = s.id !== "tab-" + tab.dataset.tab));
     return;
   }
+  const row = ev.target.closest("[data-session]");
+  if (row) return showSession(row.dataset.session);
   const btn = ev.target.closest("[data-apply],[data-undo]");
   if (!btn) return;
   const applying = !!btn.dataset.apply;
@@ -206,6 +258,11 @@ $("test-toast").addEventListener("click", async () => {
   } catch (e) {
     toast("알림 실패: " + e.message);
   }
+});
+
+document.addEventListener("keydown", (ev) => {
+  const row = ev.target.closest?.("[data-session]");
+  if (row && (ev.key === "Enter" || ev.key === " ")) { ev.preventDefault(); showSession(row.dataset.session); }
 });
 
 $("refresh").addEventListener("click", load);
