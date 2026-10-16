@@ -2,33 +2,33 @@
   --bg: #fbf7f2;
   --panel: #ffffff;
   --ink: #2b2420;
-  --muted: #6f655d;
-  --line: #eadfd4;
-  --track: #ece5dc;
+  --muted: #5d6f63;
+  --line: #d9e8dd;
+  --track: #e2efe5;
   --accent: #2f7d4f;      /* 강조(탭·버튼·효과 배지): 초록 */
   --accent-soft: #d9eedf;
   --total: #a8d5b5;       /* 차트: 전체 처리량(연초록) */
   --hot: #1f6b3d;         /* 차트: 30만 이상 몫(짙은 초록) */
   --safe: #3fa66a;        /* 여유 */
   --caution: #e0a21b;     /* 주의 */
-  --warn: #d4412f;        /* 경고 */
+  --warn: #d42f3a;        /* 경고 */
   --on-color: #ffffff;
 }
 @media (prefers-color-scheme: dark) {
   :root {
     --bg: #1d1a17;
-    --panel: #26221e;
-    --ink: #f1e9e1;
-    --muted: #b3a597;
-    --line: #3a332c;
-    --track: #3a332c;
+    --panel: #1f2a23;
+    --ink: #eef5ef;
+    --muted: #a6bdae;
+    --line: #2f4637;
+    --track: #2b3d31;
     --accent: #5cc786;
     --accent-soft: #1f3a2a;
     --total: #3d6b4c;
     --hot: #7ee0a0;
     --safe: #5cc786;
     --caution: #f2b84a;
-    --warn: #ff6b57;
+    --warn: #f0474f;
     --on-color: #14231a;
   }
 }
