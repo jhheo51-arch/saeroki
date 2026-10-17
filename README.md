@@ -92,7 +92,7 @@ claude plugin disable saerok-watch
 <table align="center">
   <tr>
     <td align="center"><a href="fruits/04-prd-assistant"><img src="assets/characters/saeroki-reviewer.png" alt="돋보기로 PRD를 살피는 검토관 새록이" height="96"></a><br><sub>🍎 4 검토관</sub></td>
-    <td align="center"><a href="fruits/01-content-personalization"><img src="assets/characters/saeroki-curator.png" alt="헤드폰을 쓰고 음표를 띄운 새록이" height="96"></a><br><sub>🌸 1 콘텐츠 개인화</sub></td>
+    <td align="center"><a href="fruits/01-content-personalization"><img src="assets/characters/saeroki-curator.png" alt="헤드폰을 쓰고 음표를 띄운 새록이" height="96"></a><br><sub>🌸&nbsp;1&nbsp;콘텐츠&nbsp;개인화</sub></td>
     <td align="center"><a href="fruits/16-natural-language-sql"><img src="assets/characters/saeroki-sql.png" alt="데이터 원통을 안은 SQL 새록이" height="96"></a><br><sub>🌸 16 SQL</sub></td>
     <td align="center"><a href="fruits/17-saerok-dictionary"><img src="assets/characters/saeroki-dictionary.png" alt="동그란 안경을 쓰고 두꺼운 사전을 낀 새록이" height="96"></a><br><sub>🌸 17 사전</sub></td>
     <td align="center"><a href="fruits/18-saerok-watch"><img src="assets/saeroki-sentry.png" alt="K-2 소총을 든 파수꾼 새록이" height="96"></a><br><sub>🌸 18 파수꾼</sub></td>
