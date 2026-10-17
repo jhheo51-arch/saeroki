@@ -161,7 +161,7 @@ saeroki/
 | [`fruits/16-natural-language-sql`](fruits/16-natural-language-sql) | 16번 새록 SQL. 설치 후 PowerShell에서 `saerok-sql` |
 | [`fruits/17-saerok-dictionary`](fruits/17-saerok-dictionary) | 17번 새록 사전. 웹에서 바로 열기: [https://jhheo51-arch.github.io/saeroki/](https://jhheo51-arch.github.io/saeroki/) |
 | [`fruits/18-saerok-watch`](fruits/18-saerok-watch) | 18번 새록 파수꾼. 설치 후 `saerok-watch`로 대시보드 |
-| [`fruits/19-saerok-interview`](fruits/19-saerok-interview) | 19번 새록 면접관. 플러그인 설치 후 심사는 `/saerok-interview:panel <자기소개서>`, 연습은 `/saerok-interview:practice`, 비교는 `/saerok-interview:compare`. 기록은 내 PC `~/saerok-interview/`에만 |
+| [`fruits/19-saerok-interview`](fruits/19-saerok-interview) | 19번 새록 면접관. 플러그인 설치 후 서류 폴더(`~/.saerok/interview/서류/`)에 자기소개서·공고를 두고 심사는 `/saerok-interview:panel --company 회사이름`, 연습은 `/saerok-interview:practice`, 비교는 `/saerok-interview:compare`. 기록은 내 PC `~/.saerok/interview/`에만 |
 | [`fruits/20-saerok-idea`](fruits/20-saerok-idea) | 20번 새록 심사단. 바로 쓰려면 [심사 화면](https://jhheo51-arch.github.io/saeroki/idea/)(내 API 키, 기록은 그 브라우저에만)이나 터미널 `saerok-idea`(같은 화면을 내 PC에서, API 키 없이 내 Claude 구독으로). 플러그인 설치 후 심사는 `/saerok-idea:judge <아이디어 한 줄>`, 비교는 `/saerok-idea:compare`. 터미널·플러그인 기록은 내 PC `~/.saerok/idea/`에만 |
 | [`docs/PRD-v01.md`](docs/PRD-v01.md) | 제품 방향, 열매 12개와 뿌리 4개의 원래 목록, 위험과 개발 순서 |
 | [`docs/PRD-v1.5.md`](docs/PRD-v1.5.md) | 2026-10-14 시점 구현 범위와 상태 기록(최신 상태는 위 열매 지도) |
@@ -214,7 +214,9 @@ python -m unittest -v
 - [x] 20번 새록 심사단 웹·터미널 화면(2026-10-17): 링크 하나로 여는 [심사 화면](https://jhheo51-arch.github.io/saeroki/idea/)과 터미널 `saerok-idea`
 - [ ] 20번 새록 심사단으로 실제 아이디어 1개 심사
 - [ ] 새록 심사단으로 내 아이디어 1개 실제 심사, 판정과 다음 행동 기록
-- [ ] 새록 SQL 채점 정답 사람 검토, 애매한·복잡한 질문 채점 세트 추가
+- [x] 새록 SQL 채점 정답 사람 검토(2026-10-17): 20문항 모두 맞음, 다시 채점 20/20
+- [x] 새록 SQL 어려운 채점 세트 16문항(여러 표·함정·애매함·답할 수 없음): 자동 채점 11/11([결과](fruits/16-natural-language-sql/eval/RESULTS.md))
+- [ ] 새록 SQL 어려운 세트 기대 행동 사람 판정
 - [ ] 새록 사전 사용자 확인
 - [ ] 새록 사전 Claude API 보충
 - [x] Claude와 Codex가 함께 읽는 공통 행동 원칙
