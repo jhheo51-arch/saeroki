@@ -12,6 +12,9 @@
 | 19 새록 면접관 | `docs/PRD-v2.1.md` |
 | 20 새록 심사단 | `docs/PRD-v2.0-idea.md`(검토관 PRD 버전을 따름) |
 | 21 새록 지원서 | `docs/PRD-v2.2.md` |
+| 19 새록 면접관 | `docs/PRD-v2.1.md` |
+| 20 새록 심사단 | `docs/PRD-v2.0-idea.md`(검토관 PRD 버전을 따름) |
+| 21 새록 지원서 | `docs/PRD-v2.2.md` |
 
 제품 전체 방향이 필요할 때만 `docs/PRD-v01.md`, 2026-10-14 시점 구현 기록이 필요할 때만 `docs/PRD-v1.5.md`를 읽습니다. 열매와 뿌리의 최신 상태는 `README.md`의 열매 지도가 기준입니다.
 

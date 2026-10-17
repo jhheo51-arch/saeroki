@@ -3,10 +3,10 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/PRD-v2.1-40916C" alt="PRD v2.1">
-  <img src="https://img.shields.io/badge/%EC%97%B4%EB%A7%A4-16-D97757" alt="열매 16개">
+  <img src="https://img.shields.io/badge/PRD-v2.2-40916C" alt="PRD v2.2">
+  <img src="https://img.shields.io/badge/%EC%97%90%EC%9D%B4%EC%A0%84%ED%8A%B8%2016-%F0%9F%8D%8E1%20%C2%B7%20%F0%9F%8C%B86%20%C2%B7%20%F0%9F%8C%B19-D97757" alt="에이전트 16개: 열매 1 · 꽃 6 · 씨앗 9">
   <img src="https://img.shields.io/badge/%EB%BF%8C%EB%A6%AC-4-8A5A36" alt="뿌리 4개">
-  <img src="https://img.shields.io/badge/Tests-148_passing-31572C" alt="자동 검사 148개 통과">
+  <img src="https://img.shields.io/badge/Tests-207_passing-31572C" alt="자동 검사 207개 통과">
   <img src="https://img.shields.io/badge/Claude_%2B_Codex-shared_rules-40916C" alt="Claude와 Codex 공통 규칙">
 </p>
 
@@ -101,9 +101,9 @@ claude plugin install saerok-watch --marketplace jhheo51-arch/saeroki
 
 ## 새록이 열매 지도
 
-새록이는 나무라서 에이전트도 나무의 말로 부릅니다. 사용자가 직접 쓰는 에이전트는 **열매**, 열매를 받치는 공통 기반은 **뿌리**입니다.
+새록이는 나무라서 에이전트도 나무의 말로 부릅니다. 사용자가 직접 쓰는 에이전트는 씨앗에서 꽃을 거쳐 **열매**로 자라고, 에이전트를 받치는 공통 기반은 **뿌리**입니다.
 
-**열매 16개 · 뿌리 4개**
+**에이전트 16개(🍎 열매 1 · 🌸 꽃 6 · 🌱 씨앗 9) · 뿌리 4개**
 
 | 상태 | 뜻 |
 |---|---|
@@ -111,9 +111,9 @@ claude plugin install saerok-watch --marketplace jhheo51-arch/saeroki
 | 🌸 꽃 | 만드는 중입니다 |
 | 🍎 열매 | 첫 버전을 완성했습니다 |
 
-### 열매 16개
+### 에이전트 16개
 
-열매마다 [`fruits/`](fruits) 아래에 폴더 하나를 둡니다. 씨앗 폴더에는 아직 설명만 있습니다.
+에이전트마다 [`fruits/`](fruits) 아래에 폴더 하나를 둡니다. 씨앗 폴더에는 아직 설명만 있습니다.
 
 | 갈래 | 열매 |
 |---|---|
@@ -139,7 +139,7 @@ claude plugin install saerok-watch --marketplace jhheo51-arch/saeroki
 
 ```text
 saeroki/
-├─ fruits/                 열매 16개, 열매마다 폴더 하나
+├─ fruits/                 에이전트 16개(🍎1 · 🌸6 · 🌱9), 에이전트마다 폴더 하나
 │  ├─ 01-content-personalization/   🌸 코드·데이터·검사·Claude 지침
 │  ├─ 04-prd-assistant/             🍎 PRD 설계 스무고개·검토 스킬·검사 명령·예시·검사
 │  ├─ 16-natural-language-sql/      🌸 saerok-sql 터미널·서울 데이터(data/)·검사
@@ -163,6 +163,7 @@ saeroki/
 | [`fruits/18-saerok-watch`](fruits/18-saerok-watch) | 18번 새록 파수꾼. 설치 후 `saerok-watch`로 대시보드 |
 | [`fruits/19-saerok-interview`](fruits/19-saerok-interview) | 19번 새록 면접관. 플러그인 설치 후 서류 폴더(`~/.saerok/interview/서류/`)에 자기소개서·공고를 두고 심사는 `/saerok-interview:panel --company 회사이름`, 연습은 `/saerok-interview:practice`, 비교는 `/saerok-interview:compare`. 화면은 [웹](https://jhheo51-arch.github.io/saeroki/interview/)(내 API 키, 기록은 브라우저에만) 또는 터미널 `saerok-interview`(내 구독). 기록은 내 PC `~/.saerok/interview/`에만 |
 | [`fruits/20-saerok-idea`](fruits/20-saerok-idea) | 20번 새록 심사단. 바로 쓰려면 [심사 화면](https://jhheo51-arch.github.io/saeroki/idea/)(내 API 키, 기록은 그 브라우저에만)이나 터미널 `saerok-idea`(같은 화면을 내 PC에서, API 키 없이 내 Claude 구독으로). 플러그인 설치 후 심사는 `/saerok-idea:judge <아이디어 한 줄>`, 비교는 `/saerok-idea:compare`. 터미널·플러그인 기록은 내 PC `~/.saerok/idea/`에만 |
+| [`fruits/21-saerok-apply`](fruits/21-saerok-apply) | 21번 새록 지원서. 설계만 확정([PRD v2.2](docs/PRD-v2.2.md)), 구현 전 |
 | [`docs/PRD-v01.md`](docs/PRD-v01.md) | 제품 방향, 열매 12개와 뿌리 4개의 원래 목록, 위험과 개발 순서 |
 | [`docs/PRD-v1.5.md`](docs/PRD-v1.5.md) | 2026-10-14 시점 구현 범위와 상태 기록(최신 상태는 위 열매 지도) |
 | [`docs/PRD-v1.6.md`](docs/PRD-v1.6.md) | 1번 콘텐츠 개인화 에이전트의 스무고개 확정 설계 |
@@ -213,7 +214,6 @@ python -m unittest -v
 - [ ] 새록 검토관으로 새 PRD 2개 검사, 지적 중 고친 비율 기록(2026-10-31까지)
 - [x] 20번 새록 심사단 첫 버전(2026-10-17): 심사위원 3명·가정 검증·패널·손익분기·판정·다듬은 방향, 검토관 `--from` 연결, PRD 버전 자동 맞춤
 - [x] 20번 새록 심사단 웹·터미널 화면(2026-10-17): 링크 하나로 여는 [심사 화면](https://jhheo51-arch.github.io/saeroki/idea/)과 터미널 `saerok-idea`
-- [ ] 20번 새록 심사단으로 실제 아이디어 1개 심사
 - [ ] 새록 심사단으로 내 아이디어 1개 실제 심사, 판정과 다음 행동 기록
 - [x] 새록 SQL 채점 정답 사람 검토(2026-10-17): 20문항 모두 맞음, 다시 채점 20/20
 - [x] 새록 SQL 어려운 채점 세트 16문항(여러 표·함정·애매함·답할 수 없음): 자동 채점 11/11([결과](fruits/16-natural-language-sql/eval/RESULTS.md))
