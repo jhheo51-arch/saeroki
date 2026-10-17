@@ -13,7 +13,7 @@ import threading
 import unittest
 from pathlib import Path
 
-from saerok_idea import cli, money, rubric, store, verdict, web
+from saerok_idea import cli, money, rubric, store, subscription, verdict, web
 
 HERE = Path(__file__).resolve().parent
 EXAMPLES = HERE / "examples"
@@ -295,6 +295,8 @@ class WebServerTest(Base):
         super().setUp()
         self.old_key = os.environ.pop("ANTHROPIC_API_KEY", None)
         self.old_keyring, web.keystore.keyring = web.keystore.keyring, None  # 실제 자격 증명 관리자는 건드리지 않음
+        self.old_cli, self.old_call = subscription.cli, subscription.call
+        web.ENGINE["now"] = "api"  # 검사에서는 실제 Claude Code·Anthropic을 부르지 않음
         self.server = web.ThreadingHTTPServer(("127.0.0.1", 0), web.Handler)
         self.port = self.server.server_address[1]
         threading.Thread(target=self.server.serve_forever, daemon=True).start()
@@ -303,6 +305,8 @@ class WebServerTest(Base):
         self.server.shutdown()
         self.server.server_close()
         web.keystore.keyring = self.old_keyring
+        subscription.cli, subscription.call = self.old_cli, self.old_call
+        web.ENGINE["now"] = None
         web.keystore._memory.clear()
         if self.old_key is not None:
             os.environ["ANTHROPIC_API_KEY"] = self.old_key
@@ -377,6 +381,94 @@ class WebServerTest(Base):
         self.assertNotIn("0000000000", json.dumps(self.call("/api/info")[1]))  # 키 전체를 화면에 돌려주지 않음
         self.call("/api/key/delete", {})
         self.assertEqual(self.call("/api/info")[1]["key"], "등록 안 됨")
+
+    def test_engine_switch_to_subscription(self):
+        subscription.cli = lambda: None
+        self.assertEqual(self.call("/api/engine", {"engine": "subscription"})[0], 400)  # claude 명령이 없으면 못 고름
+        self.assertEqual(self.call("/api/engine", {"engine": "free"})[0], 400)
+        seen = []
+        subscription.cli = lambda: "claude"
+        subscription.call = lambda body: seen.append(body) or {"content": [{"type": "text", "text": "{}"}], "stop_reason": "end_turn"}
+        self.assertEqual(self.call("/api/engine", {"engine": "subscription"}), (200, {"engine": "subscription"}))
+        info = self.call("/api/info")[1]
+        self.assertEqual((info["engine"], info["claude_cli"]), ("subscription", True))
+        body = {"model": "claude-sonnet-5-5", "messages": [{"role": "user", "content": "가상"}]}
+        self.assertEqual(self.call("/api/claude", body)[1]["stop_reason"], "end_turn")  # 키 없이도 구독으로 돎
+        self.assertEqual(seen, [body])
+        subscription.call = lambda body: (_ for _ in ()).throw(RuntimeError("로그인 필요"))
+        self.assertEqual(self.call("/api/claude", body), (502, {"error": "로그인 필요"}))
+
+
+STREAM = [
+    {"type": "system", "subtype": "init", "tools": ["WebSearch"], "apiKeySource": "none"},
+    {"type": "assistant", "message": {"content": [{"type": "text", "text": "찾아봅니다."},
+        {"type": "tool_use", "id": "t1", "name": "WebSearch", "input": {"query": "일반 낱말", "mode": "standard"}}]}},
+    {"type": "user", "message": {"content": [{"type": "tool_result", "tool_use_id": "t1", "content":
+        'Web search results for query: "일반 낱말"\n\nLinks: [{"title":"가상 \\"제목\\"","url":"https://example.com/a"},'
+        '{"title":"나쁜 링크","url":"javascript:alert(1)"}]'}]}},
+    {"type": "assistant", "message": {"content": [{"type": "text", "text": "```json\n{\"ok\": 1}\n```"}]}},
+    {"type": "result", "subtype": "success", "is_error": False,
+     "usage": {"input_tokens": 4, "cache_creation_input_tokens": 10, "cache_read_input_tokens": 6, "output_tokens": 7}},
+]
+
+
+class SubscriptionTest(unittest.TestCase):
+    """구독(claude -p) 응답을 화면이 읽는 Messages API 모양으로 바꾸는지. 실제 claude는 부르지 않습니다."""
+
+    def test_convert(self):
+        r = subscription.convert([json.dumps(e, ensure_ascii=False) for e in STREAM] + ["", "깨진 줄"])
+        kinds = [c["type"] for c in r["content"]]
+        self.assertEqual(kinds, ["text", "server_tool_use", "web_search_tool_result", "text"])
+        self.assertEqual(r["content"][1], {"type": "server_tool_use", "id": "t1", "name": "web_search", "input": {"query": "일반 낱말"}})
+        self.assertEqual(r["content"][2]["content"], [{"type": "web_search_result", "title": '가상 "제목"', "url": "https://example.com/a"}])
+        self.assertEqual(r["usage"], {"input_tokens": 20, "output_tokens": 7, "server_tool_use": {"web_search_requests": 1}})
+        self.assertEqual(r["stop_reason"], "end_turn")
+
+    def test_convert_errors(self):
+        with self.assertRaises(RuntimeError):
+            subscription.convert([json.dumps(STREAM[1])])
+        with self.assertRaisesRegex(RuntimeError, "한도"):
+            subscription.convert([json.dumps({"type": "result", "is_error": True, "result": "한도 초과"})])
+
+    def test_call_args_and_env(self):
+        seen = {}
+
+        def fake_run(args, **kw):
+            seen.update(args=args, **kw)
+            seen["system"] = Path(args[args.index("--system-prompt-file") + 1]).read_text(encoding="utf-8")
+            out = "\n".join(json.dumps(e, ensure_ascii=False) for e in STREAM)
+            return subprocess.CompletedProcess(args, 0, out.encode("utf-8"), b"")
+
+        body = {"model": "claude-sonnet-5-5", "system": "심사위원", "messages": [{"role": "user", "content": "가상 아이디어"}],
+                "tools": [{"type": "web_search_20250305", "name": "web_search", "max_uses": 3}]}
+        old_run = subprocess.run
+        os.environ["ANTHROPIC_API_KEY"], old_key = "sk-ant-test-0000", os.environ.get("ANTHROPIC_API_KEY")
+        try:
+            subscription.subprocess.run = fake_run
+            r = subscription.call(body, command="claude")
+        finally:
+            subscription.subprocess.run = old_run
+            if old_key is None:
+                os.environ.pop("ANTHROPIC_API_KEY")
+            else:
+                os.environ["ANTHROPIC_API_KEY"] = old_key
+        args = seen["args"]
+        self.assertEqual(r["content"][-1]["text"], '```json\n{"ok": 1}\n```')
+        self.assertNotIn("ANTHROPIC_API_KEY", seen["env"])  # API 크레딧이 아니라 구독으로
+        self.assertEqual(seen["input"].decode("utf-8"), "가상 아이디어")  # 아이디어는 명령줄이 아니라 표준 입력으로
+        self.assertNotIn("가상 아이디어", " ".join(args))
+        for flag in ("--no-session-persistence", "--strict-mcp-config", "--disable-slash-commands"):
+            self.assertIn(flag, args)
+        self.assertEqual(args[args.index("--tools") + 1], "WebSearch")
+        self.assertEqual(args[args.index("--model") + 1], "claude-sonnet-5-5")
+        self.assertIn("최대 3번", seen["system"])
+        self.assertFalse(Path(seen["cwd"]).exists())  # 임시 폴더는 지움
+        no_search = subscription.args_for({"messages": []}, Path("s.md"))
+        self.assertEqual(no_search[no_search.index("--tools") + 1], "")
+
+    def test_bad_body(self):
+        with self.assertRaises(ValueError):
+            subscription.call({"messages": []}, command="claude")
 
 
 def load_sync():

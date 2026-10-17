@@ -1,6 +1,6 @@
 /* 새록 심사단 화면. 진행 순서는 skills/judge/SKILL.md와 같고, 판정·검사·verdict.md는 idea-core.js(= saerok_idea)가 냅니다.
    브라우저 모드: 키·기록은 이 브라우저에만, Claude는 api.anthropic.com을 바로 부릅니다.
-   내 PC 모드(saerok-idea): 기록은 ~/.saerok/idea, 키는 자격 증명 관리자, Claude 호출은 내 PC 서버가 넘깁니다. */
+   내 PC 모드(saerok-idea): 기록은 ~/.saerok/idea, Claude 호출은 내 PC 서버가 넘깁니다(기본은 내 구독, 고르면 API 키). */
 "use strict";
 
 const S = window.SaerokIdea;
@@ -782,7 +782,8 @@ function selectTab(name) {
 // ---------- 설정 ----------
 function renderMode() {
   $("#mode").innerHTML = B.mode === "local"
-    ? `<b>내 PC 모드</b> · 기록은 <code>${esc(B.info.home)}</code>에만, 키는 ${esc(B.info.key_from || "아직 없음")}`
+    ? `<b>내 PC 모드</b> · 기록은 <code>${esc(B.info.home)}</code>에만, Claude는 ` +
+      (B.info.engine === "subscription" ? "내 구독(Claude Code)으로 부릅니다" : `API 키로 부릅니다(키: ${esc(B.info.key_from || "아직 없음")})`)
     : `<b>브라우저 모드</b> · 키와 기록은 이 브라우저에만 저장되고, Claude는 Anthropic에 바로 연결합니다. ` +
       `내 PC에 저장하려면 터미널에서 <code>saerok-idea</code>를 실행하세요.`;
 }
@@ -796,8 +797,17 @@ function openSettings() {
   $("#model-lead").value = p.lead;
   $("#settings-msg").textContent = "";
   $("#key-browser").classList.toggle("hidden", B.mode === "local");
-  $("#key-local").classList.toggle("hidden", B.mode !== "local");
+  $("#engine-local").classList.toggle("hidden", B.mode !== "local");
+  $("#key-local").classList.toggle("hidden", B.mode !== "local" || B.info.engine !== "api");
   if (B.mode === "local") {
+    for (const r of $$('input[name="engine"]')) {
+      r.checked = r.value === B.info.engine;
+      r.disabled = r.value === "subscription" && !B.info.claude_cli;
+      r.onchange = () => $("#key-local").classList.toggle("hidden", r.value !== "api" || !r.checked);
+    }
+    $("#engine-note").textContent = B.info.claude_cli
+      ? "구독 방식은 이 PC에 로그인한 Claude Code(claude 명령)로 돌리고, 구독 사용량에서 차감됩니다."
+      : "claude 명령을 찾지 못해 API 키 방식만 쓸 수 있습니다. Claude Code를 설치하고 로그인하면 구독으로 돌릴 수 있습니다.";
     $("#key-now").textContent = B.info.key;
     $("#key-from").textContent = B.info.key_from ? `(${B.info.key_from})` : "";
     $("#key-local-input").value = "";
@@ -812,6 +822,12 @@ async function saveSettings() {
   local.set(PREFS, { judge: $("#model-judge").value, lead: $("#model-lead").value });
   try {
     if (B.mode === "local") {
+      const picked = $('input[name="engine"]:checked');
+      if (picked && picked.value !== B.info.engine) {
+        const j = await B.api("api/engine", { engine: picked.value });
+        B.info.engine = j.engine;
+        renderMode();
+      }
       const key = $("#key-local-input").value.trim();
       if (key) {
         const j = await B.api("api/key", { key });

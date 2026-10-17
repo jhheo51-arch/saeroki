@@ -2,7 +2,8 @@
 
 - 127.0.0.1에서만 듣고, 다른 사이트가 이 서버를 부르지 못하게 Host·Origin·전용 헤더를 확인합니다.
 - 기록은 store를 거쳐 ~/.saerok/idea에만 쓰고, 그 밖의 폴더는 읽거나 쓰지 않습니다.
-- Claude 호출은 이 서버가 자격 증명 관리자의 키를 붙여 Anthropic에 그대로 넘깁니다. 키는 브라우저로 보내지 않습니다."""
+- Claude 호출은 기본으로 내 Claude 구독(Claude Code의 `claude -p`)으로 돌립니다(subscription.py).
+  API 키 방식을 고르면 자격 증명 관리자의 키를 붙여 Anthropic에 그대로 넘깁니다. 키는 브라우저로 보내지 않습니다."""
 
 import json
 import mimetypes
@@ -14,7 +15,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import parse_qs, urlparse
 
-from . import keystore, store
+from . import keystore, store, subscription
 
 PLUGIN = Path(__file__).resolve().parent.parent
 WEB = PLUGIN / "web"
@@ -25,6 +26,15 @@ API_HEADER = "X-Saerok-Idea"
 MAX_BODY = 2_000_000
 # 화면은 심사위원 3명·조사 결과를 동시에 보냅니다. result.json을 읽고 고쳐 쓰는 동안 다른 요청이 끼면 앞 기록이 사라지므로 한 번에 하나씩 씁니다.
 WRITE_LOCK = threading.Lock()
+ENGINES = ("subscription", "api")
+# 어떤 방식으로 Claude를 부를지. 기본은 구독(claude 명령이 있을 때), 없으면 API 키.
+ENGINE = {"now": None}
+
+
+def engine() -> str:
+    if ENGINE["now"] is None:
+        ENGINE["now"] = "subscription" if subscription.cli() else "api"
+    return ENGINE["now"]
 
 
 def _inside_home(path: str) -> Path:
@@ -113,7 +123,8 @@ class Handler(BaseHTTPRequestHandler):
         if url.path == "/api/info":
             key, where = keystore.get_key()
             return self._json({"mode": "local", "home": str(store.home()), "key": keystore.masked(key), "key_from": where,
-                               "keyring": keystore.keyring is not None})
+                               "keyring": keystore.keyring is not None, "engine": engine(),
+                               "claude_cli": subscription.cli() is not None})
         if url.path == "/api/runs":
             return self._json(ideas())
         if url.path == "/api/result":
@@ -155,6 +166,14 @@ class Handler(BaseHTTPRequestHandler):
             return self._error(str(e) or "요청 형식이 맞지 않습니다.")
 
     def _write(self, path: str, data: dict) -> None:
+        if path == "/api/engine":
+            choice = data.get("engine")
+            if choice not in ENGINES:
+                raise ValueError("engine은 subscription 또는 api입니다.")
+            if choice == "subscription" and not subscription.cli():
+                raise ValueError("claude 명령을 찾지 못했습니다. Claude Code를 설치하고 로그인해 주세요.")
+            ENGINE["now"] = choice
+            return self._json({"engine": choice})
         if path == "/api/key":
             where = keystore.set_key(data.get("key") or "")
             return self._json({"key": keystore.masked(keystore.get_key()[0]), "key_from": where})
@@ -189,6 +208,11 @@ class Handler(BaseHTTPRequestHandler):
         return {"folder": str(folder), "run": folder.name, "slug": folder.parent.name, "result": store.load(folder)}
 
     def _claude(self, body: dict) -> None:
+        if engine() == "subscription":
+            try:
+                return self._json(subscription.call(body))
+            except RuntimeError as e:
+                return self._error(str(e), 502)
         key, _ = keystore.get_key()
         if not key:
             return self._error("Claude API 키가 없습니다. 화면 위 '키' 칸에 등록해 주세요.", 401)
@@ -204,7 +228,9 @@ class Handler(BaseHTTPRequestHandler):
         self._send(status, raw, "application/json; charset=utf-8")
 
 
-def serve(port: int = DEFAULT_PORT, open_browser: bool = True) -> int:
+def serve(port: int = DEFAULT_PORT, open_browser: bool = True, use_api: bool = False) -> int:
+    if use_api:
+        ENGINE["now"] = "api"
     server = None
     for candidate in [port, *range(port + 1, port + 20), 0]:
         try:
@@ -218,6 +244,7 @@ def serve(port: int = DEFAULT_PORT, open_browser: bool = True) -> int:
     url = f"http://127.0.0.1:{server.server_address[1]}/"
     print(f"새록 심사단 화면: {url}")
     print(f"기록 폴더: {store.home()}")
+    print("Claude 호출: " + ("내 Claude 구독(claude 명령)" if engine() == "subscription" else "API 키(크레딧 차감)"))
     print("끝내려면 Ctrl+C를 누르세요.")
     if open_browser:
         threading.Timer(0.3, webbrowser.open, [url]).start()

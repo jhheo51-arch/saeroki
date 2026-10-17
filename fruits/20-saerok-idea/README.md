@@ -12,7 +12,7 @@
 | 어디서 | 여는 법 | 키·기록 |
 |---|---|---|
 | 웹 | **[심사 화면 열기](https://jhheo51-arch.github.io/saeroki/idea/)** | 내 Claude API 키를 화면에 넣으면 브라우저가 Anthropic에 바로 연결합니다. 키와 기록은 그 브라우저에만 남고, `verdict.md`·`result.json`으로 내려받습니다 |
-| 터미널 | `saerok-idea` | 같은 화면이 내 PC(127.0.0.1)에서 열립니다. 기록은 `~/.saerok/idea/`, 키는 Windows 자격 증명 관리자에 둡니다 |
+| 터미널 | `saerok-idea` | 같은 화면이 내 PC(127.0.0.1)에서 열립니다. API 키 없이 Claude Code에 로그인한 내 Claude 구독 사용량으로 돌고, 기록은 `~/.saerok/idea/`에 남습니다. API 키로 돌리려면 `saerok-idea --api`(키는 Windows 자격 증명 관리자) |
 | Claude Code | `/saerok-idea:judge <아이디어 한 줄>` | 아래 '쓰는 순서' |
 
 터미널 명령은 한 번만 설치하면 됩니다.
@@ -21,6 +21,8 @@
 pip install -e "fruits/20-saerok-idea[keyring]"
 saerok-idea
 ```
+
+구독으로 돌릴 때는 화면이 보낸 요청을 `claude -p`(Claude Code)로 바꿔 실행합니다. 환경에서 API 키를 빼고, 빈 임시 폴더에서 웹 검색 말고는 도구를 주지 않으며, 아이디어는 명령줄이 아니라 표준 입력으로 넘기고 `--no-session-persistence`로 Claude Code 대화 기록에 남기지 않습니다. Claude Code가 없거나 로그인하지 않았으면 화면의 설정에서 API 키 방식으로 바꿀 수 있습니다.
 
 두 화면 모두 판정·형식 검사·`verdict.md`는 Python과 똑같이 옮긴 [`web/idea-core.js`](web/idea-core.js)가 내고, AI가 적은 근거 링크 중 실제 검색 결과에 나온 것만 남깁니다. 공용 PC에서는 웹 화면에 키를 넣지 마세요.
 

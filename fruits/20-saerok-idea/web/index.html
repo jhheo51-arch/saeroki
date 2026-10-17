@@ -251,6 +251,12 @@
     <input type="password" id="key-input" placeholder="sk-ant-…" autocomplete="off">
     <label class="radio" style="margin-top:8px"><input type="checkbox" id="key-remember"> 이 브라우저에 기억(공용 PC에서는 끄세요)</label>
   </div>
+  <div id="engine-local" class="hidden">
+    <p class="f" style="margin-bottom:4px">Claude 부르는 방식</p>
+    <label class="radio"><input type="radio" name="engine" value="subscription"> 내 Claude 구독(Claude Code, 추가 비용 없음)</label>
+    <label class="radio"><input type="radio" name="engine" value="api"> API 키(크레딧 차감)</label>
+    <p class="sub" id="engine-note"></p>
+  </div>
   <div id="key-local" class="hidden">
     <p class="sub">키는 Windows 자격 증명 관리자에 두고, 내 PC 서버가 Anthropic에 보낼 때만 붙입니다. 브라우저로는 보내지 않습니다.</p>
     <p>지금 키: <b id="key-now"></b> <span class="usage" id="key-from"></span></p>

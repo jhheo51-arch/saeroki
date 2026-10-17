@@ -3,7 +3,7 @@
 - 작성일: 2026-10-17
 - 상태: 만드는 중(🌸 꽃). 첫 버전 구현(2026-10-17), 웹 화면·터미널 화면 추가(2026-10-17). 실제 아이디어 심사 전
 - 대상: 20번 열매 `아이디어 검증`, 이름 `새록 심사단`, 플러그인·명령 `saerok-idea`
-- 실행 환경: 세 가지 입구, 같은 판정 규칙. ① 웹 화면 [jhheo51-arch.github.io/saeroki/idea/](https://jhheo51-arch.github.io/saeroki/idea/)(내 Claude API 키, 기록은 그 브라우저에만) ② 터미널 `saerok-idea`(같은 화면을 내 PC에서 열고 기록은 `~/.saerok/idea`) ③ Claude Code 플러그인 스킬 `/saerok-idea:judge`
+- 실행 환경: 세 가지 입구, 같은 판정 규칙. ① 웹 화면 [jhheo51-arch.github.io/saeroki/idea/](https://jhheo51-arch.github.io/saeroki/idea/)(내 Claude API 키, 기록은 그 브라우저에만) ② 터미널 `saerok-idea`(같은 화면을 내 PC에서 열고, 기본은 내 Claude 구독으로 돌며 기록은 `~/.saerok/idea`) ③ Claude Code 플러그인 스킬 `/saerok-idea:judge`
 - 문서 버전: 4번 새록 검토관 PRD의 짝 문서. 검토관 [PRD v2.0](PRD-v2.0.md)을 따름(10장)
 - 참고: [AI ANTENNA, founder-skill 설치하고 쓰는 법](https://imyoung-man.github.io/AI-ANTENNA/aitip-founder/guide.html)(2026-10-17 확인). 이사회 평가 → 경쟁 → 고객 패널 → 가격·재무 → 사업계획서로 이어지는 오픈소스 스킬 묶음
 - 이전 문서: [PRD v2.1](PRD-v2.1.md), 원래 목록은 [PRD v01](PRD-v01.md)
@@ -66,6 +66,7 @@
 | 24 | 터미널 화면 | `saerok-idea`만 치면 같은 화면이 내 PC(127.0.0.1)에서 열림(2026-10-17 추가). 기록은 `~/.saerok/idea`, 키는 Windows 자격 증명 관리자(16번 새록 SQL에 등록한 키도 같이 씀). 다른 사이트가 이 서버를 부르지 못하게 주소·출처·전용 헤더를 확인 |
 | 25 | 화면의 판정·기록 | 판정·형식 검사·`verdict.md`는 Python(`saerok_idea`)과 똑같이 옮긴 `web/idea-core.js`가 냄. 두 쪽 결과가 같은지 자동 검사. 웹 화면 기록은 그 브라우저에만 남기고 `verdict.md`·`result.json`으로 내려받음 |
 | 26 | 근거 링크 걸러내기 | 화면은 AI가 적은 근거 링크 중 실제 검색 결과에 나온 것만 남기고, 확인하지 않은 검색어가 나가면 알림. 근거가 사라진 가정은 `확인 못 함`으로 낮춤 |
+| 27 | 터미널 화면의 Claude 호출 | 기본은 API 키 없이 내 Claude 구독(2026-10-17 추가). 내 PC 서버가 화면의 Messages API 요청을 `claude -p`(Claude Code)로 바꿔 돌리고 응답을 같은 모양으로 되돌림. 환경에서 `ANTHROPIC_API_KEY`를 빼고, 빈 임시 폴더·설정·MCP·스킬 없이 웹 검색만 허용, 아이디어는 표준 입력으로, `--no-session-persistence`로 대화 기록을 남기지 않음. Claude Code가 없거나 `--api`로 켜면 API 키 방식(24번). 웹 화면(23번)은 서버가 없어 API 키만 씀 |
 
 ## 5. 해결책: 검증 흐름
 
@@ -121,6 +122,7 @@
 - 10장의 버전 맞춤 스크립트·워크플로와 어긋남 검사
 - 웹 화면(`web/`)을 GitHub Pages `/idea/`로 배포하고, 터미널 `saerok-idea`로 같은 화면을 내 PC에서 열기
 - 화면 판정·기록·`verdict.md`가 Python과 같은지, 내 PC 서버의 접근 막기·동시 기록을 자동 검사
+- 터미널 화면이 기본으로 내 Claude 구독(`claude -p`)을 쓰고, 설정에서 API 키 방식으로 바꾸기. 구독 응답 변환·실행 인자·API 키 제외를 자동 검사
 
 ## 10. 검토관 버전 따라가기
 
