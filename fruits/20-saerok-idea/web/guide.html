@@ -69,17 +69,11 @@ h3 { margin: 0 0 6px; font-size: 18px; font-weight: 700; line-height: 1.4; }
 
 .step { position: relative; padding-left: 46px; margin-bottom: 28px; }
 .step .no {
-  position: absolute; left: 0; top: 2px; width: 32px; height: 32px; border-radius: 50%;
+  /* 번호 배지를 나뭇잎 모양으로: 왼쪽 위·오른쪽 아래는 뾰족, 나머지는 둥글게 */
+  position: absolute; left: 0; top: 2px; width: 32px; height: 32px; border-radius: 2px 70%;
   background: var(--accent); color: #fff; font-weight: 800; font-size: 15px;
   display: flex; align-items: center; justify-content: center;
 }
-/* 번호 위 새싹 잎 두 장 */
-.step .no::before, .step .no::after {
-  content: ""; position: absolute; top: -6px; width: 8px; height: 6px;
-  background: var(--accent); border-radius: 8px 0;
-}
-.step .no::before { left: 8px; transform: rotate(-20deg); }
-.step .no::after { right: 8px; transform: scaleX(-1) rotate(-20deg); }
 .step p { margin: 0; }
 .check { margin: 8px 0 0; font-size: 14px; color: var(--accent); font-weight: 600; }
 .check::before { content: "✓ "; }
