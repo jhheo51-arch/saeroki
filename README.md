@@ -4,7 +4,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/PRD-v2.1-40916C" alt="PRD v2.1">
-  <img src="https://img.shields.io/badge/%EC%97%B4%EB%A7%A4-14-D97757" alt="열매 14개">
+  <img src="https://img.shields.io/badge/%EC%97%B4%EB%A7%A4-15-D97757" alt="열매 15개">
   <img src="https://img.shields.io/badge/%EB%BF%8C%EB%A6%AC-4-8A5A36" alt="뿌리 4개">
   <img src="https://img.shields.io/badge/Tests-148_passing-31572C" alt="자동 검사 148개 통과">
   <img src="https://img.shields.io/badge/Claude_%2B_Codex-shared_rules-40916C" alt="Claude와 Codex 공통 규칙">
@@ -103,7 +103,7 @@ claude plugin install saerok-watch --marketplace jhheo51-arch/saeroki
 
 새록이는 나무라서 에이전트도 나무의 말로 부릅니다. 사용자가 직접 쓰는 에이전트는 **열매**, 열매를 받치는 공통 기반은 **뿌리**입니다.
 
-**열매 14개 · 뿌리 4개**
+**열매 15개 · 뿌리 4개**
 
 | 상태 | 뜻 |
 |---|---|
@@ -111,14 +111,14 @@ claude plugin install saerok-watch --marketplace jhheo51-arch/saeroki
 | 🌸 꽃 | 만드는 중입니다 |
 | 🍎 열매 | 첫 버전을 완성했습니다 |
 
-### 열매 14개
+### 열매 15개
 
 열매마다 [`fruits/`](fruits) 아래에 폴더 하나를 둡니다. 씨앗 폴더에는 아직 설명만 있습니다.
 
 | 갈래 | 열매 |
 |---|---|
 | 추천 | 🌸 [1 콘텐츠 개인화](fruits/01-content-personalization) · 🌱 [6 레시피](fruits/06-recipe) · 🌱 [11 도서](fruits/11-book-recommendation) |
-| 기획 | 🌱 [3 마케팅 전략](fruits/03-marketing-strategy) · 🍎 [4 새록 검토관(PRD 설계 지원)](fruits/04-prd-assistant) |
+| 기획 | 🌱 [3 마케팅 전략](fruits/03-marketing-strategy) · 🍎 [4 새록 검토관(PRD 설계 지원)](fruits/04-prd-assistant) · 🌱 [20 새록 심사단(아이디어 검증)](fruits/20-saerok-idea) |
 | 조사와 분석 | 🌱 [7 금융](fruits/07-finance) · 🌱 [8 미디어 트렌드](fruits/08-media-trend) · 🌱 [9 법률 문서(10번 통합)](fruits/09-legal-document) · 🌱 [15 심층 연구](fruits/15-deep-research) |
 | 데이터 | 🌱 [5 데이터 시각화](fruits/05-data-visualization) · 🌸 [16 새록 SQL(자연어 SQL)](fruits/16-natural-language-sql) |
 | 학습 | 🌸 [17 새록 사전(산업별 용어 사전)](fruits/17-saerok-dictionary) · 🌸 [19 새록 면접관(모의 면접)](fruits/19-saerok-interview) |
@@ -133,20 +133,20 @@ claude plugin install saerok-watch --marketplace jhheo51-arch/saeroki
 | 🌸 13 계획 후 실행 | 실행 계획을 세우고 단계를 기록합니다 |
 | 🌸 14 결과 자기 검토 | 결과를 스스로 확인하고 고칩니다 |
 
-번호는 처음 정한 에이전트 번호입니다. 1번부터 16번까지의 원래 목록과 나중에 더한 17번은 [PRD v01](docs/PRD-v01.md)에, 18번은 [PRD v1.9](docs/PRD-v1.9.md)에, 4번 새록 검토관 설계는 [PRD v2.0](docs/PRD-v2.0.md)에, 19번 새록 면접관 설계는 [PRD v2.1](docs/PRD-v2.1.md)에 있습니다. 최신 상태는 이 열매 지도가 기준이고, 2026-10-14 시점 구현 기록은 [PRD v1.5](docs/PRD-v1.5.md)에 남겨 둡니다. 뿌리 12~14는 지금 [1번 열매](fruits/01-content-personalization) 코드 안에 있으며, 다른 열매가 함께 쓰게 되면 따로 떼어 냅니다.
+번호는 처음 정한 에이전트 번호입니다. 1번부터 16번까지의 원래 목록과 나중에 더한 17번은 [PRD v01](docs/PRD-v01.md)에, 18번은 [PRD v1.9](docs/PRD-v1.9.md)에, 4번 새록 검토관 설계는 [PRD v2.0](docs/PRD-v2.0.md)에, 19번 새록 면접관 설계는 [PRD v2.1](docs/PRD-v2.1.md)에, 20번 새록 심사단 설계는 검토관 PRD의 짝 문서 [PRD v2.0-idea](docs/PRD-v2.0-idea.md)에 있습니다. 최신 상태는 이 열매 지도가 기준이고, 2026-10-14 시점 구현 기록은 [PRD v1.5](docs/PRD-v1.5.md)에 남겨 둡니다. 뿌리 12~14는 지금 [1번 열매](fruits/01-content-personalization) 코드 안에 있으며, 다른 열매가 함께 쓰게 되면 따로 떼어 냅니다.
 
 ## 프로젝트 지도
 
 ```text
 saeroki/
-├─ fruits/                 열매 14개, 열매마다 폴더 하나
+├─ fruits/                 열매 15개, 열매마다 폴더 하나
 │  ├─ 01-content-personalization/   🌸 코드·데이터·검사·Claude 지침
 │  ├─ 04-prd-assistant/             🍎 PRD 설계 스무고개·검토 스킬·검사 명령·예시·검사
 │  ├─ 16-natural-language-sql/      🌸 saerok-sql 터미널·서울 데이터(data/)·검사
 │  ├─ 17-saerok-dictionary/         🌸 사전 화면(web/)·용어집(data/)·검사
 │  ├─ 18-saerok-watch/              🌸 토큰 감시 훅·대시보드(web/)·공개 집계(data/)·검사
 │  ├─ 19-saerok-interview/          🌸 면접관 5명·심사·연습·비교 스킬·기록 명령·가상 예시·검사
-│  └─ 03 · 05 ~ 15 …                🌱 설명만 있는 씨앗 폴더
+│  └─ 03 · 05 ~ 15 · 20 …           🌱 설명만 있는 씨앗 폴더
 ├─ docs/                   PRD와 Claude 이어하기 안내
 ├─ assets/ · data/growth.json · growth.py   자라는 새록이 그림과 성장 기록(Actions가 갱신)
 ├─ AGENT-SPEC.md           모든 열매가 지킬 공통 원칙
@@ -169,6 +169,7 @@ saeroki/
 | [`docs/PRD-v1.9.md`](docs/PRD-v1.9.md) | 18번 열매 새록 파수꾼(토큰 사용량 감시)의 확정 설계 |
 | [`docs/PRD-v2.0.md`](docs/PRD-v2.0.md) | 4번 열매 새록 검토관(PRD 검토)의 확정 설계 |
 | [`docs/PRD-v2.1.md`](docs/PRD-v2.1.md) | 19번 열매 새록 면접관(모의 면접)의 스무고개 확정 설계 |
+| [`docs/PRD-v2.0-idea.md`](docs/PRD-v2.0-idea.md) | 20번 열매 새록 심사단(아이디어 검증)의 스무고개 확정 설계. 검토관 PRD 버전을 따라 이름이 바뀜 |
 | [`docs/CLAUDE-HANDOFF.md`](docs/CLAUDE-HANDOFF.md) | Codex push 후 Claude Code pull 또는 웹앱 프로젝트 업로드 절차 |
 | [`AGENT-SPEC.md`](AGENT-SPEC.md) | 모든 에이전트가 함께 지킬 판단 원칙 |
 | [`AGENTS.md`](AGENTS.md) · [`CLAUDE.md`](CLAUDE.md) | Codex·Claude 작업 안내 |
