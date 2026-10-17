@@ -6,7 +6,7 @@
   <img src="https://img.shields.io/badge/PRD-v2.2-40916C" alt="PRD v2.2">
   <img src="https://img.shields.io/badge/%EC%97%90%EC%9D%B4%EC%A0%84%ED%8A%B8%2016-%F0%9F%8D%8E1%20%C2%B7%20%F0%9F%8C%B86%20%C2%B7%20%F0%9F%8C%B19-D97757" alt="에이전트 16개: 열매 1 · 꽃 6 · 씨앗 9">
   <img src="https://img.shields.io/badge/%EB%BF%8C%EB%A6%AC-4-8A5A36" alt="뿌리 4개">
-  <img src="https://img.shields.io/badge/Tests-207_passing-31572C" alt="자동 검사 207개 통과">
+  <a href="#직접-확인하기"><img src="https://img.shields.io/badge/Tests-python_--m_unittest-31572C" alt="자동 검사: python -m unittest"></a>
   <img src="https://img.shields.io/badge/Claude_%2B_Codex-shared_rules-40916C" alt="Claude와 Codex 공통 규칙">
 </p>
 
@@ -60,7 +60,7 @@ claude plugin disable saerok-watch
 
 | 발견 | 기록 | 확인 |
 |---|---|---|
-| 관심사와 현재 상황에 맞는 후보를 찾습니다. | 저장, 이미 앎, 관심 없음과 너무 유명함을 기록합니다. | 출처, 날짜와 추천 이유가 없으면 결과를 확정하지 않습니다. |
+| 지금 확인할 가치가 있는 것만 골라 건넵니다. 추천 후보, 면접 질문, PRD의 빈 칸처럼 내게 필요한 것부터 보여 줍니다. | 내 결정과 기록은 내 PC나 내 브라우저에 남깁니다. 설정은 내가 고른 것만 백업한 뒤 바꿉니다. | 출처와 근거를 함께 보여 줍니다. 근거가 없으면 지어내지 않고 `미정`이나 `확인 전`으로 남깁니다. |
 
 ## 새록이 열매 지도
 
@@ -171,14 +171,14 @@ saeroki/
 |---|---|
 | [`docs/PRD-v01.md`](docs/PRD-v01.md) | 제품 방향, 열매 12개와 뿌리 4개의 원래 목록, 위험과 개발 순서 |
 | [`docs/PRD-v1.5.md`](docs/PRD-v1.5.md) | 2026-10-14 시점 구현 범위와 상태 기록(최신 상태는 위 열매 지도) |
-| [`docs/PRD-v1.6.md`](docs/PRD-v1.6.md) | 1번 콘텐츠 개인화 에이전트의 스무고개 확정 설계 |
-| [`docs/PRD-v1.7.md`](docs/PRD-v1.7.md) | 17번 열매 새록 사전(산업별 용어 사전)의 스무고개 확정 설계 |
-| [`docs/PRD-v1.8.md`](docs/PRD-v1.8.md) | 16번 열매 새록 SQL(자연어 SQL)의 스무고개 확정 설계 |
-| [`docs/PRD-v1.9.md`](docs/PRD-v1.9.md) | 18번 열매 새록 파수꾼(토큰 사용량 감시)의 확정 설계 |
-| [`docs/PRD-v2.0.md`](docs/PRD-v2.0.md) | 4번 열매 새록 검토관(PRD 검토)의 확정 설계 |
-| [`docs/PRD-v2.1.md`](docs/PRD-v2.1.md) | 19번 열매 새록 면접관(모의 면접)의 스무고개 확정 설계 |
-| [`docs/PRD-v2.0-idea.md`](docs/PRD-v2.0-idea.md) | 20번 열매 새록 심사단(아이디어 검증)의 스무고개 확정 설계. 검토관 PRD 버전을 따라 이름이 바뀜 |
-| [`docs/PRD-v2.2.md`](docs/PRD-v2.2.md) | 21번 열매 새록 지원서(공고 분석·자기소개서 작성)의 스무고개 확정 설계 |
+| [`docs/PRD-v1.6.md`](docs/PRD-v1.6.md) | **1번** 콘텐츠 개인화의 스무고개 확정 설계 |
+| [`docs/PRD-v2.0.md`](docs/PRD-v2.0.md) | **4번** 열매 새록 검토관(PRD 검토)의 확정 설계 |
+| [`docs/PRD-v1.8.md`](docs/PRD-v1.8.md) | **16번** 열매 새록 SQL(자연어 SQL)의 스무고개 확정 설계 |
+| [`docs/PRD-v1.7.md`](docs/PRD-v1.7.md) | **17번** 열매 새록 사전(산업별 용어 사전)의 스무고개 확정 설계 |
+| [`docs/PRD-v1.9.md`](docs/PRD-v1.9.md) | **18번** 열매 새록 파수꾼(토큰 사용량 감시)의 확정 설계 |
+| [`docs/PRD-v2.1.md`](docs/PRD-v2.1.md) | **19번** 열매 새록 면접관(모의 면접)의 스무고개 확정 설계 |
+| [`docs/PRD-v2.0-idea.md`](docs/PRD-v2.0-idea.md) | **20번** 열매 새록 심사단(아이디어 검증)의 스무고개 확정 설계. 검토관 PRD 버전을 따라 이름이 바뀜 |
+| [`docs/PRD-v2.2.md`](docs/PRD-v2.2.md) | **21번** 열매 새록 지원서(공고 분석·자기소개서 작성)의 스무고개 확정 설계 |
 | [`docs/CLAUDE-HANDOFF.md`](docs/CLAUDE-HANDOFF.md) | Codex push 후 Claude Code pull 또는 웹앱 프로젝트 업로드 절차 |
 | [`AGENT-SPEC.md`](AGENT-SPEC.md) | 모든 에이전트가 함께 지킬 판단 원칙 |
 | [`AGENTS.md`](AGENTS.md) · [`CLAUDE.md`](CLAUDE.md) | Codex·Claude 작업 안내 |
@@ -254,12 +254,4 @@ python -m unittest -v
 - [x] 토스 테크, 카카오 테크, NAVER D2 RSS 주소 연결
 - [x] 뉴닉 공개 목록에서 실제 아티클 링크 연결
 
-현재 1번 콘텐츠 개인화 에이전트의 첫 작동 버전은 여기까지 구현했습니다. 서울 시간대별 추천, 날씨를 반영한 음악 후보, 출처가 확인된 글, 추천 이유, 피드백 저장과 다음 추천 반영을 포함합니다. 실제 RSS 자동 수집과 Claude API 연결은 다음 확장 범위입니다.
-
-공통 기반이 실제 첫 추천 흐름에서 부족할 때만 다음 기술을 추가합니다.
-
 </details>
-
----
-
-<p align="center"><sub>Palette: #FAF9F6 / #ECF39E / #90A955 / #40916C / #31572C</sub></p>
