@@ -5,7 +5,7 @@
 - 상태: 🌸 꽃(만드는 중, 2026-10-17 첫 구현)
 - 설계: [PRD v2.0-idea](../../docs/PRD-v2.0-idea.md)(검토관 PRD 버전을 따름)
 - 공통 원칙: [AGENT-SPEC.md](../../AGENT-SPEC.md)
-- 참고: [AI-ANTENNA 창업 아이디어 가이드](https://imyoung-man.github.io/AI-ANTENNA/aitip-founder/guide.html)의 '심사위원 서브에이전트 + 가상 패널' 방식에, 가정 검증·출처 표시·결정적 판정·방향 제안을 더했습니다.
+- 사용 안내: [새록 심사단 설치하고 쓰는 법](https://jhheo51-arch.github.io/saeroki/idea/guide.html)(원본 [web/guide.html](web/guide.html))
 
 ## 바로 심사하기
 

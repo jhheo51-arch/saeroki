@@ -5,7 +5,7 @@
 - 대상: 20번 열매 `아이디어 검증`, 이름 `새록 심사단`, 플러그인·명령 `saerok-idea`
 - 실행 환경: 세 가지 입구, 같은 판정 규칙. ① 웹 화면 [jhheo51-arch.github.io/saeroki/idea/](https://jhheo51-arch.github.io/saeroki/idea/)(내 Claude API 키, 기록은 그 브라우저에만) ② 터미널 `saerok-idea`(같은 화면을 내 PC에서 열고, 기본은 내 Claude 구독으로 돌며 기록은 `~/.saerok/idea`) ③ Claude Code 플러그인 스킬 `/saerok-idea:judge`
 - 문서 버전: 4번 새록 검토관 PRD의 짝 문서. 검토관 [PRD v2.0](PRD-v2.0.md)을 따름(10장)
-- 참고: [AI ANTENNA, founder-skill 설치하고 쓰는 법](https://imyoung-man.github.io/AI-ANTENNA/aitip-founder/guide.html)(2026-10-17 확인). 이사회 평가 → 경쟁 → 고객 패널 → 가격·재무 → 사업계획서로 이어지는 오픈소스 스킬 묶음
+- 사용 안내: [새록 심사단 설치하고 쓰는 법](https://jhheo51-arch.github.io/saeroki/idea/guide.html)(원본 `fruits/20-saerok-idea/web/guide.html`)
 - 이전 문서: [PRD v2.1](PRD-v2.1.md), 원래 목록은 [PRD v01](PRD-v01.md)
 
 ## 1. 한 문장 정의

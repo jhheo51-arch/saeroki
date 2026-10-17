@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>새록 심사단 사용 안내</title>
+<meta property="og:title" content="새록 심사단 설치하고 쓰는 법">
+<style>
+/* 새록 심사단 사용 안내. 폰에서도 읽히도록 한 줄로 흐르는 문서로 만듭니다. */
+:root {
+  --accent: #3E8E5A;      /* 새록이 잎 색 */
+  --accent-soft: #E6F2EA;
+  --fg: #1B1F1C;
+  --muted: #687068;
+  --line: #E3E8E4;
+  --bg: #FFFFFF;
+  --panel: #F4F7F5;
+  --code-bg: #1B1F1C;
+  --code-fg: #EEF3EF;
+  --warn-bg: #FFF5DB;
+  --warn-fg: #7A5A00;
+  --font: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont,
+    "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --mono: Consolas, "D2Coding", "SFMono-Regular", ui-monospace, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --accent: #6CC48A;
+    --accent-soft: #1C2C21;
+    --fg: #EEF3EF;
+    --muted: #9AA39C;
+    --line: #2A322C;
+    --bg: #111513;
+    --panel: #1A201C;
+    --code-bg: #070908;
+    --warn-bg: #2E2710;
+    --warn-fg: #E8C55A;
+  }
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--bg); color: var(--fg);
+  font-family: var(--font); font-size: 17px; line-height: 1.7;
+  word-break: keep-all; overflow-wrap: anywhere;
+}
+a { color: var(--accent); }
+.wrap { max-width: 680px; margin: 0 auto; padding: 0 16px 64px; }
+
+header { padding: 28px 0 22px; border-bottom: 1px solid var(--line); margin-bottom: 30px; }
+.brand { font-size: 13px; font-weight: 800; letter-spacing: .18em; color: var(--muted); }
+.brand b { color: var(--accent); }
+.kicker { margin-top: 16px; font-size: 12px; font-weight: 700; letter-spacing: .12em; color: var(--muted); }
+h1 { margin: 6px 0 10px; font-size: 29px; line-height: 1.3; letter-spacing: -.02em; font-weight: 800; }
+.lead { margin: 0; font-size: 18px; font-weight: 600; }
+.note { margin-top: 16px; padding: 12px 14px; background: var(--panel); border-radius: 10px; font-size: 14px; color: var(--muted); }
+
+section { margin-bottom: 40px; }
+h2 { margin: 0 0 16px; padding-left: 12px; border-left: 4px solid var(--accent); font-size: 21px; font-weight: 800; line-height: 1.35; }
+h3 { margin: 0 0 6px; font-size: 18px; font-weight: 700; line-height: 1.4; }
+
+.needs { list-style: none; margin: 0; padding: 0; }
+.needs li { position: relative; padding: 10px 0 10px 30px; border-bottom: 1px solid var(--line); }
+.needs li:last-child { border-bottom: 0; }
+.needs li::before {
+  content: ""; position: absolute; left: 0; top: 17px; width: 15px; height: 15px;
+  border: 2px solid var(--accent); border-radius: 4px;
+}
+
+.step { position: relative; padding-left: 46px; margin-bottom: 28px; }
+.step .no {
+  position: absolute; left: 0; top: 2px; width: 32px; height: 32px; border-radius: 50%;
+  background: var(--accent); color: #fff; font-weight: 800; font-size: 15px;
+  display: flex; align-items: center; justify-content: center;
+}
+/* 번호 위 새싹 잎 두 장 */
+.step .no::before, .step .no::after {
+  content: ""; position: absolute; top: -6px; width: 8px; height: 6px;
+  background: var(--accent); border-radius: 8px 0;
+}
+.step .no::before { left: 8px; transform: rotate(-20deg); }
+.step .no::after { right: 8px; transform: scaleX(-1) rotate(-20deg); }
+.step p { margin: 0; }
+.check { margin: 8px 0 0; font-size: 14px; color: var(--accent); font-weight: 600; }
+.check::before { content: "✓ "; }
+
+.item { margin-bottom: 22px; }
+.copy {
+  margin: 10px 0 0; padding: 14px 16px; border-radius: 10px;
+  background: var(--code-bg); color: var(--code-fg);
+  font-family: var(--mono); font-size: 14px; line-height: 1.6;
+  white-space: pre-wrap; overflow-x: auto;
+}
+.copy-btn {
+  margin-top: 8px; padding: 7px 13px; border-radius: 8px; cursor: pointer;
+  font: 600 13px var(--font); color: var(--fg);
+  background: var(--panel); border: 1px solid var(--line);
+}
+.copy-btn.done { border-color: var(--accent); color: var(--accent); }
+
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 15px; }
+th, td { text-align: left; vertical-align: top; padding: 9px 10px; border-bottom: 1px solid var(--line); }
+th { background: var(--panel); font-weight: 700; white-space: nowrap; }
+
+.verdicts { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
+.verdicts div { padding: 12px 14px; border-radius: 10px; background: var(--panel); font-size: 15px; }
+.verdicts b { display: block; color: var(--accent); }
+
+.pit { background: var(--panel); border-radius: 12px; padding: 16px 18px; margin-bottom: 12px; }
+.pit .sym { margin: 0 0 6px; font-weight: 700; }
+.pit .fix { margin: 0; }
+
+.warn { padding: 14px 16px; border-radius: 10px; background: var(--warn-bg); color: var(--warn-fg); font-size: 15px; }
+.plain { margin: 0; padding-left: 20px; }
+.plain li { margin-bottom: 8px; }
+code { font-family: var(--mono); font-size: .9em; padding: 1px 5px; border-radius: 5px; background: var(--panel); }
+
+footer { margin-top: 48px; padding: 22px 18px; border-radius: 14px; background: var(--accent-soft); text-align: center; font-size: 15px; }
+footer p { margin: 0 0 6px; }
+footer p:last-child { margin: 0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="brand"><b>SAEROKI</b> · 20번 열매</div>
+  <div class="kicker">아이디어 검증</div>
+  <h1>새록 심사단 설치하고 쓰는 법</h1>
+  <p class="lead">아이디어 한 줄을 넣으면 만들기 전에 <code>진행·조건부·보류</code> 판정과 다듬은 방향 2~3개를 받습니다.</p>
+  <div class="note">심사위원 3명이 점수와 표를 내고, 아이디어가 기대는 가정 3개를 공개 근거로 직접 확인합니다. 판정은 AI가 아니라 고정된 규칙의 스크립트가 정하므로 같은 표와 같은 근거면 언제나 같은 판정이 나옵니다. 기획서는 쓰지 않고 4번 새록 검토관에 넘깁니다.</div>
+</header>
+
+<section>
+  <h2>준비물</h2>
+  <ul class="needs">
+    <li>Claude Code(Claude Pro 이상 요금제)에 로그인한 PC. 웹 화면만 쓸 때는 내 Claude API 키</li>
+    <li>Python 3.10 이상. 명령 프롬프트에서 <code>python --version</code>으로 확인</li>
+    <li>아이디어 한 줄. 무엇을·누구에게·어떻게 돈을 버는지·왜 지금 중 아는 것만 있어도 됩니다</li>
+    <li>가격·비용을 안다면 그 숫자(손익분기 계산용, 없으면 계산하지 않음)</li>
+  </ul>
+</section>
+
+<section>
+  <h2>사용 방법</h2>
+
+  <div class="step">
+    <div class="no">1</div>
+    <h3>플러그인 설치</h3>
+    <p>Claude Code 대화창에 설치 두 줄을 넣습니다. 처음 한 번만 하면 됩니다.</p>
+    <p class="check"><code>/saerok-idea:judge</code>가 명령 목록에 보이면 성공</p>
+  </div>
+
+  <div class="step">
+    <div class="no">2</div>
+    <h3>아이디어 한 줄로 심사 시작</h3>
+    <p><code>/saerok-idea:judge</code> 뒤에 아이디어를 적습니다. 4칸 중 빠진 것만 최대 3문항 묻고, 모르면 <code>미정</code>으로 두고 진행합니다.</p>
+  </div>
+
+  <div class="step">
+    <div class="no">3</div>
+    <h3>검색어와 사용량 확인</h3>
+    <p>가정 검증·경쟁 조사에 보낼 웹 검색어(아이디어 원문이 아닌 일반 낱말)와 패널 규모, 예상 사용량을 먼저 보여 줍니다. 빼거나 바꿀 검색어를 말한 뒤 확인하면 시작합니다.</p>
+    <p class="check">아는 경쟁 서비스가 있으면 이때 함께 알려 주세요</p>
+  </div>
+
+  <div class="step">
+    <div class="no">4</div>
+    <h3>판정과 방향 받기</h3>
+    <p>심사위원 점수, 가정마다 <code>받침·반박·확인 못 함</code>과 링크·확인 날짜, 경쟁 서비스 표, 가상 패널의 반대 이유, 손익분기, 다듬은 방향 2~3개(추천 하나)가 <code>verdict.md</code>로 저장됩니다.</p>
+    <p class="check">기록은 내 PC <code>~/.saerok/idea/&lt;아이디어&gt;/&lt;날짜&gt;/</code>에만 남습니다</p>
+  </div>
+
+  <div class="step">
+    <div class="no">5</div>
+    <h3>방향을 골라 다시 심사하거나 기획으로 넘기기</h3>
+    <p>마음에 드는 방향 번호로 다시 심사하면 같은 아이디어 폴더에 새 기록이 쌓여 전후를 비교할 수 있습니다. <code>진행</code>·<code>조건부</code>면 4번 새록 검토관의 설계 스무고개를 이 판정에서 시작합니다.</p>
+  </div>
+</section>
+
+<section>
+  <h2>판정은 이렇게 정합니다</h2>
+  <div class="verdicts">
+    <div><b>진행</b>진행 2표 이상, 보류 0표, 반박된 가정 없음</div>
+    <div><b>조건부</b>그 밖의 표, 또는 진행인데 다른 가정이 반박됨</div>
+    <div><b>보류</b>보류 2표 이상, 또는 '문제가 있다' 가정이 반박됨</div>
+    <div><b>판단 보류</b>무엇을·누구에게가 미정이거나 가정 3개 모두 확인 못 함</div>
+  </div>
+  <p>가상 사용자 패널과 손익분기는 판정에 쓰지 않습니다. 패널은 AI 시뮬레이션이라 반대 이유 모음으로만 보여 줍니다.</p>
+</section>
+
+<section>
+  <h2>복사해서 쓰기</h2>
+
+  <div class="item">
+    <h3>설치 두 줄</h3>
+<pre class="copy">/plugin marketplace add jhheo51-arch/saeroki
+/plugin install saerok-idea@saeroki</pre>
+    <button class="copy-btn" type="button">복사</button>
+  </div>
+
+  <div class="item">
+    <h3>심사 시작(가상 예시)</h3>
+<pre class="copy">/saerok-idea:judge 동네 1인 카페 사장님에게 원두·우유 재고가 떨어지기 전에 알려 주는 서비스</pre>
+    <button class="copy-btn" type="button">복사</button>
+  </div>
+
+  <div class="item">
+    <h3>패널을 100명으로</h3>
+<pre class="copy">/saerok-idea:judge 동네 1인 카페 사장님에게 원두·우유 재고가 떨어지기 전에 알려 주는 서비스 --full</pre>
+    <button class="copy-btn" type="button">복사</button>
+  </div>
+
+  <div class="item">
+    <h3>고른 방향 다시 심사</h3>
+<pre class="copy">/saerok-idea:judge --from "&lt;verdict.md 경로&gt;" --direction 2</pre>
+    <button class="copy-btn" type="button">복사</button>
+  </div>
+
+  <div class="item">
+    <h3>한 단계만 다시</h3>
+<pre class="copy">/saerok-idea:judge --step assumptions "&lt;기록 폴더&gt;"</pre>
+    <button class="copy-btn" type="button">복사</button>
+  </div>
+
+  <div class="item">
+    <h3>기록 비교</h3>
+<pre class="copy">/saerok-idea:compare "&lt;아이디어 폴더&gt;"</pre>
+    <button class="copy-btn" type="button">복사</button>
+  </div>
+
+  <div class="item">
+    <h3>기획으로 넘기기</h3>
+<pre class="copy">/saerok-prd:design --from "&lt;verdict.md 경로&gt;"</pre>
+    <button class="copy-btn" type="button">복사</button>
+  </div>
+
+  <div class="item">
+    <h3>손익분기만 계산(터미널)</h3>
+<pre class="copy">bin/saerok-idea breakeven --price 9900 --unit-cost 1500 --fixed-cost 300000</pre>
+    <button class="copy-btn" type="button">복사</button>
+  </div>
+</section>
+
+<section>
+  <h2>다른 화면으로 쓰기</h2>
+  <div class="table-wrap">
+  <table>
+    <tr><th>어디서</th><th>여는 법</th><th>키·기록</th></tr>
+    <tr><td>웹</td><td><a href="./">심사 화면</a></td><td>내 API 키를 넣으면 브라우저가 Anthropic에 바로 연결. 기록은 그 브라우저에만, <code>verdict.md</code>로 내려받기</td></tr>
+    <tr><td>터미널</td><td><code>saerok-idea</code></td><td>같은 화면이 내 PC에서 열리고 Claude Code 구독으로 돌아감. 기록은 <code>~/.saerok/idea/</code></td></tr>
+    <tr><td>Claude Code</td><td><code>/saerok-idea:judge</code></td><td>위 사용 방법 그대로</td></tr>
+  </table>
+  </div>
+</section>
+
+<section>
+  <h2>막힐 때</h2>
+  <div class="pit">
+    <p class="sym">"기록 폴더가 git 저장소 안입니다"라며 멈춰요</p>
+    <p class="fix">아이디어가 실수로 공개되지 않도록 저장소 안에는 저장하지 않습니다. 기본 위치 <code>~/.saerok/idea/</code>를 쓰거나 <code>SAEROK_IDEA_HOME</code>을 저장소 밖 폴더로 바꿔 주세요.</p>
+  </div>
+  <div class="pit">
+    <p class="sym">판정이 '판단 보류(정보 부족)'로 나와요</p>
+    <p class="fix">무엇을·누구에게 칸이 <code>미정</code>이거나 가정 3개를 모두 확인하지 못한 경우입니다. 칸을 채우거나 검색어를 바꿔 다시 심사하세요.</p>
+  </div>
+  <div class="pit">
+    <p class="sym">손익분기가 계산되지 않아요</p>
+    <p class="fix">가격·고객당 비용·고정비는 내가 준 값이나 링크가 있는 값만 씁니다. 결과에 적힌 '필요한 값'을 알려 주면 계산합니다.</p>
+  </div>
+  <div class="pit">
+    <p class="sym">터미널 화면이 Claude에 연결되지 않아요</p>
+    <p class="fix">Claude Code가 설치·로그인되어 있는지 확인하세요. 없으면 화면 설정에서 API 키 방식으로 바꾸거나 <code>saerok-idea --api</code>로 엽니다.</p>
+  </div>
+</section>
+
+<section>
+  <h2>주의할 점</h2>
+  <ul class="plain">
+    <li>판정은 만들기 전에 걸러 보는 참고입니다. 투자·창업의 최종 판단을 대신하지 않습니다.</li>
+    <li>심사위원과 가상 패널은 AI 시뮬레이션입니다. 패널 비율을 실제 수요나 구매 비율로 읽지 마세요.</li>
+    <li>근거가 없는 시장 규모·경쟁사 수치는 쓰지 않고 <code>확인 못 함</code>으로 둡니다.</li>
+    <li>실제 인터뷰나 작은 판매 시험처럼 웹으로 확인할 수 없는 일은 '직접 확인할 일'로 남깁니다.</li>
+  </ul>
+  <p class="warn">파일은 내 PC에만 저장되지만, 분석은 Claude(Anthropic 서버)가 하고 검색어는 검색 서비스로 나갑니다. 완전한 비공개는 아니니 민감한 아이디어는 일반 낱말로 바꿔 넣어 주세요. 공용 PC의 웹 화면에는 API 키를 넣지 마세요.</p>
+</section>
+
+<footer>
+  <p>새록이 20번 열매 · 새록 심사단</p>
+  <p><a href="https://github.com/jhheo51-arch/saeroki/tree/main/fruits/20-saerok-idea">저장소에서 자세히 보기</a></p>
+</footer>
+
+</div>
+<script>
+document.querySelectorAll(".copy-btn").forEach(function (btn) {
+  btn.addEventListener("click", function () {
+    var text = btn.previousElementSibling.textContent;
+    var done = function () {
+      btn.textContent = "복사됨";
+      btn.classList.add("done");
+      setTimeout(function () { btn.textContent = "복사"; btn.classList.remove("done"); }, 1500);
+    };
+    if (navigator.clipboard) navigator.clipboard.writeText(text).then(done, function () {});
+  });
+});
+</script>
+</body>
+</html>
