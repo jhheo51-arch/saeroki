@@ -6,7 +6,7 @@
   <img src="https://img.shields.io/badge/PRD-v2.0-40916C" alt="PRD v2.0">
   <img src="https://img.shields.io/badge/%EC%97%B4%EB%A7%A4-13-D97757" alt="열매 13개">
   <img src="https://img.shields.io/badge/%EB%BF%8C%EB%A6%AC-4-8A5A36" alt="뿌리 4개">
-  <img src="https://img.shields.io/badge/Tests-109_passing-31572C" alt="자동 검사 109개 통과">
+  <img src="https://img.shields.io/badge/Tests-128_passing-31572C" alt="자동 검사 128개 통과">
   <img src="https://img.shields.io/badge/Claude_%2B_Codex-shared_rules-40916C" alt="Claude와 Codex 공통 규칙">
 </p>
 
@@ -155,7 +155,7 @@ saeroki/
 | 위치 | 내용 |
 |---|---|
 | [`fruits/01-content-personalization`](fruits/01-content-personalization) | 1번 콘텐츠 개인화. 실행 방법은 폴더 안 README |
-| [`fruits/04-prd-assistant`](fruits/04-prd-assistant) | 4번 새록 검토관. 플러그인 설치 후 `/saerok-prd:review <PRD 파일>` |
+| [`fruits/04-prd-assistant`](fruits/04-prd-assistant) | 4번 새록 검토관. 플러그인 설치 후 설계는 `/saerok-prd:design <만들 것>`, 검사는 `/saerok-prd:review <PRD 파일>` |
 | [`fruits/16-natural-language-sql`](fruits/16-natural-language-sql) | 16번 새록 SQL. 설치 후 PowerShell에서 `saerok-sql` |
 | [`fruits/17-saerok-dictionary`](fruits/17-saerok-dictionary) | 17번 새록 사전. 웹에서 바로 열기: [https://jhheo51-arch.github.io/saeroki/](https://jhheo51-arch.github.io/saeroki/) |
 | [`fruits/18-saerok-watch`](fruits/18-saerok-watch) | 18번 새록 파수꾼. 설치 후 `saerok-watch`로 대시보드 |
@@ -201,6 +201,7 @@ python -m unittest -v
 - [x] 새록 파수꾼 첫 버전: 기록 분석, 실시간 경고 훅, 대시보드(지금·추이·제안·적용), 백업·되돌리기
 - [x] 4번 새록 검토관 설계 확정(PRD v2.0)과 첫 버전: 기준표 7개·줄 지적 4종 검사, 스킬 `/saerok-prd:review`
 - [ ] 새록 파수꾼 훅 설치 후 실제 대화에서 경고 한 줄 확인
+- [x] 새록 검토관 설계 스무고개 스킬 `/saerok-prd:design`, 고치기 전후 비교 `compare`
 - [ ] 새록 검토관으로 새 PRD 2개 검사, 지적 중 고친 비율 기록(2026-10-31까지)
 - [ ] 새록 SQL 채점 정답 사람 검토, 애매한·복잡한 질문 채점 세트 추가
 - [ ] 새록 사전 사용자 확인

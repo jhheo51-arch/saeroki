@@ -1,13 +1,16 @@
 import io
 import json
+import subprocess
+import tempfile
 import unittest
 from contextlib import redirect_stdout
 from pathlib import Path
 
-from saerok_prd import check, cli
+from saerok_prd import check, cli, compare
 
 HERE = Path(__file__).resolve().parent
 WEAK = (HERE / "examples" / "weak-prd.md").read_text(encoding="utf-8")
+REVISED = (HERE / "examples" / "weak-prd-revised.md").read_text(encoding="utf-8")
 
 
 def status(result, key):
@@ -109,6 +112,104 @@ class CriteriaTest(unittest.TestCase):
         self.assertEqual(status(r, "evidence"), "weak")
 
 
+class StricterTest(unittest.TestCase):
+    def test_resolved_questions_are_weak_risk(self):
+        r = check.check("# 제목\n## 열린 질문\n1. ~~언어~~ → 확정: 한국어\n2. ~~환경~~ → 확정: CPU\n")
+        self.assertEqual(status(r, "risk"), "weak")
+
+    def test_empty_section_is_weak(self):
+        r = check.check("# 제목\n## 하지 않을 것\n## 기능\n알림\n")
+        self.assertEqual(status(r, "scope_out"), "weak")
+
+    def test_planned_research_is_not_evidence(self):
+        r = check.check("# 제목\n## 문제\n찾기 어렵습니다.\n## 팬 조사\n팬 20명 인터뷰를 목표로 한다.\n")
+        self.assertEqual(status(r, "evidence"), "weak")
+        r = check.check("# 제목\n## 문제\n찾기 어렵습니다.\n## 팬 조사\n2026-10 팬 5명을 인터뷰했습니다.\n")
+        self.assertEqual(status(r, "evidence"), "ok")
+
+    def test_feature_titles_are_not_users_or_risk(self):
+        r = check.check("# 제목\n## 사용자 흐름\n입력 → 결과\n## 위험 신호 규칙\n비가 오면 경고\n")
+        self.assertEqual((status(r, "users"), status(r, "risk")), ("missing", "missing"))
+
+    def test_every_problem_section_is_checked(self):
+        text = "# 제목\n## 배경\n설명 한 줄\n## 문제\n대부분 손으로 셉니다.\n"
+        self.assertEqual([(f["line"], f["kind"]) for f in check.check(text)["findings"]], [(5, "vague")])
+
+    def test_metric_needs_measurable_target(self):
+        # 목록 번호·날짜·화면 너비는 '얼마나'가 아닙니다.
+        r = check.check("# 제목\n## 성공 기준\n1. 2026-10-31까지 추천 이유가 납득됩니다.\n2. 375px 화면에서 봅니다.\n")
+        self.assertEqual(status(r, "metric"), "weak")
+        r = check.check("# 제목\n## 성공 기준\n4주 안에 다시 쓴 사람 30% 이상\n")
+        self.assertEqual(status(r, "metric"), "ok")
+        r = check.check("# 제목\n## 성공 기준\n예시 질문 20/20 정답\n")
+        self.assertEqual(status(r, "metric"), "ok")
+
+    def test_needs_clarification_marker_is_pending(self):
+        r = check.check("# 제목\n## 기능\n로그인은 [NEEDS CLARIFICATION: 방식 미확인]\n")
+        self.assertEqual([f["kind"] for f in r["findings"]], ["pending"])
+
+    def test_warnings(self):
+        self.assertEqual([w["kind"] for w in check.check("# 메모\n할 일\n")["warnings"]], ["not_prd"])
+        long = "# 제목\n## 문제\n" + "줄\n" * 600
+        self.assertIn("long", [w["kind"] for w in check.check(long)["warnings"]])
+        self.assertEqual(check.check(WEAK)["warnings"], [])
+
+
+class TopicTest(unittest.TestCase):
+    """주제가 달라 기준이 맞지 않을 때: 이유를 밝힌 '해당 없음'과 프로젝트 낱말."""
+
+    def test_skip_comment_needs_reason(self):
+        r = check.check("# 제목\n<!-- saerok-prd: 해당 없음 users 혼자 쓰는 도구라 사용자는 나 하나 -->\n## 문제\n지연\n")
+        users = next(c for c in r["criteria"] if c["key"] == "users")
+        self.assertEqual((users["status"], users["note"]), ("skip", "해당 없음: 혼자 쓰는 도구라 사용자는 나 하나"))
+        self.assertEqual(r["summary"]["total"], 6)  # 해당 없음은 분모에서 뺌
+        r = check.check("# 제목\n<!-- saerok-prd: 해당 없음 users -->\n")
+        self.assertEqual(status(r, "users"), "missing")  # 이유가 없으면 받지 않음
+
+    def test_skip_does_not_hide_existing_section(self):
+        r = check.check("# 제목\n## 대상 사용자\n대학생\n", {"skip": {"대상 사용자": "개인 도구"}})
+        self.assertEqual(status(r, "users"), "ok")
+
+    def test_project_words(self):
+        text = "# 쇼츠 기획\n## 시청자\n역사에 관심 있는 20대\n"
+        self.assertEqual(status(check.check(text), "users"), "missing")
+        self.assertEqual(status(check.check(text, {"words": {"users": ["시청자"]}}), "users"), "ok")
+
+    def test_compare_marks_skip_separately(self):
+        r = compare.compare("# 제목\n## 문제\n지연\n", "# 제목\n<!-- saerok-prd: 해당 없음 risk 하루짜리 실험 -->\n## 문제\n지연\n")
+        risk = next(c for c in r["criteria"] if c["key"] == "risk")
+        self.assertEqual((risk["before"], risk["after"], risk["change"]), ("missing", "skip", "skip"))
+        self.assertEqual((r["summary"]["total_before"], r["summary"]["total_after"]), (7, 6))
+
+
+class CompareTest(unittest.TestCase):
+    def test_revised_example(self):
+        r = compare.compare(WEAK, REVISED)
+        self.assertEqual(r["summary"], {"ok_before": 3, "ok_after": 6, "total_before": 7, "total_after": 7, "findings_before": 5,
+                                        "findings_after": 2, "fixed": 3, "added": 0, "fix_rate": 60})
+        self.assertEqual([f["kind"] for f in r["fixed"]], ["order", "unsourced", "vague"])
+        changed = {c["key"]: c["change"] for c in r["criteria"] if c["change"] != "same"}
+        self.assertEqual(changed, {"metric": "better", "users": "better", "scope_out": "better"})
+
+    def test_moved_line_is_not_fixed_and_new_one_is_added(self):
+        before = "# 제목\n## 문제\n가격은 미정입니다.\n"
+        after = "# 제목\n## 배경\n설명 한 줄\n## 문제\n가격은  미정입니다.\n출시일 TBD\n"
+        r = compare.compare(before, after)
+        self.assertEqual(r["summary"]["fixed"], 0)  # 줄이 밀리고 띄어쓰기가 달라도 같은 지적
+        self.assertEqual([(f["line"], f["kind"]) for f in r["added"]], [(6, "pending")])
+
+    def test_repeated_finding_counts_each(self):
+        before = "# 제목\n## 문제\n미정\n미정\n"
+        r = compare.compare(before, "# 제목\n## 문제\n미정\n")
+        self.assertEqual((r["summary"]["fixed"], r["summary"]["fix_rate"]), (1, 50))
+
+    def test_no_findings_before(self):
+        r = compare.compare("# 제목\n", "# 제목\n")
+        self.assertIsNone(r["summary"]["fix_rate"])
+        self.assertIn("고칠 지적 없음", compare.render(r))
+        self.assertIn("바뀐 기준 없음", compare.render(r))
+
+
 class CliTest(unittest.TestCase):
     def test_json_output(self):
         out = io.StringIO()
@@ -119,6 +220,46 @@ class CliTest(unittest.TestCase):
 
     def test_missing_file(self):
         self.assertEqual(cli.main(["check", str(HERE / "없는파일.md")]), 2)
+
+    def test_compare_command(self):
+        out = io.StringIO()
+        with redirect_stdout(out):
+            code = cli.main(["compare", str(HERE / "examples" / "weak-prd.md"), str(HERE / "examples" / "weak-prd-revised.md")])
+        self.assertEqual(code, 0)
+        self.assertIn("고친 지적 3개(60%)", out.getvalue())
+        self.assertIn("대상 사용자: ❌ 빠짐 → ✅ 있음", out.getvalue())
+        self.assertEqual(cli.main(["compare", str(HERE / "없는파일.md"), str(HERE / "examples" / "weak-prd.md")]), 2)
+
+    def test_config_file_is_found_above_prd(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / ".git").mkdir()
+            (root / ".saerok-prd.json").write_text('{"words": {"대상 사용자": ["시청자"]}}', encoding="utf-8")
+            (root / "docs").mkdir()
+            (root / "docs" / "plan.md").write_text("# 기획\n## 시청자\n20대\n", encoding="utf-8")
+            out = io.StringIO()
+            with redirect_stdout(out):
+                cli.main(["check", str(root / "docs" / "plan.md"), "--json"])
+            self.assertEqual(status(json.loads(out.getvalue()), "users"), "ok")
+            (root / ".saerok-prd.json").write_text("{깨짐", encoding="utf-8")
+            self.assertEqual(cli.main(["check", str(root / "docs" / "plan.md")]), 2)
+
+    def test_compare_since_commit_and_log(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            git = lambda *a: subprocess.run(["git", "-C", tmp, *a], check=True, capture_output=True)
+            git("init", "-q")
+            prd = root / "prd.md"
+            prd.write_text(WEAK, encoding="utf-8")
+            git("add", ".")
+            git("-c", "user.name=t", "-c", "user.email=t@t", "commit", "-qm", "v1")
+            prd.write_text(REVISED, encoding="utf-8")
+            log = root / "log.jsonl"
+            with redirect_stdout(io.StringIO()):
+                self.assertEqual(cli.main(["compare", str(prd), "--since", "HEAD", "--log", str(log)]), 0)
+                self.assertEqual(cli.main(["compare", str(prd), "--since", "없는커밋"]), 2)
+            row = json.loads(log.read_text(encoding="utf-8"))
+            self.assertEqual((row["fixed"], row["fix_rate"], row["after"]), (3, 60, str(prd)))
 
     def test_text_render(self):
         text = check.render(check.check(WEAK))
