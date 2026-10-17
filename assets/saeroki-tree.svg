@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 320" role="img" aria-labelledby="title desc">
   <title id="title">자라는 새록이</title>
-  <desc id="desc">새록이가 Lv.11 묘목까지 자랐습니다. 성장 점수 174점.</desc>
+  <desc id="desc">새록이가 Lv.11 묘목까지 자랐습니다. 성장 점수 179점.</desc>
   <style>
     #sway { animation: sway 3.2s ease-in-out infinite; transform-origin: 240px 620px; }
     #eyes { animation: blink 4s infinite; transform-box: fill-box; transform-origin: center; }
@@ -26,7 +26,7 @@
   <text x="520" y="88" fill="#31572C" font-size="22" font-weight="700" font-family="Pretendard, Apple SD Gothic Neo, Noto Sans KR, sans-serif">새록이 Lv.11 / 100</text>
   <text x="520" y="148" fill="#31572C" font-size="54" font-weight="800" font-family="Pretendard, Apple SD Gothic Neo, Noto Sans KR, sans-serif">묘목</text>
   <rect x="520" y="176" width="520" height="18" rx="9" fill="#ECF39E"/>
-  <rect x="520" y="176" width="287" height="18" rx="9" fill="#40916C"/>
-  <text x="520" y="228" fill="#40916C" font-size="20" font-weight="600" font-family="Pretendard, Apple SD Gothic Neo, Noto Sans KR, sans-serif">성장 점수 174점 · Lv.12까지 13점</text>
-  <text x="520" y="260" fill="#90A955" font-size="17" font-weight="500" font-family="Pretendard, Apple SD Gothic Neo, Noto Sans KR, sans-serif">순방문자 0 · 스타 0 · 작업량 174 · 2026-10-17 기준</text>
+  <rect x="520" y="176" width="377" height="18" rx="9" fill="#40916C"/>
+  <text x="520" y="228" fill="#40916C" font-size="20" font-weight="600" font-family="Pretendard, Apple SD Gothic Neo, Noto Sans KR, sans-serif">성장 점수 179점 · Lv.12까지 8점</text>
+  <text x="520" y="260" fill="#90A955" font-size="17" font-weight="500" font-family="Pretendard, Apple SD Gothic Neo, Noto Sans KR, sans-serif">순방문자 0 · 스타 0 · 작업량 179 · 2026-10-17 기준</text>
 </svg>
