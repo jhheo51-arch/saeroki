@@ -120,11 +120,15 @@ class Handler(BaseHTTPRequestHandler):
         self._send(200, body, TYPES.get(file.suffix, "application/octet-stream"))
 
     def do_POST(self):
+        # 거절할 요청도 본문을 먼저 다 읽습니다. 안 읽은 채 연결을 닫으면 Windows가 연결을 끊어(RST) 403 대신 오류가 납니다.
+        try:
+            raw = self.rfile.read(int(self.headers.get("Content-Length") or 0))
+        except ValueError:
+            return self._json(400, {"error": "본문 길이가 잘못됐습니다."})
         if not self._local_host() or not secrets.compare_digest(self.headers.get("X-Saerok-Token", ""), self.token):
             return self._json(403, {"error": "대시보드 페이지에서 보낸 요청만 받습니다."})
         try:
-            length = int(self.headers.get("Content-Length") or 0)
-            body = json.loads(self.rfile.read(length) or b"{}")
+            body = json.loads(raw or b"{}")
             if self.path == "/api/apply":
                 return self._json(200, apply.apply(str(body["action"])))
             if self.path == "/api/undo":

@@ -392,6 +392,7 @@ class ServerTest(Sandbox):
         with self.assertRaises(urllib.error.HTTPError) as err:
             self.post("/api/apply", {"action": "autocompact:200000"})
         self.assertEqual(err.exception.code, 403)
+        err.exception.close()
         res = json.loads(self.post("/api/apply", {"action": "autocompact:200000"}, "secret-token").read())
         self.assertTrue(res["ok"])
 
@@ -402,11 +403,13 @@ class ServerTest(Sandbox):
         with self.assertRaises(urllib.error.HTTPError) as err:
             urllib.request.urlopen(self.base + "/api/session?id=nope", timeout=5)
         self.assertEqual(err.exception.code, 404)
+        err.exception.close()
 
     def test_blocks_path_traversal(self):
         with self.assertRaises(urllib.error.HTTPError) as err:
             urllib.request.urlopen(self.base + "/../saerok_watch/apply.py", timeout=5)
         self.assertEqual(err.exception.code, 404)
+        err.exception.close()
 
 
 if __name__ == "__main__":
