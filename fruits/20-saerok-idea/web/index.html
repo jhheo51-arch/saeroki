@@ -30,6 +30,7 @@
   }
   @media (prefers-color-scheme: dark) {
     :root {
+      color-scheme: dark;
       --bg: #141A13;
       --surface: #1C241A;
       --ink: #E9EEE3;
@@ -88,6 +89,7 @@
   input[type=text], input[type=password], input[type=number], textarea, select {
     width: 100%; padding: 9px 11px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg);
   }
+  select option { background: var(--surface); color: var(--ink); }
   textarea { min-height: 64px; resize: vertical; }
   input:focus, textarea:focus, select:focus { outline: 2px solid var(--brand); outline-offset: 0; border-color: transparent; }
   .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 14px; }

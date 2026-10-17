@@ -32,7 +32,12 @@ const local = {
   },
   del(k, where = localStorage) { try { where.removeItem(k); } catch (e) { /* 저장소를 못 쓰면 지울 것도 없습니다 */ } },
 };
-const prefs = () => Object.assign({ judge: "claude-sonnet-5-5", lead: "claude-sonnet-5-5" }, local.get(PREFS, {}));
+const prefs = () => {
+  // 목록에 없는 모델(옛 저장값·빈 값)은 기본값으로 돌려 선택 칸이 비지 않게 합니다.
+  const saved = local.get(PREFS, {}) || {};
+  const ok = (v) => MODELS.some(([id]) => id === v);
+  return { judge: ok(saved.judge) ? saved.judge : MODELS[0][0], lead: ok(saved.lead) ? saved.lead : MODELS[0][0] };
+};
 const browserKey = () => local.get(KEY, "", sessionStorage) || local.get(KEY, "");
 
 // ---------- 백엔드: 브라우저 모드 / 내 PC 모드 ----------
