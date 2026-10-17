@@ -114,6 +114,11 @@ class RecordTest(Base):
         self.assertIsNone(doc["items"]["composure"])  # 답변에서만 봄
         out = store.record_document(folder, doc_result("executive"))
         self.assertIsNone(out["items"]["company"])  # 공고 없음
+        self.assertIsNone(out["items"]["summary"])  # 답변에서만 봄
+        self.assertEqual(out["total"], 4.0)  # why_us 1/3 + vision 1/2, 분모 5
+        answer = {"interviewer": "executive", "question": "q", "answer": "a",
+                  "items": {"company": None, "why_us": 3, "vision": 2, "summary": 2}}
+        self.assertEqual(store.record_answer(folder, answer)["items"]["summary"], 2)  # 답변에서는 채점
 
     def test_document_marks_invented_quote(self):
         folder = self.new()

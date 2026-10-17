@@ -39,7 +39,7 @@ INTERVIEWERS = {
             {"key": "company", "name": "회사·산업 이해", "max": 3, "needs_posting": True},
             {"key": "why_us", "name": "'왜 우리 회사'", "max": 3},
             {"key": "vision", "name": "3~5년 포부의 현실성", "max": 2},
-            {"key": "summary", "name": "한 문장 요약력", "max": 2},
+            {"key": "summary", "name": "한 문장 요약력", "max": 2, "answer_only": True},
         ],
     },
     "numbers": {
