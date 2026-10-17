@@ -1,0 +1,15 @@
+{
+  "queries": [
+    "카페 재고 관리 앱",
+    "소상공인 발주 알림"
+  ],
+  "checked": "2026-10-17",
+  "items": [
+    {
+      "name": "가상 재고앱",
+      "url": "https://example.com/saerok-idea/rival",
+      "checked": "2026-10-17",
+      "diff": "가상 예시: 프랜차이즈용이라 1인 매장에는 무거움"
+    }
+  ]
+}

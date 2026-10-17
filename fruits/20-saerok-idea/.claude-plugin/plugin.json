@@ -1,0 +1,11 @@
+{
+  "name": "saerok-idea",
+  "version": "1.0.0",
+  "description": "새록 심사단: 서비스 아이디어 한 줄을 심사위원 3명 평가, 핵심 가정 공개 근거 검증, 경쟁 조사, 가상 사용자 패널, 손익분기 계산으로 진행·조건부·보류 판정하고 다듬은 방향 2~3개를 내는 새록이 20번 열매. 기록은 내 PC ~/.saerok/idea에만",
+  "author": {
+    "name": "jhheo51-arch"
+  },
+  "homepage": "https://github.com/jhheo51-arch/saeroki/tree/main/fruits/20-saerok-idea",
+  "repository": "https://github.com/jhheo51-arch/saeroki",
+  "keywords": ["idea", "validation", "startup", "saeroki"]
+}

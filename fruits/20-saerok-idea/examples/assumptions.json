@@ -1,0 +1,59 @@
+{
+  "assumptions": [
+    {
+      "key": "problem",
+      "statement": "1인 카페 사장님은 재고가 떨어져 손님을 돌려보낸 적이 있다",
+      "status": "받침",
+      "counter_query": "카페 재고 관리 필요 없다",
+      "evidence": [
+        {
+          "kind": "받침",
+          "title": "가상 예시 근거 1",
+          "url": "https://example.com/saerok-idea/1",
+          "checked": "2026-10-17",
+          "note": "지어낸 예시"
+        }
+      ],
+      "user_check": "사장님 3명에게 지난달 재고가 떨어진 횟수 묻기"
+    },
+    {
+      "key": "alternative",
+      "statement": "지금은 메모장이나 감으로 발주한다",
+      "status": "받침",
+      "counter_query": "카페 재고 관리 앱 추천",
+      "evidence": [
+        {
+          "kind": "받침",
+          "title": "가상 예시 근거 2",
+          "url": "https://example.com/saerok-idea/2",
+          "checked": "2026-10-17",
+          "note": "지어낸 예시"
+        },
+        {
+          "kind": "반박",
+          "title": "가상 예시 근거 3",
+          "url": "https://example.com/saerok-idea/3",
+          "checked": "2026-10-17",
+          "note": "지어낸 예시"
+        }
+      ],
+      "user_check": ""
+    },
+    {
+      "key": "pay",
+      "statement": "월 9,900원을 낼 것이다",
+      "status": "반박",
+      "counter_query": "카페 관리 앱 유료 불만",
+      "evidence": [
+        {
+          "kind": "반박",
+          "title": "가상 예시 근거 4",
+          "url": "https://example.com/saerok-idea/4",
+          "checked": "2026-10-17",
+          "note": "지어낸 예시"
+        }
+      ],
+      "user_check": "사전 신청 페이지로 결제 의향 시험"
+    }
+  ]
+}

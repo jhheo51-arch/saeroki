@@ -11,3 +11,66 @@ def load_tests(loader, tests, pattern):
         if any(folder.glob("test_*.py")):
             tests.addTests(unittest.TestLoader().discover(str(folder), pattern="test_*.py", top_level_dir=str(folder)))
     return tests
+
+
+class IdeaPrdSyncTest(unittest.TestCase):
+    """20번 심사단 PRD가 4번 검토관 PRD 버전을 따르는지(PRD v2.0-idea 10장)."""
+
+    @classmethod
+    def setUpClass(cls):
+        import importlib.util
+        path = Path(__file__).resolve().parent / "scripts" / "sync_idea_prd.py"
+        spec = importlib.util.spec_from_file_location("sync_idea_prd", path)
+        cls.sync = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(cls.sync)
+
+    def make_repo(self, root, reviewers=("2.0",), idea="2.0", skill="`--from <verdict.md>`"):
+        docs = root / "docs"
+        docs.mkdir()
+        for v in reviewers:
+            (docs / f"PRD-v{v}.md").write_text(f"# 새록이 4번 열매 PRD v{v}: 새록 검토관\n", encoding="utf-8")
+        (docs / "PRD-v2.1.md").write_text("# 새록이 19번 열매 PRD v2.1: 새록 면접관\n", encoding="utf-8")
+        (docs / f"PRD-v{idea}-idea.md").write_text(
+            f"# 새록이 20번 열매 PRD v{idea}-idea: 새록 심사단\n\n"
+            f"- 문서 버전: 4번 새록 검토관 PRD의 짝 문서. 검토관 [PRD v{idea}](PRD-v{idea}.md)을 따름(10장)\n\n본문 v{idea}\n",
+            encoding="utf-8")
+        (root / "README.md").write_text(f"[PRD v{idea}-idea](docs/PRD-v{idea}-idea.md)\n", encoding="utf-8")
+        design = root / "fruits" / "04-prd-assistant" / "skills" / "design"
+        design.mkdir(parents=True)
+        (design / "SKILL.md").write_text(skill, encoding="utf-8")
+
+    def test_repo_is_in_sync(self):
+        self.assertEqual(self.sync.problems(self.sync.ROOT), [])
+
+    def test_sync_renames_and_fixes_links(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self.make_repo(root, reviewers=("2.0", "2.2", "2.10"), idea="2.0")
+            self.assertTrue(self.sync.problems(root))
+            changed = self.sync.sync(root, use_git=False)
+            self.assertIn("docs/PRD-v2.10-idea.md", changed)
+            self.assertFalse((root / "docs" / "PRD-v2.0-idea.md").exists())
+            text = (root / "docs" / "PRD-v2.10-idea.md").read_text(encoding="utf-8")
+            self.assertTrue(text.startswith("# 새록이 20번 열매 PRD v2.10-idea:"))
+            self.assertIn("[PRD v2.10](PRD-v2.10.md)", text)
+            self.assertIn("내용 다시 보기 전", text)
+            self.assertIn("본문 v2.0", text)  # 본문은 그대로
+            self.assertIn("docs/PRD-v2.10-idea.md", (root / "README.md").read_text(encoding="utf-8"))
+            self.assertEqual(self.sync.problems(root), [])
+            self.assertEqual(self.sync.sync(root, use_git=False), [])
+
+    def test_missing_from_link_fails(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as tmp:
+            self.make_repo(Path(tmp), skill="검토관 설계 스킬")
+            self.assertTrue(any("--from" in p for p in self.sync.problems(Path(tmp))))
+
+    def test_unknown_reviewer_title_fails_without_change(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self.make_repo(root, reviewers=())
+            with self.assertRaises(ValueError):
+                self.sync.sync(root, use_git=False)
+            self.assertTrue((root / "docs" / "PRD-v2.0-idea.md").exists())

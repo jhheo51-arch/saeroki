@@ -1,0 +1,11 @@
+{
+  "judge": "business",
+  "score": 2,
+  "vote": "조건부",
+  "reasons": [
+    "기준 1: 가상 예시 이유(business)"
+  ],
+  "concerns": [
+    "가상 예시 걸리는 점(business)"
+  ]
+}

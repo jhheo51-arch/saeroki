@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "saerok-idea"
+version = "0.1.0"
+description = "새록 심사단: 아이디어 심사 결과를 검증·판정하고 손익분기를 계산하는 새록이 20번 열매"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.scripts]
+saerok-idea = "saerok_idea.cli:main"
+
+[tool.setuptools]
+packages = ["saerok_idea"]

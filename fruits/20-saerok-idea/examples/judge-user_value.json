@@ -1,0 +1,11 @@
+{
+  "judge": "user_value",
+  "score": 4,
+  "vote": "진행",
+  "reasons": [
+    "기준 1: 가상 예시 이유(user_value)"
+  ],
+  "concerns": [
+    "가상 예시 걸리는 점(user_value)"
+  ]
+}
