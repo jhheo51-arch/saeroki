@@ -201,7 +201,7 @@ class Handler(BaseHTTPRequestHandler):
             # 화면에서 방향 입력을 고쳤으면 고친 입력을 씁니다. 출처(from)는 그대로 남깁니다.
             idea = data.get("idea") or (store.direction(prev, number)["idea"] if number else store.load(prev)["idea"])
             made = store.create(idea, name=prev.parent.name, base=prev.parent.parent,
-                                origin={"verdict": str(prev / "verdict.md"), "direction": number})
+                                origin=store.origin(prev, number))
         else:
             made = store.create(data.get("idea") or {})
         folder = Path(made["folder"])

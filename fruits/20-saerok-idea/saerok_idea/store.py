@@ -240,6 +240,16 @@ def direction(folder: Path, number: int) -> dict:
     return items[number - 1]
 
 
+def origin(folder: Path, number: int | None = None) -> dict:
+    """다시 심사할 때 새 기록에 남길 출처. 이전 입력과 고른 방향을 함께 남겨 아이디어가 바뀐 과정을 보여 줍니다."""
+    folder = Path(folder)
+    out = {"verdict": str(folder / "verdict.md"), "direction": number, "before": load(folder)["idea"]}
+    if number:
+        item = direction(folder, number)
+        out.update(title=item["title"], changed=item["changed"], addresses=item["addresses"])
+    return out
+
+
 def runs(idea_folder: Path) -> list[Path]:
     return sorted(p for p in Path(idea_folder).iterdir() if (p / "result.json").is_file())
 
@@ -270,6 +280,38 @@ def _idea_rows(idea: dict, other: dict | None = None) -> list[str]:
     return [f"| {rubric.FIELDS[k]} | {other[k]} | {idea[k]} |" for k in rubric.FIELDS]
 
 
+def _change_rows(before: dict, after: dict) -> list[str]:
+    return [f"| {rubric.FIELDS[k]} | {before[k]} | {after[k]} |" for k in rubric.FIELDS if before[k] != after[k]]
+
+
+def _growth(result: dict) -> list[str]:
+    """아이디어가 이전 심사에서 이번 입력으로, 이번 입력에서 추천 방향으로 어떻게 바뀌는지 바뀐 칸만 보여 줍니다."""
+    idea, f, d = result["idea"], result.get("from") or {}, result.get("directions")
+    if not f.get("before") and not d:
+        return []
+    lines = ["## 아이디어가 이렇게 바뀌었어요", ""]
+    if f.get("before"):
+        lines += ["### 이전 심사에서 이번 입력으로", ""]
+        if f.get("direction"):
+            lines += [f"- 고른 방향: 방향 {f['direction']}. {f['title']}", f"- 바꾼 것: {f['changed']}",
+                      f"- 해결하려던 지적: {' / '.join(f['addresses'])}"]
+        rows = _change_rows(f["before"], idea)
+        lines += ["", "| 칸 | 이전 | 이번 |", "|---|---|---|"] + rows if rows else ["- 입력은 이전과 같습니다."]
+        lines.append("")
+    if d:
+        n = d["recommended"]
+        item = d["items"][n - 1]
+        lines += [f"### 이번 입력에서 추천 방향으로(방향 {n}. {item['title']})", "",
+                  f"- 바꾼 것: {item['changed']}", f"- 왜: {' / '.join(item['addresses'])}", f"- 추천 이유: {d['why']}"]
+        rows = _change_rows(idea, item["idea"])
+        same = [rubric.FIELDS[k] for k in rubric.FIELDS if idea[k] == item["idea"][k]]
+        lines += ["", "| 칸 | 지금 | 추천 방향 |", "|---|---|---|"] + rows if rows else ["- 입력 칸은 바꾸지 않았습니다."]
+        if rows and same:
+            lines += ["", f"그대로 둔 칸: {', '.join(same)}"]
+        lines.append("")
+    return lines
+
+
 def render(folder: Path) -> str:
     folder = Path(folder)
     result = load(folder)
@@ -279,8 +321,9 @@ def render(folder: Path) -> str:
     if result.get("from"):
         f = result["from"]
         lines += [f"다시 심사: {f['verdict']}" + (f"의 방향 {f['direction']}" if f.get("direction") else ""), ""]
-    lines += ["## 판정", "", f"**{decided['verdict']}**", ""] + [f"- {s}" for s in decided["steps"]]
-    lines += ["", "## 입력(사용자 입력)", "", "| 칸 | 내용 |", "|---|---|"] + _idea_rows(idea)
+    lines += ["## 판정", "", f"**{decided['verdict']}**", ""] + [f"- {s}" for s in decided["steps"]] + [""]
+    lines += _growth(result)
+    lines += ["## 입력(사용자 입력)", "", "| 칸 | 내용 |", "|---|---|"] + _idea_rows(idea)
 
     lines += ["", "## 심사위원(AI 시뮬레이션)", "", "| 심사위원 | 점수 | 투표 | 이유 | 걸리는 점 |", "|---|---:|---|---|---|"]
     for k in rubric.ORDER:

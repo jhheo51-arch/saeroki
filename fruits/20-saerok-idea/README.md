@@ -51,7 +51,7 @@ Python 3.10 이상이 필요합니다.
 | 단계 | 명령 | 하는 일 |
 |---|---|---|
 | 심사 | `/saerok-idea:judge 동네 1인 카페 사장님에게 재고 알림` | 4칸(무엇을·누구에게·돈·왜 지금) 확인, 심사위원 3명, 가정 3개 검증, 경쟁 조사, 패널, 손익분기를 거쳐 `verdict.md`를 만듭니다 |
-| 방향 다시 심사 | `/saerok-idea:judge --from <verdict.md> --direction 2` | 다듬은 방향 하나를 같은 아이디어 폴더에 새 기록으로 심사합니다 |
+| 방향 다시 심사 | `/saerok-idea:judge --from <verdict.md> --direction 2` | 다듬은 방향 하나를 같은 아이디어 폴더에 새 기록으로 심사합니다. 새 `verdict.md`의 '아이디어가 이렇게 바뀌었어요'에 이전 입력에서 바뀐 칸과 이유가 남습니다 |
 | 한 단계만 다시 | `/saerok-idea:judge --step assumptions <기록 폴더>` | 그 단계만 바꿔 쓰고, 옛 값은 `replaced`에 남깁니다 |
 | 기록 비교 | `/saerok-idea:compare <아이디어 폴더>` | 날짜·방향별 판정, 심사위원 점수, 가정 결과를 표로 봅니다 |
 | 기획으로 넘기기 | `/saerok-prd:design --from <verdict.md>` | `진행`·`조건부`일 때 4번 검토관 설계 스무고개를 심사 결과에서 시작합니다 |

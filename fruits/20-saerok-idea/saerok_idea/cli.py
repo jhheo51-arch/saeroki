@@ -89,7 +89,7 @@ def _run(args) -> int:
             prev = store.run_of(args.origin)
             old = store.load(prev)
             idea = store.direction(prev, args.direction)["idea"] if args.direction else old["idea"]
-            origin = {"verdict": str(prev / "verdict.md"), "direction": args.direction}
+            origin = store.origin(prev, args.direction)
             _print(store.create(idea, date=args.date, allow_git=args.allow_git, name=prev.parent.name,
                                 base=prev.parent.parent, origin=origin))
         else:

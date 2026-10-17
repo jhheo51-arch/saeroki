@@ -101,7 +101,7 @@ const B = {
     const date = today();
     let run = date, n = 2;
     while (recs[slug] && recs[slug][run]) run = `${date}-${n++}`;
-    const origin = from ? { verdict: `${from.run.slug}/${from.run.run}/verdict.md`, direction: from.direction || null } : null;
+    const origin = from ? S.originOf(from.run.result, `${from.run.slug}/${from.run.run}/verdict.md`, from.direction) : null;
     const result = S.newResult(idea, date, origin);
     recs[slug] = Object.assign(recs[slug] || {}, { [run]: result });
     this.saveRecords(recs);
@@ -631,6 +631,34 @@ async function finish() {
 function verdictClass(v) { return ["진행", "조건부", "보류"].includes(v) ? `v-${v}` : "v-none"; }
 function statusClass(s) { return s === "확인 못 함" ? "s-확인" : `s-${s}`; }
 
+// verdict.md의 '아이디어가 이렇게 바뀌었어요'와 같은 내용입니다. 바뀐 칸만 보여 줍니다.
+function changeTable(before, after, a, b) {
+  const rows = Object.keys(S.FIELDS).filter((k) => before[k] !== after[k])
+    .map((k) => `<tr><th>${esc(S.FIELDS[k])}</th><td>${esc(before[k])}</td><td>${esc(after[k])}</td></tr>`);
+  return rows.length ? `<div class="scroll"><table><tr><th>칸</th><th>${a}</th><th>${b}</th></tr>${rows.join("")}</table></div>` : "";
+}
+
+function growthHTML(r) {
+  const f = r.from || {}, d = r.directions;
+  if (!f.before && !d) return "";
+  let html = "<h3>아이디어가 이렇게 바뀌었어요</h3>";
+  if (f.before) {
+    const table = changeTable(f.before, r.idea, "이전", "이번");
+    html += `<div class="dir"><div class="t">이전 심사에서 이번 입력으로</div>
+      ${f.direction ? `<div class="ev">고른 방향: 방향 ${esc(f.direction)}. ${esc(f.title)}</div><div class="ev">바꾼 것: ${esc(f.changed)}</div>
+      <div class="ev">해결하려던 지적: ${esc(f.addresses.join(" / "))}</div>` : ""}
+      ${table || '<div class="ev">입력은 이전과 같습니다.</div>'}</div>`;
+  }
+  if (d) {
+    const n = d.recommended, item = d.items[n - 1];
+    const table = changeTable(r.idea, item.idea, "지금", "추천 방향");
+    html += `<div class="dir rec"><div class="t">이번 입력에서 추천 방향으로(방향 ${n}. ${esc(item.title)})</div>
+      <div class="ev">바꾼 것: ${esc(item.changed)}</div><div class="ev">왜: ${esc(item.addresses.join(" / "))}</div>
+      <div class="ev">추천 이유: ${esc(d.why)}</div>${table || '<div class="ev">입력 칸은 바꾸지 않았습니다.</div>'}</div>`;
+  }
+  return html;
+}
+
 function resultHTML(run, report) {
   const r = run.result;
   let decided;
@@ -641,6 +669,8 @@ function resultHTML(run, report) {
     ${r.from ? `<p class="sub">다시 심사: ${esc(r.from.verdict)}${r.from.direction ? `의 방향 ${esc(r.from.direction)}` : ""}</p>` : ""}
     <div class="verdict"><span class="big ${verdictClass(decided.verdict)}">${esc(decided.verdict)}</span>
     <ul class="steps">${decided.steps.map((s) => `<li>${esc(s)}</li>`).join("")}</ul></div>`);
+  const growth = growthHTML(r);
+  if (growth) parts.push(growth);
   parts.push(`<h3>입력(사용자 입력)</h3><div class="scroll"><table>${Object.keys(S.FIELDS).map((k) => `<tr><th>${esc(S.FIELDS[k])}</th><td>${esc(r.idea[k])}</td></tr>`).join("")}</table></div>`);
   if (S.ORDER.every((k) => r.judges[k])) {
     parts.push(`<h3>심사위원(AI 시뮬레이션)</h3><div class="judges">${S.ORDER.map((k) => judgeCard(k, r.judges[k])).join("")}</div>`);

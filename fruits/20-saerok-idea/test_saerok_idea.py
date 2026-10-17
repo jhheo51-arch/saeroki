@@ -142,6 +142,16 @@ class StoreTest(Base):
         self.assertIn("반박 근거를 먼저 찾은 검색어", text)
         self.assertEqual(text, store.render(folder))  # 같은 기록이면 같은 결과
 
+    def test_growth_shows_changed_fields_only(self):
+        folder = self.full_run()
+        text = store.render(folder)
+        growth = text.split("## 아이디어가 이렇게 바뀌었어요")[1].split("## 입력(사용자 입력)")[0]
+        self.assertIn("### 이번 입력에서 추천 방향으로(방향 1. 무료 알림 + 거래처 연동 수수료)", growth)
+        self.assertIn("| 어떻게 돈을 버는지 | 월 9,900원 구독 | 거래처 발주 연결 수수료 |", growth)
+        self.assertNotIn("| 누구에게 |", growth)  # 바꾸지 않은 칸은 표에 넣지 않음
+        self.assertIn("그대로 둔 칸:", growth)
+        self.assertNotIn("이전 심사에서", growth)
+
     def test_rerecord_keeps_old(self):
         folder = self.full_run()
         store.record(folder, "judge", {**example("judge-business.json"), "vote": "보류"})
@@ -228,6 +238,15 @@ class CliTest(Base):
         self.assertEqual(code, 0)
         self.assertIn("| 2026-10-17 | 조건부 |", out)
         self.assertIn("| 2026-10-18 | 미완료 |", out)
+        origin = store.load(new)["from"]
+        self.assertEqual((origin["title"], origin["before"]["what"]), ("우유만 먼저", "주문 기록으로 재고 소진일을 예측해 발주 알림"))
+        store.record(new, "directions", example("directions.json"))
+        for k in rubric.ORDER:
+            store.record(new, "judge", example(f"judge-{k}.json"))
+        store.record(new, "assumptions", example("assumptions.json"))
+        text = store.render(new)
+        self.assertIn("- 고른 방향: 방향 2. 우유만 먼저", text)
+        self.assertIn("| 무엇을 | 주문 기록으로 재고 소진일을 예측해 발주 알림 | 우유 유통기한·재고 알림만 |", text)
 
     def test_breakeven_and_errors(self):
         code, out = self.run_cli("breakeven", "--price", "9900", "--unit-cost", "1500", "--fixed-cost", "300000")
@@ -261,6 +280,18 @@ class WebCoreTest(Base):
                                 "run": folder.name, "path": str(folder / "verdict.md")})
         self.assertEqual(out["md"], store.render(folder))
         self.assertEqual(out["result"], store.load(folder))
+
+    def test_same_origin_and_growth_as_python(self):
+        folder = self.full_run()
+        new = Path(store.create(store.direction(folder, 2)["idea"], date="2026-10-18", name=folder.parent.name,
+                                base=folder.parent.parent, origin=store.origin(folder, 2))["folder"])
+        store.record(new, "directions", example("directions.json"))
+        script = r"""const S=require(process.argv[1]);let d='';process.stdin.on('data',c=>d+=c).on('end',()=>{
+          const i=JSON.parse(d);const o=S.originOf(i.prev,i.path,2);const r=Object.assign({},i.now,{from:o});
+          process.stdout.write(JSON.stringify({origin:o,growth:S.growth(r)}))})"""
+        out = run_node(script, {"prev": store.load(folder), "now": store.load(new), "path": str(folder / "verdict.md")})
+        self.assertEqual(out["origin"], store.load(new)["from"])
+        self.assertEqual(out["growth"], store._growth(store.load(new)))
 
     def test_same_verdict_for_every_case(self):
         statuses = rubric.STATUSES

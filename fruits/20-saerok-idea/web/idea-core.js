@@ -297,6 +297,18 @@
       competitors: null, panel: null, money: null, directions: null, replaced: [] };
   }
 
+  // store.origin과 같습니다. prev는 이전 기록(result), verdictPath는 그 verdict.md 경로입니다.
+  function originOf(prev, verdictPath, number) {
+    const out = { verdict: verdictPath, direction: number || null, before: prev.idea };
+    if (number) {
+      const items = (prev.directions && prev.directions.items) || [];
+      if (!(number >= 1 && number <= items.length)) throw new Error(`방향 ${number}이(가) 없습니다. 이 기록의 방향 수: ${items.length}`);
+      const item = items[number - 1];
+      Object.assign(out, { title: item.title, changed: item.changed, addresses: item.addresses });
+    }
+    return out;
+  }
+
   // store.record와 같습니다. result를 바꾸고 검사한 값을 돌려줍니다.
   function record(result, part, data, now) {
     let clean, old, label;
@@ -357,6 +369,39 @@
     return keys(FIELDS).map((k) => (other ? `| ${FIELDS[k]} | ${other[k]} | ${idea[k]} |` : `| ${FIELDS[k]} | ${idea[k]} |`));
   }
 
+  function changeRows(before, after) {
+    return keys(FIELDS).filter((k) => before[k] !== after[k]).map((k) => `| ${FIELDS[k]} | ${before[k]} | ${after[k]} |`);
+  }
+
+  // store._growth와 같습니다. 바뀐 칸만 보여 줍니다.
+  function growth(result) {
+    const idea = result.idea, f = result.from || {}, d = result.directions;
+    if (!f.before && !d) return [];
+    const lines = ["## 아이디어가 이렇게 바뀌었어요", ""];
+    if (f.before) {
+      lines.push("### 이전 심사에서 이번 입력으로", "");
+      if (f.direction) {
+        lines.push(`- 고른 방향: 방향 ${f.direction}. ${f.title}`, `- 바꾼 것: ${f.changed}`, `- 해결하려던 지적: ${f.addresses.join(" / ")}`);
+      }
+      const rows = changeRows(f.before, idea);
+      if (rows.length) lines.push("", "| 칸 | 이전 | 이번 |", "|---|---|---|", ...rows);
+      else lines.push("- 입력은 이전과 같습니다.");
+      lines.push("");
+    }
+    if (d) {
+      const n = d.recommended, item = d.items[n - 1];
+      lines.push(`### 이번 입력에서 추천 방향으로(방향 ${n}. ${item.title})`, "",
+        `- 바꾼 것: ${item.changed}`, `- 왜: ${item.addresses.join(" / ")}`, `- 추천 이유: ${d.why}`);
+      const rows = changeRows(idea, item.idea);
+      const same = keys(FIELDS).filter((k) => idea[k] === item.idea[k]).map((k) => FIELDS[k]);
+      if (rows.length) lines.push("", "| 칸 | 지금 | 추천 방향 |", "|---|---|---|", ...rows);
+      else lines.push("- 입력 칸은 바꾸지 않았습니다.");
+      if (rows.length && same.length) lines.push("", `그대로 둔 칸: ${same.join(", ")}`);
+      lines.push("");
+    }
+    return lines;
+  }
+
   // store.render와 같습니다. run은 기록 폴더 이름(날짜), verdictPath는 다음 단계 명령에 넣을 verdict.md 경로입니다.
   function render(result, run, verdictPath) {
     const decided = decideResult(result);
@@ -366,8 +411,9 @@
       const f = result.from;
       lines.push(`다시 심사: ${f.verdict}` + (f.direction ? `의 방향 ${f.direction}` : ""), "");
     }
-    lines.push("## 판정", "", `**${decided.verdict}**`, "", ...decided.steps.map((s) => `- ${s}`));
-    lines.push("", "## 입력(사용자 입력)", "", "| 칸 | 내용 |", "|---|---|", ...ideaRows(idea));
+    lines.push("## 판정", "", `**${decided.verdict}**`, "", ...decided.steps.map((s) => `- ${s}`), "");
+    lines.push(...growth(result));
+    lines.push("## 입력(사용자 입력)", "", "| 칸 | 내용 |", "|---|---|", ...ideaRows(idea));
 
     lines.push("", "## 심사위원(AI 시뮬레이션)", "", "| 심사위원 | 점수 | 투표 | 이유 | 걸리는 점 |", "|---|---:|---|---|---|");
     for (const k of ORDER) {
@@ -458,7 +504,7 @@
     ORDER, JUDGES, SCORES, VOTES, ASSUMPTIONS, STATUSES, EVIDENCE_KINDS, FIELDS, CORE_FIELDS, UNKNOWN, PANEL_SIZES,
     NOTICE, INSUFFICIENT, MONEY_NAMES, PARTS, DATE,
     decide, breakeven, slug, cleanIdea, checkJudge, checkAssumptions, checkCompetitors, checkPanel, checkDirections,
-    newResult, record, decideResult, compare, render, comma,
+    newResult, originOf, growth, record, decideResult, compare, render, comma,
   };
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   else root.SaerokIdea = api;
