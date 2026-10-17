@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "saerok-prd"
+version = "0.1.0"
+description = "새록 검토관: PRD를 기준표로 검사하는 새록이 4번 열매"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.scripts]
+saerok-prd = "saerok_prd.cli:main"
+
+[tool.setuptools]
+packages = ["saerok_prd"]

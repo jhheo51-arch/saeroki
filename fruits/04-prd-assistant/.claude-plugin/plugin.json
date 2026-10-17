@@ -1,0 +1,11 @@
+{
+  "name": "saerok-prd",
+  "version": "0.1.0",
+  "description": "새록 검토관: PRD를 기준표(문제·근거·지표·사용자·범위·위험·해결책)로 검사하고 고칠 질문을 주는 새록이 4번 열매",
+  "author": {
+    "name": "jhheo51-arch"
+  },
+  "homepage": "https://github.com/jhheo51-arch/saeroki/tree/main/fruits/04-prd-assistant",
+  "repository": "https://github.com/jhheo51-arch/saeroki",
+  "keywords": ["prd", "review", "product", "saeroki"]
+}

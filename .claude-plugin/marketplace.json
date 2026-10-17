@@ -9,6 +9,11 @@
       "name": "saerok-watch",
       "source": "./fruits/18-saerok-watch",
       "description": "새록이 18번 열매 새록 파수꾼: 대화 컨텍스트가 20만·40만 토큰을 넘으면 대화 한 줄과 Windows 알림으로 알려 주고, 토큰 사용량 대시보드를 엽니다."
+    },
+    {
+      "name": "saerok-prd",
+      "source": "./fruits/04-prd-assistant",
+      "description": "새록이 4번 열매 새록 검토관: PRD를 기준표(문제·근거·지표·사용자·범위·위험·해결책)로 검사해 빠진 칸과 근거 없는 줄을 줄 번호로 짚고, 고칠 질문을 줍니다."
     }
   ]
 }
