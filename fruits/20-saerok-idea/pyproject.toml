@@ -9,6 +9,10 @@ description = "새록 심사단: 아이디어 심사 결과를 검증·판정하
 requires-python = ">=3.10"
 dependencies = []
 
+[project.optional-dependencies]
+# 심사 화면의 Claude API 키를 Windows 자격 증명 관리자에 보관합니다. 없으면 실행 중 메모리에만 둡니다.
+keyring = ["keyring>=24"]
+
 [project.scripts]
 saerok-idea = "saerok_idea.cli:main"
 

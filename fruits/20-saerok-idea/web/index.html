@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title>새록 심사단</title>
+<style>
+  :root {
+    --bg: #FAF9F6;
+    --surface: #FFFFFF;
+    --ink: #1F2A1C;
+    --muted: #5B6656;
+    --line: #E2E4DA;
+    --brand: #40916C;
+    --brand-deep: #31572C;
+    --blossom: #D9668C;
+    --chip: #EEF3E6;
+    --warn-bg: #FFF4D6;
+    --warn-ink: #7A4B00;
+    --go: #2D7A4F;
+    --go-bg: #E3F2E8;
+    --cond: #8A5A00;
+    --cond-bg: #FFF1CF;
+    --stop: #A33A3A;
+    --stop-bg: #FBE4E4;
+    --none: #55606A;
+    --none-bg: #E9EDF0;
+    --shadow: 0 1px 2px rgba(31, 42, 28, .06), 0 4px 16px rgba(31, 42, 28, .05);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #141A13;
+      --surface: #1C241A;
+      --ink: #E9EEE3;
+      --muted: #A3AE9C;
+      --line: #2F3A2C;
+      --brand: #6CC195;
+      --brand-deep: #A6D98A;
+      --blossom: #F09AB8;
+      --chip: #24301F;
+      --warn-bg: #3A2F14;
+      --warn-ink: #F3D27A;
+      --go: #8FD8AC;
+      --go-bg: #1D3526;
+      --cond: #F3D27A;
+      --cond-bg: #3A2F14;
+      --stop: #F2A0A0;
+      --stop-bg: #3D1F1F;
+      --none: #B9C2CA;
+      --none-bg: #2A3035;
+      --shadow: none;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 16px/1.6 "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--brand); word-break: break-all; }
+  button, input, textarea, select { font: inherit; color: inherit; }
+  button { cursor: pointer; }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 0 16px; }
+
+  header.top { background: var(--surface); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 5; }
+  .bar { display: flex; align-items: center; gap: 12px; padding: 12px 0; flex-wrap: wrap; }
+  .logo { font-weight: 800; font-size: 20px; letter-spacing: -.02em; display: flex; align-items: center; gap: 8px; }
+  .logo small { font-weight: 500; font-size: 13px; color: var(--muted); }
+  .grow { flex: 1; }
+  .tabs { display: flex; gap: 4px; }
+  .tab { border: 0; background: none; padding: 6px 12px; border-radius: 999px; color: var(--muted); font-weight: 600; }
+  .tab[aria-selected="true"] { background: var(--chip); color: var(--brand-deep); }
+  .mode { font-size: 13px; color: var(--muted); padding: 0 0 10px; }
+  .mode b { color: var(--ink); }
+
+  main { padding: 20px 0 80px; }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 20px; margin-bottom: 16px; box-shadow: var(--shadow); }
+  .card h2 { margin: 0 0 4px; font-size: 18px; display: flex; align-items: center; gap: 8px; }
+  .card h2 .n { display: inline-grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: var(--chip); color: var(--brand-deep); font-size: 13px; }
+  .card h3 { font-size: 16px; margin: 18px 0 6px; }
+  .sub { color: var(--muted); font-size: 14px; margin: 0 0 14px; }
+  .note { background: var(--warn-bg); color: var(--warn-ink); border-radius: 10px; padding: 10px 12px; font-size: 14px; margin: 0 0 14px; }
+  label.f { display: block; font-weight: 600; font-size: 14px; margin: 12px 0 4px; }
+  label.f span { font-weight: 400; color: var(--muted); }
+  input[type=text], input[type=password], input[type=number], textarea, select {
+    width: 100%; padding: 9px 11px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg);
+  }
+  textarea { min-height: 64px; resize: vertical; }
+  input:focus, textarea:focus, select:focus { outline: 2px solid var(--brand); outline-offset: 0; border-color: transparent; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 14px; }
+  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0 12px; }
+  @media (max-width: 640px) { .grid2, .grid3 { grid-template-columns: 1fr; } header.top { position: static; } }
+  details.more { margin-top: 14px; border-top: 1px dashed var(--line); padding-top: 10px; }
+  details.more summary { cursor: pointer; font-weight: 600; font-size: 14px; color: var(--muted); }
+  .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 16px; }
+  .btn { border: 1px solid var(--line); background: var(--surface); padding: 9px 16px; border-radius: 10px; font-weight: 600; }
+  .btn.primary { background: var(--brand); border-color: var(--brand); color: #fff; }
+  .btn.small { padding: 5px 10px; font-size: 13px; }
+  .btn:disabled { opacity: .5; cursor: default; }
+  .radio { display: inline-flex; gap: 6px; align-items: center; margin-right: 14px; font-size: 14px; }
+
+  .judges { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  @media (max-width: 720px) { .judges { grid-template-columns: 1fr; } }
+  .judge { border: 1px solid var(--line); border-radius: 12px; padding: 14px; background: var(--bg); }
+  .judge .who { font-weight: 700; }
+  .judge .q { color: var(--muted); font-size: 13px; }
+  .judge .score { font-size: 26px; font-weight: 800; margin: 6px 0 2px; }
+  .judge ul { padding-left: 18px; margin: 6px 0 0; font-size: 14px; }
+  .judge .lbl { font-size: 12px; color: var(--muted); margin-top: 8px; font-weight: 700; }
+  .badge { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 700; }
+  .v-진행 { background: var(--go-bg); color: var(--go); }
+  .v-조건부 { background: var(--cond-bg); color: var(--cond); }
+  .v-보류 { background: var(--stop-bg); color: var(--stop); }
+  .v-none { background: var(--none-bg); color: var(--none); }
+  .s-받침 { background: var(--go-bg); color: var(--go); }
+  .s-반박 { background: var(--stop-bg); color: var(--stop); }
+  .s-확인 { background: var(--none-bg); color: var(--none); }
+  .spin { display: inline-block; width: 14px; height: 14px; border: 2px solid var(--line); border-top-color: var(--brand); border-radius: 50%; animation: spin 1s linear infinite; vertical-align: -2px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) { .spin { animation: none; } }
+
+  .q-group { border: 1px solid var(--line); border-radius: 12px; padding: 12px; margin-top: 12px; background: var(--bg); }
+  .q-group .title { font-weight: 700; font-size: 14px; }
+  .q-line { display: flex; gap: 8px; align-items: center; margin-top: 6px; }
+  .q-line input[type=text] { flex: 1; }
+  .q-kind { font-size: 12px; color: var(--muted); width: 36px; flex: none; }
+
+  .log { font-size: 14px; color: var(--muted); margin: 8px 0 0; padding-left: 0; list-style: none; }
+  .log li { padding: 2px 0; }
+  .log li.err { color: var(--stop); }
+  .log li.warn { color: var(--warn-ink); }
+
+  .verdict { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .verdict .big { font-size: 28px; font-weight: 800; padding: 6px 18px; border-radius: 12px; }
+  .steps { margin: 10px 0 0; padding-left: 18px; }
+  .ev { font-size: 14px; margin: 4px 0; }
+  .ev .k { font-weight: 700; }
+  .dir { border: 1px solid var(--line); border-radius: 12px; padding: 14px; margin-top: 12px; background: var(--bg); }
+  .dir.rec { border-color: var(--blossom); }
+  .dir .t { font-weight: 700; }
+  .tag { font-size: 12px; color: var(--blossom); font-weight: 700; margin-left: 6px; }
+  table { border-collapse: collapse; width: 100%; font-size: 14px; }
+  th, td { border-bottom: 1px solid var(--line); padding: 6px 8px; text-align: left; vertical-align: top; }
+  th { color: var(--muted); font-weight: 600; }
+  .scroll { overflow-x: auto; }
+  pre.md { white-space: pre-wrap; word-break: break-word; background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 12px; font-size: 13px; max-height: 480px; overflow: auto; }
+  .usage { font-size: 13px; color: var(--muted); }
+  .hidden { display: none !important; }
+  .empty { color: var(--muted); text-align: center; padding: 40px 0; }
+
+  dialog { border: 1px solid var(--line); border-radius: 14px; background: var(--surface); color: var(--ink); max-width: 520px; width: calc(100% - 32px); padding: 20px; }
+  dialog::backdrop { background: rgba(0, 0, 0, .35); }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="bar">
+      <div class="logo">🌸 새록 심사단 <small>아이디어 검증</small></div>
+      <div class="grow"></div>
+      <nav class="tabs" role="tablist">
+        <button class="tab" role="tab" aria-selected="true" data-tab="judge">새 심사</button>
+        <button class="tab" role="tab" aria-selected="false" data-tab="history">기록</button>
+      </nav>
+      <button class="btn small" id="open-settings">🔑 키·설정</button>
+    </div>
+    <div class="mode" id="mode">화면을 준비하는 중입니다…</div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section id="tab-judge">
+    <div class="card" id="step-input">
+      <h2><span class="n">1</span>아이디어 입력</h2>
+      <p class="sub">한 줄은 꼭 필요합니다. 4칸은 비워 두면 <b>미정</b>으로 심사합니다. 무엇을·누구에게가 미정이면 판정은 <b>판단 보류(정보 부족)</b>가 됩니다.</p>
+      <p class="note" id="privacy">분석은 Claude(Anthropic)가 하고, 확인한 검색어는 검색 서비스로 나갑니다. 아이디어 원문은 검색어에 넣지 않지만 완전한 비공개는 아닙니다.</p>
+      <p class="note hidden" id="from-note"></p>
+      <label class="f" for="f-line">아이디어 한 줄</label>
+      <input type="text" id="f-line" maxlength="300" placeholder="예: 동네 1인 카페 사장님에게 재고가 떨어지기 전에 알려 주는 서비스">
+      <div class="row" style="margin-top:8px"><button class="btn small" id="read-fields">AI가 한 줄에서 4칸 읽기</button><span class="usage">한 줄에 적힌 것만 옮기고, 없는 칸은 비워 둡니다.</span></div>
+      <div class="grid2">
+        <div><label class="f" for="f-what">무엇을</label><textarea id="f-what" placeholder="무엇을 해 주는지"></textarea></div>
+        <div><label class="f" for="f-who">누구에게</label><textarea id="f-who" placeholder="누가 이 문제를 겪는지"></textarea></div>
+        <div><label class="f" for="f-money">어떻게 돈을 버는지</label><textarea id="f-money" placeholder="구독, 수수료, 광고…"></textarea></div>
+        <div><label class="f" for="f-why_now">왜 지금 <span>(모르면 비움)</span></label><textarea id="f-why_now" placeholder="지금이어야 하는 이유"></textarea></div>
+      </div>
+      <details class="more">
+        <summary>손익분기·패널·아는 경쟁 서비스 (선택)</summary>
+        <p class="sub" style="margin-top:8px">손익분기는 내가 넣은 값으로만 계산합니다. AI가 가격을 짐작해 넣지 않습니다.</p>
+        <div class="grid3">
+          <div><label class="f" for="m-price">고객 한 명의 월 매출(원)</label><input type="number" id="m-price" min="0" step="any" inputmode="decimal"></div>
+          <div><label class="f" for="m-unit">고객 한 명에 드는 월 비용(원)</label><input type="number" id="m-unit" min="0" step="any" inputmode="decimal"></div>
+          <div><label class="f" for="m-fixed">월 고정비(원)</label><input type="number" id="m-fixed" min="0" step="any" inputmode="decimal"></div>
+        </div>
+        <label class="f">가상 사용자 패널</label>
+        <label class="radio"><input type="radio" name="panel" value="20" checked> 20명(기본)</label>
+        <label class="radio"><input type="radio" name="panel" value="100"> 100명</label>
+        <label class="f" for="f-rivals">내가 아는 경쟁 서비스 <span>(한 줄에 하나: 이름 https://링크)</span></label>
+        <textarea id="f-rivals" placeholder="예: 가상재고 https://example.com"></textarea>
+      </details>
+      <div class="row">
+        <button class="btn primary" id="start">심사 시작</button>
+        <button class="btn hidden" id="cancel-from">방향 다시 심사 취소</button>
+        <span class="usage" id="start-hint">심사위원 3명이 먼저 평가하고, 웹 검색 전에 검색어를 확인받습니다.</span>
+      </div>
+    </div>
+
+    <div class="card hidden" id="step-judges">
+      <h2><span class="n">2</span>심사위원 3명 <span class="badge v-none">AI 시뮬레이션</span></h2>
+      <p class="sub">기준표대로 1~5점과 투표를 냅니다. 투표는 판정 규칙에 쓰입니다.</p>
+      <div class="judges" id="judges"></div>
+      <ul class="log" id="log-judges"></ul>
+    </div>
+
+    <div class="card hidden" id="step-queries">
+      <h2><span class="n">3</span>검색어 확인</h2>
+      <p class="sub">가정마다 <b>반박 쪽 검색어를 먼저</b> 씁니다. 체크한 검색어만 그대로 검색 서비스로 나갑니다. 아이디어를 짐작할 수 있는 낱말은 고치거나 빼 주세요.</p>
+      <div id="queries"></div>
+      <p class="usage" id="estimate"></p>
+      <div class="row"><button class="btn primary" id="search">이 검색어로 검증 시작</button></div>
+      <ul class="log" id="log-queries"></ul>
+    </div>
+
+    <div class="card hidden" id="step-research">
+      <h2><span class="n">4</span>가정 검증·경쟁 조사·패널</h2>
+      <p class="sub">검색 결과에 실제로 나온 링크만 근거로 남깁니다. 근거가 없으면 지어내지 않고 <b>확인 못 함</b>으로 둡니다.</p>
+      <ul class="log" id="log-research"></ul>
+    </div>
+
+    <div class="card hidden" id="step-result"></div>
+  </section>
+
+  <section id="tab-history" class="hidden">
+    <div class="card">
+      <h2>심사 기록</h2>
+      <p class="sub" id="history-where"></p>
+      <div id="history"></div>
+    </div>
+    <div class="card hidden" id="history-view"></div>
+  </section>
+</main>
+
+<dialog id="settings">
+  <h2 style="margin-top:0">🔑 키·설정</h2>
+  <div id="key-browser">
+    <p class="sub">Claude API 키는 이 브라우저에만 저장되고, Anthropic(api.anthropic.com)으로만 보냅니다. 중간 서버는 없습니다. 심사할 때마다 내 API 사용량이 듭니다.</p>
+    <label class="f" for="key-input">Claude API 키</label>
+    <input type="password" id="key-input" placeholder="sk-ant-…" autocomplete="off">
+    <label class="radio" style="margin-top:8px"><input type="checkbox" id="key-remember"> 이 브라우저에 기억(공용 PC에서는 끄세요)</label>
+  </div>
+  <div id="key-local" class="hidden">
+    <p class="sub">키는 Windows 자격 증명 관리자에 두고, 내 PC 서버가 Anthropic에 보낼 때만 붙입니다. 브라우저로는 보내지 않습니다.</p>
+    <p>지금 키: <b id="key-now"></b> <span class="usage" id="key-from"></span></p>
+    <label class="f" for="key-local-input">새 키 등록</label>
+    <input type="password" id="key-local-input" placeholder="sk-ant-…" autocomplete="off">
+  </div>
+  <label class="f" for="model-judge">심사위원·패널 모델</label>
+  <select id="model-judge"></select>
+  <label class="f" for="model-lead">진행자 모델 <span>(가정 검증·검색·방향)</span></label>
+  <select id="model-lead"></select>
+  <div class="row">
+    <button class="btn primary" id="save-settings">저장</button>
+    <button class="btn" id="forget-key">키 지우기</button>
+    <div class="grow"></div>
+    <button class="btn" id="close-settings">닫기</button>
+  </div>
+  <p class="usage" id="settings-msg"></p>
+</dialog>
+
+<script src="idea-core.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

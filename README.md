@@ -162,7 +162,7 @@ saeroki/
 | [`fruits/17-saerok-dictionary`](fruits/17-saerok-dictionary) | 17번 새록 사전. 웹에서 바로 열기: [https://jhheo51-arch.github.io/saeroki/](https://jhheo51-arch.github.io/saeroki/) |
 | [`fruits/18-saerok-watch`](fruits/18-saerok-watch) | 18번 새록 파수꾼. 설치 후 `saerok-watch`로 대시보드 |
 | [`fruits/19-saerok-interview`](fruits/19-saerok-interview) | 19번 새록 면접관. 플러그인 설치 후 심사는 `/saerok-interview:panel <자기소개서>`, 연습은 `/saerok-interview:practice`, 비교는 `/saerok-interview:compare`. 기록은 내 PC `~/saerok-interview/`에만 |
-| [`fruits/20-saerok-idea`](fruits/20-saerok-idea) | 20번 새록 심사단. 플러그인 설치 후 심사는 `/saerok-idea:judge <아이디어 한 줄>`, 비교는 `/saerok-idea:compare`. 기록은 내 PC `~/.saerok/idea/`에만 |
+| [`fruits/20-saerok-idea`](fruits/20-saerok-idea) | 20번 새록 심사단. 바로 쓰려면 [심사 화면](https://jhheo51-arch.github.io/saeroki/idea/)(내 API 키, 기록은 그 브라우저에만)이나 터미널 `saerok-idea`(같은 화면을 내 PC에서). 플러그인 설치 후 심사는 `/saerok-idea:judge <아이디어 한 줄>`, 비교는 `/saerok-idea:compare`. 터미널·플러그인 기록은 내 PC `~/.saerok/idea/`에만 |
 | [`docs/PRD-v01.md`](docs/PRD-v01.md) | 제품 방향, 열매 12개와 뿌리 4개의 원래 목록, 위험과 개발 순서 |
 | [`docs/PRD-v1.5.md`](docs/PRD-v1.5.md) | 2026-10-14 시점 구현 범위와 상태 기록(최신 상태는 위 열매 지도) |
 | [`docs/PRD-v1.6.md`](docs/PRD-v1.6.md) | 1번 콘텐츠 개인화 에이전트의 스무고개 확정 설계 |
@@ -211,6 +211,8 @@ python -m unittest -v
 - [x] 4번 새록 검토관 🍎 열매 승격(2026-10-17): 설계 스무고개·검사·고치기 전후 비교 첫 버전 완성
 - [ ] 새록 검토관으로 새 PRD 2개 검사, 지적 중 고친 비율 기록(2026-10-31까지)
 - [x] 20번 새록 심사단 첫 버전(2026-10-17): 심사위원 3명·가정 검증·패널·손익분기·판정·다듬은 방향, 검토관 `--from` 연결, PRD 버전 자동 맞춤
+- [x] 20번 새록 심사단 웹·터미널 화면(2026-10-17): 링크 하나로 여는 [심사 화면](https://jhheo51-arch.github.io/saeroki/idea/)과 터미널 `saerok-idea`
+- [ ] 20번 새록 심사단으로 실제 아이디어 1개 심사
 - [ ] 새록 심사단으로 내 아이디어 1개 실제 심사, 판정과 다음 행동 기록
 - [ ] 새록 SQL 채점 정답 사람 검토, 애매한·복잡한 질문 채점 세트 추가
 - [ ] 새록 사전 사용자 확인

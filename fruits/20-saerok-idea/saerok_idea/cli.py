@@ -1,4 +1,6 @@
-"""사용: saerok-idea new --line "아이디어 한 줄" [--what ..] [--who ..] [--money ..] [--why-now ..]
+"""사용: saerok-idea                    심사 화면을 브라우저로 엽니다(= saerok-idea web)
+      saerok-idea web [--port 8740] [--no-open]
+      saerok-idea new --line "아이디어 한 줄" [--what ..] [--who ..] [--money ..] [--why-now ..]
       saerok-idea new --from <verdict.md> [--direction 2]
       saerok-idea record <기록 폴더> judge|assumptions|competitors|panel|money|directions --file 결과.json
       saerok-idea decide <기록 폴더>
@@ -12,7 +14,7 @@ import json
 import sys
 from pathlib import Path
 
-from . import money, rubric, store
+from . import money, rubric, store, web
 
 
 def _print(data) -> None:
@@ -24,7 +26,11 @@ def main(argv: list[str] | None = None) -> int:
         if hasattr(stream, "reconfigure"):
             stream.reconfigure(encoding="utf-8")
     parser = argparse.ArgumentParser(prog="saerok-idea", description="새록 심사단: 아이디어 심사 결과를 검증·판정·기록합니다.")
-    sub = parser.add_subparsers(dest="command", required=True)
+    sub = parser.add_subparsers(dest="command")
+
+    w = sub.add_parser("web", help="심사 화면을 내 PC에서 열고 브라우저를 띄웁니다(명령 없이 실행해도 같음).")
+    w.add_argument("--port", type=int, default=web.DEFAULT_PORT)
+    w.add_argument("--no-open", action="store_true", help="브라우저를 띄우지 않고 주소만 알립니다.")
 
     n = sub.add_parser("new", help="기록 폴더(~/.saerok/idea/<아이디어>/<날짜>/)를 만듭니다.")
     n.add_argument("--line", help="아이디어 한 줄")
@@ -74,6 +80,8 @@ def _read_json(file: str | None) -> dict:
 
 
 def _run(args) -> int:
+    if args.command in (None, "web"):
+        return web.serve(getattr(args, "port", web.DEFAULT_PORT), not getattr(args, "no_open", False))
     if args.command == "new":
         if args.origin:
             prev = store.run_of(args.origin)

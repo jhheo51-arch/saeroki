@@ -7,9 +7,26 @@
 - 공통 원칙: [AGENT-SPEC.md](../../AGENT-SPEC.md)
 - 참고: [AI-ANTENNA 창업 아이디어 가이드](https://imyoung-man.github.io/AI-ANTENNA/aitip-founder/guide.html)의 '심사위원 서브에이전트 + 가상 패널' 방식에, 가정 검증·출처 표시·결정적 판정·방향 제안을 더했습니다.
 
+## 바로 심사하기
+
+| 어디서 | 여는 법 | 키·기록 |
+|---|---|---|
+| 웹 | **[심사 화면 열기](https://jhheo51-arch.github.io/saeroki/idea/)** | 내 Claude API 키를 화면에 넣으면 브라우저가 Anthropic에 바로 연결합니다. 키와 기록은 그 브라우저에만 남고, `verdict.md`·`result.json`으로 내려받습니다 |
+| 터미널 | `saerok-idea` | 같은 화면이 내 PC(127.0.0.1)에서 열립니다. 기록은 `~/.saerok/idea/`, 키는 Windows 자격 증명 관리자에 둡니다 |
+| Claude Code | `/saerok-idea:judge <아이디어 한 줄>` | 아래 '쓰는 순서' |
+
+터미널 명령은 한 번만 설치하면 됩니다.
+
+```bash
+pip install -e "fruits/20-saerok-idea[keyring]"
+saerok-idea
+```
+
+두 화면 모두 판정·형식 검사·`verdict.md`는 Python과 똑같이 옮긴 [`web/idea-core.js`](web/idea-core.js)가 내고, AI가 적은 근거 링크 중 실제 검색 결과에 나온 것만 남깁니다. 공용 PC에서는 웹 화면에 키를 넣지 마세요.
+
 ## 아이디어는 내 PC에만
 
-아이디어와 심사 기록은 이 저장소에 두지 않고 내 PC 기록 폴더(기본 `~/.saerok/idea/`, `SAEROK_IDEA_HOME`으로 바꿈)에만 저장합니다.
+아이디어와 심사 기록은 이 저장소에 두지 않고 내 PC 기록 폴더(기본 `~/.saerok/idea/`, `SAEROK_IDEA_HOME`으로 바꿈)에만 저장합니다. 웹 화면은 그 브라우저 저장소에만 둡니다.
 
 - 기록 폴더가 git 저장소 안이면 기록을 만들지 않고 멈춥니다.
 - 웹 검색어에는 아이디어 원문을 넣지 않고 일반 낱말만 쓰며, 보내기 전에 목록을 보여 주고 확인받습니다.

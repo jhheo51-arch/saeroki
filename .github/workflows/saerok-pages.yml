@@ -1,10 +1,12 @@
-name: 새록 사전 배포
+name: 새록 화면 배포(사전·심사단)
 
 on:
   push:
     branches: [main]
     paths:
       - "fruits/17-saerok-dictionary/web/**"
+      - "fruits/20-saerok-idea/web/**"
+      - "fruits/20-saerok-idea/agents/**"
       - ".github/workflows/saerok-pages.yml"
   workflow_dispatch:
 
@@ -26,8 +28,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/configure-pages@v5
+      # 사전은 첫 화면(/), 심사단은 /idea/. 심사위원 기준(agents)은 화면이 그대로 읽습니다.
+      - name: 화면 모으기
+        run: |
+          mkdir -p _site/idea/agents
+          cp -r fruits/17-saerok-dictionary/web/. _site/
+          cp -r fruits/20-saerok-idea/web/. _site/idea/
+          cp fruits/20-saerok-idea/agents/*.md _site/idea/agents/
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: fruits/17-saerok-dictionary/web
+          path: _site
       - id: deployment
         uses: actions/deploy-pages@v4
