@@ -15,16 +15,32 @@
 - 시작 전에 주민번호·전화번호·이메일 꼴을 찾아 가린 값으로 보여 주고, 진행할지 묻습니다.
 - 이 폴더의 [`examples/`](examples)는 모두 지어낸 가상 지원자·가상 회사입니다.
 
-## 설치
+## 빠른 시작
 
-Claude Code 대화창에서:
+Claude Code와 Python 3.10 이상이 필요합니다. 면접관 5명은 Claude Code 안에서 돌아가므로 GitHub 링크만으로는 시작할 수 없습니다.
+
+**Claude Code 대화창에서** 처음 한 번 설치하고, 그다음부터는 한 줄로 시작합니다.
 
 ```text
 /plugin marketplace add jhheo51-arch/saeroki
 /plugin install saerok-interview@saeroki
+/saerok-interview:panel 자기소개서.md --posting 공고.md
 ```
 
-Python 3.10 이상이 필요합니다.
+**터미널에서** 설치한 뒤에는 Claude Code를 면접 명령과 함께 바로 띄울 수 있습니다.
+
+```bash
+claude "/saerok-interview:panel 자기소개서.md --posting 공고.md"
+```
+
+**설치 없이 한 번만 써 보기**: 저장소를 받아 이번 실행에만 플러그인을 불러옵니다.
+
+```bash
+git clone https://github.com/jhheo51-arch/saeroki.git
+claude --plugin-dir saeroki/fruits/19-saerok-interview "/saerok-interview:panel 자기소개서.md"
+```
+
+어느 방법이든 기록은 저장소가 아니라 내 PC 면접 폴더에 쌓입니다.
 
 ## 쓰는 순서
 
