@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title>새록 면접관</title>
+<style>
+  :root {
+    --bg: #FAF9F6;
+    --surface: #FFFFFF;
+    --ink: #1F2A1C;
+    --muted: #5B6656;
+    --line: #E2E4DA;
+    --brand: #40916C;
+    --brand-deep: #31572C;
+    --blossom: #D9668C;
+    --chip: #EEF3E6;
+    --warn-bg: #FFF4D6;
+    --warn-ink: #7A4B00;
+    --go: #2D7A4F;
+    --go-bg: #E3F2E8;
+    --cond: #8A5A00;
+    --cond-bg: #FFF1CF;
+    --stop: #A33A3A;
+    --stop-bg: #FBE4E4;
+    --none: #55606A;
+    --none-bg: #E9EDF0;
+    --shadow: 0 1px 2px rgba(31, 42, 28, .06), 0 4px 16px rgba(31, 42, 28, .05);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      color-scheme: dark;
+      --bg: #141A13;
+      --surface: #1C241A;
+      --ink: #E9EEE3;
+      --muted: #A3AE9C;
+      --line: #2F3A2C;
+      --brand: #6CC195;
+      --brand-deep: #A6D98A;
+      --blossom: #F09AB8;
+      --chip: #24301F;
+      --warn-bg: #3A2F14;
+      --warn-ink: #F3D27A;
+      --go: #8FD8AC;
+      --go-bg: #1D3526;
+      --cond: #F3D27A;
+      --cond-bg: #3A2F14;
+      --stop: #F2A0A0;
+      --stop-bg: #3D1F1F;
+      --none: #B9C2CA;
+      --none-bg: #2A3035;
+      --shadow: none;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 16px/1.6 "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--brand); word-break: break-all; }
+  button, input, textarea, select { font: inherit; color: inherit; }
+  button { cursor: pointer; }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 0 16px; }
+
+  header.top { background: var(--surface); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 5; }
+  .bar { display: flex; align-items: center; gap: 12px; padding: 12px 0; flex-wrap: wrap; }
+  .logo { font-weight: 800; font-size: 20px; letter-spacing: -.02em; display: flex; align-items: center; gap: 8px; }
+  .logo small { font-weight: 500; font-size: 13px; color: var(--muted); }
+  .grow { flex: 1; }
+  .tabs { display: flex; gap: 4px; }
+  .tab { border: 0; background: none; padding: 6px 12px; border-radius: 999px; color: var(--muted); font-weight: 600; }
+  .tab[aria-selected="true"] { background: var(--chip); color: var(--brand-deep); }
+  .mode { font-size: 13px; color: var(--muted); padding: 0 0 10px; }
+  .mode b { color: var(--ink); }
+
+  main { padding: 20px 0 80px; }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 20px; margin-bottom: 16px; box-shadow: var(--shadow); }
+  .card h2 { margin: 0 0 4px; font-size: 18px; display: flex; align-items: center; gap: 8px; }
+  .card h2 .n { display: inline-grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: var(--chip); color: var(--brand-deep); font-size: 13px; }
+  .card h3 { font-size: 16px; margin: 18px 0 6px; }
+  .sub { color: var(--muted); font-size: 14px; margin: 0 0 14px; }
+  .note { background: var(--warn-bg); color: var(--warn-ink); border-radius: 10px; padding: 10px 12px; font-size: 14px; margin: 0 0 14px; }
+  label.f { display: block; font-weight: 600; font-size: 14px; margin: 12px 0 4px; }
+  label.f span { font-weight: 400; color: var(--muted); }
+  input[type=text], input[type=password], input[type=number], textarea, select {
+    width: 100%; padding: 9px 11px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg);
+  }
+  select option { background: var(--surface); color: var(--ink); }
+  textarea { min-height: 64px; resize: vertical; }
+  input:focus, textarea:focus, select:focus { outline: 2px solid var(--brand); outline-offset: 0; border-color: transparent; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 14px; }
+  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0 12px; }
+  @media (max-width: 640px) { .grid2, .grid3 { grid-template-columns: 1fr; } header.top { position: static; } }
+  details.more { margin-top: 14px; border-top: 1px dashed var(--line); padding-top: 10px; }
+  details.more summary { cursor: pointer; font-weight: 600; font-size: 14px; color: var(--muted); }
+  .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 16px; }
+  .btn { border: 1px solid var(--line); background: var(--surface); padding: 9px 16px; border-radius: 10px; font-weight: 600; }
+  .btn.primary { background: var(--brand); border-color: var(--brand); color: #fff; }
+  .btn.small { padding: 5px 10px; font-size: 13px; }
+  .btn:disabled { opacity: .5; cursor: default; }
+  .radio { display: inline-flex; gap: 6px; align-items: center; margin-right: 14px; font-size: 14px; }
+
+  .judges { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  @media (max-width: 720px) { .judges { grid-template-columns: 1fr; } }
+  .judge { border: 1px solid var(--line); border-radius: 12px; padding: 14px; background: var(--bg); }
+  .judge .who { font-weight: 700; }
+  .judge .q { color: var(--muted); font-size: 13px; }
+  .judge .score { font-size: 26px; font-weight: 800; margin: 6px 0 2px; }
+  .judge ul { padding-left: 18px; margin: 6px 0 0; font-size: 14px; }
+  .judge .lbl { font-size: 12px; color: var(--muted); margin-top: 8px; font-weight: 700; }
+  .badge { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 700; }
+  .v-진행 { background: var(--go-bg); color: var(--go); }
+  .v-조건부 { background: var(--cond-bg); color: var(--cond); }
+  .v-보류 { background: var(--stop-bg); color: var(--stop); }
+  .v-none { background: var(--none-bg); color: var(--none); }
+  .s-받침 { background: var(--go-bg); color: var(--go); }
+  .s-반박 { background: var(--stop-bg); color: var(--stop); }
+  .s-확인 { background: var(--none-bg); color: var(--none); }
+  .spin { display: inline-block; width: 14px; height: 14px; border: 2px solid var(--line); border-top-color: var(--brand); border-radius: 50%; animation: spin 1s linear infinite; vertical-align: -2px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) { .spin { animation: none; } }
+
+  .q-group { border: 1px solid var(--line); border-radius: 12px; padding: 12px; margin-top: 12px; background: var(--bg); }
+  .q-group .title { font-weight: 700; font-size: 14px; }
+  .q-line { display: flex; gap: 8px; align-items: center; margin-top: 6px; }
+  .q-line input[type=text] { flex: 1; }
+  .q-kind { font-size: 12px; color: var(--muted); width: 36px; flex: none; }
+
+  .log { font-size: 14px; color: var(--muted); margin: 8px 0 0; padding-left: 0; list-style: none; }
+  .log li { padding: 2px 0; }
+  .log li.err { color: var(--stop); }
+  .log li.warn { color: var(--warn-ink); }
+
+  .verdict { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .verdict .big { font-size: 28px; font-weight: 800; padding: 6px 18px; border-radius: 12px; }
+  .steps { margin: 10px 0 0; padding-left: 18px; }
+  .ev { font-size: 14px; margin: 4px 0; }
+  .ev .k { font-weight: 700; }
+  .dir { border: 1px solid var(--line); border-radius: 12px; padding: 14px; margin-top: 12px; background: var(--bg); }
+  .dir.rec { border-color: var(--blossom); }
+  .dir .t { font-weight: 700; }
+  .tag { font-size: 12px; color: var(--blossom); font-weight: 700; margin-left: 6px; }
+  table { border-collapse: collapse; width: 100%; font-size: 14px; }
+  th, td { border-bottom: 1px solid var(--line); padding: 6px 8px; text-align: left; vertical-align: top; }
+  th { color: var(--muted); font-weight: 600; }
+  .scroll { overflow-x: auto; }
+  pre.md { white-space: pre-wrap; word-break: break-word; background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 12px; font-size: 13px; max-height: 480px; overflow: auto; }
+  .usage { font-size: 13px; color: var(--muted); }
+  .hidden { display: none !important; }
+  .empty { color: var(--muted); text-align: center; padding: 40px 0; }
+
+  dialog { border: 1px solid var(--line); border-radius: 14px; background: var(--surface); color: var(--ink); max-width: 520px; width: calc(100% - 32px); padding: 20px; }
+  dialog::backdrop { background: rgba(0, 0, 0, .35); }
+  .judges.five { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+  .v-합격권 { background: var(--go-bg); color: var(--go); }
+  .v-보류2 { background: var(--cond-bg); color: var(--cond); }
+  .v-부족 { background: var(--stop-bg); color: var(--stop); }
+  .s-확인됨 { background: var(--go-bg); color: var(--go); }
+  .s-확인안됨 { background: var(--none-bg); color: var(--none); }
+  .qa { border-left: 3px solid var(--line); padding: 4px 0 4px 12px; margin: 10px 0; }
+  .qa.ask { border-color: var(--brand); }
+  .qa .who { font-size: 12px; font-weight: 700; color: var(--muted); }
+  .qa .hint { font-size: 13px; color: var(--warn-ink); background: var(--warn-bg); border-radius: 8px; padding: 4px 8px; margin-top: 4px; display: inline-block; }
+  .check { display: inline-flex; gap: 6px; align-items: center; margin-right: 14px; font-size: 14px; }
+  code { font-size: 13px; background: var(--chip); padding: 1px 5px; border-radius: 6px; }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="bar">
+      <div class="logo">🎤 새록 면접관 <small>모의 면접 연습</small></div>
+      <div class="grow"></div>
+      <nav class="tabs" role="tablist">
+        <button class="tab" role="tab" aria-selected="true" data-tab="panel">새 면접</button>
+        <button class="tab" role="tab" aria-selected="false" data-tab="practice">실전 연습</button>
+        <button class="tab" role="tab" aria-selected="false" data-tab="history">기록·비교</button>
+      </nav>
+      <button class="btn small" id="open-settings">🔑 키·설정</button>
+    </div>
+    <div class="mode" id="mode">화면을 준비하는 중입니다…</div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section id="tab-panel">
+    <div class="card" id="step-input">
+      <h2><span class="n">1</span>서류 넣기</h2>
+      <p class="sub">자기소개서는 꼭 필요합니다. 채용 공고·이력서·포트폴리오는 있으면 넣습니다. 한 줄에 한 문장씩 쓰면 면접관이 질문마다 몇째 줄을 보고 물었는지 달아 줍니다.</p>
+      <p class="note" id="privacy">서류 본문은 심사를 위해 Claude(Anthropic)로 보냅니다. 전화번호·이메일·주민번호는 지우고 넣어 주세요. 시작 전에 이런 꼴이 있는지 한 번 더 확인합니다.</p>
+      <div class="row hidden" id="docs-row" style="margin-top:0">
+        <button class="btn small" id="load-docs">내 PC '서류' 폴더에서 불러오기</button>
+        <span class="usage" id="docs-msg"></span>
+      </div>
+      <div class="grid3">
+        <div><label class="f" for="f-company">회사 <span>(기록 이름에 씀)</span></label><input type="text" id="f-company" maxlength="60" placeholder="예: 골목장터"></div>
+        <div><label class="f" for="f-industry">산업 <span>(선택)</span></label><select id="f-industry"><option value="">고르지 않음</option></select></div>
+        <div><label class="f" for="f-role">직무 <span>(선택)</span></label><select id="f-role"><option value="">고르지 않음</option></select></div>
+      </div>
+      <p class="usage" style="margin:4px 0 0">산업·직무를 고르면 실무·숫자 검증 면접관이 그 분야 핵심 용어(17번 새록 사전)를 함께 봅니다. 둘 다 고르거나 둘 다 비워 두세요.</p>
+      <label class="f" for="d-resume_letter">자기소개서 <button class="btn small" data-load="resume_letter" type="button">파일 열기</button></label>
+      <textarea id="d-resume_letter" style="min-height:220px" placeholder="## 지원 동기&#10;한 줄에 한 문장씩…"></textarea>
+      <label class="f" for="d-posting">채용 공고 <span>(없으면 실무 '공고 요건 연결'·임원 '회사 이해'는 해당 없음)</span> <button class="btn small" data-load="posting" type="button">파일 열기</button></label>
+      <textarea id="d-posting" style="min-height:120px" placeholder="채용 페이지 본문을 그대로 붙여 넣어 주세요"></textarea>
+      <details class="more">
+        <summary>이력서·포트폴리오 (선택)</summary>
+        <label class="f" for="d-resume">이력서 <button class="btn small" data-load="resume" type="button">파일 열기</button></label>
+        <textarea id="d-resume"></textarea>
+        <label class="f" for="d-portfolio">포트폴리오 요약 <button class="btn small" data-load="portfolio" type="button">파일 열기</button></label>
+        <textarea id="d-portfolio"></textarea>
+      </details>
+      <input type="file" id="file-pick" accept=".md,.txt,text/plain,text/markdown" class="hidden">
+      <div class="row">
+        <button class="btn primary" id="start">서류 심사 시작</button>
+        <span class="usage">면접관 5명이 동시에 심사합니다(Claude 호출 5번).</span>
+      </div>
+    </div>
+
+    <div class="card hidden" id="step-panel">
+      <h2><span class="n">2</span>면접관 5명 <span class="badge v-none">AI 시뮬레이션</span></h2>
+      <p class="sub">고정 기준표로 10점 환산 점수를 내고, 근거 원문이 달린 질문을 2개씩 만듭니다. 근거는 입력한 서류에 그 문장이 실제로 있는지 규칙으로 확인합니다.</p>
+      <div class="judges five" id="judges"></div>
+      <ul class="log" id="log-panel"></ul>
+    </div>
+
+    <div class="card hidden" id="step-result"></div>
+  </section>
+
+  <section id="tab-practice" class="hidden">
+    <div class="card">
+      <h2>실전 연습</h2>
+      <p class="sub">서류 심사로 만든 질문을 서류 점수가 낮은 면접관부터 하나씩 묻습니다. 답하면 꼬리 질문 뒤 기준표로 채점합니다.</p>
+      <label class="f" for="p-session">세션</label>
+      <select id="p-session"></select>
+      <label class="f">강도</label>
+      <label class="radio"><input type="radio" name="level" value="순한맛"> 순한맛 <span class="usage">꼬리 질문 1번·힌트</span></label>
+      <label class="radio"><input type="radio" name="level" value="보통" checked> 보통 <span class="usage">꼬리 질문 1~2번</span></label>
+      <label class="radio"><input type="radio" name="level" value="매운맛"> 매운맛 <span class="usage">꼬리 질문 2번·빈틈 바로 짚기</span></label>
+      <label class="f">면접관 <span>(모두 비우면 전체)</span></label>
+      <div id="p-who"></div>
+      <div class="row">
+        <button class="btn primary" id="p-next">다음 질문</button>
+        <button class="btn" id="p-record">연습 기록 보기</button>
+      </div>
+      <p class="usage" id="p-msg"></p>
+    </div>
+
+    <div class="card hidden" id="p-box">
+      <div id="p-convo"></div>
+      <label class="f" for="p-answer" id="p-answer-label">내 답</label>
+      <textarea id="p-answer" style="min-height:120px" placeholder="실제 면접처럼 말하듯 적어 주세요"></textarea>
+      <div class="row">
+        <button class="btn primary" id="p-send">답하기</button>
+        <button class="btn" id="p-stop">이 질문 그만두기</button>
+      </div>
+      <ul class="log" id="log-practice"></ul>
+    </div>
+
+    <div class="card hidden" id="p-result"></div>
+  </section>
+
+  <section id="tab-history" class="hidden">
+    <div class="card">
+      <h2>면접 기록</h2>
+      <p class="sub" id="history-where"></p>
+      <div id="history"></div>
+      <div class="row">
+        <button class="btn primary" id="compare">체크한 세션 비교</button>
+        <span class="usage">세션 이름(날짜) 순으로 답변 점수 변화, 반복해서 낮은 항목, 실제 면접 적중률을 봅니다.</span>
+      </div>
+    </div>
+    <div class="card hidden" id="history-view"></div>
+  </section>
+</main>
+
+<dialog id="settings">
+  <h2 style="margin-top:0">🔑 키·설정</h2>
+  <div id="key-browser">
+    <p class="sub">Claude API 키는 이 브라우저에만 저장되고, Anthropic(api.anthropic.com)으로만 보냅니다. 중간 서버는 없습니다. 심사·연습할 때마다 내 API 사용량이 듭니다.</p>
+    <label class="f" for="key-input">Claude API 키</label>
+    <input type="password" id="key-input" placeholder="sk-ant-…" autocomplete="off">
+    <label class="radio" style="margin-top:8px"><input type="checkbox" id="key-remember"> 이 브라우저에 기억(공용 PC에서는 끄세요)</label>
+  </div>
+  <div id="engine-local" class="hidden">
+    <p class="f" style="margin-bottom:4px">Claude 부르는 방식</p>
+    <label class="radio"><input type="radio" name="engine" value="subscription"> 내 Claude 구독(Claude Code, 추가 비용 없음)</label>
+    <label class="radio"><input type="radio" name="engine" value="api"> API 키(크레딧 차감)</label>
+    <p class="sub" id="engine-note"></p>
+  </div>
+  <div id="key-local" class="hidden">
+    <p class="sub">키는 Windows 자격 증명 관리자에 두고, 내 PC 서버가 Anthropic에 보낼 때만 붙입니다. 브라우저로는 보내지 않습니다.</p>
+    <p>지금 키: <b id="key-now"></b> <span class="usage" id="key-from"></span></p>
+    <label class="f" for="key-local-input">새 키 등록</label>
+    <input type="password" id="key-local-input" placeholder="sk-ant-…" autocomplete="off">
+  </div>
+  <label class="f" for="model-panel">서류 심사 모델 <span>(면접관 5명)</span></label>
+  <select id="model-panel"></select>
+  <label class="f" for="model-practice">실전 연습 모델 <span>(꼬리 질문·채점)</span></label>
+  <select id="model-practice"></select>
+  <div class="row">
+    <button class="btn primary" id="save-settings">저장</button>
+    <button class="btn" id="forget-key">키 지우기</button>
+    <div class="grow"></div>
+    <button class="btn" id="close-settings">닫기</button>
+  </div>
+  <p class="usage" id="settings-msg"></p>
+</dialog>
+
+<script src="interview-core.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

@@ -9,6 +9,10 @@ description = "새록 면접관: 자기소개서를 기준표로 심사하고 �
 requires-python = ">=3.10"
 dependencies = []
 
+[project.optional-dependencies]
+# 면접 화면의 Claude API 키를 Windows 자격 증명 관리자에 보관합니다. 없으면 실행 중 메모리에만 둡니다.
+keyring = ["keyring>=24"]
+
 [project.scripts]
 saerok-interview = "saerok_interview.cli:main"
 

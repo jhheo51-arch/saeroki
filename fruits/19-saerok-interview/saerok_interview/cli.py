@@ -1,4 +1,6 @@
-"""사용: saerok-interview init
+"""사용: saerok-interview                       면접 화면을 브라우저로 엽니다(= saerok-interview web). Claude는 내 구독으로 부릅니다
+      saerok-interview web [--port 8750] [--no-open] [--api]
+      saerok-interview init
       saerok-interview docs [--company 회사]
       saerok-interview new [자기소개서] [--posting 공고] [--resume 이력서] [--portfolio 포트폴리오] [--company 회사] [--industry 산업 --role 직무]
       saerok-interview scan <파일...>
@@ -14,7 +16,7 @@ import json
 import sys
 from pathlib import Path
 
-from . import compare, docs, rubric, session, store, terms
+from . import compare, docs, rubric, session, store, terms, web
 
 
 def _print(data) -> None:
@@ -31,7 +33,12 @@ def main(argv: list[str] | None = None) -> int:
         if hasattr(stream, "reconfigure"):
             stream.reconfigure(encoding="utf-8")
     parser = argparse.ArgumentParser(prog="saerok-interview", description="새록 면접관: 모의 면접 세션을 만들고 점수를 기록·비교합니다.")
-    sub = parser.add_subparsers(dest="command", required=True)
+    sub = parser.add_subparsers(dest="command")
+
+    w = sub.add_parser("web", help="면접 화면을 내 PC에서 열고 브라우저를 띄웁니다(명령 없이 실행해도 같음).")
+    w.add_argument("--port", type=int, default=web.DEFAULT_PORT)
+    w.add_argument("--no-open", action="store_true", help="브라우저를 띄우지 않고 주소만 알립니다.")
+    w.add_argument("--api", action="store_true", help="구독 대신 API 키로 Claude를 부릅니다(크레딧 차감).")
 
     n = sub.add_parser("new", help="면접 폴더에 세션을 만들고 입력 사본을 둡니다.")
     n.add_argument("resume_letter", nargs="?", help="자기소개서(.md·.txt). 비우면 면접 폴더의 '서류' 폴더에서 고릅니다.")
@@ -85,6 +92,9 @@ def main(argv: list[str] | None = None) -> int:
 
 
 def _run(args) -> int:
+    if args.command in (None, "web"):
+        return web.serve(port=getattr(args, "port", web.DEFAULT_PORT), open_browser=not getattr(args, "no_open", False),
+                         use_api=getattr(args, "api", False))
     if args.command == "new":
         files = {}
         if not args.resume_letter:  # 경로가 없으면 서류 폴더에서 고르고, 직접 준 옵션이 이깁니다.

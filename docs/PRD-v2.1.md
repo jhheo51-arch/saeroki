@@ -4,6 +4,7 @@
 - 상태: 설계 확정(🌱 씨앗). 구현 전
 - 대상: 19번 열매 `면접 연습`, 이름 `새록 면접관`, 플러그인·명령 `saerok-interview`
 - 실행 환경: 내 PC의 Claude Code 플러그인(스킬 `/saerok-interview:panel`·`/saerok-interview:practice`·`/saerok-interview:compare`, 면접관 서브에이전트 5명)
+  - 2026-10-17 추가: 같은 흐름의 화면 두 개. 웹(GitHub Pages `/interview/`, 내 API 키로 브라우저가 Anthropic에 바로 연결, 기록은 그 브라우저에만)과 터미널 `saerok-interview`(127.0.0.1, 기본은 `claude -p` 구독, `--api`면 API 키, 기록은 면접 폴더에만). 검사·렌더링은 Python과 같은 결과를 내는 `web/interview-core.js`가 맡음
 - 참고: [AI ANTENNA, 클로드 면접관 3명 만들어 모의 면접 보는 법](https://imyoung-man.github.io/AI-ANTENNA/aitip-interview/guide.html)(2026-10-17 확인)
 - 이전 문서: [PRD v2.0](PRD-v2.0.md), 원래 목록은 [PRD v01](PRD-v01.md)
 

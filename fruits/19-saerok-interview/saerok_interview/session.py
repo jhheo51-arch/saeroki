@@ -56,11 +56,6 @@ def read(path: Path) -> str:
 def create(files: dict[str, str], *, company: str = "", industry: str = "", role: str = "",
            date: str | None = None, base: Path | None = None, allow_git: bool = False) -> dict:
     """세션 폴더를 만들고 입력 사본과 session.json, 빈 score.json을 둡니다."""
-    base = (base or home()).resolve()
-    repo = git_root(base)
-    if repo and not allow_git:
-        raise ValueError(f"면접 폴더({base})가 git 저장소({repo}) 안에 있습니다. 자기소개서가 커밋될 수 있어 멈춥니다. "
-                         f"{HOME_ENV}를 저장소 밖으로 바꿔 주세요.")
     if "resume_letter" not in files:
         raise ValueError("자기소개서는 꼭 필요합니다.")
     texts = {}
@@ -73,6 +68,25 @@ def create(files: dict[str, str], *, company: str = "", industry: str = "", role
         if file.suffix.lower() not in (".md", ".txt"):
             raise ValueError(f"{file.name}: .md·.txt만 읽습니다. 한글·워드·PDF는 본문을 텍스트 파일로 붙여 넣어 주세요.")
         texts[key] = read(file)
+    return create_texts(texts, company=company, industry=industry, role=role, date=date, base=base,
+                        allow_git=allow_git, sources=files)
+
+
+def create_texts(texts: dict[str, str], *, company: str = "", industry: str = "", role: str = "",
+                 date: str | None = None, base: Path | None = None, allow_git: bool = False,
+                 sources: dict[str, str] | None = None) -> dict:
+    """본문으로 세션을 만듭니다(화면에서 붙여 넣은 서류). sources가 있으면 그 파일을 그대로 복사합니다."""
+    base = (base or home()).resolve()
+    repo = git_root(base)
+    if repo and not allow_git:
+        raise ValueError(f"면접 폴더({base})가 git 저장소({repo}) 안에 있습니다. 자기소개서가 커밋될 수 있어 멈춥니다. "
+                         f"{HOME_ENV}를 저장소 밖으로 바꿔 주세요.")
+    for key in texts:
+        if key not in DOCS:
+            raise ValueError(f"모르는 입력입니다: {key}")
+    texts = {key: texts[key] for key in DOCS if isinstance(texts.get(key), str) and texts[key].strip()}
+    if "resume_letter" not in texts:
+        raise ValueError("자기소개서는 꼭 필요합니다.")
 
     date = date or time.strftime("%Y-%m-%d")
     stem = f"{date}-{_slug(company)}"
@@ -84,7 +98,10 @@ def create(files: dict[str, str], *, company: str = "", industry: str = "", role
     inputs = {}
     for key, text in texts.items():
         target = folder / "inputs" / f"{DOC_NAMES[key]}.md"
-        shutil.copyfile(files[key], target)
+        if sources and key in sources:
+            shutil.copyfile(sources[key], target)
+        else:
+            target.write_text(text, encoding="utf-8", newline="")
         inputs[key] = {"file": f"inputs/{target.name}", "sha256": hashlib.sha256(text.encode("utf-8")).hexdigest()}
 
     meta = {
@@ -101,6 +118,11 @@ def create(files: dict[str, str], *, company: str = "", industry: str = "", role
     write_json(folder / "score.json", {"version": 1, "document": {}, "answers": [], "real": []})
     privacy = {key: hits for key, text in texts.items() if (hits := scan(text))}
     return {"folder": str(folder), **meta, "privacy": privacy}
+
+
+def inputs(folder: Path, meta: dict) -> dict[str, str]:
+    """세션 폴더에 둔 입력 사본의 본문."""
+    return {key: read(Path(folder) / info["file"]) for key, info in meta["inputs"].items()}
 
 
 def write_json(path: Path, data) -> None:

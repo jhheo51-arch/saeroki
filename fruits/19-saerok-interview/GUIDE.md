@@ -4,6 +4,19 @@
 
 처음 한 번만 설치하고, **서류 폴더**에 자기소개서와 공고를 넣은 뒤 `/saerok-interview:panel`을 입력하면 됩니다. 파일 경로는 몰라도 됩니다.
 
+## 화면으로 쓰기
+
+명령 대신 화면에서 서류를 붙여 넣고 버튼으로 진행할 수도 있습니다. 화면은 탭 세 개(새 면접·실전 연습·기록·비교)로 나뉩니다.
+
+| 어디서 | 여는 법 | Claude 사용량 | 기록이 남는 곳 |
+|---|---|---|---|
+| 웹 | [면접 화면](https://jhheo51-arch.github.io/saeroki/interview/)을 열고 '키·설정'에 내 Claude API 키를 넣음 | 내 API 크레딧 | 그 브라우저에만. `verdict.md`·`practice.md`로 내려받기 |
+| 터미널 | `pip install -e "fruits/19-saerok-interview[keyring]"` 뒤 `saerok-interview` | 기본은 Claude Code에 로그인한 내 구독. `saerok-interview --api`면 API 키 | 내 PC 면접 폴더(`~/.saerok/interview/`) |
+
+- 웹 화면은 키를 Anthropic(api.anthropic.com)에만 보내고 중간 서버가 없습니다. 공용 PC에서는 키를 넣지 마세요.
+- 터미널 화면은 127.0.0.1에서만 열리고, '내 PC 서류 폴더에서 불러오기'로 아래 서류 폴더의 파일을 바로 채웁니다. 키는 Windows 자격 증명 관리자에 두고 브라우저로 보내지 않습니다.
+- 실제 면접 질문 기록란에 한 줄에 질문 하나씩 적고, 모의 질문과 같았던 줄은 끝에 `/ Q3`처럼 번호를 붙이면 적중으로 셉니다.
+
 ## 원본 방식과 달라진 점
 
 [AI ANTENNA의 '클로드 면접관 3명' 방식](https://imyoung-man.github.io/AI-ANTENNA/aitip-interview/guide.html)을 바탕으로, 시작은 더 짧게 하고 결과는 다시 확인할 수 있게 바꿨습니다.

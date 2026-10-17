@@ -7,9 +7,30 @@
 - 공통 원칙: [AGENT-SPEC.md](../../AGENT-SPEC.md)
 - 참고: [AI-ANTENNA 면접 가이드](https://imyoung-man.github.io/AI-ANTENNA/aitip-interview/guide.html)의 '면접관 서브에이전트 + 판정.md + 실전 연습' 방식을 근거 표시·기록·비교로 고도화했습니다.
 
+## 바로 면접 보기
+
+| 어디서 | 여는 법 | 키·기록 |
+|---|---|---|
+| 웹 | **[면접 화면 열기](https://jhheo51-arch.github.io/saeroki/interview/)** | 내 Claude API 키를 화면에 넣으면 브라우저가 Anthropic에 바로 연결합니다. 키와 기록은 그 브라우저에만 남고, `verdict.md`·`practice.md`로 내려받습니다 |
+| 터미널 | `saerok-interview` | 같은 화면이 내 PC(127.0.0.1)에서 열립니다. API 키 없이 Claude Code에 로그인한 내 Claude 구독 사용량으로 돌고, 기록은 면접 폴더(`~/.saerok/interview/`)에 남습니다. 서류 폴더에서 불러오기도 됩니다. API 키로 돌리려면 `saerok-interview --api`(키는 Windows 자격 증명 관리자) |
+| Claude Code | `/saerok-interview:panel --company 골목장터` | 아래 '빠른 시작' |
+
+터미널 명령은 한 번만 설치하면 됩니다.
+
+```bash
+pip install -e "fruits/19-saerok-interview[keyring]"
+saerok-interview
+```
+
+화면에는 탭이 세 개입니다. **새 면접**에서 서류를 넣으면 면접관 5명이 동시에 심사하고, **실전 연습**에서 꼬리 질문과 채점을 받고, **기록·비교**에서 회차 변화와 실제 면접 적중률을 봅니다.
+
+구독으로 돌릴 때는 화면이 보낸 요청을 `claude -p`(Claude Code)로 바꿔 실행합니다. 환경에서 API 키를 빼고, 빈 임시 폴더에서 도구를 하나도 주지 않으며, 서류는 명령줄이 아니라 표준 입력으로 넘기고 `--no-session-persistence`로 Claude Code 대화 기록에 남기지 않습니다. Claude Code가 없거나 로그인하지 않았으면 화면의 '키·설정'에서 API 키 방식으로 바꿀 수 있습니다.
+
+두 화면 모두 기준표 검사·근거 원문 확인·`verdict.md`·`practice.md`·회차 비교는 Python과 똑같이 옮긴 [`web/interview-core.js`](web/interview-core.js)가 냅니다(검사가 두 결과를 맞대어 봅니다). 공용 PC에서는 웹 화면에 키를 넣지 마세요.
+
 ## 내 기록은 내 PC에만
 
-자기소개서·답변·점수 기록은 이 저장소에 두지 않고 내 PC 면접 폴더(기본 `~/.saerok/interview/`, `SAEROK_INTERVIEW_HOME`으로 바꿈)에만 저장합니다.
+자기소개서·답변·점수 기록은 이 저장소에 두지 않고 내 PC 면접 폴더(기본 `~/.saerok/interview/`, `SAEROK_INTERVIEW_HOME`으로 바꿈)에만 저장합니다. 웹 화면은 그 브라우저 저장소에만 둡니다.
 
 - 면접 폴더가 git 저장소 안이면 세션을 만들지 않고 멈춥니다.
 - 시작 전에 주민번호·전화번호·이메일 꼴을 찾아 가린 값으로 보여 주고, 진행할지 묻습니다.
@@ -17,7 +38,7 @@
 
 ## 빠른 시작
 
-Claude Code와 Python 3.10 이상이 필요합니다. 면접관 5명은 Claude Code 안에서 돌아가므로 GitHub 링크만으로는 시작할 수 없습니다.
+Claude Code 플러그인으로 쓸 때는 Claude Code와 Python 3.10 이상이 필요합니다. 설치 없이 쓰려면 위 웹 화면을 엽니다.
 
 **Claude Code 대화창에서** 처음 한 번 설치합니다.
 
