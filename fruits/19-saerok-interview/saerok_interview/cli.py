@@ -1,4 +1,6 @@
-"""사용: saerok-interview new <자기소개서> [--posting 공고] [--resume 이력서] [--portfolio 포트폴리오] [--company 회사] [--industry 산업 --role 직무]
+"""사용: saerok-interview init
+      saerok-interview docs [--company 회사]
+      saerok-interview new [자기소개서] [--posting 공고] [--resume 이력서] [--portfolio 포트폴리오] [--company 회사] [--industry 산업 --role 직무]
       saerok-interview scan <파일...>
       saerok-interview rubric
       saerok-interview terms --industry platform --role pm [--limit 20]
@@ -12,7 +14,7 @@ import json
 import sys
 from pathlib import Path
 
-from . import compare, rubric, session, store, terms
+from . import compare, docs, rubric, session, store, terms
 
 
 def _print(data) -> None:
@@ -32,7 +34,7 @@ def main(argv: list[str] | None = None) -> int:
     sub = parser.add_subparsers(dest="command", required=True)
 
     n = sub.add_parser("new", help="면접 폴더에 세션을 만들고 입력 사본을 둡니다.")
-    n.add_argument("resume_letter", help="자기소개서(.md·.txt)")
+    n.add_argument("resume_letter", nargs="?", help="자기소개서(.md·.txt). 비우면 면접 폴더의 '서류' 폴더에서 고릅니다.")
     n.add_argument("--posting", help="채용 공고(.md·.txt)")
     n.add_argument("--resume", help="이력서(.md·.txt)")
     n.add_argument("--portfolio", help="포트폴리오 요약(.md·.txt)")
@@ -41,6 +43,10 @@ def main(argv: list[str] | None = None) -> int:
     n.add_argument("--role", default="", help="17번 새록 사전 직무 id(pm·data·marketing·cx)")
     n.add_argument("--date", help="세션 날짜(기본 오늘, YYYY-MM-DD)")
     n.add_argument("--allow-git", action="store_true", help="면접 폴더가 git 저장소 안이어도 만듭니다(권하지 않음).")
+
+    sub.add_parser("init", help="면접 폴더에 '서류' 폴더와 자기소개서·공고 양식을 만듭니다.")
+    d = sub.add_parser("docs", help="'서류' 폴더에서 이번에 쓸 자기소개서·공고·이력서·포트폴리오를 고릅니다.")
+    d.add_argument("--company", default="", help="회사 이름(파일 이름 '공고-회사이름'의 회사이름)")
 
     s = sub.add_parser("scan", help="주민번호·전화번호·이메일 꼴을 찾습니다.")
     s.add_argument("files", nargs="+")
@@ -58,7 +64,7 @@ def main(argv: list[str] | None = None) -> int:
     r.add_argument("kind", choices=["document", "answer", "real"])
     r.add_argument("--file", help="JSON 파일. 없으면 표준 입력에서 읽습니다.")
 
-    p = sub.add_parser("report", help="score.json으로 판정.md를 만듭니다.")
+    p = sub.add_parser("report", help="score.json으로 verdict.md를 만듭니다.")
     p.add_argument("folder")
 
     x = sub.add_parser("next", help="다음에 물을 질문(서류 점수가 낮은 면접관부터)을 출력합니다.")
@@ -80,7 +86,15 @@ def main(argv: list[str] | None = None) -> int:
 
 def _run(args) -> int:
     if args.command == "new":
-        files = {"resume_letter": args.resume_letter}
+        files = {}
+        if not args.resume_letter:  # 경로가 없으면 서류 폴더에서 고르고, 직접 준 옵션이 이깁니다.
+            found = docs.pick(args.company)
+            if found["pick"] is None:
+                raise ValueError(f"공고가 여러 회사입니다. --company로 하나를 골라 주세요: {', '.join(found['choices'])}")
+            files = dict(found["pick"])
+            args.company = args.company or found["company"]
+        else:
+            files["resume_letter"] = args.resume_letter
         for key in ("posting", "resume", "portfolio"):
             if getattr(args, key):
                 files[key] = getattr(args, key)
@@ -90,6 +104,10 @@ def _run(args) -> int:
             terms.pick(args.industry, args.role, limit=1)  # 잘못된 id를 먼저 막습니다.
         _print(session.create(files, company=args.company, industry=args.industry, role=args.role,
                               date=args.date, allow_git=args.allow_git))
+    elif args.command == "init":
+        _print(docs.init())
+    elif args.command == "docs":
+        _print(docs.pick(args.company))
     elif args.command == "scan":
         out = {}
         for f in args.files:

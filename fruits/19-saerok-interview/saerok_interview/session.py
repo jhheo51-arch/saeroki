@@ -20,7 +20,7 @@ PATTERNS = [
 
 
 def home() -> Path:
-    return Path(os.environ.get(HOME_ENV) or Path.home() / "saerok-interview").expanduser().resolve()
+    return Path(os.environ.get(HOME_ENV) or Path.home() / ".saerok" / "interview").expanduser().resolve()
 
 
 def git_root(path: Path) -> Path | None:

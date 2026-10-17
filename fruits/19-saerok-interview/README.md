@@ -9,7 +9,7 @@
 
 ## 내 기록은 내 PC에만
 
-자기소개서·답변·점수 기록은 이 저장소에 두지 않고 내 PC 면접 폴더(기본 `~/saerok-interview/`, `SAEROK_INTERVIEW_HOME`으로 바꿈)에만 저장합니다.
+자기소개서·답변·점수 기록은 이 저장소에 두지 않고 내 PC 면접 폴더(기본 `~/.saerok/interview/`, `SAEROK_INTERVIEW_HOME`으로 바꿈)에만 저장합니다.
 
 - 면접 폴더가 git 저장소 안이면 세션을 만들지 않고 멈춥니다.
 - 시작 전에 주민번호·전화번호·이메일 꼴을 찾아 가린 값으로 보여 주고, 진행할지 묻습니다.
@@ -19,36 +19,49 @@
 
 Claude Code와 Python 3.10 이상이 필요합니다. 면접관 5명은 Claude Code 안에서 돌아가므로 GitHub 링크만으로는 시작할 수 없습니다.
 
-**Claude Code 대화창에서** 처음 한 번 설치하고, 그다음부터는 한 줄로 시작합니다.
+**Claude Code 대화창에서** 처음 한 번 설치합니다.
 
 ```text
 /plugin marketplace add jhheo51-arch/saeroki
 /plugin install saerok-interview@saeroki
-/saerok-interview:panel 자기소개서.md --posting 공고.md
 ```
 
-**터미널에서** 설치한 뒤에는 Claude Code를 면접 명령과 함께 바로 띄울 수 있습니다.
+새 대화창에서 `/saerok-interview:panel`을 입력하면, 처음에는 내 PC에 **서류 폴더**(`~/.saerok/interview/서류/`)와 양식 두 개를 만들어 줍니다. 양식을 채우면 준비 끝입니다.
+
+```text
+~/.saerok/interview/서류/
+├─ 자기소개서.md         내 자기소개서(한 줄에 한 문장)
+└─ 공고-골목장터.md      채용 공고 본문. '-' 뒤가 회사 이름
+```
+
+그다음부터는 파일 경로 없이 한 줄로 시작합니다. "골목장터 면접 보자"처럼 말해도 됩니다.
+
+```text
+/saerok-interview:panel --company 골목장터
+```
+
+**터미널에서** Claude Code를 면접 명령과 함께 바로 띄울 수도 있습니다.
 
 ```bash
-claude "/saerok-interview:panel 자기소개서.md --posting 공고.md"
+claude "/saerok-interview:panel --company 골목장터"
 ```
 
 **설치 없이 한 번만 써 보기**: 저장소를 받아 이번 실행에만 플러그인을 불러옵니다.
 
 ```bash
 git clone https://github.com/jhheo51-arch/saeroki.git
-claude --plugin-dir saeroki/fruits/19-saerok-interview "/saerok-interview:panel 자기소개서.md"
+claude --plugin-dir saeroki/fruits/19-saerok-interview "/saerok-interview:panel"
 ```
 
 어느 방법이든 기록은 저장소가 아니라 내 PC 면접 폴더에 쌓입니다.
 
-자기소개서 쓰는 법(`.md`·`.txt`, 한 줄에 한 문장), 원본을 어디에 둘지, 대화창·터미널에서 경로를 넘기는 법, 심사 뒤 연습·비교까지는 **[사용 안내(GUIDE.md)](GUIDE.md)**에 자세히 적었습니다.
+원본 AI ANTENNA 방식과 달라진 점, 서류 폴더 위치와 파일 이름 규칙, 자기소개서 쓰는 법, 대화창·말·터미널로 부르는 법, 서류 폴더 밖 파일을 쓰는 법, 심사 뒤 연습·비교까지는 **[사용 안내(GUIDE.md)](GUIDE.md)**에 자세히 적었습니다.
 
 ## 쓰는 순서
 
 | 단계 | 명령 | 하는 일 |
 |---|---|---|
-| 서류 심사 | `/saerok-interview:panel 자기소개서.md --posting 공고.md --industry platform --role pm` | 면접관 5명이 동시에 심사해 질문 10개(면접관당 2개)와 `판정.md`를 만듭니다 |
+| 서류 심사 | `/saerok-interview:panel --company 골목장터 --industry platform --role pm` | 서류 폴더에서 자기소개서·공고를 골라 면접관 5명이 동시에 심사하고, 질문 10개(면접관당 2개)와 `verdict.md`를 만듭니다 |
 | 실전 연습 | `/saerok-interview:practice --level 보통` | 서류 점수가 낮은 면접관 질문부터 하나씩 묻고, 꼬리 질문 1~2번 뒤 채점해 `practice.md`에 남깁니다 |
 | 회차 비교 | `/saerok-interview:compare --last 3` | 답변 점수 변화, 반복해서 낮은 항목, 실제 면접 적중률을 보여 줍니다 |
 | 실제 면접 기록 | `/saerok-interview:compare --real <세션 폴더>` | 실제로 받은 질문을 모의 질문과 짝지어 보고, 내가 확인한 짝만 적중으로 셉니다 |
@@ -72,11 +85,13 @@ claude --plugin-dir saeroki/fruits/19-saerok-interview "/saerok-interview:panel 
 ## 두 층
 
 - **AI 계층**: 면접관 5명([`agents/`](agents), Sonnet)이 질문·점수를 JSON으로 내고, 실전 채점은 세션 모델이 합니다.
-- **결정적 계층**([`saerok_interview/`](saerok_interview), AI 없음): 점수 범위·항목 검사, 근거 원문이 입력 파일 그 줄(±1)에 정말 있는지 확인, `판정.md`·`practice.md` 렌더링, 회차 비교. 근거 원문을 찾지 못한 질문은 '확인 안 됨, 일반 질문'으로 표시됩니다.
+- **결정적 계층**([`saerok_interview/`](saerok_interview), AI 없음): 점수 범위·항목 검사, 근거 원문이 입력 파일 그 줄(±1)에 정말 있는지 확인, `verdict.md`·`practice.md` 렌더링, 회차 비교. 근거 원문을 찾지 못한 질문은 '확인 안 됨, 일반 질문'으로 표시됩니다.
 
 명령만 따로 쓸 수도 있습니다.
 
 ```bash
+bash bin/saerok-interview init
+bash bin/saerok-interview docs --company 골목장터
 bash bin/saerok-interview rubric
 bash bin/saerok-interview scan examples/resume-letter.md
 bash bin/saerok-interview new examples/resume-letter.md --posting examples/posting.md --company 골목장터
@@ -84,15 +99,16 @@ bash bin/saerok-interview record <세션 폴더> document --file examples/pressu
 bash bin/saerok-interview report <세션 폴더>
 ```
 
-## 세션 폴더
+## 면접 폴더
 
 ```text
-~/saerok-interview/
+~/.saerok/interview/
+├─ 서류/          내가 고치는 원본(자기소개서.md · 공고-회사이름.md · 이력서.md · 포트폴리오.md)
 └─ 2026-10-17-골목장터/
    ├─ inputs/        자기소개서.md · 채용 공고.md 사본
    ├─ session.json   회사·산업·직무, 입력 파일 sha256
    ├─ score.json     서류 점수·질문, 답변 점수, 실제 면접 질문
-   ├─ 판정.md        판정표·기준 항목·질문 10개와 근거·고칠 점
+   ├─ verdict.md     판정표·기준 항목·질문 10개와 근거·고칠 점
    └─ practice.md    실전 연습 기록
 ```
 

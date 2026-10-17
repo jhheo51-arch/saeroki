@@ -8,7 +8,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from saerok_interview import cli, compare, rubric, session, store, terms
+from saerok_interview import cli, compare, docs, rubric, session, store, terms
 
 HERE = Path(__file__).resolve().parent
 EXAMPLES = HERE / "examples"
@@ -83,6 +83,53 @@ class SessionTest(Base):
         self.assertEqual([f["kind"] for f in found], ["전화번호", "이메일", "주민등록번호"])
         self.assertTrue(all(f["masked"].endswith("*") and "5678" not in f["masked"] for f in found))
         self.assertEqual(session.scan((EXAMPLES / "resume-letter.md").read_text(encoding="utf-8")), [])
+
+
+class DocsTest(Base):
+    def put(self, name: str, src: Path = EXAMPLES / "resume-letter.md") -> Path:
+        path = docs.folder() / name
+        path.write_text(src.read_text(encoding="utf-8"), encoding="utf-8")
+        return path
+
+    def test_init_makes_templates_once(self):
+        first = docs.init()
+        self.assertEqual(first["created"], ["자기소개서.md", "공고-회사이름.md"])
+        self.assertEqual(docs.init()["created"], [])
+        with self.assertRaises(ValueError) as e:  # 양식 그대로면 시작하지 않습니다.
+            docs.pick()
+        self.assertIn("양식", str(e.exception))
+        self.assertEqual(session.sessions(), [])  # 서류 폴더는 세션으로 세지 않습니다.
+
+    def test_init_refuses_inside_git(self):
+        repo = Path(self.tmp.name) / "repo"
+        (repo / ".git").mkdir(parents=True)
+        os.environ[session.HOME_ENV] = str(repo / "interviews")
+        with self.assertRaises(ValueError):
+            docs.init()
+
+    def test_pick_by_file_name(self):
+        docs.init()
+        self.put("자기소개서.md")
+        self.put("공고-골목장터.md", EXAMPLES / "posting.md")
+        (docs.folder() / "공고-회사이름.md").unlink()
+        (docs.folder() / "이력서.hwp").write_bytes(b"x")
+        found = docs.pick()
+        self.assertEqual(found["company"], "골목장터")
+        self.assertEqual(set(found["pick"]), {"resume_letter", "posting"})
+        self.assertEqual(found["unreadable"], ["이력서.hwp"])
+        self.assertEqual(found["template"], [])
+
+    def test_pick_asks_when_many_companies(self):
+        docs.init()
+        self.put("자기소개서.md")
+        self.put("공고-골목장터.md", EXAMPLES / "posting.md")
+        self.put("공고-꽃길마켓.md", EXAMPLES / "posting.md")
+        self.put("자기소개서-꽃길마켓.md")
+        self.assertIsNone(docs.pick()["pick"])
+        self.assertEqual(docs.pick()["choices"], ["골목장터", "꽃길마켓"])
+        mine = docs.pick("꽃길마켓")["pick"]
+        self.assertTrue(mine["resume_letter"].endswith("자기소개서-꽃길마켓.md"))
+        self.assertTrue(docs.pick("골목장터")["pick"]["resume_letter"].endswith("자기소개서.md"))
 
 
 class RubricTest(unittest.TestCase):
@@ -247,6 +294,18 @@ class CliTest(Base):
         self.assertEqual(code, 2)
         self.assertIn("함께", err)
         self.assertEqual(self.run_cli("compare")[0], 2)  # 세션 없음
+        self.assertEqual(self.run_cli("new")[0], 2)  # 서류 폴더 없음
+
+    def test_new_from_docs(self):
+        self.assertEqual(self.run_cli("init")[0], 0)
+        (docs.folder() / "자기소개서.md").write_text((EXAMPLES / "resume-letter.md").read_text(encoding="utf-8"), encoding="utf-8")
+        (docs.folder() / "공고-회사이름.md").unlink()
+        (docs.folder() / "공고-골목장터.md").write_text((EXAMPLES / "posting.md").read_text(encoding="utf-8"), encoding="utf-8")
+        code, out, _ = self.run_cli("new", "--date", "2026-10-17")
+        self.assertEqual(code, 0)
+        made = json.loads(out)
+        self.assertEqual(Path(made["folder"]).name, "2026-10-17-골목장터")
+        self.assertTrue(made["posting"])
 
 
 if __name__ == "__main__":

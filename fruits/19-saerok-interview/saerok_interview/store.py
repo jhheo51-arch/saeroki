@@ -1,4 +1,4 @@
-"""면접관 결과·답변·실제 면접 질문을 검사해 score.json에 쌓고, 판정.md·practice.md를 만듭니다.
+"""면접관 결과·답변·실제 면접 질문을 검사해 score.json에 쌓고, verdict.md·practice.md를 만듭니다.
 같은 score.json에서는 언제나 같은 파일이 나옵니다."""
 
 import time
@@ -183,7 +183,7 @@ def _fmt(score) -> str:
 
 
 def render_report(folder: Path) -> str:
-    """판정.md 본문."""
+    """verdict.md 본문."""
     meta, score = load(Path(folder))
     lines = [
         f"# 새록 면접관 판정: {meta.get('company') or '회사 미지정'} ({meta['date']})",
@@ -251,6 +251,6 @@ def render_practice(meta: dict, score: dict) -> str:
 
 
 def write_report(folder: Path) -> Path:
-    path = Path(folder) / "판정.md"
+    path = Path(folder) / "verdict.md"
     path.write_text(render_report(folder), encoding="utf-8")
     return path
