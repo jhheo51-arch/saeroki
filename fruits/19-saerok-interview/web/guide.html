@@ -1,0 +1,333 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>새록 면접관 사용 안내</title>
+<meta property="og:title" content="새록 면접관 5명에게 모의 면접 보는 법">
+<style>
+/* 새록 면접관 사용 안내. 폰에서도 읽히도록 한 줄로 흐르는 문서로 만듭니다. */
+:root {
+  --accent: #3E8E5A;      /* 새록이 잎 색 */
+  --accent-soft: #E6F2EA;
+  --fg: #1B1F1C;
+  --muted: #687068;
+  --line: #E3E8E4;
+  --bg: #FFFFFF;
+  --panel: #F4F7F5;
+  --code-bg: #1B1F1C;
+  --code-fg: #EEF3EF;
+  --warn-bg: #FFF5DB;
+  --warn-fg: #7A5A00;
+  --font: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont,
+    "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --mono: Consolas, "D2Coding", "SFMono-Regular", ui-monospace, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --accent: #6CC48A;
+    --accent-soft: #1C2C21;
+    --fg: #EEF3EF;
+    --muted: #9AA39C;
+    --line: #2A322C;
+    --bg: #111513;
+    --panel: #1A201C;
+    --code-bg: #070908;
+    --warn-bg: #2E2710;
+    --warn-fg: #E8C55A;
+  }
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--bg); color: var(--fg);
+  font-family: var(--font); font-size: 17px; line-height: 1.7;
+  word-break: keep-all; overflow-wrap: anywhere;
+}
+a { color: var(--accent); }
+.wrap { max-width: 680px; margin: 0 auto; padding: 0 16px 64px; }
+
+header { padding: 28px 0 22px; border-bottom: 1px solid var(--line); margin-bottom: 30px; }
+.brand { font-size: 13px; font-weight: 800; letter-spacing: .18em; color: var(--muted); }
+.brand b { color: var(--accent); }
+.kicker { margin-top: 16px; font-size: 12px; font-weight: 700; letter-spacing: .12em; color: var(--muted); }
+h1 { margin: 6px 0 10px; font-size: 29px; line-height: 1.3; letter-spacing: -.02em; font-weight: 800; }
+.lead { margin: 0; font-size: 18px; font-weight: 600; }
+.note { margin-top: 16px; padding: 12px 14px; background: var(--panel); border-radius: 10px; font-size: 14px; color: var(--muted); }
+
+section { margin-bottom: 40px; }
+h2 { margin: 0 0 16px; padding-left: 12px; border-left: 4px solid var(--accent); font-size: 21px; font-weight: 800; line-height: 1.35; }
+h3 { margin: 0 0 6px; font-size: 18px; font-weight: 700; line-height: 1.4; }
+
+.needs { list-style: none; margin: 0; padding: 0; }
+.needs li { position: relative; padding: 10px 0 10px 30px; border-bottom: 1px solid var(--line); }
+.needs li:last-child { border-bottom: 0; }
+.needs li::before {
+  content: ""; position: absolute; left: 0; top: 17px; width: 15px; height: 15px;
+  border: 2px solid var(--accent); border-radius: 4px;
+}
+
+.step { position: relative; padding-left: 46px; margin-bottom: 28px; }
+.step .no {
+  /* 번호 배지를 나뭇잎 모양으로: 왼쪽 위·오른쪽 아래는 뾰족, 나머지는 둥글게 */
+  position: absolute; left: 0; top: 2px; width: 32px; height: 32px; border-radius: 2px 70%;
+  background: var(--accent); color: #fff; font-weight: 800; font-size: 15px;
+  display: flex; align-items: center; justify-content: center;
+}
+.step p { margin: 0; }
+.check { margin: 8px 0 0; font-size: 14px; color: var(--accent); font-weight: 600; }
+.check::before { content: "✓ "; }
+
+.item { margin-bottom: 22px; }
+.copy {
+  margin: 10px 0 0; padding: 14px 16px; border-radius: 10px;
+  background: var(--code-bg); color: var(--code-fg);
+  font-family: var(--mono); font-size: 14px; line-height: 1.6;
+  white-space: pre-wrap; overflow-x: auto;
+}
+.copy-btn {
+  margin-top: 8px; padding: 7px 13px; border-radius: 8px; cursor: pointer;
+  font: 600 13px var(--font); color: var(--fg);
+  background: var(--panel); border: 1px solid var(--line);
+}
+.copy-btn.done { border-color: var(--accent); color: var(--accent); }
+
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 15px; }
+th, td { text-align: left; vertical-align: top; padding: 9px 10px; border-bottom: 1px solid var(--line); }
+th { background: var(--panel); font-weight: 700; white-space: nowrap; }
+
+.verdicts { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
+.verdicts div { padding: 12px 14px; border-radius: 10px; background: var(--panel); font-size: 15px; }
+.verdicts b { display: block; color: var(--accent); }
+
+.pit { background: var(--panel); border-radius: 12px; padding: 16px 18px; margin-bottom: 12px; }
+.pit .sym { margin: 0 0 6px; font-weight: 700; }
+.pit .fix { margin: 0; }
+
+.warn { padding: 14px 16px; border-radius: 10px; background: var(--warn-bg); color: var(--warn-fg); font-size: 15px; }
+.plain { margin: 0; padding-left: 20px; }
+.plain li { margin-bottom: 8px; }
+code { font-family: var(--mono); font-size: .9em; padding: 1px 5px; border-radius: 5px; background: var(--panel); }
+
+footer { margin-top: 48px; padding: 22px 18px; border-radius: 14px; background: var(--accent-soft); text-align: center; font-size: 15px; }
+footer p { margin: 0 0 6px; }
+footer p:last-child { margin: 0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="brand"><b>SAEROKI</b> · 19번 열매</div>
+  <div class="kicker">모의 면접</div>
+  <h1>새록 면접관 5명에게 모의 면접 보는 법</h1>
+  <p class="lead">자기소개서와 채용 공고를 넣으면 면접관 5명이 동시에 심사하고, 근거 줄이 달린 질문 10개와 <code>verdict.md</code>를 줍니다.</p>
+  <div class="note">압박·인사·실무·임원·숫자 검증 면접관이 각자 4항목 고정 기준표로 점수를 냅니다. 질문마다 내 글의 몇째 줄을 보고 물었는지 달고, 그 문장이 정말 거기 있는지 프로그램이 확인합니다. 실전 연습 점수는 회차마다 쌓여 전후 비교와 실제 면접 적중률까지 봅니다. 합격 가능성은 예측하지 않습니다.</div>
+</header>
+
+<section>
+  <h2>준비물</h2>
+  <ul class="needs">
+    <li>웹 화면만 쓸 때: 내 Claude API 키. 설치할 것이 없습니다</li>
+    <li>내 PC에서 쓸 때: Claude Code(Claude Pro 이상 요금제)에 로그인한 PC와 Python 3.10 이상(<code>python --version</code>으로 확인)</li>
+    <li>자기소개서. 한글·워드·PDF라면 본문만 복사해 두세요</li>
+    <li>채용 공고 본문(선택). 넣으면 '공고 요건 연결'·'회사 이해'까지 심사합니다</li>
+  </ul>
+</section>
+
+<section>
+  <h2>사용 방법</h2>
+
+  <div class="step">
+    <div class="no">1</div>
+    <h3>플러그인 설치</h3>
+    <p>Claude Code 대화창에 아래 '설치 두 줄'을 넣습니다. 면접관 파일을 직접 만들 필요가 없습니다. 설치 뒤에는 <b>새 대화창</b>을 엽니다.</p>
+    <p class="check"><code>/saerok-interview:panel</code>이 명령 목록에 보이면 성공</p>
+  </div>
+
+  <div class="step">
+    <div class="no">2</div>
+    <h3>서류 폴더 만들기</h3>
+    <p>대화창에 <code>/saerok-interview:panel</code>만 입력하면, 처음에는 심사 대신 내 PC에 서류 폴더와 양식 두 개를 만들어 줍니다. 이 폴더는 공개 저장소 밖에 있어 자기소개서가 올라갈 일이 없습니다.</p>
+    <p class="check">Windows는 <code>Win + R</code> → <code>%USERPROFILE%\.saerok\interview\서류</code>로 바로 열기</p>
+  </div>
+
+  <div class="step">
+    <div class="no">3</div>
+    <h3>자기소개서와 공고 넣기</h3>
+    <p>양식을 메모장으로 열어 <code>자기소개서.md</code>는 내 글로, <code>공고-회사이름.md</code>는 이름을 바꾸고(예: <code>공고-골목장터.md</code>) 공고 본문으로 채웁니다. <b>문장 하나를 한 줄에</b> 쓰면 근거 표시가 정확해집니다.</p>
+    <p class="check">양식의 <code>[새록 면접관 양식]</code> 안내 줄을 지워야 시작합니다</p>
+  </div>
+
+  <div class="step">
+    <div class="no">4</div>
+    <h3>면접 시작</h3>
+    <p>어느 폴더에서든 <code>/saerok-interview:panel --company 골목장터</code> 한 줄, 또는 "골목장터 면접 보자"라고 말합니다. 개인정보 꼴(주민번호·전화번호·이메일)이 있으면 가린 값을 보여 주고 진행할지 먼저 묻습니다.</p>
+    <p class="check">1~3분 뒤 판정표와 <code>verdict.md</code> 위치를 알려 줍니다</p>
+  </div>
+
+  <div class="step">
+    <div class="no">5</div>
+    <h3>실전 연습과 비교</h3>
+    <p><code>/saerok-interview:practice</code>로 점수가 낮은 면접관 질문부터 하나씩 답합니다. 꼬리 질문 1~2번 뒤 채점하고 <code>practice.md</code>에 남깁니다. 자기소개서를 고쳐 다시 심사하면 <code>/saerok-interview:compare</code>로 회차별 변화를 봅니다.</p>
+    <p class="check">기록은 내 PC <code>~/.saerok/interview/&lt;날짜-회사&gt;/</code>에만 남습니다</p>
+  </div>
+</section>
+
+<section>
+  <h2>면접관 5명과 기준표</h2>
+  <p>면접관마다 4항목 10점입니다. 볼 수 없는 항목은 0점이 아니라 '해당 없음'으로 빼고 10점으로 환산합니다.</p>
+  <div class="table-wrap">
+  <table>
+    <tr><th>면접관</th><th>3점 항목</th><th>2점 항목</th></tr>
+    <tr><td>압박</td><td>근거·수치, 본인 역할</td><td>앞뒤 일관성, 침착함(답변에서만)</td></tr>
+    <tr><td>인사</td><td>지원 동기, 협업</td><td>조직 적합, 장기 근속</td></tr>
+    <tr><td>실무</td><td>상황 판단, 실행 순서</td><td>직무 용어, 공고 요건 연결</td></tr>
+    <tr><td>임원</td><td>회사 이해, 왜 이 회사</td><td>장기 포부, 핵심 요약(답변에서만)</td></tr>
+    <tr><td>숫자 검증</td><td>수치의 출처, 계산 과정</td><td>지표 정의, 비교 기준</td></tr>
+  </table>
+  </div>
+  <div class="verdicts" style="margin-top:14px">
+    <div><b>합격권</b>7점 이상</div>
+    <div><b>보류</b>5점 이상</div>
+    <div><b>부족</b>5점 미만</div>
+  </div>
+  <p>서류 단계의 판정이며 실제 합격 예측이 아닙니다. 근거 원문을 내 글에서 찾지 못한 질문은 '확인 안 됨, 일반 질문'으로 표시됩니다.</p>
+</section>
+
+<section>
+  <h2>복사해서 쓰기</h2>
+
+  <div class="item">
+    <h3>설치 두 줄</h3>
+<pre class="copy">/plugin marketplace add jhheo51-arch/saeroki
+/plugin install saerok-interview@saeroki</pre>
+    <button class="copy-btn" type="button">복사</button>
+  </div>
+
+  <div class="item">
+    <h3>서류 심사(가상 회사)</h3>
+<pre class="copy">/saerok-interview:panel --company 골목장터</pre>
+    <button class="copy-btn" type="button">복사</button>
+  </div>
+
+  <div class="item">
+    <h3>산업·직무 용어까지 넣어 심사</h3>
+<pre class="copy">/saerok-interview:panel --company 골목장터 --industry platform --role pm</pre>
+    <button class="copy-btn" type="button">복사</button>
+  </div>
+
+  <div class="item">
+    <h3>실전 연습(강도: 순한맛·보통·매운맛)</h3>
+<pre class="copy">/saerok-interview:practice --level 보통</pre>
+    <button class="copy-btn" type="button">복사</button>
+  </div>
+
+  <div class="item">
+    <h3>특정 면접관만 연습</h3>
+<pre class="copy">/saerok-interview:practice --who pressure,numbers</pre>
+    <button class="copy-btn" type="button">복사</button>
+  </div>
+
+  <div class="item">
+    <h3>회차별 점수 비교</h3>
+<pre class="copy">/saerok-interview:compare --last 3</pre>
+    <button class="copy-btn" type="button">복사</button>
+  </div>
+
+  <div class="item">
+    <h3>실제 면접 질문 기록</h3>
+<pre class="copy">/saerok-interview:compare --real "&lt;세션 폴더&gt;"</pre>
+    <button class="copy-btn" type="button">복사</button>
+  </div>
+
+  <div class="item">
+    <h3>자기소개서 양식(한 줄에 한 문장)</h3>
+<pre class="copy"># 자기소개서
+
+## 지원 동기
+
+저는 ○○ 서비스에서 2년 동안 운영 PM으로 일했습니다.
+그 경험으로 더 많은 판매자를 돕는 플랫폼에서 일하고 싶어 지원했습니다.
+
+## 가장 큰 성과
+
+주문 화면 단계를 줄여 전환율을 30% 올렸습니다.
+고객 문의를 직접 분류해 개선 순서를 정했습니다.</pre>
+    <button class="copy-btn" type="button">복사</button>
+  </div>
+</section>
+
+<section>
+  <h2>다른 화면으로 쓰기</h2>
+  <div class="table-wrap">
+  <table>
+    <tr><th>어디서</th><th>여는 법</th><th>키·기록</th></tr>
+    <tr><td>웹</td><td><a href="./">면접 화면</a></td><td>내 API 키를 넣으면 브라우저가 Anthropic에 바로 연결. 기록은 그 브라우저에만, <code>verdict.md</code>·<code>practice.md</code>로 내려받기</td></tr>
+    <tr><td>터미널</td><td><code>saerok-interview</code></td><td>같은 화면이 내 PC에서 열리고 Claude Code 구독으로 돌아감. 서류 폴더에서 불러오기 가능. 기록은 <code>~/.saerok/interview/</code></td></tr>
+    <tr><td>Claude Code</td><td><code>/saerok-interview:panel</code></td><td>위 사용 방법 그대로</td></tr>
+  </table>
+  </div>
+  <p>화면은 새 면접·실전 연습·기록·비교 탭 세 개입니다. 실제 면접 질문은 한 줄에 하나씩 적고, 모의 질문과 비슷했던 줄 끝에 <code>/ Q3</code>처럼 번호를 붙이면 적중으로 셉니다.</p>
+</section>
+
+<section>
+  <h2>막힐 때</h2>
+  <div class="pit">
+    <p class="sym"><code>/saerok-interview:panel</code>이 안 보여요</p>
+    <p class="fix">설치 뒤 새 대화창을 열어야 보입니다. <code>/plugin</code>에서 <code>saerok-interview</code>가 켜져 있는지 확인하세요.</p>
+  </div>
+  <div class="pit">
+    <p class="sym">"아직 양식 그대로입니다"라고 해요</p>
+    <p class="fix">양식의 <code>&gt;</code>로 시작하는 안내 줄을 지우고 저장하세요.</p>
+  </div>
+  <div class="pit">
+    <p class="sym">한글 파일이나 공고를 읽지 않아요</p>
+    <p class="fix"><code>.md</code>·<code>.txt</code>만 읽습니다. 본문을 메모장에 붙여 넣어 저장하고, 공고는 <code>공고-회사이름.md</code>처럼 <code>공고</code>로 시작하게 이름을 붙이세요.</p>
+  </div>
+  <div class="pit">
+    <p class="sym">"면접 폴더가 git 저장소 안입니다"라며 멈춰요</p>
+    <p class="fix">자기소개서가 실수로 공개되지 않도록 저장소 안에는 만들지 않습니다. 기본 위치를 쓰거나 <code>SAEROK_INTERVIEW_HOME</code>을 저장소 밖 폴더로 바꿔 주세요.</p>
+  </div>
+  <div class="pit">
+    <p class="sym">점수가 너무 짜요</p>
+    <p class="fix">면접관은 일부러 깐깐합니다. 점수보다 '왜 그 질문을 했는지'와 고칠 점을 보세요.</p>
+  </div>
+  <div class="pit">
+    <p class="sym">터미널 화면이 Claude에 연결되지 않아요</p>
+    <p class="fix">Claude Code가 설치·로그인되어 있는지 확인하세요. 없으면 화면의 '키·설정'에서 API 키 방식으로 바꾸거나 <code>saerok-interview --api</code>로 엽니다.</p>
+  </div>
+</section>
+
+<section>
+  <h2>주의할 점</h2>
+  <ul class="plain">
+    <li>AI 면접관은 연습용입니다. 실제 회사 면접 방식과 다를 수 있고, 합격 가능성을 예측하지 않습니다.</li>
+    <li>서류 심사는 면접관 5명이 같은 글을 각자 읽어 평소 대화보다 사용량이 많이 듭니다. 아끼려면 <code>--who</code>로 면접관을 줄이세요.</li>
+    <li>모범 답안 전문은 요청할 때만 줍니다. 기본은 '더 좋은 답의 방향' 한 줄입니다.</li>
+  </ul>
+  <p class="warn">파일은 내 PC(웹 화면은 그 브라우저)에만 저장되지만, 심사는 Claude(Anthropic 서버)가 하므로 내용이 분석을 위해 전송됩니다. 주민번호·연락처는 지우고 넣으세요. 공용 PC의 웹 화면에는 API 키를 넣지 마세요.</p>
+</section>
+
+<footer>
+  <p>새록이 19번 열매 · 새록 면접관</p>
+  <p><a href="https://github.com/jhheo51-arch/saeroki/blob/main/fruits/19-saerok-interview/GUIDE.md">자세한 사용 안내(파일 이름 규칙·결과 폴더)</a></p>
+</footer>
+
+</div>
+<script>
+document.querySelectorAll(".copy-btn").forEach(function (btn) {
+  btn.addEventListener("click", function () {
+    var text = btn.previousElementSibling.textContent;
+    var done = function () {
+      btn.textContent = "복사됨";
+      btn.classList.add("done");
+      setTimeout(function () { btn.textContent = "복사"; btn.classList.remove("done"); }, 1500);
+    };
+    if (navigator.clipboard) navigator.clipboard.writeText(text).then(done, function () {});
+  });
+});
+</script>
+</body>
+</html>

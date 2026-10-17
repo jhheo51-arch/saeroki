@@ -5,7 +5,8 @@
 - 상태: 🌸 꽃(만드는 중, 2026-10-17 첫 구현)
 - 설계: [PRD v2.1](../../docs/PRD-v2.1.md)
 - 공통 원칙: [AGENT-SPEC.md](../../AGENT-SPEC.md)
-- 참고: [AI-ANTENNA 면접 가이드](https://imyoung-man.github.io/AI-ANTENNA/aitip-interview/guide.html)의 '면접관 서브에이전트 + 판정.md + 실전 연습' 방식을 근거 표시·기록·비교로 고도화했습니다.
+- 사용 안내: **[새록 면접관 5명에게 모의 면접 보는 법](https://jhheo51-arch.github.io/saeroki/interview/guide.html)** (한 장짜리 화면) · [GUIDE.md](GUIDE.md) (파일 이름 규칙·결과 폴더까지)
+- 바탕: [AI-ANTENNA 면접 가이드](https://imyoung-man.github.io/AI-ANTENNA/aitip-interview/guide.html)의 '면접관 서브에이전트 + 판정.md + 실전 연습' 방식을 새록이 방식(면접관 5명·고정 기준표·근거 줄 확인·회차 비교)으로 다시 만들었습니다.
 
 ## 바로 면접 보기
 
