@@ -42,6 +42,8 @@ claude --plugin-dir saeroki/fruits/19-saerok-interview "/saerok-interview:panel 
 
 어느 방법이든 기록은 저장소가 아니라 내 PC 면접 폴더에 쌓입니다.
 
+자기소개서 쓰는 법(`.md`·`.txt`, 한 줄에 한 문장), 원본을 어디에 둘지, 대화창·터미널에서 경로를 넘기는 법, 심사 뒤 연습·비교까지는 **[사용 안내(GUIDE.md)](GUIDE.md)**에 자세히 적었습니다.
+
 ## 쓰는 순서
 
 | 단계 | 명령 | 하는 일 |
