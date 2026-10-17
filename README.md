@@ -35,7 +35,7 @@ Claude Code 대화창에서 새록이 플러그인 모음을 한 번만 등록�
 | 🌸 [19 새록 면접관](fruits/19-saerok-interview) | 면접관 5명이 자기소개서를 심사하고 근거 달린 예상 질문 10개 | `/plugin install saerok-interview@saeroki` | `/saerok-interview:panel`<br>`/saerok-interview:practice` |
 | 🌸 [20 새록 심사단](fruits/20-saerok-idea) | 서비스 아이디어를 심사위원 3명이 진행·조건부·보류로 판정 | `/plugin install saerok-idea@saeroki` | `/saerok-idea:judge <아이디어 한 줄>` |
 
-**설치 없이 브라우저에서:** [📖 17 새록 사전](https://jhheo51-arch.github.io/saeroki/) · [🎤 19 면접관 화면](https://jhheo51-arch.github.io/saeroki/interview/) · [⚖️ 20 심사단 화면](https://jhheo51-arch.github.io/saeroki/idea/) · [📕 새록 도감](https://jhheo51-arch.github.io/saeroki/dex/)  
+**설치 없이 브라우저에서:** [📖 17 새록 사전](https://jhheo51-arch.github.io/saeroki/) · [🎤 19 면접관 화면](https://jhheo51-arch.github.io/saeroki/interview/) · [⚖️ 20 심사단 화면](https://jhheo51-arch.github.io/saeroki/idea/)  
 <sub>면접관·심사단 화면은 내 Claude API 키로 동작하고 기록은 그 브라우저에만 남습니다.</sub>
 
 <details>
@@ -111,6 +111,14 @@ claude plugin disable saerok-watch
 | 🌸 14 결과 자기 검토 | 결과를 스스로 확인하고 고칩니다 |
 
 번호는 처음 정한 에이전트 번호입니다. 1번부터 16번까지의 원래 목록과 나중에 더한 17번은 [PRD v01](docs/PRD-v01.md)에, 18번은 [PRD v1.9](docs/PRD-v1.9.md)에, 4번 새록 검토관 설계는 [PRD v2.0](docs/PRD-v2.0.md)에, 19번 새록 면접관 설계는 [PRD v2.1](docs/PRD-v2.1.md)에, 20번 새록 심사단 설계는 검토관 PRD의 짝 문서 [PRD v2.0-idea](docs/PRD-v2.0-idea.md)에, 21번 새록 지원서 설계는 [PRD v2.2](docs/PRD-v2.2.md)에 있습니다. 최신 상태는 이 열매 지도가 기준이고, 2026-10-14 시점 구현 기록은 [PRD v1.5](docs/PRD-v1.5.md)에 남겨 둡니다. 뿌리 12~14는 지금 [1번 열매](fruits/01-content-personalization) 코드 안에 있으며, 다른 열매가 함께 쓰게 되면 따로 떼어 냅니다.
+
+### 📕 새록 도감
+
+포켓몬 1세대 도감처럼 열매와 뿌리를 번호순으로 모아 보는 화면입니다. **[새록 도감 열기](https://jhheo51-arch.github.io/saeroki/dex/)**
+
+- 🌸 꽃이 핀 번호는 지금 레벨의 새록이 그림과 분류·설명이, 🌱 씨앗은 실루엣과 기획 한 줄만 보입니다.
+- 방향키로 고르고 `A`(Enter)로 엽니다. 울음소리, 게임보이 4색과 원래 색 전환, `#004`처럼 번호로 바로 열기를 지원합니다.
+- 상태는 이 열매 지도에서 읽습니다. 지도를 고친 뒤 `python scripts/make_dex.py`를 실행하면 도감도 따라옵니다.
 
 ## 자라는 새록이
 
