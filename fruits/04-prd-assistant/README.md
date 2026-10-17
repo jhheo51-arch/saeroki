@@ -1,4 +1,6 @@
-# 🌸 4 새록 검토관 (PRD 설계 지원)
+# 🍎 4 새록 검토관 (PRD 설계 지원)
+
+<img src="../../assets/characters/saeroki-reviewer.png" alt="돋보기로 PRD를 살피는 검토관 새록이" width="140" align="right">
 
 PRD를 쓰기 전에는 스무고개로 결정을 하나씩 확정하고, 쓴 뒤에는 기준표 7개로 검사해 빠진 칸과 근거 없이 쓴 줄을 줄 번호로 짚습니다. 결정을 대신 내리거나 근거를 지어내지 않습니다.
 

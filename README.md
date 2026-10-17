@@ -87,6 +87,20 @@ claude plugin disable saerok-watch
 | 학습 | 🌸 [17 새록 사전(산업별 용어 사전)](fruits/17-saerok-dictionary) · 🌸 [19 새록 면접관(모의 면접)](fruits/19-saerok-interview) · 🌱 [21 새록 지원서(공고 분석·자기소개서)](fruits/21-saerok-apply) |
 | 돌봄 | 🌸 [18 새록 파수꾼(토큰 사용량 감시)](fruits/18-saerok-watch) |
 
+꽃이나 열매가 된 에이전트는 하는 일에 맞는 소품을 든 새록이로 그립니다. 새록이가 자라면 그림도 함께 자랍니다(`python scripts/make_characters.py`).
+
+<table align="center">
+  <tr>
+    <td align="center"><a href="fruits/04-prd-assistant"><img src="assets/characters/saeroki-reviewer.png" alt="돋보기로 PRD를 살피는 검토관 새록이" height="96"></a><br><sub>🍎 4 검토관</sub></td>
+    <td align="center"><a href="fruits/01-content-personalization"><img src="assets/characters/saeroki-curator.png" alt="헤드폰을 쓰고 음표를 띄운 새록이" height="96"></a><br><sub>🌸 1 콘텐츠 개인화</sub></td>
+    <td align="center"><a href="fruits/16-natural-language-sql"><img src="assets/characters/saeroki-sql.png" alt="데이터 원통을 안은 SQL 새록이" height="96"></a><br><sub>🌸 16 SQL</sub></td>
+    <td align="center"><a href="fruits/17-saerok-dictionary"><img src="assets/characters/saeroki-dictionary.png" alt="동그란 안경을 쓰고 두꺼운 사전을 낀 새록이" height="96"></a><br><sub>🌸 17 사전</sub></td>
+    <td align="center"><a href="fruits/18-saerok-watch"><img src="assets/saeroki-sentry.png" alt="K-2 소총을 든 파수꾼 새록이" height="96"></a><br><sub>🌸 18 파수꾼</sub></td>
+    <td align="center"><a href="fruits/19-saerok-interview"><img src="assets/characters/saeroki-interviewer.png" alt="넥타이를 매고 클립보드를 든 면접관 새록이" height="96"></a><br><sub>🌸 19 면접관</sub></td>
+    <td align="center"><a href="fruits/20-saerok-idea"><img src="assets/characters/saeroki-judge.png" alt="법복을 입고 판사봉을 든 심사단 새록이" height="96"></a><br><sub>🌸 20 심사단</sub></td>
+  </tr>
+</table>
+
 ### 뿌리 4개
 
 | 뿌리 | 하는 일 |

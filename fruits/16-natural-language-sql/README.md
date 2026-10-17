@@ -1,5 +1,7 @@
 # 🌸 16 새록 SQL
 
+<img src="../../assets/characters/saeroki-sql.png" alt="데이터 원통을 안은 SQL 새록이" width="140" align="right">
+
 우리말로 물으면 서울 생활 공공 데이터에 맞는 SQL을 만들어 실행하고, 결과표와 쉬운 풀이를 함께 보여 주는 터미널 에이전트입니다. 받은 SQL을 붙여 넣으면 무엇을 하는 쿼리인지 풀어 줍니다.
 
 - 설계: [PRD v1.8](../../docs/PRD-v1.8.md)

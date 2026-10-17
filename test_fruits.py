@@ -74,3 +74,29 @@ class IdeaPrdSyncTest(unittest.TestCase):
             with self.assertRaises(ValueError):
                 self.sync.sync(root, use_git=False)
             self.assertTrue((root / "docs" / "PRD-v2.0-idea.md").exists())
+
+
+class CharacterTest(unittest.TestCase):
+    """에이전트별 새록이 그림(scripts/make_characters.py)이 모든 레벨에서 그려지는지."""
+
+    @classmethod
+    def setUpClass(cls):
+        import importlib.util
+        path = Path(__file__).resolve().parent / "scripts" / "make_characters.py"
+        spec = importlib.util.spec_from_file_location("make_characters", path)
+        cls.chars = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(cls.chars)
+
+    def test_every_character_renders_at_every_body_size(self):
+        for key in self.chars.CHARACTERS:
+            for level in (1, 13, 26, 50, 100):
+                with self.subTest(key=key, level=level):
+                    rows, colors = self.chars.sprite(key, level)
+                    self.assertTrue(all(c == " " or c in colors for r in rows for c in r))
+                    self.assertTrue(self.chars.render_png(key, level).startswith(b"\x89PNG"))
+
+    def test_readme_shows_every_character(self):
+        readme = (Path(__file__).resolve().parent / "README.md").read_text(encoding="utf-8")
+        for key in self.chars.CHARACTERS:
+            with self.subTest(key=key):
+                self.assertIn(f"assets/characters/saeroki-{key}.png", readme)
