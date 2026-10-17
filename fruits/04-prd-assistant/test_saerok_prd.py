@@ -11,6 +11,7 @@ from saerok_prd import check, cli, compare
 HERE = Path(__file__).resolve().parent
 WEAK = (HERE / "examples" / "weak-prd.md").read_text(encoding="utf-8")
 REVISED = (HERE / "examples" / "weak-prd-revised.md").read_text(encoding="utf-8")
+DRAFT = (HERE / "examples" / "design-draft.md").read_text(encoding="utf-8")
 
 
 def status(result, key):
@@ -153,6 +154,23 @@ class StricterTest(unittest.TestCase):
         long = "# 제목\n## 문제\n" + "줄\n" * 600
         self.assertIn("long", [w["kind"] for w in check.check(long)["warnings"]])
         self.assertEqual(check.check(WEAK)["warnings"], [])
+
+
+class DesignTest(unittest.TestCase):
+    """설계 스무고개 스킬이 권하는 절 순서로 쓴 초안은 기준표를 모두 채웁니다."""
+
+    def test_design_draft_passes(self):
+        r = check.check(DRAFT)
+        self.assertEqual((r["summary"]["ok"], r["summary"]["total"], r["findings"], r["warnings"]), (7, 7, [], []))
+
+    def test_skill_files(self):
+        for name in ("design", "review"):
+            head = (HERE / "skills" / name / "SKILL.md").read_text(encoding="utf-8").split("---")[1]
+            self.assertIn(f"name: {name}", head)
+            self.assertIn("description:", head)
+        design = (HERE / "skills" / "design" / "SKILL.md").read_text(encoding="utf-8")
+        self.assertIn("최대 20개", design)
+        self.assertIn("한 번에 하나만", design)
 
 
 class TopicTest(unittest.TestCase):

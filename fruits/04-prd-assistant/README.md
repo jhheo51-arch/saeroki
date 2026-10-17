@@ -2,7 +2,7 @@
 
 PRD를 쓰기 전에는 스무고개로 결정을 하나씩 확정하고, 쓴 뒤에는 기준표 7개로 검사해 빠진 칸과 근거 없이 쓴 줄을 줄 번호로 짚습니다. 결정을 대신 내리거나 근거를 지어내지 않습니다.
 
-- 상태: 🌸 꽃(첫 버전 구현)
+- 상태: 🍎 열매(첫 버전 완성, 2026-10-17)
 - 설계: [PRD v2.0](../../docs/PRD-v2.0.md)
 - 공통 원칙: [AGENT-SPEC.md](../../AGENT-SPEC.md)
 
@@ -26,6 +26,8 @@ Claude Code 대화창에서:
 - 고를 수 있는 질문은 권하는 보기를 맨 앞에 두고, 근거 숫자처럼 지어내면 안 되는 답은 짧은 답으로 받습니다. 정하지 못한 것은 `미정`으로 남깁니다.
 - 끝나면 '스무고개 확정 사항' 표와 PRD 초안을 만들고(파일은 확인받은 뒤), 바로 `check`로 검사해 빈 기준만 1~3개 더 묻습니다.
 - 기존 PRD 경로를 함께 넘기면 검사에서 빠지거나 약한 기준과 `미정` 줄만 묻습니다.
+
+초안 모양은 [`examples/design-draft.md`](examples/design-draft.md)에 있습니다(꾸며 낸 내용, 기준 7개 충족).
 
 질문 한도와 보기 형식은 [github/spec-kit](https://github.com/github/spec-kit)의 `clarify`(질문 5개, 보기 2~5개, 영향 큰 것부터)를 참고했고, 한도는 새록이 PRD v1.6~v1.8에서 써 온 20개로 정했습니다.
 
@@ -130,7 +132,7 @@ bash fruits/04-prd-assistant/bin/saerok-prd compare docs/PRD-v2.0.md --since HEA
 | [`saerok_prd/compare.py`](saerok_prd/compare.py) | 고치기 전후 비교와 텍스트 출력 |
 | [`saerok_prd/cli.py`](saerok_prd/cli.py) | `saerok-prd check`·`compare` 명령, 설정 파일 찾기, git 이전 버전, 기록 |
 | [`bin/saerok-prd`](bin/saerok-prd) | Python을 찾아 명령을 실행하는 스크립트(플러그인용) |
-| [`examples/`](examples) | 허술한 예시 PRD와 그것을 일부 고친 예시 |
+| [`examples/`](examples) | 허술한 예시 PRD, 그것을 일부 고친 예시, 스무고개 초안 예시 |
 | [`skills/design/SKILL.md`](skills/design/SKILL.md) | Claude Code 스킬 `/saerok-prd:design`(설계 스무고개) |
 | [`skills/review/SKILL.md`](skills/review/SKILL.md) | Claude Code 스킬 `/saerok-prd:review` |
 | [`test_saerok_prd.py`](test_saerok_prd.py) | 자동 검사 |

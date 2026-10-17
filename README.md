@@ -6,7 +6,7 @@
   <img src="https://img.shields.io/badge/PRD-v2.0-40916C" alt="PRD v2.0">
   <img src="https://img.shields.io/badge/%EC%97%B4%EB%A7%A4-13-D97757" alt="열매 13개">
   <img src="https://img.shields.io/badge/%EB%BF%8C%EB%A6%AC-4-8A5A36" alt="뿌리 4개">
-  <img src="https://img.shields.io/badge/Tests-128_passing-31572C" alt="자동 검사 128개 통과">
+  <img src="https://img.shields.io/badge/Tests-130_passing-31572C" alt="자동 검사 130개 통과">
   <img src="https://img.shields.io/badge/Claude_%2B_Codex-shared_rules-40916C" alt="Claude와 Codex 공통 규칙">
 </p>
 
@@ -118,7 +118,7 @@ claude plugin install saerok-watch --marketplace jhheo51-arch/saeroki
 | 갈래 | 열매 |
 |---|---|
 | 추천 | 🌸 [1 콘텐츠 개인화](fruits/01-content-personalization) · 🌱 [6 레시피](fruits/06-recipe) · 🌱 [11 도서](fruits/11-book-recommendation) |
-| 기획 | 🌱 [3 마케팅 전략](fruits/03-marketing-strategy) · 🌸 [4 새록 검토관(PRD 설계 지원)](fruits/04-prd-assistant) |
+| 기획 | 🌱 [3 마케팅 전략](fruits/03-marketing-strategy) · 🍎 [4 새록 검토관(PRD 설계 지원)](fruits/04-prd-assistant) |
 | 조사와 분석 | 🌱 [7 금융](fruits/07-finance) · 🌱 [8 미디어 트렌드](fruits/08-media-trend) · 🌱 [9 법률 문서(10번 통합)](fruits/09-legal-document) · 🌱 [15 심층 연구](fruits/15-deep-research) |
 | 데이터 | 🌱 [5 데이터 시각화](fruits/05-data-visualization) · 🌸 [16 새록 SQL(자연어 SQL)](fruits/16-natural-language-sql) |
 | 학습 | 🌸 [17 새록 사전(산업별 용어 사전)](fruits/17-saerok-dictionary) |
@@ -141,7 +141,7 @@ claude plugin install saerok-watch --marketplace jhheo51-arch/saeroki
 saeroki/
 ├─ fruits/                 열매 13개, 열매마다 폴더 하나
 │  ├─ 01-content-personalization/   🌸 코드·데이터·검사·Claude 지침
-│  ├─ 04-prd-assistant/             🌸 PRD 검토 스킬·검사 명령·예시·검사
+│  ├─ 04-prd-assistant/             🍎 PRD 설계 스무고개·검토 스킬·검사 명령·예시·검사
 │  ├─ 16-natural-language-sql/      🌸 saerok-sql 터미널·서울 데이터(data/)·검사
 │  ├─ 17-saerok-dictionary/         🌸 사전 화면(web/)·용어집(data/)·검사
 │  ├─ 18-saerok-watch/              🌸 토큰 감시 훅·대시보드(web/)·공개 집계(data/)·검사
@@ -202,6 +202,7 @@ python -m unittest -v
 - [x] 4번 새록 검토관 설계 확정(PRD v2.0)과 첫 버전: 기준표 7개·줄 지적 4종 검사, 스킬 `/saerok-prd:review`
 - [ ] 새록 파수꾼 훅 설치 후 실제 대화에서 경고 한 줄 확인
 - [x] 새록 검토관 설계 스무고개 스킬 `/saerok-prd:design`, 고치기 전후 비교 `compare`
+- [x] 4번 새록 검토관 🍎 열매 승격(2026-10-17): 설계 스무고개·검사·고치기 전후 비교 첫 버전 완성
 - [ ] 새록 검토관으로 새 PRD 2개 검사, 지적 중 고친 비율 기록(2026-10-31까지)
 - [ ] 새록 SQL 채점 정답 사람 검토, 애매한·복잡한 질문 채점 세트 추가
 - [ ] 새록 사전 사용자 확인
