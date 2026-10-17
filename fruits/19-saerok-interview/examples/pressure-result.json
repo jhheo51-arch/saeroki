@@ -1,0 +1,21 @@
+{
+  "interviewer": "pressure",
+  "questions": [
+    {
+      "question": "전환율 30% 상승에서 PM님이 직접 한 일과 개발자·디자이너가 한 일을 나눠 말씀해 주세요.",
+      "item": "role",
+      "evidence": [{"doc": "resume_letter", "line": 12, "quote": "주문 화면의 배송 날짜 선택을 한 단계로 줄여 전환율을 30% 올렸습니다."}],
+      "direction": "본인이 정한 것(문제 정의·우선순위)과 팀이 한 것(구현·디자인)을 나눠 말한다."
+    },
+    {
+      "question": "배송 날짜 변경 문의가 가장 많았다는데, 전체 문의 중 몇 건이었고 다른 문의와 얼마나 차이 났습니까?",
+      "item": "evidence",
+      "evidence": [{"doc": "resume_letter", "line": 13, "quote": "배송 날짜 변경 문의가 가장 많았고"}],
+      "direction": "분류한 기간, 전체 건수, 1위와 2위 차이를 숫자로 말한다."
+    }
+  ],
+  "items": {"evidence": 1, "role": 1, "consistency": 2, "composure": null},
+  "na": {"composure": "답변에서만 봄"},
+  "comment": "성과 문장은 분명하지만 숫자의 출처와 본인 역할이 문서에 없습니다.",
+  "fixes": ["전환율 30%의 기간과 비교 기준을 같은 문장에 적습니다.", "4주 배포에서 본인이 맡은 결정을 한 줄로 나눠 적습니다."]
+}

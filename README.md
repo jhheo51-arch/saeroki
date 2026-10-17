@@ -6,7 +6,7 @@
   <img src="https://img.shields.io/badge/PRD-v2.1-40916C" alt="PRD v2.1">
   <img src="https://img.shields.io/badge/%EC%97%B4%EB%A7%A4-14-D97757" alt="열매 14개">
   <img src="https://img.shields.io/badge/%EB%BF%8C%EB%A6%AC-4-8A5A36" alt="뿌리 4개">
-  <img src="https://img.shields.io/badge/Tests-130_passing-31572C" alt="자동 검사 130개 통과">
+  <img src="https://img.shields.io/badge/Tests-148_passing-31572C" alt="자동 검사 148개 통과">
   <img src="https://img.shields.io/badge/Claude_%2B_Codex-shared_rules-40916C" alt="Claude와 Codex 공통 규칙">
 </p>
 
@@ -121,7 +121,7 @@ claude plugin install saerok-watch --marketplace jhheo51-arch/saeroki
 | 기획 | 🌱 [3 마케팅 전략](fruits/03-marketing-strategy) · 🍎 [4 새록 검토관(PRD 설계 지원)](fruits/04-prd-assistant) |
 | 조사와 분석 | 🌱 [7 금융](fruits/07-finance) · 🌱 [8 미디어 트렌드](fruits/08-media-trend) · 🌱 [9 법률 문서(10번 통합)](fruits/09-legal-document) · 🌱 [15 심층 연구](fruits/15-deep-research) |
 | 데이터 | 🌱 [5 데이터 시각화](fruits/05-data-visualization) · 🌸 [16 새록 SQL(자연어 SQL)](fruits/16-natural-language-sql) |
-| 학습 | 🌸 [17 새록 사전(산업별 용어 사전)](fruits/17-saerok-dictionary) · 🌱 [19 새록 면접관(모의 면접)](fruits/19-saerok-interview) |
+| 학습 | 🌸 [17 새록 사전(산업별 용어 사전)](fruits/17-saerok-dictionary) · 🌸 [19 새록 면접관(모의 면접)](fruits/19-saerok-interview) |
 | 돌봄 | 🌸 [18 새록 파수꾼(토큰 사용량 감시)](fruits/18-saerok-watch) |
 
 ### 뿌리 4개
@@ -145,7 +145,8 @@ saeroki/
 │  ├─ 16-natural-language-sql/      🌸 saerok-sql 터미널·서울 데이터(data/)·검사
 │  ├─ 17-saerok-dictionary/         🌸 사전 화면(web/)·용어집(data/)·검사
 │  ├─ 18-saerok-watch/              🌸 토큰 감시 훅·대시보드(web/)·공개 집계(data/)·검사
-│  └─ 03 · 05 ~ 15 · 19 …           🌱 설명만 있는 씨앗 폴더
+│  ├─ 19-saerok-interview/          🌸 면접관 5명·심사·연습·비교 스킬·기록 명령·가상 예시·검사
+│  └─ 03 · 05 ~ 15 …                🌱 설명만 있는 씨앗 폴더
 ├─ docs/                   PRD와 Claude 이어하기 안내
 ├─ assets/ · data/growth.json · growth.py   자라는 새록이 그림과 성장 기록(Actions가 갱신)
 ├─ AGENT-SPEC.md           모든 열매가 지킬 공통 원칙
@@ -159,6 +160,7 @@ saeroki/
 | [`fruits/16-natural-language-sql`](fruits/16-natural-language-sql) | 16번 새록 SQL. 설치 후 PowerShell에서 `saerok-sql` |
 | [`fruits/17-saerok-dictionary`](fruits/17-saerok-dictionary) | 17번 새록 사전. 웹에서 바로 열기: [https://jhheo51-arch.github.io/saeroki/](https://jhheo51-arch.github.io/saeroki/) |
 | [`fruits/18-saerok-watch`](fruits/18-saerok-watch) | 18번 새록 파수꾼. 설치 후 `saerok-watch`로 대시보드 |
+| [`fruits/19-saerok-interview`](fruits/19-saerok-interview) | 19번 새록 면접관. 플러그인 설치 후 심사는 `/saerok-interview:panel <자기소개서>`, 연습은 `/saerok-interview:practice`, 비교는 `/saerok-interview:compare`. 기록은 내 PC `~/saerok-interview/`에만 |
 | [`docs/PRD-v01.md`](docs/PRD-v01.md) | 제품 방향, 열매 12개와 뿌리 4개의 원래 목록, 위험과 개발 순서 |
 | [`docs/PRD-v1.5.md`](docs/PRD-v1.5.md) | 2026-10-14 시점 구현 범위와 상태 기록(최신 상태는 위 열매 지도) |
 | [`docs/PRD-v1.6.md`](docs/PRD-v1.6.md) | 1번 콘텐츠 개인화 에이전트의 스무고개 확정 설계 |

@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "saerok-interview"
+version = "0.1.0"
+description = "새록 면접관: 자기소개서를 기준표로 심사하고 모의 면접 기록을 비교하는 새록이 19번 열매"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.scripts]
+saerok-interview = "saerok_interview.cli:main"
+
+[tool.setuptools]
+packages = ["saerok_interview"]

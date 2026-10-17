@@ -1,0 +1,11 @@
+{
+  "name": "saerok-interview",
+  "version": "1.0.0",
+  "description": "새록 면접관: 면접관 5명(압박·인사·실무·임원·숫자 검증)이 자기소개서를 고정 기준표로 심사해 근거 달린 질문 10개를 만들고, 실전 연습 점수와 회차 변화를 내 PC에만 기록하는 새록이 19번 열매",
+  "author": {
+    "name": "jhheo51-arch"
+  },
+  "homepage": "https://github.com/jhheo51-arch/saeroki/tree/main/fruits/19-saerok-interview",
+  "repository": "https://github.com/jhheo51-arch/saeroki",
+  "keywords": ["interview", "mock-interview", "resume", "saeroki"]
+}
