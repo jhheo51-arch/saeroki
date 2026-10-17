@@ -100,3 +100,37 @@ class CharacterTest(unittest.TestCase):
         for key in self.chars.CHARACTERS:
             with self.subTest(key=key):
                 self.assertIn(f"assets/characters/saeroki-{key}.png", readme)
+
+
+class DexTest(unittest.TestCase):
+    """새록 도감(scripts/make_dex.py)이 README 열매 지도의 번호를 모두 담고 상태를 따라가는지."""
+
+    @classmethod
+    def setUpClass(cls):
+        import importlib.util
+        path = Path(__file__).resolve().parent / "scripts" / "make_dex.py"
+        spec = importlib.util.spec_from_file_location("make_dex", path)
+        cls.dex = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(cls.dex)
+
+    def test_every_readme_number_has_an_entry(self):
+        missing = set(self.dex.statuses()) - set(self.dex.ENTRIES)
+        self.assertFalse(missing, f"도감에 없는 번호: {sorted(missing)}")
+
+    def test_build_follows_readme_status(self):
+        status = self.dex.statuses()
+        for level in (1, 13, 50, 100):
+            for item in self.dex.build(level)["entries"]:
+                if "merged" in item:
+                    continue
+                with self.subTest(no=item["no"], level=level):
+                    self.assertEqual(item["status"], status.get(item["no"], "seed"))
+                    self.assertTrue(item["sprite"])
+                    if item["status"] != "seed":
+                        self.assertTrue(item["text"])
+                        self.assertTrue(all(c == " " or c in item["colors"] for r in item["sprite"] for c in r))
+
+    def test_dex_page_is_linked(self):
+        root = Path(__file__).resolve().parent
+        self.assertIn("saeroki/dex/", (root / "README.md").read_text(encoding="utf-8"))
+        self.assertIn("dex/", (root / ".github" / "workflows" / "saerok-pages.yml").read_text(encoding="utf-8"))

@@ -1,0 +1,485 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>새록 도감</title>
+<meta name="description" content="새록이 에이전트 21번까지를 옛날 휴대용 게임기 도감처럼 넘겨 보는 화면">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/galmuri@2.39.3/dist/galmuri.css">
+<style>
+  :root {
+    /* 화면은 초록 4색 액정, 몸체는 새록이 나무색 */
+    --gb0: #E0F8D0;
+    --gb1: #88C070;
+    --gb2: #346856;
+    --gb3: #081820;
+    --shell: #31572C;
+    --shell-hi: #40916C;
+    --shell-lo: #1F3A1C;
+    --bezel: #3A3F44;
+    --page: #EEF3E6;
+    --page-ink: #1F2A1C;
+    --fruit: #D97757;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --page: #141A12; --page-ink: #DDE6D4; }
+  }
+  :root[data-theme="dark"] { --page: #141A12; --page-ink: #DDE6D4; }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: var(--page);
+    color: var(--page-ink);
+    font-family: Galmuri11, "DungGeunMo", monospace;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px 16px 40px;
+    -webkit-font-smoothing: none;
+  }
+
+  /* 몸체 */
+  .device {
+    width: min(100%, 440px);
+    background: linear-gradient(160deg, var(--shell-hi), var(--shell) 40%, var(--shell-lo));
+    border-radius: 18px 18px 56px 18px;
+    padding: 18px 18px 26px;
+    box-shadow: inset 0 2px 0 rgba(255,255,255,.18), inset 0 -4px 0 rgba(0,0,0,.25), 0 10px 30px rgba(0,0,0,.25);
+  }
+  .lights { display: flex; align-items: center; gap: 10px; margin: 0 4px 14px; }
+  .lens {
+    width: 34px; height: 34px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, #CFF5FF, #4A9FD8 45%, #1E5A8A);
+    border: 3px solid var(--gb0);
+    box-shadow: 0 0 0 2px var(--shell-lo);
+  }
+  .dot { width: 10px; height: 10px; border-radius: 50%; box-shadow: inset 0 -2px 0 rgba(0,0,0,.3); }
+  .dot.r { background: #E05A4F; } .dot.y { background: #F2C14E; } .dot.g { background: #7BD389; }
+  .brand { margin-left: auto; color: var(--gb0); font-size: 12px; letter-spacing: 2px; opacity: .85; }
+
+  .bezel {
+    background: var(--bezel);
+    border-radius: 10px 10px 32px 10px;
+    padding: 14px 18px 22px;
+  }
+  .screen {
+    background: var(--gb0);
+    color: var(--gb3);
+    aspect-ratio: 10 / 9;
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    font-size: 14px;
+    line-height: 1.45;
+    image-rendering: pixelated;
+  }
+  .bezel-label { color: #B9C0B5; font-size: 10px; text-align: center; margin-top: 8px; letter-spacing: 1px; }
+
+  /* 화면 공통: 두 줄 테두리 */
+  .frame {
+    position: absolute; inset: 6px;
+    border: 3px double var(--gb3);
+    padding: 8px;
+  }
+  .hidden { display: none !important; }
+
+  /* 목록 화면 */
+  #list { display: grid; grid-template-columns: 1fr 34%; gap: 8px; }
+  .entries { list-style: none; margin: 0; padding: 0 0 0 14px; overflow-y: auto; height: 100%; scrollbar-width: none; }
+  .entries::-webkit-scrollbar { display: none; }
+  .entries li { position: relative; cursor: pointer; padding: 1px 0; white-space: nowrap; }
+  .entries li .no { font-size: 11px; display: block; color: var(--gb2); }
+  .entries li .nm { display: flex; align-items: center; gap: 4px; padding-left: 8px; }
+  .entries li.seed .nm { color: var(--gb2); }
+  .entries li.merged .nm { color: var(--gb1); }
+  .entries li.sel::before { content: "▶"; position: absolute; left: -14px; top: 13px; font-size: 11px; }
+  .mark { width: 10px; height: 10px; flex: none; }
+  .side { border-left: 3px solid var(--gb3); padding-left: 8px; display: flex; flex-direction: column; gap: 2px; font-size: 13px; }
+  .side .big { font-size: 22px; text-align: right; margin-bottom: 6px; }
+  .side hr { border: 0; border-top: 2px dashed var(--gb2); width: 100%; margin: 6px 0; }
+  .menu { list-style: none; margin: 0; padding: 0 0 0 12px; }
+  .menu li { position: relative; cursor: pointer; }
+  .menu li.sel::before { content: "▶"; position: absolute; left: -12px; font-size: 10px; top: 3px; }
+  .menu li.dim { color: var(--gb1); }
+
+  /* 자세히 화면 */
+  #detail { display: flex; flex-direction: column; }
+  #detail .top { display: grid; grid-template-columns: 42% 1fr; gap: 8px; }
+  .portrait { display: flex; flex-direction: column; align-items: center; }
+  .portrait .box { width: 100%; aspect-ratio: 1; display: flex; align-items: flex-end; justify-content: center; }
+  .portrait canvas { image-rendering: pixelated; max-width: 100%; max-height: 100%; }
+  .portrait .num { font-size: 13px; margin-top: 2px; }
+  .facts .name { font-size: 18px; line-height: 1.3; }
+  .facts .cls { margin-bottom: 6px; }
+  .facts dl { margin: 0; display: grid; grid-template-columns: auto 1fr; column-gap: 8px; font-size: 13px; }
+  .facts dt { color: var(--gb2); }
+  .facts dd { margin: 0; text-align: right; }
+  .rule { border: 0; border-top: 4px dotted var(--gb3); margin: 8px -2px; }
+  .text { flex: 1; min-height: 0; overflow-y: auto; font-size: 13px; scrollbar-width: none; }
+  .text .plan { color: var(--gb2); }
+  .actions { margin-top: 4px; display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: 12px; }
+  .actions a, .actions button {
+    color: var(--gb3); background: none; border: 0; padding: 0; font: inherit; cursor: pointer; text-decoration: none;
+  }
+  .actions a::before, .actions button::before { content: "▶"; font-size: 9px; margin-right: 3px; }
+  .actions a:hover, .actions button:hover, .actions a:focus-visible, .actions button:focus-visible { text-decoration: underline; outline: none; }
+  .text { position: relative; cursor: pointer; }
+  .more { position: absolute; right: 0; bottom: 0; font-size: 10px; animation: blink 1s steps(1) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+  @media (prefers-reduced-motion: reduce) { .more { animation: none; } }
+
+  /* 버튼부 */
+  .pad { display: flex; align-items: center; justify-content: space-between; margin: 26px 10px 0; }
+  .dpad { position: relative; width: 96px; height: 96px; }
+  .dpad button {
+    position: absolute; width: 32px; height: 32px; background: #22262A; border: 0; cursor: pointer; color: #555C62; font-size: 12px;
+    box-shadow: inset 0 -3px 0 rgba(0,0,0,.4);
+  }
+  .dpad .u { left: 32px; top: 0; border-radius: 4px 4px 0 0; }
+  .dpad .d { left: 32px; top: 64px; border-radius: 0 0 4px 4px; }
+  .dpad .l { left: 0; top: 32px; border-radius: 4px 0 0 4px; }
+  .dpad .r { left: 64px; top: 32px; border-radius: 0 4px 4px 0; }
+  .dpad .c { position: absolute; left: 32px; top: 32px; width: 32px; height: 32px; background: #22262A; }
+  .ab { display: flex; gap: 14px; transform: rotate(-22deg); }
+  .ab button {
+    width: 48px; height: 48px; border-radius: 50%; border: 0; cursor: pointer;
+    background: #9E2E4A; color: #F3D7DE; font: inherit; font-size: 15px;
+    box-shadow: inset 0 -4px 0 rgba(0,0,0,.35), 0 2px 0 rgba(0,0,0,.2);
+  }
+  .ab button:active, .dpad button:active { transform: translateY(2px); box-shadow: none; }
+  .opts { display: flex; justify-content: center; gap: 22px; margin-top: 22px; }
+  .opts button {
+    background: #22262A; color: #B9C0B5; border: 0; border-radius: 12px; padding: 5px 14px; font: inherit; font-size: 11px; cursor: pointer;
+    transform: rotate(-22deg);
+  }
+  .opts button[aria-pressed="true"] { color: var(--gb0); background: #11351F; }
+  button:focus-visible { outline: 2px solid var(--gb0); outline-offset: 2px; }
+
+  .help { margin-top: 18px; font-size: 12px; text-align: center; line-height: 1.7; opacity: .8; max-width: 440px; }
+  .help a { color: inherit; }
+  kbd { font-family: inherit; border: 1px solid currentColor; border-radius: 3px; padding: 0 4px; font-size: 11px; }
+
+  @media (max-width: 380px) {
+    .screen { font-size: 12px; }
+    .facts .name { font-size: 15px; }
+    .bezel { padding: 10px 10px 18px; }
+  }
+</style>
+</head>
+<body>
+<main class="device" aria-label="새록 도감">
+  <div class="lights" aria-hidden="true">
+    <span class="lens"></span><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+    <span class="brand">SAEROK DEX</span>
+  </div>
+  <div class="bezel">
+    <div class="screen" id="screen" aria-live="polite">
+      <section id="list" class="frame" aria-label="도감 목록">
+        <ol class="entries" id="entries" role="listbox" aria-label="에이전트 번호"></ol>
+        <div class="side">
+          <div>꽃 핌</div><div class="big" id="seen">0</div>
+          <div>열매</div><div class="big" id="own">0</div>
+          <hr>
+          <ul class="menu" id="menu">
+            <li data-act="data">자세히</li>
+            <li data-act="cry">울음소리</li>
+            <li data-act="home">사는 곳</li>
+          </ul>
+        </div>
+      </section>
+      <section id="detail" class="frame hidden" aria-label="도감 자세히">
+        <div class="top">
+          <div class="portrait">
+            <div class="box"><canvas id="art" width="1" height="1" role="img"></canvas></div>
+            <div class="num" id="d-no"></div>
+          </div>
+          <div class="facts">
+            <div class="name" id="d-name"></div>
+            <div class="cls" id="d-cls"></div>
+            <dl>
+              <dt>타입</dt><dd id="d-kind"></dd>
+              <dt>상태</dt><dd id="d-status"></dd>
+            </dl>
+          </div>
+        </div>
+        <hr class="rule">
+        <div class="text" id="d-text"></div>
+        <div class="actions" id="d-actions"></div>
+      </section>
+    </div>
+    <div class="bezel-label">◀ 새록이 나무색 액정 ▶</div>
+  </div>
+
+  <div class="pad">
+    <div class="dpad">
+      <button class="u" data-key="ArrowUp" aria-label="위">▲</button>
+      <button class="l" data-key="ArrowLeft" aria-label="왼쪽">◀</button>
+      <span class="c" aria-hidden="true"></span>
+      <button class="r" data-key="ArrowRight" aria-label="오른쪽">▶</button>
+      <button class="d" data-key="ArrowDown" aria-label="아래">▼</button>
+    </div>
+    <div class="ab">
+      <button data-key="Escape" aria-label="B 뒤로">B</button>
+      <button data-key="Enter" aria-label="A 고르기">A</button>
+    </div>
+  </div>
+  <div class="opts">
+    <button id="palette" aria-pressed="false">원래 색</button>
+    <button id="sound" aria-pressed="false">소리</button>
+  </div>
+</main>
+
+<p class="help">
+  <kbd>↑</kbd><kbd>↓</kbd> 고르기 · <kbd>←</kbd><kbd>→</kbd> 7칸씩 · <kbd>A</kbd>=<kbd>Enter</kbd> 고르기·다음 장 · <kbd>B</kbd>=<kbd>Esc</kbd> 뒤로<br>
+  🍎 열매는 첫 버전을 완성한 에이전트, 🌸 꽃은 만드는 중, 🌱 씨앗은 기획만 있는 에이전트입니다.<br>
+  그림은 새록이 Lv.<span id="lv"></span> 모습입니다. <a href="https://github.com/jhheo51-arch/saeroki">새록이 저장소</a>
+</p>
+
+<script src="dex-data.js"></script>
+<script>
+(() => {
+  const DEX = window.SAEROK_DEX;
+  const entries = DEX.entries;
+  const $ = (id) => document.getElementById(id);
+  const STATUS = { seed: "씨앗", flower: "꽃", fruit: "열매" };
+  const SHADES = ["--gb0", "--gb1", "--gb2", "--gb3"].map((v) => getComputedStyle(document.documentElement).getPropertyValue(v).trim());
+
+  const state = { i: 0, menu: 0, view: "list", color: false, sound: false };
+  try {
+    state.color = localStorage.getItem("saerok-dex-color") === "1";
+    state.sound = localStorage.getItem("saerok-dex-sound") === "1";
+  } catch (e) { /* 저장소를 못 쓰면 기본값 */ }
+
+  // 열매·꽃 표시 그림(10×10)
+  const MARKS = {
+    fruit: '<svg class="mark" viewBox="0 0 5 5" shape-rendering="crispEdges" aria-label="열매"><rect x="2" y="0" width="1" height="1" fill="#346856"/><rect x="3" y="0" width="1" height="1" fill="#88C070"/><rect x="1" y="1" width="3" height="1" fill="#D97757"/><rect x="0" y="2" width="5" height="2" fill="#D97757"/><rect x="1" y="4" width="3" height="1" fill="#D97757"/><rect x="1" y="2" width="1" height="1" fill="#F6C9B8"/></svg>',
+    flower: '<svg class="mark" viewBox="0 0 5 5" shape-rendering="crispEdges" aria-label="꽃"><rect x="2" y="0" width="1" height="1" fill="#081820"/><rect x="0" y="2" width="1" height="1" fill="#081820"/><rect x="4" y="2" width="1" height="1" fill="#081820"/><rect x="2" y="4" width="1" height="1" fill="#081820"/><rect x="1" y="1" width="3" height="3" fill="#346856"/><rect x="2" y="2" width="1" height="1" fill="#E0F8D0"/></svg>',
+  };
+  const no3 = (n) => "No." + String(n).padStart(3, "0");
+
+  // 목록 그리기
+  const list = $("entries");
+  list.innerHTML = entries.map((e, i) => {
+    if (e.merged) return `<li role="option" class="merged" data-i="${i}"><span class="no">${no3(e.no)}</span><span class="nm">→ ${e.merged}번과 합침</span></li>`;
+    const mark = MARKS[e.status] || "";
+    return `<li role="option" class="${e.status}" data-i="${i}"><span class="no">${no3(e.no)}</span><span class="nm">${mark}${e.name}</span></li>`;
+  }).join("");
+  $("seen").textContent = entries.filter((e) => e.status === "flower" || e.status === "fruit").length;
+  $("own").textContent = entries.filter((e) => e.status === "fruit").length;
+  $("lv").textContent = DEX.level;
+
+  // 그림: 원래 색을 밝기에 따라 액정 4색으로 바꿉니다.
+  function shade(hex) {
+    const v = parseInt(hex.slice(1), 16);
+    const l = (0.299 * (v >> 16) + 0.587 * ((v >> 8) & 255) + 0.114 * (v & 255)) / 255;
+    return SHADES[l > 0.78 ? 0 : l > 0.5 ? 1 : l > 0.26 ? 2 : 3];
+  }
+  function paint(e) {
+    const rows = e.sprite;
+    const w = rows[0].length, h = rows.length;
+    const canvas = $("art");
+    const box = canvas.parentElement.getBoundingClientRect();
+    const scale = Math.max(1, Math.floor(Math.min(box.width / w, box.height / h)));
+    canvas.width = w * scale; canvas.height = h * scale;
+    const ctx = canvas.getContext("2d");
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    rows.forEach((row, y) => {
+      [...row].forEach((c, x) => {
+        if (c === " ") return;
+        const hex = e.colors ? e.colors[c] : null;
+        ctx.fillStyle = !hex ? SHADES[3] : state.color ? hex : shade(hex);
+        ctx.fillRect(x * scale, y * scale, scale, scale);
+      });
+    });
+    canvas.setAttribute("aria-label", e.status === "seed" || !e.colors ? "아직 실루엣만 보이는 새록이" : `${e.cls} 그림`);
+  }
+
+  function showDetail() {
+    const e = entries[state.i];
+    if (e.merged) return;
+    const seed = e.status === "seed" || !e.text;
+    $("d-no").textContent = no3(e.no);
+    $("d-name").textContent = e.name;
+    $("d-cls").textContent = seed ? "??? 새록이" : e.cls;
+    $("d-kind").textContent = e.kind;
+    $("d-status").innerHTML = (MARKS[e.status] || "") + " " + STATUS[e.status];
+    state.pages = seed
+      ? ["아직 씨앗이라 자세한 기록이 없다.", `<span class="plan">기획: ${e.plan}</span>`]
+      : e.text.split(/(?<=\.)\s+/);
+    state.page = 0;
+    showPage();
+    const acts = [];
+    if (e.web) acts.push(`<a href="${e.web}" target="_blank" rel="noopener">써 보기</a>`);
+    if (e.folder) acts.push(`<a href="${e.folder}" target="_blank" rel="noopener">사는 곳</a>`);
+    if (e.plugin) acts.push(`<button type="button" data-act="copy" title="/plugin install ${e.plugin}@saeroki">설치 명령 복사</button>`);
+    acts.push(`<button type="button" data-act="cry">울음소리</button>`);
+    $("d-actions").innerHTML = acts.join("");
+    $("list").classList.add("hidden");
+    $("detail").classList.remove("hidden");
+    state.view = "detail";
+    paint(e);
+    history.replaceState(null, "", "#" + String(e.no).padStart(3, "0"));
+  }
+  // 옛 도감처럼 설명을 한 문장씩 넘깁니다. 마지막 장에서 A를 누르면 처음으로 돌아갑니다.
+  function showPage() {
+    const more = state.page < state.pages.length - 1;
+    $("d-text").innerHTML = state.pages[state.page] + (more ? '<span class="more" aria-hidden="true">▼</span>' : "");
+  }
+  function nextPage() {
+    state.page = (state.page + 1) % state.pages.length;
+    showPage();
+  }
+
+  function showList() {
+    $("detail").classList.add("hidden");
+    $("list").classList.remove("hidden");
+    state.view = "list";
+    history.replaceState(null, "", location.pathname + location.search);
+    render();
+  }
+
+  function render() {
+    [...list.children].forEach((li, i) => {
+      li.classList.toggle("sel", i === state.i);
+      li.setAttribute("aria-selected", i === state.i);
+    });
+    const cur = list.children[state.i];
+    const top = cur.offsetTop, bottom = top + cur.offsetHeight;
+    if (top < list.scrollTop) list.scrollTop = top;
+    else if (bottom > list.scrollTop + list.clientHeight) list.scrollTop = bottom - list.clientHeight;
+    const merged = !!entries[state.i].merged;
+    [...$("menu").children].forEach((li, i) => {
+      li.classList.toggle("sel", i === state.menu);
+      li.classList.toggle("dim", merged || (li.dataset.act === "home" && !entries[state.i].folder));
+    });
+  }
+
+  // 울음소리: 번호마다 다른 네모파 소리
+  let audio;
+  function cry(e) {
+    if (!e || e.merged) return;
+    audio = audio || new (window.AudioContext || window.webkitAudioContext)();
+    const t0 = audio.currentTime;
+    const base = 220 + (e.no * 37) % 260;
+    const steps = [1, 1.5 + (e.no % 3) * 0.25, 1.2, 0.8 + (e.no % 4) * 0.1];
+    steps.forEach((m, k) => {
+      const o = audio.createOscillator(), g = audio.createGain();
+      o.type = "square";
+      o.frequency.setValueAtTime(base * m, t0 + k * 0.09);
+      g.gain.setValueAtTime(0.06, t0 + k * 0.09);
+      g.gain.exponentialRampToValueAtTime(0.001, t0 + k * 0.09 + 0.12);
+      o.connect(g).connect(audio.destination);
+      o.start(t0 + k * 0.09); o.stop(t0 + k * 0.09 + 0.13);
+    });
+  }
+  function blip() {
+    if (!state.sound) return;
+    audio = audio || new (window.AudioContext || window.webkitAudioContext)();
+    const o = audio.createOscillator(), g = audio.createGain(), t = audio.currentTime;
+    o.type = "square"; o.frequency.value = 880;
+    g.gain.setValueAtTime(0.03, t); g.gain.exponentialRampToValueAtTime(0.001, t + 0.05);
+    o.connect(g).connect(audio.destination); o.start(t); o.stop(t + 0.06);
+  }
+
+  function act(name) {
+    const e = entries[state.i];
+    if (e.merged) return;
+    if (name === "data") showDetail();
+    else if (name === "cry") cry(e);
+    else if (name === "home" && e.folder) window.open(e.folder, "_blank", "noopener");
+  }
+
+  function move(d) {
+    let i = state.i + d;
+    i = Math.max(0, Math.min(entries.length - 1, i));
+    if (state.view === "detail") {
+      // 자세히 화면에서는 합친 번호를 건너뜁니다.
+      while (entries[i] && entries[i].merged) i += Math.sign(d) || 1;
+      if (!entries[i]) return;
+      state.i = i; blip(); showDetail();
+    } else if (i !== state.i) {
+      state.i = i; blip(); render();
+    }
+  }
+
+  function key(k) {
+    if (k === "ArrowUp") move(-1);
+    else if (k === "ArrowDown") move(1);
+    else if (k === "ArrowLeft") state.view === "list" ? move(-7) : move(-1);
+    else if (k === "ArrowRight") state.view === "list" ? move(7) : move(1);
+    else if (k === "Enter" || k === "z" || k === " ") {
+      blip();
+      if (state.view === "list") act($("menu").children[state.menu].dataset.act);
+      else nextPage();
+    } else if (k === "Escape" || k === "x" || k === "Backspace") {
+      blip();
+      if (state.view === "detail") showList();
+    } else if (k === "Tab" && state.view === "list") {
+      state.menu = (state.menu + 1) % $("menu").children.length; render();
+      return true;
+    } else return false;
+    return true;
+  }
+
+  document.addEventListener("keydown", (ev) => {
+    if (ev.altKey || ev.ctrlKey || ev.metaKey) return;
+    // 링크와 아래 버튼 위에서는 Enter·Space를 그 버튼에 맡깁니다.
+    if (ev.target.closest("a, .opts button") && (ev.key === "Enter" || ev.key === " ")) return;
+    if (key(ev.key)) ev.preventDefault();
+  });
+  document.querySelectorAll("[data-key]").forEach((b) => b.addEventListener("click", () => key(b.dataset.key)));
+  list.addEventListener("click", (ev) => {
+    const li = ev.target.closest("li");
+    if (!li) return;
+    const i = Number(li.dataset.i);
+    if (i === state.i) { state.menu = 0; act("data"); }
+    else { state.i = i; blip(); render(); }
+  });
+  list.addEventListener("dblclick", (ev) => { const li = ev.target.closest("li"); if (li) { state.i = Number(li.dataset.i); act("data"); } });
+  $("menu").addEventListener("click", (ev) => {
+    const li = ev.target.closest("li");
+    if (!li) return;
+    state.menu = [...$("menu").children].indexOf(li); render(); act(li.dataset.act);
+  });
+  $("d-actions").addEventListener("click", async (ev) => {
+    const b = ev.target.closest("button");
+    if (!b) return;
+    if (b.dataset.act === "cry") cry(entries[state.i]);
+    if (b.dataset.act === "copy") {
+      try { await navigator.clipboard.writeText(b.title); b.textContent = "복사함"; }
+      catch (e) { b.textContent = b.title; }
+    }
+  });
+  $("d-text").addEventListener("click", nextPage);
+  $("detail").querySelector(".top").addEventListener("click", showList);
+
+  const pal = $("palette"), snd = $("sound");
+  function syncOpts() {
+    pal.setAttribute("aria-pressed", state.color);
+    snd.setAttribute("aria-pressed", state.sound);
+  }
+  pal.addEventListener("click", () => {
+    state.color = !state.color; syncOpts();
+    try { localStorage.setItem("saerok-dex-color", state.color ? "1" : "0"); } catch (e) {}
+    if (state.view === "detail") paint(entries[state.i]);
+  });
+  snd.addEventListener("click", () => {
+    state.sound = !state.sound; syncOpts(); blip();
+    try { localStorage.setItem("saerok-dex-sound", state.sound ? "1" : "0"); } catch (e) {}
+  });
+  window.addEventListener("resize", () => { if (state.view === "detail") paint(entries[state.i]); });
+
+  syncOpts();
+  // 주소 끝 #004 처럼 번호가 있으면 그 번호를 바로 엽니다.
+  function openHash() {
+    const at = entries.findIndex((e) => !e.merged && "#" + String(e.no).padStart(3, "0") === location.hash);
+    if (at >= 0) { state.i = at; render(); showDetail(); } else render();
+  }
+  window.addEventListener("hashchange", openHash);
+  openHash();
+})();
+</script>
+</body>
+</html>

@@ -35,7 +35,7 @@ Claude Code 대화창에서 새록이 플러그인 모음을 한 번만 등록�
 | 🌸 [19 새록 면접관](fruits/19-saerok-interview) | 면접관 5명이 자기소개서를 심사하고 근거 달린 예상 질문 10개 | `/plugin install saerok-interview@saeroki` | `/saerok-interview:panel`<br>`/saerok-interview:practice` |
 | 🌸 [20 새록 심사단](fruits/20-saerok-idea) | 서비스 아이디어를 심사위원 3명이 진행·조건부·보류로 판정 | `/plugin install saerok-idea@saeroki` | `/saerok-idea:judge <아이디어 한 줄>` |
 
-**설치 없이 브라우저에서:** [📖 17 새록 사전](https://jhheo51-arch.github.io/saeroki/) · [🎤 19 면접관 화면](https://jhheo51-arch.github.io/saeroki/interview/) · [⚖️ 20 심사단 화면](https://jhheo51-arch.github.io/saeroki/idea/)  
+**설치 없이 브라우저에서:** [📖 17 새록 사전](https://jhheo51-arch.github.io/saeroki/) · [🎤 19 면접관 화면](https://jhheo51-arch.github.io/saeroki/interview/) · [⚖️ 20 심사단 화면](https://jhheo51-arch.github.io/saeroki/idea/) · [📕 새록 도감](https://jhheo51-arch.github.io/saeroki/dex/)  
 <sub>면접관·심사단 화면은 내 Claude API 키로 동작하고 기록은 그 브라우저에만 남습니다.</sub>
 
 <details>

@@ -1,4 +1,4 @@
-name: 새록 화면 배포(사전·심사단·면접관)
+name: 새록 화면 배포(사전·심사단·면접관·도감)
 
 on:
   push:
@@ -10,6 +10,7 @@ on:
       - "fruits/19-saerok-interview/web/**"
       - "fruits/19-saerok-interview/agents/**"
       - "fruits/19-saerok-interview/data/**"
+      - "dex/**"
       - ".github/workflows/saerok-pages.yml"
   workflow_dispatch:
 
@@ -31,16 +32,17 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/configure-pages@v5
-      # 사전은 첫 화면(/), 심사단은 /idea/, 면접관은 /interview/. 심사위원·면접관 기준(agents)과 용어 목록(data)은 화면이 그대로 읽습니다.
+      # 사전은 첫 화면(/), 심사단은 /idea/, 면접관은 /interview/, 도감은 /dex/. 심사위원·면접관 기준(agents)과 용어 목록(data)은 화면이 그대로 읽습니다.
       - name: 화면 모으기
         run: |
-          mkdir -p _site/idea/agents _site/interview/agents _site/interview/data
+          mkdir -p _site/idea/agents _site/interview/agents _site/interview/data _site/dex
           cp -r fruits/17-saerok-dictionary/web/. _site/
           cp -r fruits/20-saerok-idea/web/. _site/idea/
           cp fruits/20-saerok-idea/agents/*.md _site/idea/agents/
           cp -r fruits/19-saerok-interview/web/. _site/interview/
           cp fruits/19-saerok-interview/agents/*.md _site/interview/agents/
           cp fruits/19-saerok-interview/data/terms-lite.json _site/interview/data/
+          cp -r dex/. _site/dex/
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site

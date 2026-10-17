@@ -176,6 +176,11 @@ def current_level() -> int:
 
 def sprite(key: str, level: int) -> tuple[list[str], dict]:
     """(잘라 낸 픽셀 줄, 글자→색)을 돌려줍니다."""
+    return draw(CHARACTERS[key]["props"], level)
+
+
+def draw(props, level: int) -> tuple[list[str], dict]:
+    """지금 레벨의 새록이에 소품 목록(CHARACTERS의 "props" 형식)을 얹습니다."""
     base = growth.sprite_for(level)
     grid = [[" "] * (len(base[0]) + PAD * 2) for _ in range(len(base) + PAD * 2)]
     for y, row in enumerate(base):
@@ -185,7 +190,7 @@ def sprite(key: str, level: int) -> tuple[list[str], dict]:
     left = int(growth.CENTER) - width // 2 + PAD
     top = growth.GRID_H - 1 - height + PAD
     anchors = {"C": (left + width // 2, top), "L": (left - 1, top + 3), "R": (left + width, top + 3)}
-    for anchor, offset, rows in CHARACTERS[key]["props"]:
+    for anchor, offset, rows in props:
         if anchor in WORN:
             for x, y, c in WORN[anchor](left, top, width, height):
                 grid[y][x] = c
