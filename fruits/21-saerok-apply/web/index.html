@@ -1,0 +1,319 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<title>새록 지원서</title>
+<style>
+  :root {
+    --bg: #FAF9F6;
+    --surface: #FFFFFF;
+    --ink: #1F2A1C;
+    --muted: #5B6656;
+    --line: #E2E4DA;
+    --brand: #40916C;
+    --brand-deep: #31572C;
+    --blossom: #D9668C;
+    --chip: #EEF3E6;
+    --warn-bg: #FFF4D6;
+    --warn-ink: #7A4B00;
+    --go: #2D7A4F;
+    --go-bg: #E3F2E8;
+    --stop: #A33A3A;
+    --stop-bg: #FBE4E4;
+    --none: #55606A;
+    --none-bg: #E9EDF0;
+    --shadow: 0 1px 2px rgba(31, 42, 28, .06), 0 4px 16px rgba(31, 42, 28, .05);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      color-scheme: dark;
+      --bg: #141A13;
+      --surface: #1C241A;
+      --ink: #E9EEE3;
+      --muted: #A3AE9C;
+      --line: #2F3A2C;
+      --brand: #6CC195;
+      --brand-deep: #A6D98A;
+      --blossom: #F09AB8;
+      --chip: #24301F;
+      --warn-bg: #3A2F14;
+      --warn-ink: #F3D27A;
+      --go: #8FD8AC;
+      --go-bg: #1D3526;
+      --stop: #F2A0A0;
+      --stop-bg: #3D1F1F;
+      --none: #B9C2CA;
+      --none-bg: #2A3035;
+      --shadow: none;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 16px/1.6 "Pretendard", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--brand); word-break: break-all; }
+  button, input, textarea, select { font: inherit; color: inherit; }
+  button { cursor: pointer; }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 0 16px; }
+
+  header.top { background: var(--surface); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 5; }
+  .bar { display: flex; align-items: center; gap: 12px; padding: 12px 0; flex-wrap: wrap; }
+  .logo { font-weight: 800; font-size: 20px; letter-spacing: -.02em; display: flex; align-items: center; gap: 8px; }
+  .logo small { font-weight: 500; font-size: 13px; color: var(--muted); }
+  .grow { flex: 1; }
+  .tabs { display: flex; gap: 4px; flex-wrap: wrap; }
+  .tab { border: 0; background: none; padding: 6px 12px; border-radius: 999px; color: var(--muted); font-weight: 600; }
+  .tab[aria-selected="true"] { background: var(--chip); color: var(--brand-deep); }
+  .mode { font-size: 13px; color: var(--muted); padding: 0 0 10px; }
+  .mode b { color: var(--ink); }
+
+  main { padding: 20px 0 80px; }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 20px; margin-bottom: 16px; box-shadow: var(--shadow); }
+  .card h2 { margin: 0 0 4px; font-size: 18px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .card h2 .n { display: inline-grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: var(--chip); color: var(--brand-deep); font-size: 13px; }
+  .card h3 { font-size: 16px; margin: 18px 0 6px; }
+  .sub { color: var(--muted); font-size: 14px; margin: 0 0 14px; }
+  .note { background: var(--warn-bg); color: var(--warn-ink); border-radius: 10px; padding: 10px 12px; font-size: 14px; margin: 0 0 14px; }
+  label.f { display: block; font-weight: 600; font-size: 14px; margin: 12px 0 4px; }
+  label.f span { font-weight: 400; color: var(--muted); }
+  input[type=text], input[type=password], input[type=number], textarea, select {
+    width: 100%; padding: 9px 11px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg);
+  }
+  select option { background: var(--surface); color: var(--ink); }
+  textarea { min-height: 64px; resize: vertical; }
+  textarea.code { font: 13px/1.55 ui-monospace, "Cascadia Mono", Consolas, monospace; }
+  input:focus, textarea:focus, select:focus { outline: 2px solid var(--brand); outline-offset: 0; border-color: transparent; }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 14px; }
+  .grid3 { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 0 12px; }
+  @media (max-width: 640px) { .grid2, .grid3 { grid-template-columns: 1fr; } header.top { position: static; } }
+  details.more { margin-top: 14px; border-top: 1px dashed var(--line); padding-top: 10px; }
+  details.more summary { cursor: pointer; font-weight: 600; font-size: 14px; color: var(--muted); }
+  .row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 16px; }
+  .btn { border: 1px solid var(--line); background: var(--surface); padding: 9px 16px; border-radius: 10px; font-weight: 600; }
+  .btn.primary { background: var(--brand); border-color: var(--brand); color: #fff; }
+  .btn.small { padding: 5px 10px; font-size: 13px; }
+  .btn:disabled { opacity: .5; cursor: default; }
+  .radio { display: inline-flex; gap: 6px; align-items: center; margin-right: 14px; font-size: 14px; }
+  .badge { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: 13px; font-weight: 700; }
+  .b-ok { background: var(--go-bg); color: var(--go); }
+  .b-stop { background: var(--stop-bg); color: var(--stop); }
+  .b-warn { background: var(--warn-bg); color: var(--warn-ink); }
+  .b-none { background: var(--none-bg); color: var(--none); }
+  .flags { display: flex; gap: 6px; flex-wrap: wrap; margin: 8px 0; }
+  .spin { display: inline-block; width: 14px; height: 14px; border: 2px solid var(--line); border-top-color: var(--brand); border-radius: 50%; animation: spin 1s linear infinite; vertical-align: -2px; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) { .spin { animation: none; } }
+  .issues { list-style: none; padding: 0; margin: 8px 0 0; font-size: 14px; }
+  .issues li { padding: 6px 0; border-bottom: 1px solid var(--line); }
+  .issues .lv { font-weight: 700; margin-right: 6px; }
+  .issues .err .lv { color: var(--stop); }
+  .issues .warn .lv { color: var(--warn-ink); }
+  .issues .q { color: var(--muted); font-size: 13px; margin-top: 2px; word-break: break-word; }
+  table { border-collapse: collapse; width: 100%; font-size: 14px; }
+  th, td { border-bottom: 1px solid var(--line); padding: 6px 8px; text-align: left; vertical-align: top; }
+  th { color: var(--muted); font-weight: 600; }
+  td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .scroll { overflow-x: auto; }
+  pre.md { white-space: pre-wrap; word-break: break-word; background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 12px; font-size: 13px; max-height: 480px; overflow: auto; }
+  .usage { font-size: 13px; color: var(--muted); }
+  .hidden { display: none !important; }
+  code { font-size: 13px; background: var(--chip); padding: 1px 5px; border-radius: 6px; }
+  dialog { border: 1px solid var(--line); border-radius: 14px; background: var(--surface); color: var(--ink); max-width: 520px; width: calc(100% - 32px); padding: 20px; }
+  dialog::backdrop { background: rgba(0, 0, 0, .35); }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap">
+    <div class="bar">
+      <div class="logo">📝 새록 지원서 <small>경험 장부로 쓰는 자기소개서</small></div>
+      <div class="grow"></div>
+      <nav class="tabs" role="tablist">
+        <button class="tab" role="tab" aria-selected="true" data-tab="ledger">① 장부</button>
+        <button class="tab" role="tab" aria-selected="false" data-tab="posting">② 공고</button>
+        <button class="tab" role="tab" aria-selected="false" data-tab="write">③ 작성</button>
+        <button class="tab" role="tab" aria-selected="false" data-tab="check">④ 검사</button>
+      </nav>
+      <button class="btn small" id="open-settings">🔑 키·설정</button>
+    </div>
+    <div class="mode" id="mode">화면을 준비하는 중입니다…</div>
+  </div>
+</header>
+
+<main class="wrap">
+  <p class="note hidden" id="git-warning"></p>
+
+  <section id="tab-ledger">
+    <div class="card">
+      <h2><span class="n">1</span>경험 장부</h2>
+      <p class="sub">자기소개서의 사실 문장은 모두 이 장부의 경험 ID(E01, E02…)를 근거로 씁니다. 행동에는 [한 일]·[설계안(도입 가정)]·[계획]을 붙이고,
+        Claude가 정리한 칸의 '(AI 정리, 확인 전)'은 직접 확인한 뒤 지웁니다. 전화번호·이메일·주민번호는 넣지 않습니다.</p>
+      <div class="row" style="margin-top:0">
+        <button class="btn small" id="ledger-template" type="button">양식 넣기</button>
+        <button class="btn small" data-load="ledger" type="button">파일 열기</button>
+      </div>
+      <label class="f" for="t-ledger">ledger.md</label>
+      <textarea id="t-ledger" class="code" style="min-height:320px"></textarea>
+      <details class="more">
+        <summary>표기 규칙(style.md, 선택)</summary>
+        <p class="usage">쓰지 않을 말·바꿀 말·문장 길이·말투를 적으면 검사가 지켰는지 봅니다.</p>
+        <textarea id="t-style" class="code" style="min-height:120px"></textarea>
+      </details>
+      <div class="row">
+        <button class="btn primary" id="ledger-check">점검</button>
+        <button class="btn" id="ledger-save">저장</button>
+        <span class="usage" id="ledger-msg"></span>
+      </div>
+      <div id="ledger-result"></div>
+    </div>
+  </section>
+
+  <section id="tab-posting" class="hidden">
+    <div class="card">
+      <h2><span class="n">2</span>채용 공고</h2>
+      <p class="sub">공고 본문을 그대로 붙여 넣습니다. 브라우저는 다른 사이트 주소를 읽지 못하므로 URL은 출처로만 적습니다.
+        캡처 이미지만 있으면 Claude가 글을 옮겨 적고, 직접 대조해 '확인함'을 누르기 전에는 분석하지 않습니다.</p>
+      <div class="grid3">
+        <div><label class="f" for="f-company">회사</label><input type="text" id="f-company" maxlength="40" list="company-list" placeholder="예: 가상커머스"><datalist id="company-list"></datalist></div>
+        <div><label class="f" for="f-source">출처 <span>(URL·붙여넣기·이미지)</span></label><input type="text" id="f-source" placeholder="붙여넣기"></div>
+        <div><label class="f" for="f-date">확인 날짜</label><input type="text" id="f-date" placeholder="YYYY-MM-DD"></div>
+      </div>
+      <label class="f" for="t-posting-body">공고 원문</label>
+      <textarea id="t-posting-body" style="min-height:220px" placeholder="채용 페이지 본문을 그대로 붙여 넣어 주세요"></textarea>
+      <div class="row">
+        <label class="btn small" for="image-pick" style="cursor:pointer">🖼️ 캡처 이미지에서 옮기기</label>
+        <input type="file" id="image-pick" accept="image/png,image/jpeg,image/webp,image/gif" class="hidden">
+        <span class="badge b-none" id="posting-status">상태: 확인함</span>
+        <button class="btn small hidden" id="posting-confirm">이미지와 대조했습니다(확인함)</button>
+      </div>
+      <p class="usage" id="posting-msg"></p>
+      <div class="row">
+        <button class="btn" id="posting-save">공고 저장</button>
+        <button class="btn primary" id="analyze">Claude로 분석 초안</button>
+        <span class="usage">요구·우대 역량을 장부 경험과 잇고, 17번 새록 사전에 있는 용어만 뜻을 붙입니다.</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2><span class="n">3</span>공고 분석 <span class="badge b-none">숨은 키워드는 AI 해석</span></h2>
+      <p class="sub">웹 화면에서는 회사 조사를 하지 않습니다. '회사 조사' 칸은 '조사 안 됨'으로 두고, 조사가 필요하면 Claude Code에서
+        <code>/saerok-apply:analyze</code>로 출처·확인 날짜와 함께 채웁니다.</p>
+      <div class="flags" id="analysis-flags"></div>
+      <label class="f" for="t-analysis">analysis.md</label>
+      <textarea id="t-analysis" class="code" style="min-height:300px"></textarea>
+      <div class="row">
+        <button class="btn primary" id="analysis-check">점검</button>
+        <button class="btn" id="analysis-save">분석 저장</button>
+        <span class="usage" id="analysis-msg"></span>
+      </div>
+      <ul class="issues" id="analysis-issues"></ul>
+    </div>
+  </section>
+
+  <section id="tab-write" class="hidden">
+    <div class="card">
+      <h2><span class="n">4</span>문항 초안</h2>
+      <p class="sub">문항을 넣으면 Claude가 장부에서 경험 후보를 골라 한 문항씩 씁니다. 장부에 근거가 없으면 지어내지 않고
+        <code>[사용자 확인 필요: …]</code>를 남깁니다. 초안은 늘 직접 고친 뒤 확정합니다.</p>
+      <label class="f" for="q-title">문항</label>
+      <input type="text" id="q-title" placeholder="예: 데이터로 문제를 해결한 경험을 써 주세요.">
+      <div class="grid3">
+        <div><label class="f" for="q-type">유형 <span>(문항으로 추정, 고칠 수 있음)</span></label><select id="q-type"></select></div>
+        <div><label class="f" for="q-limit">글자 수 제한</label><input type="number" id="q-limit" min="0" placeholder="500"></div>
+        <div><label class="f" for="q-basis">기준</label><select id="q-basis"><option>공백 포함</option><option>공백 제외</option><option value="바이트">바이트</option></select></div>
+      </div>
+      <details class="more" id="edit-box">
+        <summary>첨삭 모드 <span class="usage">(내가 쓴 글을 고치기)</span></summary>
+        <p class="usage">원문은 그대로 두고 새 초안 파일로 고칩니다. 원문에 없던 사실은 장부 근거가 있을 때만 더합니다.</p>
+        <label class="f" for="q-original">내가 쓴 원문</label>
+        <textarea id="q-original" style="min-height:160px"></textarea>
+      </details>
+      <div class="row">
+        <button class="btn primary" id="q-write">Claude로 이 문항 쓰기</button>
+        <span class="usage" id="q-msg"></span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2><span class="n">5</span>초안 <span class="badge b-none" id="draft-name">새 초안</span></h2>
+      <div class="grid2">
+        <div><label class="f" for="draft-pick">불러오기</label><select id="draft-pick"><option value="">새 초안</option></select></div>
+        <div><label class="f">저장</label><p class="usage" style="margin:6px 0 0">저장할 때마다 <code>draft-날짜.md</code> 새 파일로 남기고, 이전 판은 덮어쓰지 않습니다.</p></div>
+      </div>
+      <label class="f" for="t-draft">초안 <span>(문장 뒤 &lt;!-- E01 행동 --&gt; 주석은 근거이며 제출본에서 빠집니다)</span></label>
+      <textarea id="t-draft" class="code" style="min-height:420px"></textarea>
+      <div class="row">
+        <button class="btn primary" id="draft-save">새 판으로 저장</button>
+        <button class="btn" id="draft-to-check">검사하기</button>
+        <span class="usage" id="draft-msg"></span>
+      </div>
+    </div>
+  </section>
+
+  <section id="tab-check" class="hidden">
+    <div class="card">
+      <h2><span class="n">6</span>자기소개서 검사 <span class="badge" id="check-badge"></span></h2>
+      <p class="sub">AI 없이 규칙으로 봅니다. 같은 글이면 늘 같은 결과입니다(내 PC의 <code>saerok-apply check</code>와 같음).
+        불러온 판에서 '상태: 확정'이던 문항이 바뀌면 오류로 알립니다.</p>
+      <div class="row" style="margin-top:0">
+        <button class="btn primary" id="check-run">검사</button>
+        <span class="usage" id="check-msg"></span>
+      </div>
+      <div id="check-result"></div>
+    </div>
+    <div class="card">
+      <h2><span class="n">7</span>제출본 넘기기</h2>
+      <p class="sub">오류가 없고 모든 문항이 확정이면 근거 주석을 뺀 제출본을 만듭니다. 내 PC 모드는 19번 새록 면접관의 서류 폴더에
+        넘기고(같은 이름이 있으면 날짜를 붙여 새로 저장), 브라우저 모드는 파일로 내려받습니다.</p>
+      <div class="row" style="margin-top:0">
+        <button class="btn" id="submit-preview">미리 보기</button>
+        <button class="btn primary" id="submit-go" disabled>넘기기</button>
+        <span class="usage" id="submit-msg"></span>
+      </div>
+      <pre class="md hidden" id="submit-text"></pre>
+    </div>
+  </section>
+</main>
+
+<dialog id="settings">
+  <h2 style="margin-top:0">🔑 키·설정</h2>
+  <div id="key-browser">
+    <p class="sub">Claude API 키는 이 브라우저에만 저장되고, Anthropic(api.anthropic.com)으로만 보냅니다. 중간 서버는 없습니다. 쓸 때마다 내 API 사용량이 듭니다.</p>
+    <label class="f" for="key-input">Claude API 키</label>
+    <input type="password" id="key-input" placeholder="sk-ant-…" autocomplete="off">
+    <label class="radio" style="margin-top:8px"><input type="checkbox" id="key-remember"> 이 브라우저에 기억(공용 PC에서는 끄세요)</label>
+  </div>
+  <div id="engine-local" class="hidden">
+    <p class="f" style="margin-bottom:4px">Claude 부르는 방식</p>
+    <label class="radio"><input type="radio" name="engine" value="subscription"> 내 Claude 구독(Claude Code, 추가 비용 없음)</label>
+    <label class="radio"><input type="radio" name="engine" value="api"> API 키(크레딧 차감)</label>
+    <p class="sub" id="engine-note"></p>
+  </div>
+  <div id="key-local" class="hidden">
+    <p class="sub">키는 Windows 자격 증명 관리자에 두고, 내 PC 서버가 Anthropic에 보낼 때만 붙입니다. 브라우저로는 보내지 않습니다.</p>
+    <p>지금 키: <b id="key-now"></b> <span class="usage" id="key-from"></span></p>
+    <label class="f" for="key-local-input">새 키 등록</label>
+    <input type="password" id="key-local-input" placeholder="sk-ant-…" autocomplete="off">
+  </div>
+  <label class="f" for="model">모델</label>
+  <select id="model"></select>
+  <div class="row">
+    <button class="btn primary" id="save-settings">저장</button>
+    <button class="btn" id="forget-key">키 지우기</button>
+    <div class="grow"></div>
+    <button class="btn" id="close-settings">닫기</button>
+  </div>
+  <p class="usage" id="settings-msg"></p>
+</dialog>
+
+<input type="file" id="file-pick" accept=".md,.txt,text/plain,text/markdown" class="hidden">
+<script src="apply-core.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

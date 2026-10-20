@@ -1,0 +1,20 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "saerok-apply"
+version = "0.1.0"
+description = "새록 지원서: 경험 장부로 자기소개서를 쓰고 글자 수·사실을 검사하는 새록이 21번 열매"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.optional-dependencies]
+# 지원서 화면의 Claude API 키를 Windows 자격 증명 관리자에 보관합니다. 없으면 실행 중 메모리에만 둡니다.
+keyring = ["keyring>=24"]
+
+[project.scripts]
+saerok-apply = "saerok_apply.cli:main"
+
+[tool.setuptools]
+packages = ["saerok_apply"]

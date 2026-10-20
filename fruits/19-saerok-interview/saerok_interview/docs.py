@@ -105,8 +105,9 @@ def scan() -> dict:
 
 
 def pick(company: str = "") -> dict:
-    """회사 하나에 쓸 파일을 고릅니다. 회사 이름이 붙은 파일이 먼저이고, 없으면 이름 없는 파일을 씁니다.
-    공고가 여러 회사인데 회사를 정하지 않았으면 choices만 돌려줍니다."""
+    """회사 하나에 쓸 파일을 고릅니다. 회사 이름이 붙은 파일(예: 자기소개서-골목장터)이 먼저이고, 없으면 이름 없는 파일을 씁니다.
+    공고가 여러 회사인데 회사를 정하지 않았으면 choices만 돌려줍니다. 공고가 없고 이름 없는 자기소개서도 없으면
+    회사 이름이 붙은 자기소개서로 회사를 정합니다."""
     found = scan()
     if not found["exists"]:
         raise ValueError(f"서류 폴더가 없습니다: {found['folder']}. `saerok-interview init`으로 만들어 주세요.")
@@ -114,6 +115,8 @@ def pick(company: str = "") -> dict:
     companies = sorted({f["company"] for f in files if f["company"]})
     if not company:
         posted = sorted({f["company"] for f in files if f["kind"] == "posting" and f["company"]})
+        if not posted and not any(f["kind"] == "resume_letter" and not f["company"] for f in files):
+            posted = sorted({f["company"] for f in files if f["kind"] == "resume_letter" and f["company"]})
         if len(posted) > 1:
             return {**found, "company": "", "choices": posted, "pick": None}
         company = posted[0] if posted else ""

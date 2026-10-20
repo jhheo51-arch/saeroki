@@ -135,6 +135,24 @@ class DocsTest(Base):
         self.assertTrue(mine["resume_letter"].endswith("자기소개서-꽃길마켓.md"))
         self.assertTrue(docs.pick("골목장터")["pick"]["resume_letter"].endswith("자기소개서.md"))
 
+    def test_pick_company_resume_letter(self):
+        # 21번 새록 지원서가 저장하는 이름(자기소개서-회사이름·공고-회사이름)을 --company로 고릅니다.
+        docs.init()
+        (docs.folder() / "자기소개서.md").unlink()
+        (docs.folder() / "공고-회사이름.md").unlink()
+        self.put("자기소개서-골목장터.md")
+        self.assertTrue(docs.pick()["pick"]["resume_letter"].endswith("자기소개서-골목장터.md"))  # 공고 없이도 회사를 정함
+        self.put("공고-골목장터.md", EXAMPLES / "posting.md")
+        self.put("자기소개서-꽃길마켓.md")
+        mine = docs.pick()  # 공고가 한 회사면 그 회사로 정합니다.
+        self.assertEqual(mine["company"], "골목장터")
+        self.assertTrue(mine["pick"]["resume_letter"].endswith("자기소개서-골목장터.md"))
+        self.assertTrue(mine["pick"]["posting"].endswith("공고-골목장터.md"))
+        with self.assertRaises(ValueError):  # 이름 없는 자기소개서가 없으면 다른 회사로 돌아가지 않습니다.
+            docs.pick("모르는회사")
+        self.put("자기소개서.md")
+        self.assertTrue(docs.pick("모르는회사")["pick"]["resume_letter"].endswith("자기소개서.md"))
+
 
 class RubricTest(unittest.TestCase):
     def test_each_interviewer_totals_ten(self):

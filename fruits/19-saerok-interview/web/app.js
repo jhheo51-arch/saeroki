@@ -765,7 +765,7 @@ async function loadDocs() {
   try {
     const j = await B.api(`api/docs?company=${encodeURIComponent($("#f-company").value.trim())}`);
     if (!j.pick) {
-      msg.textContent = `공고가 여러 회사입니다. 회사 칸에 하나를 적고 다시 눌러 주세요: ${j.choices.join(", ")}`;
+      msg.textContent = `회사가 여러 곳입니다. 회사 칸에 하나를 적고 다시 눌러 주세요: ${j.choices.join(", ")}`;
       return;
     }
     for (const k of S.DOCS) $(`#d-${k}`).value = j.texts[k] || "";

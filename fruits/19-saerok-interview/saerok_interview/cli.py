@@ -100,7 +100,7 @@ def _run(args) -> int:
         if not args.resume_letter:  # 경로가 없으면 서류 폴더에서 고르고, 직접 준 옵션이 이깁니다.
             found = docs.pick(args.company)
             if found["pick"] is None:
-                raise ValueError(f"공고가 여러 회사입니다. --company로 하나를 골라 주세요: {', '.join(found['choices'])}")
+                raise ValueError(f"회사가 여러 곳입니다. --company로 하나를 골라 주세요: {', '.join(found['choices'])}")
             files = dict(found["pick"])
             args.company = args.company or found["company"]
         else:

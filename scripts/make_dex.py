@@ -19,7 +19,7 @@ OUT = REPO / "dex" / "dex-data.js"
 GITHUB = "https://github.com/jhheo51-arch/saeroki/tree/main/"
 PAGES = "https://jhheo51-arch.github.io/saeroki/"
 
-# 도감에만 나오는 뿌리 세 개와 21번의 소품(make_characters.CHARACTERS와 같은 형식)
+# 도감에만 나오는 뿌리 세 개의 소품(make_characters.CHARACTERS와 같은 형식)
 DEX_PROPS = {
     "basket": [("L", (-5, -1), (
         " h h ",
@@ -46,18 +46,6 @@ DEX_PROPS = {
         " ccc ",
         "  h  ",
         " h   ",
-    ))],
-    "writer": [("R", (0, -4), (
-        "    c",
-        "   n ",
-        "  n  ",
-        " n   ",
-    )), ("L", (-4, -1), (
-        "wwww",
-        "wiiw",
-        "wwww",
-        "wiiw",
-        "wwww",
     ))],
 }
 
@@ -99,7 +87,7 @@ ENTRIES = {
     20: dict(name="새록 심사단", kind="기획", art="judge", cls="판사봉 새록이", folder="fruits/20-saerok-idea",
              plugin="saerok-idea", web=PAGES + "idea/",
              text="아이디어 한 줄을 심사위원 셋이 판정한다. 진행·조건부·보류 가운데 하나와 다듬은 방향을 내놓는다."),
-    21: dict(name="새록 지원서", kind="학습", art="writer", cls="만년필 새록이", folder="fruits/21-saerok-apply",
+    21: dict(name="새록 지원서", kind="학습", art="apply", cls="연필 새록이", folder="fruits/21-saerok-apply",
              plan="채용 공고를 분석하고 내 경험 장부에 적힌 경험만으로 자기소개서를 쓴다.",
              text="채용 공고를 읽고 내 경험 장부에 적힌 경험만으로 자기소개서를 쓴다. 다 쓴 글은 면접관에게 넘긴다."),
 }

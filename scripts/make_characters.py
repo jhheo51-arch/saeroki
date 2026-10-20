@@ -122,6 +122,30 @@ CHARACTERS = {
             ("robe", None, None),
         ],
     },
+    "apply": {
+        "name": "새록 지원서",
+        "fruit": "21",
+        "alt": "연필을 들고 지원서 봉투를 낀 새록이",
+        "props": [
+            ("R", (-1, -6), (
+                "     rr",
+                "    ccr",
+                "   yyc ",
+                "  yyy  ",
+                " yyy   ",
+                "wyy    ",
+                "ww     ",
+                "i      ",
+            )),
+            ("L", (-5, -2), (
+                "wwwwww",
+                "owwwwo",
+                "wowwow",
+                "wwoowr",
+                "wwwwww",
+            )),
+        ],
+    },
     "curator": {
         "name": "새록 콘텐츠 개인화",
         "fruit": "01",
