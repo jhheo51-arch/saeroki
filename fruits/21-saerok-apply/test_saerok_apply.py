@@ -491,12 +491,18 @@ class StoreCliTest(Home):
         self.assertEqual(sorted(Path(p).name for p in made["made"]), ["ledger.md", "style.md"])
         self.assertEqual(store.init(fresh)["made"], [])  # 이미 있으면 건드리지 않습니다.
         self.assertEqual(read(fresh / "ledger.md"), store.TEMPLATES["ledger.md"])
+        self.assertTrue((fresh / "경험자료").is_dir())
+        self.assertEqual(Path(info["materials"]).resolve(), (self.home / "경험자료").resolve())
 
     def test_templates(self):
         data = json.loads(read(HERE / "data" / "templates.json"))
         self.assertEqual(data, store.TEMPLATES)
         self.assertEqual(sorted(data), ["ledger.md", "style.md"])
         self.assertEqual(core.ledger_report(data["ledger.md"])["summary"]["experiences"], 1)
+        # init이 만든 양식만 있으면 빈 장부로 보고 경험을 전달해 달라고 합니다.
+        empty = [i for i in core.parse_ledger(data["ledger.md"])["issues"] if i["code"] == "ledger_empty"]
+        self.assertEqual(len(empty), 1)
+        self.assertIn("경험을 전달해 주세요", empty[0]["message"])
         self.assertEqual(store.scan(data["ledger.md"] + data["style.md"]), [])
 
     def test_git_warning(self):

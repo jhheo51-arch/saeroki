@@ -12,6 +12,7 @@ from . import core, terms
 HOME_ENV = "SAEROK_APPLY_HOME"
 INTERVIEW_ENV = "SAEROK_INTERVIEW_HOME"
 LEDGER, STYLE = "ledger.md", "style.md"
+MATERIALS = "경험자료"  # 사용자가 가진 이력서, 경력기술서, 메모를 형식 없이 넣어 두는 폴더
 COMPANY_FILES = ("posting.md", "analysis.md")
 DRAFT = re.compile(r"^draft-[0-9]{4}-[0-9]{2}-[0-9]{2}(?:-[0-9]+)?\.md$")
 DOCS = {kind: re.compile(rf"^{kind}-([0-9]{{4}}-[0-9]{{2}}-[0-9]{{2}})(?:-([0-9]+))?\.md$")
@@ -139,7 +140,8 @@ def init(base: Path | None = None) -> dict:
         if not path.exists():
             path.write_text(text, encoding="utf-8")
             made.append(str(path))
-    return {"home": str(base), "made": made, "warning": git_warning(base)}
+    (base / MATERIALS).mkdir(exist_ok=True)
+    return {"home": str(base), "made": made, "materials": str(base / MATERIALS), "warning": git_warning(base)}
 
 
 def context(draft_path: Path, company: str = "", ledger: str = "", analysis: str = "", style: str = "",

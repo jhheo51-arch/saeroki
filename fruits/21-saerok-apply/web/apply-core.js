@@ -341,7 +341,9 @@
       exp.all_text = everything.join("\n");
       experiences.push(exp);
     }
-    if (!experiences.length) issue(issues, "error", "ledger_empty", "장부", "", "경험이 없습니다. '## E01. 경험 이름'으로 시작해 주세요.");
+    // 경험이 없거나 init이 만든 양식('경험 이름')만 있으면 빈 장부로 봅니다.
+    if (experiences.every((e) => e.title === "경험 이름")) issue(issues, "error", "ledger_empty", "장부", "",
+      "경험 장부가 비어 있습니다. 지원서를 쓰려면 먼저 경험을 전달해 주세요. 가지고 있는 이력서, 경력기술서, 메모 파일을 지원 폴더의 '경험자료' 폴더에 넣거나, 새록이 양식('## E01. 경험 이름')에 맞춰 ledger.md에 직접 써 주세요.");
     return { experiences, issues };
   }
 

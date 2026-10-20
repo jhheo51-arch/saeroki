@@ -19,6 +19,8 @@ NEED = "[사용자 확인 필요"
 SPACES = " \t\n\r\f\v 　"
 
 # 직함 낱말. 앞뒤가 다른 글자로 이어지면(리더십, 멘토링) 직함으로 보지 않습니다.
+TEMPLATE_TITLE = "경험 이름"
+LEDGER_EMPTY = "경험 장부가 비어 있습니다. 지원서를 쓰려면 먼저 경험을 전달해 주세요. 가지고 있는 이력서, 경력기술서, 메모 파일을 지원 폴더의 '경험자료' 폴더에 넣거나, 새록이 양식('## E01. 경험 이름')에 맞춰 ledger.md에 직접 써 주세요."
 TITLES = ["프로젝트 매니저", "프로덕트 매니저", "부위원장", "위원장", "부회장", "회장", "팀장", "파트장", "리더", "대표",
           "총무", "매니저", "인턴", "기획자", "운영진", "운영자", "개발자", "디자이너", "분석가", "조장", "멘토",
           "간사", "사원", "주임", "대리", "과장", "차장", "부장", "실장", "본부장", "선임", "연구원", "조교", "반장",
@@ -389,9 +391,9 @@ def parse_ledger(text: str) -> dict:
         exp["evidence"] = "\n".join(confirmed)
         exp["all_text"] = "\n".join(everything)
         experiences.append(exp)
-    if not experiences:
-        issues.append({"level": "error", "code": "ledger_empty", "where": "장부", "text": "",
-                       "message": "경험이 없습니다. '## E01. 경험 이름'으로 시작해 주세요."})
+    # 경험이 없거나 init이 만든 양식('경험 이름')만 있으면 빈 장부로 봅니다.
+    if all(e["title"] == TEMPLATE_TITLE for e in experiences):
+        issues.append({"level": "error", "code": "ledger_empty", "where": "장부", "text": "", "message": LEDGER_EMPTY})
     return {"experiences": experiences, "issues": issues}
 
 

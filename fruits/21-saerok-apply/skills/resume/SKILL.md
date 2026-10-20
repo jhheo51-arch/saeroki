@@ -16,7 +16,7 @@ argument-hint: "--company 회사이름 [--edit 내 이력서 파일]"
 
 1. `saerok-apply where`로 지원 폴더와 회사 폴더를 확인합니다. `warning`이 있으면 그대로 알립니다.
 2. 회사 폴더에 `analysis.md`가 없으면 `/saerok-apply:analyze`의 흐름을 먼저 합니다. 공고가 받는 서류 형식(자유양식 PDF, 쪽수 제한, 사진 여부)을 분석에서 읽고, 없으면 묻습니다.
-3. `ledger.md`, `style.md`(있으면), `<회사 폴더>/analysis.md`, `posting.md`를 Read로 읽습니다. 장부가 없으면 `/saerok-apply:ledger`를 먼저 하자고 안내합니다. `saerok-apply ledger`로 확인 전 칸을 알아 두고, 확인 전 칸은 근거로 쓰지 않습니다.
+3. `ledger.md`, `style.md`(있으면), `<회사 폴더>/analysis.md`, `posting.md`를 Read로 읽습니다. 장부가 없거나 양식 그대로면(`saerok-apply ledger`가 `ledger_empty`) 다른 일을 하기 전에 `../ledger/SKILL.md`의 '0. 처음 안내'대로 경험부터 받습니다. `saerok-apply ledger`로 확인 전 칸을 알아 두고, 확인 전 칸은 근거로 쓰지 않습니다.
 4. `--edit`이 있으면 그 파일을 Read로 읽습니다. HTML이면 태그를 걷어 낸 글 순서대로 읽습니다(채용 프로그램이 읽는 순서와 같게). PDF는 읽지 않고 Markdown이나 HTML 원본을 달라고 합니다.
 
 ## 2. 쓰기(새로 쓸 때)

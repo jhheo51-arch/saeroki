@@ -182,7 +182,8 @@ def _run(args) -> int:
     if args.command == "init":
         _print(store.init())
     elif args.command == "where":
-        _print({"home": str(store.home()), "interview_docs": str(store.interview_docs()),
+        _print({"home": str(store.home()), "materials": str(store.home() / store.MATERIALS),
+                "interview_docs": str(store.interview_docs()),
                 "companies": store.companies_here(), "warning": store.git_warning()})
     elif args.command == "ledger":
         report = core.ledger_report(_need(Path(args.ledger) if args.ledger else store.home() / store.LEDGER))

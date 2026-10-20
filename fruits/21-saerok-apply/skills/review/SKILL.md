@@ -25,7 +25,7 @@ argument-hint: "<이력서·포트폴리오 파일> [--company 회사이름]"
 ## 준비
 
 1. 평가할 파일을 Read로 읽습니다. 파일을 주지 않았으면 무엇을 볼지 묻습니다. HTML이면 태그를 걷어 낸 글 순서대로 읽습니다(채용 프로그램이 읽는 순서와 같게). PDF는 읽지 않고 Markdown이나 HTML 원본을 달라고 합니다.
-2. 지원 폴더(`saerok-apply where`)의 `ledger.md`를 읽습니다. 다시 쓰기는 장부 사실로만 합니다.
+2. 지원 폴더(`saerok-apply where`)의 `ledger.md`를 읽습니다. 다시 쓰기는 장부 사실로만 합니다. 장부가 없거나 양식 그대로면(`saerok-apply ledger`가 `ledger_empty`) 다른 일을 하기 전에 `../ledger/SKILL.md`의 '0. 처음 안내'대로 경험부터 받습니다.
 3. 회사를 주면 `<회사 폴더>/posting.md`와 `analysis.md`를 읽고, 없으면 `/saerok-apply:analyze`를 먼저 하자고 안내합니다. 회사를 주지 않으면 직무 일반 기준으로 보고, 점수 옆에 어떤 기준으로 봤는지 적습니다.
 4. 지원 폴더 안의 이력서(`resume-*.md`)나 포트폴리오(`portfolio-*.md`)면 `saerok-apply check <파일> --json`을 돌립니다. 그 오류와 경고가 ② 자동 필터의 스크립트 목록입니다. 지원 폴더 밖 파일이나 장부 ID 주석이 없는 원본이면 검사기가 근거 ID 오류만 낼 수 있으니, 그 사실을 적고 같은 기준을 AI가 대신 봤다고 표시합니다.
 
