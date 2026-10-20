@@ -14,12 +14,13 @@ INTERVIEW_ENV = "SAEROK_INTERVIEW_HOME"
 LEDGER, STYLE = "ledger.md", "style.md"
 COMPANY_FILES = ("posting.md", "analysis.md")
 DRAFT = re.compile(r"^draft-[0-9]{4}-[0-9]{2}-[0-9]{2}(?:-[0-9]+)?\.md$")
+DOCS = {kind: re.compile(rf"^{kind}-([0-9]{{4}}-[0-9]{{2}}-[0-9]{{2}})(?:-([0-9]+))?\.md$")
+        for kind in ("draft", "resume", "portfolio")}
 
 # web/apply-core.js와 같은 결과를 내도록 `\d`·`\w`·`\s` 대신 ASCII 문자 묶음을 씁니다.
 PATTERNS = [
     ("주민등록번호", re.compile(r"(?<![0-9])[0-9]{6}[ \t]?-[ \t]?[1-4][0-9]{6}(?![0-9])")),
-    ("전화번호", re.compile(r"(?<![0-9])01[016789][-. \t]?[0-9]{3,4}[-. \t]?[0-9]{4}(?![0-9])")),
-    ("이메일", re.compile(r"[A-Za-z0-9_.+-]+@[A-Za-z0-9_-]+(\.[A-Za-z0-9_-]+)+")),
+    *core.CONTACT,
 ]
 
 # 장부·표기 규칙 양식. 웹 화면(app.js)도 같은 파일을 읽습니다.
@@ -210,4 +211,83 @@ def submit(draft_path: Path, company: str = "", dry_run: bool = False, date: str
             folder.mkdir(parents=True, exist_ok=True)
             path.write_text(body, encoding="utf-8")
     return {"saved": not dry_run, "files": out, "warning": git_warning(folder),
+            "next": "/saerok-interview:panel 로 서류 심사를 받습니다. 날짜가 붙은 이름이면 --company에 그 이름을 그대로 넣어 주세요."}
+
+
+# ---------- 이력서·포트폴리오 ----------
+
+def _latest(folder: Path, kind: str) -> Path | None:
+    """회사 폴더의 가장 새 판. 'resume-…-2.md'가 'resume-….md'보다 뒤에 오도록 (날짜, 번호)로 견줍니다."""
+    if not folder.is_dir():
+        return None
+    found = []
+    for p in folder.iterdir():
+        m = DOCS[kind].match(p.name)
+        if m:
+            found.append(((m.group(1), int(m.group(2) or 1)), p))
+    return max(found)[1] if found else None
+
+
+def others(folder: Path, kind: str, exclude: Path | None = None) -> list[dict]:
+    """문서 사이 불일치 검사용: 같은 회사 폴더의 다른 종류 문서(이력서, 포트폴리오, 자기소개서 초안) 최신 판."""
+    out = []
+    for k in ("resume", "portfolio", "draft"):
+        if k == kind:
+            continue
+        p = _latest(folder, k)
+        if p and (not exclude or p.resolve() != exclude.resolve()):
+            out.append({"name": p.name, "kind": k, "text": read(p)})
+    return out
+
+
+def doc_context(path: Path, company: str = "", ledger: str = "", analysis: str = "", style: str = "") -> dict:
+    path = Path(path)
+    text = read(path)
+    if not text:
+        raise ValueError(f"파일을 찾지 못했습니다: {path}")
+    kind = core.doc_kind(text, path.name)
+    if not kind:
+        raise ValueError("이력서나 포트폴리오가 아닙니다. 첫 줄을 '# 이력서 · 회사'나 '# 포트폴리오 · 회사'로 써 주세요.")
+    company = company or core.parse_doc(text)["meta"].get("회사", "")
+    folder = company_dir(company) if company else path.parent
+    return {"text": text, "kind": kind, "name": path.name, "company": company,
+            "ledger_text": read(Path(ledger) if ledger else home() / LEDGER),
+            "analysis_text": read(Path(analysis) if analysis else folder / "analysis.md"),
+            "posting_text": read(folder / "posting.md"),
+            "style_text": read(Path(style) if style else home() / STYLE),
+            "others": others(folder if folder.is_dir() else path.parent, kind, path)}
+
+
+def run_doc_check(path: Path, company: str = "", ledger: str = "", analysis: str = "", style: str = "",
+                  data: dict | None = None) -> dict:
+    ctx = doc_context(path, company, ledger, analysis, style)
+    data = data or terms.load()
+    return core.check_doc(ctx["text"], ctx["ledger_text"], ctx["analysis_text"], ctx["posting_text"], ctx["style_text"],
+                          company_names(ctx["company"], data), data, ctx["others"], ctx["name"])
+
+
+def submit_doc(path: Path, company: str = "", dry_run: bool = False, date: str | None = None,
+               result: dict | None = None) -> dict:
+    """검사를 통과하고 '상태: 확정'이면 주석을 뺀 제출본을 19번 서류 폴더에 `이력서-회사.md`, `포트폴리오-회사.md`로 넘깁니다.
+    같은 이름이 있으면 덮어쓰지 않고 날짜를 붙입니다. 연락처는 이력서에 들어가므로 막지 않고 알리기만 합니다."""
+    ctx = doc_context(path, company)
+    result = result or run_doc_check(path, company)
+    if result["summary"]["errors"]:
+        raise ValueError(f"검사 오류가 {result['summary']['errors']}개 있습니다. check로 고친 뒤 넘겨 주세요.")
+    if not result["summary"]["confirmed"]:
+        raise ValueError("아직 '- 상태: 확정'이 아닙니다. 확정한 뒤 넘겨 주세요.")
+    text = core.doc_submission(ctx["text"])
+    found = scan(text)
+    blocked = [f for f in found if f["kind"] == "주민등록번호"]
+    if blocked:
+        raise ValueError("제출본에 주민등록번호 꼴(" + ", ".join(f"{f['line']}줄" for f in blocked) + ")이 있습니다.")
+    label = core.DOC_KINDS[ctx["kind"]]
+    title = f"# {label} · {ctx['company']}" if ctx["company"] else f"# {label}"
+    folder = interview_docs()
+    path_out = _free(folder / f"{label}-{slug(ctx['company'])}.md", date or time.strftime("%Y-%m-%d"))
+    if not dry_run:
+        folder.mkdir(parents=True, exist_ok=True)
+        path_out.write_text(f"{title}\n\n{text}", encoding="utf-8")
+    return {"saved": not dry_run, "files": [{"kind": label, "path": str(path_out)}],
+            "privacy": [f for f in found if f["kind"] != "주민등록번호"], "warning": git_warning(folder),
             "next": "/saerok-interview:panel 로 서류 심사를 받습니다. 날짜가 붙은 이름이면 --company에 그 이름을 그대로 넣어 주세요."}

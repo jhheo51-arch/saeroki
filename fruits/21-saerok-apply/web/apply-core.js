@@ -927,10 +927,400 @@
     return found;
   }
 
+  // ---------- 이력서·포트폴리오 (PRD 5.7절) ----------
+  const DOC_KINDS = { resume: "이력서", portfolio: "포트폴리오" };
+  const DOC_PAGES = { resume: [1, 2], portfolio: [3, 5] };
+  const DOC_CARDS = { resume: ["숫자 카드", 4], portfolio: ["프로젝트 카드", 3] };
+  const DOC_META = ["회사", "직무", "판", "상태"];
+  const WEAK = ["참여했습니다", "공부했습니다", "노력했습니다", "기초", "수료 예정", "활용 가능", "관심"];
+  const FREE_SECTIONS = ["자격", "교육", "학력", "도구", "연락"];
+  const DESIGN_WORDS = ["가상", "설계", "가정"];
+  const DESIGN_MARK = ["가상", "설계안", "가정"];
+  const PHOTO = ["사진", "photo", "profile", "증명"];
+  const BIRTH = ["생년월일", "출생", "년생"];
+  const CLAIM_HEAD = { "자격증": "자격", "프로젝트": "프로젝트", "수상": "수상" };
+  const IMAGE_SRC = "!\\[([^\\]]*)\\]\\(([^)\\s]*)[^)]*\\)";
+  const IMAGE = new RegExp(IMAGE_SRC);
+  const IMAGE_G = new RegExp(IMAGE_SRC, "g");
+  const HEADING = /^(#{1,6})\s+(.*)$/;
+  const LIST_ITEM = /^(?:[-*]|[0-9]+\.)\s+/;
+  const RULE_CELL = /^:?-{2,}:?$/;
+  const PAGE_RULE = /([0-9]+)\s*(?:쪽|페이지|장)\s*(?:이내|이하)/;
+  const COUNT_CLAIM = /(자격증|프로젝트|수상)\s*([0-9]+)\s*(?:개|건|종)/g;
+  const ADDRESS = /[가-힣]+(?:시|도) [가-힣]+(?:구|군|시) [가-힣0-9]+(?:로|길|동)(?![가-힣])/;
+  const YM = /(20[0-9]{2})\s*(\.|-|\/|년)\s*([0-9]{1,2})(?![0-9])/g;
+  const YM_DOT = /(20[0-9]{2})\.([0-9]{1,2})(?![0-9])/g;
+  const YM_RANGE = /(20[0-9]{2})\s*(?:\.|-|\/|년)\s*([0-9]{1,2})\s*월?\s*~\s*(20[0-9]{2})\s*(?:\.|-|\/|년)\s*([0-9]{1,2})(?![0-9])/g;
+  const pad2 = (n) => String(parseInt(n, 10)).padStart(2, "0");
+  const sortedList = (set) => [...set].sort();
+  const stripBars = (s) => s.replace(/^\|+|\|+$/g, "");
+
+  function docKind(text, name = "") {
+    for (const line of (text || "").replace(/\r\n/g, "\n").split("\n")) {
+      if (line.startsWith("# ")) {
+        const title = line.slice(2).trim();
+        for (const [kind, word] of Object.entries(DOC_KINDS)) if (title.startsWith(word)) return kind;
+        break;
+      }
+    }
+    for (const kind of Object.keys(DOC_KINDS)) if (name.startsWith(kind + "-")) return kind;
+    return "";
+  }
+
+  function stripMd(line) {
+    let s = plain(line).replace(IMAGE_G, "").trim();
+    s = s.replace(LIST_ITEM, "");
+    return s.split("**").join("").trim();
+  }
+
+  function tags(line) {
+    const tag = { ids: [], labels: [], sources: [], unknown: [] };
+    for (const m of line.matchAll(COMMENT)) {
+      const t = parseTag(m[1]);
+      for (const key of Object.keys(tag)) for (const v of t[key]) if (!tag[key].includes(v)) tag[key].push(v);
+    }
+    return tag;
+  }
+
+  function parseDoc(text, name = "") {
+    const doc = { kind: docKind(text, name), meta: {}, pages: [], lines: [], sections: [], images: [] };
+    let page = 1, section = "", inTable = false, started = false;
+    const contentPages = new Set();
+    for (const raw of (text || "").replace(/\r\n/g, "\n").split("\n")) {
+      const s = raw.trim();
+      if (!s) { inTable = false; continue; }
+      if (s === "---") { page += 1; inTable = false; continue; }
+      if (s.startsWith(">")) continue;
+      const h = HEADING.exec(s);
+      if (h && h[1].length === 1) continue;
+      const f = FIELD.exec(s);
+      if (!started && !h && f && DOC_META.includes(f[1].trim())) {
+        if (!(f[1].trim() in doc.meta)) doc.meta[f[1].trim()] = f[2].trim();
+        continue;
+      }
+      started = true;
+      let kind = "line", body;
+      if (h) {
+        section = plain(h[2]).trim();
+        doc.sections.push({ title: section, page, items: 0, lines: 0 });
+        kind = "heading";
+        body = stripMd(h[2]);
+        inTable = false;
+      } else if (s.startsWith("|")) {
+        const cells = stripBars(s).split("|").map((c) => c.trim());
+        if (!inTable) { inTable = true; continue; }
+        if (cells.filter((c) => c).every((c) => RULE_CELL.test(c))) continue;
+        kind = "row";
+        body = cells.map(stripMd).join(" | ");
+      } else {
+        inTable = false;
+        body = stripMd(s);
+      }
+      for (const m of plain(s).matchAll(IMAGE_G)) doc.images.push({ page, alt: m[1].trim(), src: m[2] });
+      if (kind !== "heading" && doc.sections.length) {
+        const sec = doc.sections[doc.sections.length - 1];
+        if (kind === "row" || LIST_ITEM.test(s)) sec.items += 1;
+        if (body) sec.lines += 1;
+      }
+      if (body || IMAGE.test(s)) contentPages.add(page);
+      doc.lines.push({ page, section, kind, text: body, raw: s, ...tags(s) });
+    }
+    doc.pages = [...contentPages].sort((a, b) => a - b);
+    return doc;
+  }
+
+  function docSubmission(text) {
+    const out = [];
+    let started = false;
+    for (const raw of (text || "").replace(/\r\n/g, "\n").split("\n")) {
+      const s = raw.trim();
+      if (s.startsWith("# ") || s.startsWith(">")) continue;
+      const f = FIELD.exec(s);
+      if (!started && f && DOC_META.includes(f[1].trim())) continue;
+      if (s) started = true;
+      const line = plain(raw).replace(/[ \t]+/g, " ").trimEnd();
+      if (!line.trim() && (!out.length || !out[out.length - 1].trim())) continue;
+      out.push(line);
+    }
+    return out.join("\n").trim() + "\n";
+  }
+
+  function ym(text) {
+    const found = new Set(), styles = new Set();
+    for (const m of text.matchAll(YM)) { found.add(`${m[1]}-${pad2(m[3])}`); styles.add(m[2]); }
+    return [found, styles];
+  }
+
+  function contacts(text) {
+    const out = new Set();
+    for (const [kind, pattern] of PATTERNS.slice(1)) {
+      for (const m of plain(text).matchAll(pattern)) out.add(kind === "전화번호" ? m[0].replace(/[^0-9]/g, "") : m[0].toLowerCase());
+    }
+    return out;
+  }
+
+  function idFacts(text) {
+    const out = new Map();
+    for (const raw of (text || "").replace(/\r\n/g, "\n").split("\n")) {
+      const ids = tags(raw).ids;
+      if (!ids.length) continue;
+      const body = plain(raw);
+      const ranges = new Set([...body.matchAll(YM_RANGE)].map((m) => `${m[1]}-${pad2(m[2])}~${m[3]}-${pad2(m[4])}`));
+      const titles = titlesIn(body);
+      for (const i of ids) {
+        if (!out.has(i)) out.set(i, { periods: new Set(), titles: new Set() });
+        for (const r of ranges) out.get(i).periods.add(r);
+        for (const t of titles) out.get(i).titles.add(t);
+      }
+    }
+    return out;
+  }
+
+  function designNumbers(exp) {
+    const out = new Set();
+    for (const mt of exp.metrics) {
+      if (has(get(mt, "출처") + get(mt, "지표"), DESIGN_WORDS)) {
+        for (const k of METRIC_VALUES) for (const n of numbers(get(mt, k), false)) out.add(n.value);
+      }
+    }
+    const plan = exp.actions.filter((a) => a.tag !== "한 일").map((a) => a.text).join("\n");
+    const rest = [exp.title, ...Object.values(exp.fields), ...exp.actions.filter((a) => a.tag === "한 일").map((a) => a.text),
+      ...exp.metrics.map((mt) => mt.raw)].join("\n");
+    const haveSet = new Set(numbers(rest, false).map((n) => n.value));
+    for (const n of numbers(plan, false)) if (!haveSet.has(n.value)) out.add(n.value);
+    return out;
+  }
+
+  const meets = (a, b) => [...a].some((x) => b.has(x));
+  const sameSet = (a, b) => a.size === b.size && [...a].every((x) => b.has(x));
+
+  function checkDoc(text, ledgerText, analysisText = "", postingText = "", styleText = "", companies = null, terms = null,
+    others = null, name = "") {
+    const issues = [];
+    const doc = parseDoc(text, name);
+    const kind = doc.kind || "resume";
+    const label = DOC_KINDS[kind];
+    const ledger = parseLedger(ledgerText || "");
+    const exps = new Map(ledger.experiences.map((e) => [e.id, e]));
+    const analysis = parseAnalysis(analysisText || "");
+    const posting = parsePosting(postingText || "");
+    const style = parseStyle(styleText);
+    const meta = doc.meta;
+    const current = get(meta, "회사");
+    companies = companies || [];
+    const mine = companies.filter((c) => c.from === "folder").map((c) => c.name);
+    const asked = posting.body;
+    const researchNone = !!analysisText && ["", "자료 없음", "조사 안 됨"].includes(analysis.research_status);
+    for (const li of ledger.issues) if (li.code === "ledger_empty") issue(issues, "error", "ledger_empty", "장부", "", li.message);
+    if (!current) issue(issues, "error", "doc_meta", "머리", "", "'- 회사: 회사이름'이 없습니다.");
+    const ver = VERSION.exec(get(meta, "판"));
+    if (!ver) issue(issues, "error", "doc_meta", "머리", "", "'- 판: v1 · 바꾼 점 한 줄'이 없습니다.");
+    if (!get(meta, "직무")) issue(issues, "warn", "doc_meta", "머리", "", "'- 직무:'가 없습니다. 첫 화면에 지원 직무가 읽혀야 합니다.");
+    const [cardHead, cardNeed] = DOC_CARDS[kind];
+    const cards = doc.lines.filter((ln) => ln.kind === "row" && ln.section.includes(cardHead));
+    const allText = doc.lines.map((ln) => ln.text).join("\n");
+    for (const ln of doc.lines) {
+      const where = `${ln.page}쪽 ${ln.section || "머리"}`;
+      const t = ln.text;
+      if (!t) continue;
+      if (t.includes(NEED)) {
+        issue(issues, "error", "placeholder", where, t, "장부에 근거가 없어 남긴 칸입니다. 장부에 경험을 더하거나 줄을 빼 주세요.");
+        continue;
+      }
+      if (contacts(t).size) continue; // 연락처 줄은 근거 ID를 묻지 않습니다.
+      for (const u of ln.unknown) issue(issues, "warn", "unknown_tag", where, t, `모르는 주석 '${u}'입니다. E01, 공고, 조사, 의견만 씁니다.`);
+      for (const i of ln.ids) {
+        if (!exps.has(i)) issue(issues, "error", "unknown_id", where, t, `장부에 ${i}가 없습니다.`);
+        else if (exps.get(i).unconfirmed.length) issue(issues, "warn", "unconfirmed_ledger", where, t,
+          `${i}에 확인 전 칸(${exps.get(i).unconfirmed.join(", ")})이 있습니다. 확인한 칸만 근거가 됩니다.`);
+      }
+      const free = FREE_SECTIONS.some((w) => ln.section.includes(w));
+      const fact = t.replace(YM_DOT, "$1-$2");
+      const factual = numbers(fact).length > 0 || isPast(fact) || (titlesIn(fact).length > 0 && !isFuture(fact));
+      if (factual && !free && !ln.ids.length && !ln.sources.length) issue(issues, "error", "no_id", where, t, "사실 줄에 근거 ID가 없습니다. 줄 끝에 <!-- E01 -->처럼 달아 주세요.");
+      if (ln.sources.includes("조사") && researchNone) issue(issues, "error", "research_none_cited", where, t, "분석의 회사 조사가 '자료 없음'인데 조사를 근거로 썼습니다.");
+      if (!ln.sources.includes("의견")) {
+        factChecks(issues, where, { text: fact, ids: ln.ids, labels: [], sources: ln.sources, unknown: [] }, exps, asked, analysis.research_text);
+      }
+      if (has(t, ABSTRACT) && !/[0-9]/.test(t)) issue(issues, "warn", "para_abstract", where, t, "근거 없는 추상 성과입니다. 수치, 기간, 규모, 전후 변화로 바꿔 주세요.");
+      for (const w of WEAK) if (t.includes(w)) issue(issues, "warn", "weak_word", where, t, `약한 표현 '${w}'입니다. 한 일과 결과로 바꿔 주세요.`);
+      if (ln.kind === "heading" || cards.includes(ln)) {
+        const design = new Set();
+        for (const i of ln.ids) if (exps.has(i)) for (const v of designNumbers(exps.get(i))) design.add(v);
+        const hits = numbers(fact).filter((n) => design.has(n.value));
+        if (hits.length && !has(t, DESIGN_MARK)) issue(issues, "error", "design_number_unmarked", where, t,
+          `${hits[0].raw}${hits[0].unit}는 장부에서 설계안이나 가상 데이터 수치입니다. ` +
+          "숫자 바로 옆에 '가상 데이터'나 '설계안'을 적어 주세요.");
+      }
+      if (!asked.includes("생년월일") && has(t, BIRTH)) issue(issues, "error", "birth", where, t, "공고가 생년월일을 요구하지 않았습니다. 빼 주세요.");
+      if (!asked.includes("주소") && ADDRESS.test(t)) issue(issues, "error", "address", where, t, "공고가 주소를 요구하지 않았습니다. 빼 주세요.");
+      companyChecks(issues, where, t, current, companies, mine);
+      styleChecks(issues, where, t, style, false);
+      termChecks(issues, where, t, terms);
+    }
+    for (const img of doc.images) {
+      const where = `${img.page}쪽`;
+      if (!has(asked, PHOTO) && has((img.alt + " " + img.src).toLowerCase(), PHOTO)) issue(issues, "error", "photo", where, img.src, "공고가 사진을 요구하지 않았습니다. 사진을 빼 주세요.");
+      if (!img.alt) issue(issues, "warn", "image_no_caption", where, img.src, "이미지가 무엇을 보여 주는지 대체 글 한 줄을 붙여 주세요.");
+    }
+    // 첫 카드와 카드 수
+    const items = analysis.items.filter((it) => it.kind === "필수" || it.kind === "우대");
+    if (cards.length && items.length && cards[0].ids.length) {
+      const comps = [];
+      for (const i of cards[0].ids) if (exps.has(i)) comps.push(...exps.get(i).competencies);
+      if (comps.length && !comps.some((c) => items.some((it) => it.item.includes(c) || c.includes(it.item)))) {
+        issue(issues, "warn", "first_card_off_role", `${cards[0].page}쪽 ${cardHead}`, cards[0].text,
+          `첫 카드 경험의 역량(${comps.join(", ")})이 공고의 필수, 우대 역량과 겹치지 않습니다. 직무와 이어지는 수치를 앞에 두세요.`);
+      }
+    }
+    if (cards.length !== cardNeed) issue(issues, "warn", "card_count", cardHead, "",
+      cards.length ? `${cardHead}가 ${cards.length}개입니다. ${label}은 ${cardNeed}개로 씁니다.` : `'${cardHead}' 절의 표가 없습니다.`);
+    // 개수 주장과 실제 목록
+    for (const ln of doc.lines) {
+      for (const m of ln.text.matchAll(COUNT_CLAIM)) {
+        const head = CLAIM_HEAD[m[1]];
+        const sec = doc.sections.find((s) => s.title.includes(head) && s.items);
+        if (sec && sec.items !== parseInt(m[2], 10)) issue(issues, "error", "count_claim", `${ln.page}쪽 ${ln.section || "머리"}`, ln.text,
+          `'${m[0]}'라고 썼는데 '${sec.title}' 목록은 ${sec.items}개입니다.`);
+      }
+    }
+    // 공고 키워드
+    const low = allText.toLowerCase();
+    const keywords = items.map((it) => ({ item: it.item, kind: it.kind, found: low.includes(it.item.toLowerCase()) }));
+    for (const k of analysis.keywords) {
+      const word = k.text.split(/[:：]/)[0].trim();
+      if (word) keywords.push({ item: word, kind: "숨은 키워드", found: low.includes(word.toLowerCase()) });
+    }
+    for (const k of keywords) if (!k.found) issue(issues, "warn", "keyword_missing", "전체", k.item, `공고의 ${k.kind} '${k.item}'이 문서에 없습니다.`);
+    if (!analysisText) issue(issues, "warn", "no_analysis", "전체", "", "analysis.md가 없어 키워드와 첫 카드를 보지 못했습니다.");
+    // 분량과 형식
+    let [lowPage, highPage] = DOC_PAGES[kind];
+    const rule = PAGE_RULE.exec(asked);
+    if (rule) { lowPage = 1; highPage = parseInt(rule[1], 10); }
+    const pages = doc.pages.length;
+    if (pages > highPage || pages < lowPage) issue(issues, "error", "page_count", "전체", "",
+      `${pages}쪽입니다. ${label}은 ${lowPage}~${highPage}쪽으로 씁니다('---' 줄이 쪽 나눔).`);
+    const pageText = new Map(doc.pages.map((p) => [p, squash(doc.lines.filter((ln) => ln.page === p).map((ln) => ln.text).join(""))]));
+    for (const p of [...new Set(doc.images.map((img) => img.page))].sort((a, b) => a - b)) {
+      const body = squash(doc.lines.filter((ln) => ln.page === p && ln.kind !== "heading").map((ln) => ln.text).join(""));
+      if (len(body) < 10) issue(issues, "warn", "image_only_page", `${p}쪽`, "", "글 없이 이미지만 있는 쪽입니다. 무엇을 보여 주는지 글로 적어 주세요.");
+    }
+    const plist = doc.pages;
+    for (let a = 0; a < plist.length; a++) {
+      for (let b = a + 1; b < plist.length; b++) {
+        const ka = pageText.get(plist[a]), kb = pageText.get(plist[b]);
+        if (len(ka) < 20 || len(kb) < 20) continue;
+        const ba = bigrams(ka), bb = bigrams(kb);
+        if (200 * common(ba, bb) >= 85 * (ba.size + bb.size)) issue(issues, "warn", "page_repeat", `${plist[a]}쪽, ${plist[b]}쪽`, "", "거의 같은 내용의 쪽이 되풀이됩니다.");
+      }
+    }
+    if (kind === "portfolio") {
+      const limits = doc.sections.filter((s) => s.title.includes("한계"));
+      if (!limits.length) issue(issues, "error", "limit_empty", "전체", "", "프로젝트마다 '한계' 칸을 두고 비워 두지 않습니다.");
+      for (const s of limits) if (!s.lines) issue(issues, "error", "limit_empty", `${s.page}쪽 ${s.title}`, "", "'한계' 칸이 비었습니다.");
+    }
+    // 문서 사이 불일치
+    const myContacts = contacts(text), myFacts = idFacts(text);
+    const myStyles = ym(allText)[1];
+    for (const other of others || []) {
+      const where = `${other.name}과 비교`;
+      const theirs = contacts(other.text);
+      if (myContacts.size && theirs.size && !sameSet(myContacts, theirs)) issue(issues, "error", "doc_mismatch", where, "", "연락처가 다릅니다.");
+      const facts = idFacts(other.text);
+      for (const i of [...myFacts.keys()].filter((k) => facts.has(k)).sort()) {
+        const a = myFacts.get(i), b = facts.get(i);
+        if (a.periods.size && b.periods.size && !meets(a.periods, b.periods)) issue(issues, "error", "doc_mismatch", where, i,
+          `${i}의 기간이 다릅니다(${sortedList(a.periods).join(", ")} / ${sortedList(b.periods).join(", ")}).`);
+        if (a.titles.size && b.titles.size && !meets(a.titles, b.titles)) issue(issues, "error", "doc_mismatch", where, i,
+          `${i}의 직함이 다릅니다(${sortedList(a.titles).join(", ")} / ${sortedList(b.titles).join(", ")}).`);
+      }
+      if (other.kind in DOC_KINDS && other.kind !== kind) {
+        const styles = ym(parseDoc(other.text).lines.map((ln) => ln.text).join("\n"))[1];
+        if (myStyles.size && styles.size && !meets(myStyles, styles)) issue(issues, "error", "doc_mismatch", where, "",
+          `날짜 표기가 다릅니다('${sortedList(myStyles).join(" ")}' / '${sortedList(styles).join(" ")}').`);
+      }
+    }
+    const errors = issues.filter((i) => i.level === "error").length;
+    const confirmed = get(meta, "상태").trim() === "확정";
+    return { kind, company: current, role: get(meta, "직무"), version: ver ? `v${ver[1]}` : "", change: ver ? ver[2].trim() : "",
+      pages, cards: cards.length, keywords, issues,
+      summary: { errors, warnings: issues.length - errors, ready: errors === 0, confirmed, submittable: errors === 0 && confirmed } };
+  }
+
+  // ---------- HTML 출력 ----------
+  const HTML_STYLE = "@page{size:A4;margin:16mm}" +
+    "body{font-family:'Pretendard','Noto Sans KR','Malgun Gothic',sans-serif;font-size:10.5pt;line-height:1.55;" +
+    "color:#111;background:#fff;max-width:178mm;margin:0 auto;padding:8mm 0}" +
+    "h1,h2,h3{line-height:1.3;margin:1.1em 0 .4em}h2{font-size:13pt;border-bottom:1px solid #999;padding-bottom:2px}" +
+    "h3{font-size:11pt}table{border-collapse:collapse;width:100%;margin:.4em 0}" +
+    "th,td{border:1px solid #bbb;padding:3px 6px;text-align:left;vertical-align:top}th{background:#f2f2f2}" +
+    "img{max-width:100%}figure{margin:.6em 0}figcaption{font-size:9pt;color:#444}ul,ol{padding-left:1.3em;margin:.3em 0}" +
+    "p{margin:.35em 0}.page-break{break-after:page;height:0}" +
+    "@media screen{.page-break{border-top:1px dashed #bbb;margin:8mm 0}}";
+
+  const esc = (text) => text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+
+  function inline(text) {
+    let s = esc(text);
+    s = s.replace(IMAGE_G, '<img src="$2" alt="$1">');
+    s = s.replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, '<a href="$2">$1</a>');
+    return s.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+  }
+
+  function toHtml(text, title = "") {
+    const out = [], para = [], items = [], table = [];
+    let list = "";
+    const flush = () => {
+      if (para.length) { out.push("<p>" + para.map(inline).join(" ") + "</p>"); para.length = 0; }
+      if (items.length) { out.push(`<${list}>` + items.map((i) => `<li>${inline(i)}</li>`).join("") + `</${list}>`); items.length = 0; }
+      if (table.length) {
+        const rows = table.filter((r) => !r.filter((c) => c).every((c) => RULE_CELL.test(c)));
+        const html = rows.map((cells, k) => "<tr>" + cells.map((c) => { const tag = k === 0 ? "th" : "td"; return `<${tag}>${inline(c)}</${tag}>`; }).join("") + "</tr>").join("");
+        out.push(`<table>${html}</table>`);
+        table.length = 0;
+      }
+    };
+    for (const raw of plain(text || "").replace(/\r\n/g, "\n").split("\n")) {
+      const s = raw.trim();
+      if (!s) { flush(); continue; }
+      if (s === "---") { flush(); out.push('<div class="page-break"></div>'); continue; }
+      const h = HEADING.exec(s);
+      if (h) { flush(); const n = h[1].length; out.push(`<h${n}>${inline(h[2].trim())}</h${n}>`); continue; }
+      if (s.startsWith("|")) {
+        if (para.length || items.length) flush();
+        table.push(stripBars(s).split("|").map((c) => c.trim()));
+        continue;
+      }
+      const m = /^([-*]|[0-9]+\.)\s+(.*)$/.exec(s);
+      if (m) {
+        const tag = m[1] === "-" || m[1] === "*" ? "ul" : "ol";
+        if (para.length || table.length || (items.length && list !== tag)) flush();
+        list = tag;
+        items.push(m[2]);
+        continue;
+      }
+      const img = new RegExp("^" + IMAGE_SRC + "$").exec(s);
+      if (img) {
+        flush();
+        const cap = img[1] ? `<figcaption>${esc(img[1])}</figcaption>` : "";
+        out.push(`<figure>${inline(s)}${cap}</figure>`);
+        continue;
+      }
+      if (items.length || table.length) flush();
+      para.push(s);
+    }
+    flush();
+    return "<!doctype html>\n<html lang=\"ko\">\n<head>\n<meta charset=\"utf-8\">\n" +
+      "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n" +
+      `<title>${esc(title)}</title>\n<style>${HTML_STYLE}</style>\n</head>\n<body>\n` +
+      out.join("\n") + "\n</body>\n</html>\n";
+  }
+
   const api = {
     TYPES, STAR, SOURCES, ACTION_TAGS, UNCONFIRMED, IMAGE_MARK, NEED,
     count, fit, numbers, isPast, isFuture, titlesIn, findName, plain, guessType, sentences, bodyText,
     parseLedger, ledgerReport, parsePosting, parseAnalysis, matchTerms, checkAnalysis, parseStyle, parseDraft, submission, check, scan,
+    DOC_KINDS, docKind, parseDoc, docSubmission, checkDoc, toHtml,
   };
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   else root.SaerokApply = api;

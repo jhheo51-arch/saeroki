@@ -324,6 +324,112 @@ class PrivacyTest(unittest.TestCase):
         self.assertEqual(store.scan("문의 2,400건, 2025-03 ~ 2025-08, 12345678901234"), [])
 
 
+RESUME = read(COMPANY / "resume-2026-10-20.md")
+PORTFOLIO = read(COMPANY / "portfolio-2026-10-20.md")
+FOLDER_ONLY = [{"name": "가상커머스", "from": "folder"}, {"name": "가상물류", "from": "folder"}]
+
+
+def run_doc(text=RESUME, ledger=LEDGER, analysis=ANALYSIS, posting=POSTING, style=STYLE, others=None):
+    return core.check_doc(text, ledger, analysis, posting, style, COMPANIES, DATA, others)
+
+
+class DocRuleTest(unittest.TestCase):
+    """이력서, 포트폴리오 검사(PRD 5.7절). 걸러야 할 것과 그냥 둬야 할 것을 함께 봅니다."""
+
+    def test_examples_pass(self):
+        for text, kind, pages, cards in ((RESUME, "resume", 2, 4), (PORTFOLIO, "portfolio", 3, 3)):
+            r = run_doc(text, others=[{"name": "다른 문서", "kind": "portfolio" if kind == "resume" else "resume",
+                                       "text": PORTFOLIO if kind == "resume" else RESUME}])
+            self.assertEqual(r["summary"]["errors"], 0, r["issues"])
+            self.assertTrue(r["summary"]["submittable"])
+            self.assertEqual((r["kind"], r["pages"], r["cards"], r["version"]), (kind, pages, cards, "v1"))
+            self.assertEqual(codes(r), {"keyword_missing"})  # 장부에 SQL 경험이 없음은 경고로만 남습니다.
+            self.assertEqual([k["item"] for k in r["keywords"] if not k["found"]], ["SQL"])
+
+    def test_doc_kind(self):
+        self.assertEqual(core.doc_kind(RESUME), "resume")
+        self.assertEqual(core.doc_kind(PORTFOLIO), "portfolio")
+        self.assertEqual(core.doc_kind(DRAFT, "draft-2026-10-17.md"), "")
+        self.assertEqual(core.doc_kind("본문", "portfolio-2026-10-20.md"), "portfolio")
+
+    def test_facts_need_ledger(self):
+        self.assertIn("number_not_in_ledger", codes(run_doc(replace(RESUME, "41%에서 33%로 낮췄", "45%에서 33%로 낮췄")), "error"))
+        self.assertIn("no_id", codes(run_doc(replace(RESUME, "규칙을 만들었습니다. <!-- E01 -->", "규칙을 만들었습니다.")), "error"))
+        self.assertIn("unknown_id", codes(run_doc(replace(RESUME, "| 3개월 <!-- E01 --> |", "| 3개월 <!-- E09 --> |")), "error"))
+        self.assertIn("placeholder", codes(run_doc(replace(RESUME, "- 스프레드시트, 설문 도구", "- [사용자 확인 필요: 도구]")), "error"))
+        # '2025.12'를 소수 12로 읽지 않습니다.
+        dotted = replace(RESUME, "- 2025-12~2026-02 가상리빙", "- 2025.12~2026.02 가상리빙")
+        self.assertEqual(codes(run_doc(dotted), "error"), set())
+        # 도구, 자격 절의 사실 줄은 장부 ID 없이 둡니다.
+        self.assertEqual(codes(run_doc(replace(RESUME, "- 스프레드시트, 설문 도구", "- 스프레드시트 3년 사용")), "error"), set())
+
+    def test_design_number_needs_mark(self):
+        ledger = replace(LEDGER, "대기 예약을 받는 기능을 설계했습니다.", "대기 예약을 받는 기능을 설계했습니다. 가상 데이터로 노쇼율 9%를 예상했습니다.")
+        row = "| 노쇼 이유 설문 | 회원 30명 | 2025-03~2025-08 <!-- E01 --> |"
+        bare = run_doc(replace(RESUME, row, "| 대기 예약 뒤 노쇼율 | 9% | 예상 <!-- E01 --> |"), ledger=ledger)
+        self.assertIn("design_number_unmarked", codes(bare, "error"))
+        marked = run_doc(replace(RESUME, row, "| 대기 예약 뒤 노쇼율 | 9%(가상 데이터) | 예상 <!-- E01 --> |"), ledger=ledger)
+        self.assertNotIn("design_number_unmarked", codes(marked))
+        self.assertEqual(codes(run_doc(RESUME, ledger=ledger), "error"), set())  # 실제 수치 카드는 그대로 둡니다.
+
+    def test_private_details(self):
+        self.assertIn("photo", codes(run_doc(replace(RESUME, "## 도구", "![증명사진](photo.jpg)\n\n## 도구")), "error"))
+        asked = replace(POSTING, "## 원문\n", "## 원문\n\n이력서에 사진을 붙여 주세요.\n")
+        self.assertNotIn("photo", codes(run_doc(replace(RESUME, "## 도구", "![증명사진](photo.jpg)\n\n## 도구"), posting=asked)))
+        self.assertIn("birth", codes(run_doc(replace(RESUME, "- 스프레드시트", "- 생년월일 2001-01-01\n- 스프레드시트")), "error"))
+        self.assertIn("address", codes(run_doc(replace(RESUME, "- 스프레드시트", "- 서울시 강남구 테헤란로\n- 스프레드시트")), "error"))
+        self.assertIn("image_no_caption", codes(run_doc(replace(RESUME, "## 도구", "![](chart.png)\n\n## 도구")), "warn"))
+
+    def test_meta_and_company(self):
+        self.assertIn("doc_meta", codes(run_doc(replace(RESUME, "- 판: v1 · 첫 판\n", "")), "error"))
+        self.assertIn("doc_meta", codes(run_doc(replace(RESUME, "- 직무: 서비스 기획(신입)\n", "")), "warn"))
+        self.assertFalse(run_doc(replace(RESUME, "- 상태: 확정", "- 상태: 작성 중"))["summary"]["submittable"])
+        self.assertIn("other_company", codes(run_doc(replace(RESUME, "고치는 서비스", "고치는 가상물류 서비스")), "error"))
+
+    def test_pages_cards_and_claims(self):
+        long = RESUME + "\n---\n\n## 더\n\n글\n"
+        self.assertIn("page_count", codes(run_doc(long), "error"))
+        rule = replace(POSTING, "## 원문\n", "## 원문\n\n이력서는 3쪽 이내로 냅니다.\n")
+        self.assertNotIn("page_count", codes(run_doc(long, posting=rule)))
+        self.assertIn("page_count", codes(run_doc(PORTFOLIO.split("\n---\n")[0]), "error"))
+        self.assertIn("card_count", codes(run_doc(replace(RESUME, "| 주간 좌석 노쇼율 | 18% → 11% | 3개월 <!-- E01 --> |\n", "")), "warn"))
+        self.assertIn("count_claim", codes(run_doc(replace(PORTFOLIO, "프로젝트 3개를", "프로젝트 4개를")), "error"))
+        self.assertIn("weak_word", codes(run_doc(replace(RESUME, "- 스프레드시트, 설문 도구", "- 스프레드시트 활용 가능")), "warn"))
+
+    def test_portfolio_limits(self):
+        self.assertIn("limit_empty", codes(run_doc(replace(PORTFOLIO, "- 실제 이용자에게 시험하지 않은 설계안입니다. <!-- 의견 -->", "")), "error"))
+        self.assertIn("limit_empty", codes(run_doc(PORTFOLIO.replace("### 한계", "### 배운 점").replace("### 설계안의 한계", "### 남은 일")), "error"))
+
+    def test_documents_agree(self):
+        other = lambda text: [{"name": "포트폴리오", "kind": "portfolio", "text": text}]
+        moved = replace(PORTFOLIO, "2025-12~2026-02, 가상리빙", "2025-11~2026-01, 가상리빙")
+        self.assertIn("doc_mismatch", codes(run_doc(others=other(moved)), "error"))
+        dotted = PORTFOLIO.replace("2025-12~2026-02", "2025.12~2026.02").replace("2025-03~2025-08", "2025.03~2025.08")
+        self.assertIn("doc_mismatch", codes(run_doc(others=other(dotted)), "error"))
+        renamed = replace(PORTFOLIO, "기획 팀장", "조장").replace("기획 팀장", "조장")
+        self.assertIn("doc_mismatch", codes(run_doc(others=other(renamed)), "error"))
+        # 연락처는 테스트 안의 임시 값으로만 봅니다.
+        a = replace(RESUME, "## 숫자 카드", "- 연락: 010-0000-1111\n\n## 숫자 카드")
+        b = replace(PORTFOLIO, "## 프로젝트 카드", "- 연락: 010-0000-2222\n\n## 프로젝트 카드")
+        self.assertIn("doc_mismatch", codes(run_doc(a, others=other(b)), "error"))
+        same = replace(PORTFOLIO, "## 프로젝트 카드", "- 연락: 010-0000-1111\n\n## 프로젝트 카드")
+        self.assertNotIn("doc_mismatch", codes(run_doc(a, others=other(same))))
+
+    def test_submission_and_html(self):
+        text = core.doc_submission(RESUME)
+        for gone in ("<!--", "- 판:", "- 상태:", "# 이력서", "가상 지원자 '새록 지원자'"):
+            self.assertNotIn(gone, text)
+        self.assertTrue(text.startswith("## 새록 지원자\n"))
+        html = core.to_html(core.doc_submission(PORTFOLIO), "포트폴리오 가상커머스")
+        self.assertTrue(html.startswith("<!doctype html>\n<html lang=\"ko\">"))
+        self.assertEqual(html.count('<div class="page-break"></div>'), 2)
+        self.assertIn("<th>프로젝트</th>", html)
+        self.assertIn("<li>문의 2,400건을 배송, 교환, 결제 등 7개 유형으로 나눴습니다.</li>", html)
+        self.assertNotIn("<!--", html)
+        self.assertIn('<figure><img src="a.png" alt="그림 &lt;1&gt;"><figcaption>그림 &lt;1&gt;</figcaption></figure>',
+                      core.to_html("![그림 <1>](a.png)"))
+
+
 def run_cli(*argv):
     out, err = io.StringIO(), io.StringIO()
     with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
@@ -436,6 +542,59 @@ class StoreCliTest(Home):
         files = store.submit(self.draft, dry_run=True)["files"]
         self.assertEqual([f["kind"] for f in files], ["자기소개서"])
 
+    def test_doc_check_and_html_cli(self):
+        resume = self.home / "가상커머스" / "resume-2026-10-20.md"
+        code, out, _ = run_cli("check", str(resume))
+        self.assertEqual(code, 0)
+        self.assertIn("## 공고 키워드", out)
+        r = json.loads(run_cli("check", str(resume), "--json")[1])
+        self.assertEqual((r["kind"], r["summary"]["errors"]), ("resume", 0))
+        bad = self.home / "가상커머스" / "resume-2026-10-21.md"
+        bad.write_text(replace(RESUME, "41%에서 33%로 낮췄", "45%에서 33%로 낮췄"), encoding="utf-8")
+        self.assertEqual(run_cli("check", str(bad))[0], 2)
+        # 다른 문서와 기간이 어긋나면 막힙니다(같은 폴더의 최신 포트폴리오와 비교).
+        portfolio = self.home / "가상커머스" / "portfolio-2026-10-21.md"
+        portfolio.write_text(replace(PORTFOLIO, "2025-12~2026-02, 가상리빙", "2025-11~2026-01, 가상리빙"), encoding="utf-8")
+        self.assertIn("doc_mismatch", codes(store.run_doc_check(resume)))
+        out_html = Path(self.tmp.name) / "resume.html"
+        code, out, _ = run_cli("html", str(resume), "--out", str(out_html))
+        self.assertEqual(code, 0)
+        self.assertIn("PDF로 저장", out)
+        self.assertEqual(read(out_html), core.to_html(core.doc_submission(RESUME), "이력서 가상커머스"))
+        self.assertEqual(run_cli("html", str(self.draft))[0], 2)
+
+    def test_doc_submit_never_overwrites(self):
+        resume = self.home / "가상커머스" / "resume-2026-10-20.md"
+        dry = store.submit_doc(resume, dry_run=True, date="2026-10-20")
+        self.assertFalse(dry["saved"])
+        self.assertFalse((self.interview / "서류").exists())
+        first = store.submit_doc(resume, date="2026-10-20")
+        target = self.interview / "서류" / "이력서-가상커머스.md"
+        self.assertEqual(Path(first["files"][0]["path"]).resolve(), target.resolve())
+        self.assertTrue(read(target).startswith("# 이력서 · 가상커머스\n\n## 새록 지원자\n"))
+        self.assertNotIn("<!--", read(target))
+        target.write_text("사용자가 고친 이력서", encoding="utf-8")
+        second = store.submit_doc(resume, date="2026-10-20")
+        self.assertEqual(Path(second["files"][0]["path"]).name, "이력서-가상커머스-2026-10-20.md")
+        self.assertEqual(read(target), "사용자가 고친 이력서")
+        portfolio = store.submit_doc(self.home / "가상커머스" / "portfolio-2026-10-20.md", date="2026-10-20")
+        self.assertEqual(Path(portfolio["files"][0]["path"]).name, "포트폴리오-가상커머스.md")
+        # 연락처는 이력서에 들어가므로 막지 않고 알리기만 합니다(임시 값).
+        contact = self.home / "가상커머스" / "resume-2026-10-22.md"
+        contact.write_text(replace(RESUME, "## 숫자 카드", "- 연락: 010-0000-1111\n\n## 숫자 카드"), encoding="utf-8")
+        self.assertEqual([p["kind"] for p in store.submit_doc(contact, dry_run=True)["privacy"]], ["전화번호"])
+
+    def test_doc_submit_refuses(self):
+        work = self.home / "가상커머스" / "resume-2026-10-21.md"
+        work.write_text(replace(RESUME, "- 상태: 확정", "- 상태: 작성 중"), encoding="utf-8")
+        with self.assertRaisesRegex(ValueError, "확정"):
+            store.submit_doc(work)
+        work.write_text(replace(RESUME, "41%에서 33%로 낮췄", "45%에서 33%로 낮췄"), encoding="utf-8")
+        with self.assertRaisesRegex(ValueError, "오류"):
+            store.submit_doc(work)
+        self.assertEqual(run_cli("submit", str(work))[0], 2)
+        self.assertFalse((self.interview / "서류").exists())
+
 
 class TermsTest(unittest.TestCase):
     def test_lite_matches_dictionary(self):
@@ -506,6 +665,53 @@ process.stdin.on("data", (c) => d += c).on("end", () => {
             want = self.python(a)
             for key in want:
                 self.assertEqual(got[key], want[key], f"사례 {n}의 {key}가 다릅니다.")
+
+    DOC_SCRIPT = r'''
+const A = require(process.argv[1]); let d = "";
+process.stdin.on("data", (c) => d += c).on("end", () => {
+  console.log(JSON.stringify(JSON.parse(d).map((a) => ({
+    check: A.checkDoc(a.text, a.ledger, a.analysis, a.posting, a.style, a.companies, a.terms, a.others, a.name),
+    doc: A.parseDoc(a.text, a.name), submission: A.docSubmission(a.text), html: A.toHtml(A.docSubmission(a.text), a.name) }))));
+});'''
+
+    def doc_cases(self):
+        base = dict(text=RESUME, ledger=LEDGER, analysis=ANALYSIS, posting=POSTING, style=STYLE, companies=COMPANIES,
+                    terms=DATA, others=[{"name": "p", "kind": "portfolio", "text": PORTFOLIO}], name="resume-2026-10-20.md")
+        design = replace(LEDGER, "대기 예약을 받는 기능을 설계했습니다.", "대기 예약을 받는 기능을 설계했습니다. 가상 데이터로 노쇼율 9%를 예상했습니다.")
+        variants = [
+            {},
+            {"text": PORTFOLIO, "name": "portfolio-2026-10-20.md", "others": [{"name": "r", "kind": "resume", "text": RESUME}]},
+            {"text": replace(RESUME, "41%에서 33%로 낮췄", "45%에서 33%로 낮췄") + "\n---\n\n## 더\n\n- 생년월일 2001-01-01\n"
+                     "- 서울시 강남구 테헤란로\n\n![증명사진](photo.jpg)\n\n![](a.png)\n",
+             "others": [{"name": "p", "kind": "portfolio",
+                         "text": PORTFOLIO.replace("2025-12~2026-02", "2025.11~2026.01").replace("기획 팀장", "조장")}]},
+            {"text": replace(RESUME, "| 노쇼 이유 설문 | 회원 30명 | 2025-03~2025-08 <!-- E01 --> |",
+                             "| 대기 예약 뒤 노쇼율 | 9% | 예상 <!-- E01 --> |").replace("- 판: v1 · 첫 판\n", ""),
+             "ledger": design, "analysis": "", "style": ""},
+            {"text": replace(PORTFOLIO, "프로젝트 3개를", "프로젝트 4개를 **가상물류** [링크](https://example.com)에서")
+                     .replace("### 설계안의 한계", "### 남은 일") + "\n- 스프레드시트 활용 가능\n- [사용자 확인 필요: 수상]\n",
+             "name": "portfolio-2026-10-21.md", "others": []},
+            {"text": replace(RESUME, "## 숫자 카드", "- 연락: 010-0000-1111\n\n## 숫자 카드"),
+             "others": [{"name": "p", "kind": "portfolio",
+                         "text": replace(PORTFOLIO, "## 프로젝트 카드", "- 연락: 010-0000-2222\n\n## 프로젝트 카드")}]},
+        ]
+        return [{**base, **v} for v in variants]
+
+    def test_doc_same_results(self):
+        cases = self.doc_cases()
+        js = run_node(self.DOC_SCRIPT, cases)
+        for n, (a, got) in enumerate(zip(cases, js)):
+            want = {"check": core.check_doc(a["text"], a["ledger"], a["analysis"], a["posting"], a["style"], a["companies"],
+                                            a["terms"], a["others"], a["name"]),
+                    "doc": core.parse_doc(a["text"], a["name"]), "submission": core.doc_submission(a["text"]),
+                    "html": core.to_html(core.doc_submission(a["text"]), a["name"])}
+            want = json.loads(json.dumps(want, ensure_ascii=False))
+            for key in want:
+                self.assertEqual(got[key], want[key], f"문서 사례 {n}의 {key}가 다릅니다.")
+        errors = [core.check_doc(a["text"], a["ledger"], a["analysis"], a["posting"], a["style"], a["companies"], a["terms"],
+                                 a["others"], a["name"])["summary"]["errors"] for a in cases]
+        self.assertEqual(errors[:2], [0, 0])
+        self.assertTrue(all(e > 0 for e in errors[2:]), errors)
 
     def test_variants_are_not_trivial(self):
         results = [self.python(a)["check"]["summary"]["errors"] for a in self.cases()]

@@ -1036,3 +1036,459 @@ def check(draft_text: str, ledger_text: str, analysis_text: str = "", posting_te
             "coverage": coverage, "issues": issues,
             "summary": {"errors": errors, "warnings": len(issues) - errors, "ready": errors == 0,
                         "confirmed_all": confirmed_all, "submittable": errors == 0 and confirmed_all}}
+
+
+# ---------- 이력서·포트폴리오 (PRD 5.7절) ----------
+
+DOC_KINDS = {"resume": "이력서", "portfolio": "포트폴리오"}
+DOC_PAGES = {"resume": (1, 2), "portfolio": (3, 5)}
+DOC_CARDS = {"resume": ("숫자 카드", 4), "portfolio": ("프로젝트 카드", 3)}
+DOC_META = ("회사", "직무", "판", "상태")
+WEAK = ["참여했습니다", "공부했습니다", "노력했습니다", "기초", "수료 예정", "활용 가능", "관심"]
+FREE_SECTIONS = ["자격", "교육", "학력", "도구", "연락"]
+DESIGN_WORDS = ["가상", "설계", "가정"]
+DESIGN_MARK = ["가상", "설계안", "가정"]
+PHOTO = ["사진", "photo", "profile", "증명"]
+BIRTH = ["생년월일", "출생", "년생"]
+CLAIM_HEAD = {"자격증": "자격", "프로젝트": "프로젝트", "수상": "수상"}
+CONTACT = [
+    ("전화번호", re.compile(r"(?<![0-9])01[016789][-. \t]?[0-9]{3,4}[-. \t]?[0-9]{4}(?![0-9])")),
+    ("이메일", re.compile(r"[A-Za-z0-9_.+-]+@[A-Za-z0-9_-]+(\.[A-Za-z0-9_-]+)+")),
+]
+IMAGE = re.compile(r"!\[([^\]]*)\]\(([^)\s]*)[^)]*\)")
+HEADING = re.compile(r"^(#{1,6})\s+(.*)$")
+LIST_ITEM = re.compile(r"^(?:[-*]|[0-9]+\.)\s+")
+RULE_CELL = re.compile(r"^:?-{2,}:?$")
+PAGE_RULE = re.compile(r"([0-9]+)\s*(?:쪽|페이지|장)\s*(?:이내|이하)")
+COUNT_CLAIM = re.compile(r"(자격증|프로젝트|수상)\s*([0-9]+)\s*(?:개|건|종)")
+ADDRESS = re.compile(r"[가-힣]+(?:시|도) [가-힣]+(?:구|군|시) [가-힣0-9]+(?:로|길|동)(?![가-힣])")
+YM = re.compile(r"(20[0-9]{2})\s*(\.|-|/|년)\s*([0-9]{1,2})(?![0-9])")
+YM_DOT = re.compile(r"(20[0-9]{2})\.([0-9]{1,2})(?![0-9])")
+YM_RANGE = re.compile(r"(20[0-9]{2})\s*(?:\.|-|/|년)\s*([0-9]{1,2})\s*월?\s*~\s*(20[0-9]{2})\s*(?:\.|-|/|년)\s*([0-9]{1,2})(?![0-9])")
+
+
+def doc_kind(text: str, name: str = "") -> str:
+    """이력서(resume), 포트폴리오(portfolio), 그 밖("")을 첫 제목이나 파일 이름으로 가립니다."""
+    for line in (text or "").replace("\r\n", "\n").split("\n"):
+        if line.startswith("# "):
+            title = line[2:].strip()
+            for kind, word in DOC_KINDS.items():
+                if title.startswith(word):
+                    return kind
+            break
+    for kind in DOC_KINDS:
+        if name.startswith(kind + "-"):
+            return kind
+    return ""
+
+
+def _strip_md(line: str) -> str:
+    s = IMAGE.sub("", plain(line)).strip()
+    s = LIST_ITEM.sub("", s)
+    return s.replace("**", "").strip()
+
+
+def _tags(line: str) -> dict:
+    tag = {"ids": [], "labels": [], "sources": [], "unknown": []}
+    for raw in COMMENT_SPLIT.findall(line):
+        t = _parse_tag(raw)
+        for key in tag:
+            tag[key] += [v for v in t[key] if v not in tag[key]]
+    return tag
+
+
+def parse_doc(text: str, name: str = "") -> dict:
+    """머리 칸, 쪽(`---` 줄), 절(##, ###), 내용 줄(제목, 표 행, 글 줄), 이미지를 나눕니다."""
+    doc = {"kind": doc_kind(text, name), "meta": {}, "pages": [], "lines": [], "sections": [], "images": []}
+    page, section, in_table, started = 1, "", False, False
+    content_pages = set()
+    for raw in (text or "").replace("\r\n", "\n").split("\n"):
+        s = raw.strip()
+        if not s:
+            in_table = False
+            continue
+        if s == "---":
+            page += 1
+            in_table = False
+            continue
+        if s.startswith(">"):
+            continue
+        h = HEADING.match(s)
+        if h and len(h.group(1)) == 1:
+            continue
+        f = FIELD.match(s)
+        if not started and not h and f and f.group(1).strip() in DOC_META:
+            doc["meta"].setdefault(f.group(1).strip(), f.group(2).strip())
+            continue
+        started = True
+        kind = "line"
+        if h:
+            section = plain(h.group(2)).strip()
+            doc["sections"].append({"title": section, "page": page, "items": 0, "lines": 0})
+            kind = "heading"
+            body = _strip_md(h.group(2))
+            in_table = False
+        elif s.startswith("|"):
+            cells = [c.strip() for c in s.strip("|").split("|")]
+            if not in_table:
+                in_table = True
+                continue
+            if all(RULE_CELL.match(c) for c in cells if c):
+                continue
+            kind = "row"
+            body = " | ".join(_strip_md(c) for c in cells)
+        else:
+            in_table = False
+            body = _strip_md(s)
+        for m in IMAGE.finditer(plain(s)):
+            doc["images"].append({"page": page, "alt": m.group(1).strip(), "src": m.group(2)})
+        if kind != "heading" and doc["sections"]:
+            sec = doc["sections"][-1]
+            if kind == "row" or LIST_ITEM.match(s):
+                sec["items"] += 1
+            if body:
+                sec["lines"] += 1
+        if body or IMAGE.search(s):
+            content_pages.add(page)
+        line = {"page": page, "section": section, "kind": kind, "text": body, "raw": s}
+        line.update(_tags(s))
+        doc["lines"].append(line)
+    doc["pages"] = sorted(content_pages)
+    return doc
+
+
+def doc_submission(text: str) -> str:
+    """제출용 본문: 첫 제목, 머리 칸, 안내 줄(>), 장부 ID 주석을 빼고 제목, 표, 쪽 나눔은 남깁니다."""
+    out, started = [], False
+    for raw in (text or "").replace("\r\n", "\n").split("\n"):
+        s = raw.strip()
+        if s.startswith("# ") or s.startswith(">"):
+            continue
+        f = FIELD.match(s)
+        if not started and f and f.group(1).strip() in DOC_META:
+            continue
+        if s:
+            started = True
+        line = re.sub(r"[ \t]+", " ", plain(raw)).rstrip()
+        if not line.strip() and (not out or not out[-1].strip()):
+            continue
+        out.append(line)
+    return "\n".join(out).strip() + "\n"
+
+
+def _ym(text: str) -> tuple[set, set]:
+    """연월('2025-03' 꼴로 맞춤)과 쓴 표기('.', '-', '/', '년')."""
+    found, styles = set(), set()
+    for m in YM.finditer(text):
+        found.add(f"{m.group(1)}-{int(m.group(3)):02d}")
+        styles.add(m.group(2))
+    return found, styles
+
+
+def _contacts(text: str) -> set:
+    out = set()
+    for kind, pattern in CONTACT:
+        for m in pattern.finditer(plain(text)):
+            v = m.group(0)
+            out.add(re.sub(r"[^0-9]", "", v) if kind == "전화번호" else v.lower())
+    return out
+
+
+def _id_facts(text: str) -> dict:
+    """줄마다 단 장부 ID별로 그 줄의 기간(시작~끝)과 직함을 모읍니다(문서 사이 비교용)."""
+    out = {}
+    for raw in (text or "").replace("\r\n", "\n").split("\n"):
+        ids = _tags(raw)["ids"]
+        if not ids:
+            continue
+        body = plain(raw)
+        ranges = {f"{m.group(1)}-{int(m.group(2)):02d}~{m.group(3)}-{int(m.group(4)):02d}" for m in YM_RANGE.finditer(body)}
+        titles = set(titles_in(body))
+        for i in ids:
+            slot = out.setdefault(i, {"periods": set(), "titles": set()})
+            slot["periods"] |= ranges
+            slot["titles"] |= titles
+    return out
+
+
+def _design_numbers(exp: dict) -> set:
+    """설계안, 가상 데이터 수치: 출처나 지표에 가상, 설계, 가정이 있는 수치 칸의 값과 [한 일]이 아닌 행동에만 있는 숫자."""
+    out = set()
+    for mt in exp["metrics"]:
+        if any(w in mt.get("출처", "") + mt.get("지표", "") for w in DESIGN_WORDS):
+            for k in METRIC_VALUES:
+                out |= {n["value"] for n in numbers(mt.get(k, ""), strict=False)}
+    plan = "\n".join(a["text"] for a in exp["actions"] if a["tag"] != "한 일")
+    rest = "\n".join([exp["title"], *exp["fields"].values(), *(a["text"] for a in exp["actions"] if a["tag"] == "한 일"),
+                      *(mt["raw"] for mt in exp["metrics"])])
+    have = {n["value"] for n in numbers(rest, strict=False)}
+    out |= {n["value"] for n in numbers(plan, strict=False) if n["value"] not in have}
+    return out
+
+
+def check_doc(text: str, ledger_text: str, analysis_text: str = "", posting_text: str = "", style_text: str = "",
+              companies: list | None = None, terms: dict | None = None, others: list | None = None,
+              name: str = "") -> dict:
+    """이력서, 포트폴리오 검사. others는 같은 회사 폴더의 다른 문서 [{"name", "kind", "text"}]."""
+    issues: list[dict] = []
+    doc = parse_doc(text, name)
+    kind = doc["kind"] or "resume"
+    label = DOC_KINDS[kind]
+    ledger = parse_ledger(ledger_text or "")
+    exps = {e["id"]: e for e in ledger["experiences"]}
+    analysis = parse_analysis(analysis_text or "")
+    posting = parse_posting(posting_text or "")
+    style = parse_style(style_text)
+    meta = doc["meta"]
+    current = meta.get("회사", "")
+    companies = companies or []
+    mine = [c["name"] for c in companies if c["from"] == "folder"]
+    asked = posting["body"]
+    research_none = bool(analysis_text) and analysis["research_status"] in ("", "자료 없음", "조사 안 됨")
+    for li in ledger["issues"]:
+        if li["code"] == "ledger_empty":
+            _issue(issues, "error", "ledger_empty", "장부", "", li["message"])
+    if not current:
+        _issue(issues, "error", "doc_meta", "머리", "", "'- 회사: 회사이름'이 없습니다.")
+    ver = VERSION.match(meta.get("판", ""))
+    if not ver:
+        _issue(issues, "error", "doc_meta", "머리", "", "'- 판: v1 · 바꾼 점 한 줄'이 없습니다.")
+    if not meta.get("직무"):
+        _issue(issues, "warn", "doc_meta", "머리", "", "'- 직무:'가 없습니다. 첫 화면에 지원 직무가 읽혀야 합니다.")
+    card_head, card_need = DOC_CARDS[kind]
+    cards = [ln for ln in doc["lines"] if ln["kind"] == "row" and card_head in ln["section"]]
+    all_text = "\n".join(ln["text"] for ln in doc["lines"])
+    for ln in doc["lines"]:
+        where = f"{ln['page']}쪽 {ln['section'] or '머리'}"
+        t = ln["text"]
+        if not t:
+            continue
+        if NEED in t:
+            _issue(issues, "error", "placeholder", where, t, "장부에 근거가 없어 남긴 칸입니다. 장부에 경험을 더하거나 줄을 빼 주세요.")
+            continue
+        if _contacts(t):
+            continue  # 연락처 줄은 사실 주장이 아니라 근거 ID를 묻지 않습니다(같은지 여부는 문서 사이 비교가 봅니다).
+        for u in ln["unknown"]:
+            _issue(issues, "warn", "unknown_tag", where, t, f"모르는 주석 '{u}'입니다. E01, 공고, 조사, 의견만 씁니다.")
+        for i in ln["ids"]:
+            if i not in exps:
+                _issue(issues, "error", "unknown_id", where, t, f"장부에 {i}가 없습니다.")
+            elif exps[i]["unconfirmed"]:
+                _issue(issues, "warn", "unconfirmed_ledger", where, t,
+                       f"{i}에 확인 전 칸({', '.join(exps[i]['unconfirmed'])})이 있습니다. 확인한 칸만 근거가 됩니다.")
+        free = any(w in ln["section"] for w in FREE_SECTIONS)
+        fact = YM_DOT.sub(r"\1-\2", t)
+        factual = bool(numbers(fact)) or is_past(fact) or (bool(titles_in(fact)) and not is_future(fact))
+        if factual and not free and not ln["ids"] and not ln["sources"]:
+            _issue(issues, "error", "no_id", where, t, "사실 줄에 근거 ID가 없습니다. 줄 끝에 <!-- E01 -->처럼 달아 주세요.")
+        if "조사" in ln["sources"] and research_none:
+            _issue(issues, "error", "research_none_cited", where, t, "분석의 회사 조사가 '자료 없음'인데 조사를 근거로 썼습니다.")
+        if "의견" not in ln["sources"]:
+            s = {"text": fact, "ids": ln["ids"], "labels": [], "sources": ln["sources"], "unknown": []}
+            _fact_checks(issues, where, s, exps, asked, analysis["research_text"])
+        if any(w in t for w in ABSTRACT) and not re.search(r"[0-9]", t):
+            _issue(issues, "warn", "para_abstract", where, t, "근거 없는 추상 성과입니다. 수치, 기간, 규모, 전후 변화로 바꿔 주세요.")
+        for w in WEAK:
+            if w in t:
+                _issue(issues, "warn", "weak_word", where, t, f"약한 표현 '{w}'입니다. 한 일과 결과로 바꿔 주세요.")
+        if ln["kind"] == "heading" or any(ln is c for c in cards):
+            design = set()
+            for i in ln["ids"]:
+                if i in exps:
+                    design |= _design_numbers(exps[i])
+            hits = [n for n in numbers(fact) if n["value"] in design]
+            if hits and not any(m in t for m in DESIGN_MARK):
+                _issue(issues, "error", "design_number_unmarked", where, t,
+                       f"{hits[0]['raw']}{hits[0]['unit']}는 장부에서 설계안이나 가상 데이터 수치입니다. "
+                       "숫자 바로 옆에 '가상 데이터'나 '설계안'을 적어 주세요.")
+        if "생년월일" not in asked and any(w in t for w in BIRTH):
+            _issue(issues, "error", "birth", where, t, "공고가 생년월일을 요구하지 않았습니다. 빼 주세요.")
+        if "주소" not in asked and ADDRESS.search(t):
+            _issue(issues, "error", "address", where, t, "공고가 주소를 요구하지 않았습니다. 빼 주세요.")
+        _company_checks(issues, where, t, current, companies, mine)
+        _style_checks(issues, where, t, style, sentence=False)
+        _term_checks(issues, where, t, terms)
+    for img in doc["images"]:
+        where = f"{img['page']}쪽"
+        if not any(w in asked for w in PHOTO) and any(w in (img["alt"] + " " + img["src"]).lower() for w in PHOTO):
+            _issue(issues, "error", "photo", where, img["src"], "공고가 사진을 요구하지 않았습니다. 사진을 빼 주세요.")
+        if not img["alt"]:
+            _issue(issues, "warn", "image_no_caption", where, img["src"], "이미지가 무엇을 보여 주는지 대체 글 한 줄을 붙여 주세요.")
+    # 첫 카드와 카드 수
+    items = [it for it in analysis["items"] if it["kind"] in ("필수", "우대")]
+    if cards and items and cards[0]["ids"]:
+        comps = [c for i in cards[0]["ids"] if i in exps for c in exps[i]["competencies"]]
+        if comps and not any(c in it["item"] or it["item"] in c for c in comps for it in items):
+            _issue(issues, "warn", "first_card_off_role", f"{cards[0]['page']}쪽 {card_head}", cards[0]["text"],
+                   f"첫 카드 경험의 역량({', '.join(comps)})이 공고의 필수, 우대 역량과 겹치지 않습니다. 직무와 이어지는 수치를 앞에 두세요.")
+    if len(cards) != card_need:
+        _issue(issues, "warn", "card_count", card_head, "",
+               f"{card_head}가 {len(cards)}개입니다. {label}은 {card_need}개로 씁니다." if cards else
+               f"'{card_head}' 절의 표가 없습니다.")
+    # 개수 주장과 실제 목록
+    for ln in doc["lines"]:
+        for m in COUNT_CLAIM.finditer(ln["text"]):
+            head = CLAIM_HEAD[m.group(1)]
+            sec = next((s for s in doc["sections"] if head in s["title"] and s["items"]), None)
+            if sec and sec["items"] != int(m.group(2)):
+                _issue(issues, "error", "count_claim", f"{ln['page']}쪽 {ln['section'] or '머리'}", ln["text"],
+                       f"'{m.group(0)}'라고 썼는데 '{sec['title']}' 목록은 {sec['items']}개입니다.")
+    # 공고 키워드
+    low = all_text.lower()
+    keywords = [{"item": it["item"], "kind": it["kind"], "found": it["item"].lower() in low} for it in items]
+    for k in analysis["keywords"]:
+        word = re.split(r"[:：]", k["text"], maxsplit=1)[0].strip()
+        if word:
+            keywords.append({"item": word, "kind": "숨은 키워드", "found": word.lower() in low})
+    for k in keywords:
+        if not k["found"]:
+            _issue(issues, "warn", "keyword_missing", "전체", k["item"], f"공고의 {k['kind']} '{k['item']}'이 문서에 없습니다.")
+    if not analysis_text:
+        _issue(issues, "warn", "no_analysis", "전체", "", "analysis.md가 없어 키워드와 첫 카드를 보지 못했습니다.")
+    # 분량과 형식
+    low_page, high_page = DOC_PAGES[kind]
+    rule = PAGE_RULE.search(asked)
+    if rule:
+        low_page, high_page = 1, int(rule.group(1))
+    pages = len(doc["pages"])
+    if pages > high_page or pages < low_page:
+        _issue(issues, "error", "page_count", "전체", "",
+               f"{pages}쪽입니다. {label}은 {low_page}~{high_page}쪽으로 씁니다('---' 줄이 쪽 나눔).")
+    page_text = {p: squash("".join(ln["text"] for ln in doc["lines"] if ln["page"] == p)) for p in doc["pages"]}
+    for p in sorted({img["page"] for img in doc["images"]}):
+        body = squash("".join(ln["text"] for ln in doc["lines"] if ln["page"] == p and ln["kind"] != "heading"))
+        if len(body) < 10:
+            _issue(issues, "warn", "image_only_page", f"{p}쪽", "", "글 없이 이미지만 있는 쪽입니다. 무엇을 보여 주는지 글로 적어 주세요.")
+    plist = doc["pages"]
+    for a in range(len(plist)):
+        for b in range(a + 1, len(plist)):
+            ka, kb = page_text[plist[a]], page_text[plist[b]]
+            if len(ka) < 20 or len(kb) < 20:
+                continue
+            ba, bb = bigrams(ka), bigrams(kb)
+            if 200 * len(ba & bb) >= 85 * (len(ba) + len(bb)):
+                _issue(issues, "warn", "page_repeat", f"{plist[a]}쪽, {plist[b]}쪽", "", "거의 같은 내용의 쪽이 되풀이됩니다.")
+    if kind == "portfolio":
+        limits = [s for s in doc["sections"] if "한계" in s["title"]]
+        if not limits:
+            _issue(issues, "error", "limit_empty", "전체", "", "프로젝트마다 '한계' 칸을 두고 비워 두지 않습니다.")
+        for s in limits:
+            if not s["lines"]:
+                _issue(issues, "error", "limit_empty", f"{s['page']}쪽 {s['title']}", "", "'한계' 칸이 비었습니다.")
+    # 문서 사이 불일치
+    my_contacts, my_facts = _contacts(text), _id_facts(text)
+    _, my_styles = _ym(all_text)
+    for other in others or []:
+        where = f"{other['name']}과 비교"
+        theirs = _contacts(other["text"])
+        if my_contacts and theirs and my_contacts != theirs:
+            _issue(issues, "error", "doc_mismatch", where, "", "연락처가 다릅니다.")
+        facts = _id_facts(other["text"])
+        for i in sorted(set(my_facts) & set(facts)):
+            a, b = my_facts[i], facts[i]
+            if a["periods"] and b["periods"] and not a["periods"] & b["periods"]:
+                _issue(issues, "error", "doc_mismatch", where, i,
+                       f"{i}의 기간이 다릅니다({', '.join(sorted(a['periods']))} / {', '.join(sorted(b['periods']))}).")
+            if a["titles"] and b["titles"] and not a["titles"] & b["titles"]:
+                _issue(issues, "error", "doc_mismatch", where, i,
+                       f"{i}의 직함이 다릅니다({', '.join(sorted(a['titles']))} / {', '.join(sorted(b['titles']))}).")
+        if other["kind"] in DOC_KINDS and other["kind"] != kind:
+            _, styles = _ym("\n".join(ln["text"] for ln in parse_doc(other["text"])["lines"]))
+            if my_styles and styles and not my_styles & styles:
+                _issue(issues, "error", "doc_mismatch", where, "",
+                       f"날짜 표기가 다릅니다('{' '.join(sorted(my_styles))}' / '{' '.join(sorted(styles))}').")
+    errors = sum(1 for i in issues if i["level"] == "error")
+    confirmed = meta.get("상태", "").strip() == "확정"
+    return {"kind": kind, "company": current, "role": meta.get("직무", ""),
+            "version": f"v{ver.group(1)}" if ver else "", "change": ver.group(2).strip() if ver else "",
+            "pages": pages, "cards": len(cards), "keywords": keywords, "issues": issues,
+            "summary": {"errors": errors, "warnings": len(issues) - errors, "ready": errors == 0,
+                        "confirmed": confirmed, "submittable": errors == 0 and confirmed}}
+
+
+# ---------- HTML 출력 ----------
+
+HTML_STYLE = ("@page{size:A4;margin:16mm}"
+              "body{font-family:'Pretendard','Noto Sans KR','Malgun Gothic',sans-serif;font-size:10.5pt;line-height:1.55;"
+              "color:#111;background:#fff;max-width:178mm;margin:0 auto;padding:8mm 0}"
+              "h1,h2,h3{line-height:1.3;margin:1.1em 0 .4em}h2{font-size:13pt;border-bottom:1px solid #999;padding-bottom:2px}"
+              "h3{font-size:11pt}table{border-collapse:collapse;width:100%;margin:.4em 0}"
+              "th,td{border:1px solid #bbb;padding:3px 6px;text-align:left;vertical-align:top}th{background:#f2f2f2}"
+              "img{max-width:100%}figure{margin:.6em 0}figcaption{font-size:9pt;color:#444}ul,ol{padding-left:1.3em;margin:.3em 0}"
+              "p{margin:.35em 0}.page-break{break-after:page;height:0}"
+              "@media screen{.page-break{border-top:1px dashed #bbb;margin:8mm 0}}")
+
+
+def _esc(text: str) -> str:
+    return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").replace('"', "&quot;")
+
+
+def _inline(text: str) -> str:
+    s = _esc(text)
+    s = re.sub(r"!\[([^\]]*)\]\(([^)\s]*)[^)]*\)", r'<img src="\2" alt="\1">', s)
+    s = re.sub(r"\[([^\]]+)\]\(([^)\s]+)\)", r'<a href="\2">\1</a>', s)
+    return re.sub(r"\*\*([^*]+)\*\*", r"<strong>\1</strong>", s)
+
+
+def to_html(text: str, title: str = "") -> str:
+    """한 단 HTML. 글은 글자로 두고 위에서 아래로 읽히게 씁니다. PDF는 브라우저 인쇄로 만듭니다."""
+    out, para, items, table = [], [], [], []
+    state = {"list": ""}
+
+    def flush():
+        if para:
+            out.append("<p>" + " ".join(_inline(p) for p in para) + "</p>")
+            para.clear()
+        if items:
+            tag = state["list"]
+            out.append(f"<{tag}>" + "".join(f"<li>{_inline(i)}</li>" for i in items) + f"</{tag}>")
+            items.clear()
+        if table:
+            rows = [r for r in table if not all(RULE_CELL.match(c) for c in r if c)]
+            html = "".join("<tr>" + "".join(f"<{'th' if k == 0 else 'td'}>{_inline(c)}</{'th' if k == 0 else 'td'}>"
+                                             for c in cells) + "</tr>" for k, cells in enumerate(rows))
+            out.append(f"<table>{html}</table>")
+            table.clear()
+
+    for raw in plain(text or "").replace("\r\n", "\n").split("\n"):
+        s = raw.strip()
+        if not s:
+            flush()
+            continue
+        if s == "---":
+            flush()
+            out.append('<div class="page-break"></div>')
+            continue
+        h = HEADING.match(s)
+        if h:
+            flush()
+            n = len(h.group(1))
+            out.append(f"<h{n}>{_inline(h.group(2).strip())}</h{n}>")
+            continue
+        if s.startswith("|"):
+            if para or items:
+                flush()
+            table.append([c.strip() for c in s.strip("|").split("|")])
+            continue
+        m = re.match(r"^([-*]|[0-9]+\.)\s+(.*)$", s)
+        if m:
+            tag = "ul" if m.group(1) in ("-", "*") else "ol"
+            if para or table or (items and state["list"] != tag):
+                flush()
+            state["list"] = tag
+            items.append(m.group(2))
+            continue
+        img = re.match(r"^!\[([^\]]*)\]\(([^)\s]*)[^)]*\)$", s)
+        if img:
+            flush()
+            cap = f"<figcaption>{_esc(img.group(1))}</figcaption>" if img.group(1) else ""
+            out.append(f"<figure>{_inline(s)}{cap}</figure>")
+            continue
+        if items or table:
+            flush()
+        para.append(s)
+    flush()
+    return ("<!doctype html>\n<html lang=\"ko\">\n<head>\n<meta charset=\"utf-8\">\n"
+            "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n"
+            f"<title>{_esc(title)}</title>\n<style>{HTML_STYLE}</style>\n</head>\n<body>\n"
+            + "\n".join(out) + "\n</body>\n</html>\n")

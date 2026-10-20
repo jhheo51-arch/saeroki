@@ -5,11 +5,13 @@
       saerok-apply ledger [--ledger 경로] [--json]
       saerok-apply analysis <회사> [--json]
       saerok-apply terms <공고 파일> [--industry 산업 --role 직무]
-      saerok-apply check <초안> [--company 회사] [--ledger] [--analysis] [--style] [--previous 이전 판] [--json]
+      saerok-apply check <초안|이력서|포트폴리오> [--company 회사] [--ledger] [--analysis] [--style] [--previous 이전 판] [--json]
       saerok-apply diff <이전 판> <새 판>
-      saerok-apply submit <초안> [--company 회사] [--dry-run]
+      saerok-apply submit <초안|이력서|포트폴리오> [--company 회사] [--dry-run]
+      saerok-apply html <이력서|포트폴리오> [--out 경로]
       saerok-apply privacy <파일...>
-검사에 오류가 있으면 종료 코드 2를 돌려줍니다."""
+check와 submit은 파일 첫 제목('# 이력서', '# 포트폴리오')이나 이름(resume-, portfolio-)을 보고
+이력서, 포트폴리오 검사(PRD 5.7절)와 자기소개서 검사를 가립니다. 검사에 오류가 있으면 종료 코드 2를 돌려줍니다."""
 
 import argparse
 import difflib
@@ -59,6 +61,21 @@ def render_check(result: dict) -> str:
         for c in result["coverage"]:
             lines.append(f"| {c['item']} | {c['kind']} | {', '.join(str(n) for n in c['questions']) or '빠짐'} |")
     lines += ["", "## 문제", ""] + (_issues(result["issues"]) or ["- 없음"])
+    return "\n".join(lines) + "\n"
+
+
+def render_doc(result: dict) -> str:
+    s = result["summary"]
+    label = core.DOC_KINDS[result["kind"]]
+    lines = [f"# {label} 검사 · {result['company'] or '회사 미정'}", "",
+             f"오류 {s['errors']}개 · 경고 {s['warnings']}개 · {result['pages']}쪽 · 카드 {result['cards']}개"
+             f" · 판 {result['version'] or '-'} · 확정 {'예' if s['confirmed'] else '아직 아님'}"
+             f" · 제출 {'가능' if s['submittable'] else '불가'}", ""]
+    if result["keywords"]:
+        lines += ["## 공고 키워드", "", "| 항목 | 구분 | 문서에 있나 |", "|---|---|---|"]
+        lines += [f"| {k['item']} | {k['kind']} | {'있음' if k['found'] else '없음'} |" for k in result["keywords"]]
+        lines.append("")
+    lines += ["## 문제", ""] + (_issues(result["issues"]) or ["- 없음"])
     return "\n".join(lines) + "\n"
 
 
@@ -113,7 +130,7 @@ def main(argv: list[str] | None = None) -> int:
     t.add_argument("--industry", default="")
     t.add_argument("--role", default="")
 
-    c = sub.add_parser("check", help="자기소개서 초안을 검사합니다(같은 입력이면 같은 결과).")
+    c = sub.add_parser("check", help="자기소개서 초안, 이력서, 포트폴리오를 검사합니다(같은 입력이면 같은 결과).")
     c.add_argument("draft")
     c.add_argument("--company", default="")
     c.add_argument("--ledger", default="")
@@ -131,6 +148,10 @@ def main(argv: list[str] | None = None) -> int:
     s.add_argument("--company", default="")
     s.add_argument("--dry-run", action="store_true")
 
+    h = sub.add_parser("html", help="이력서, 포트폴리오 제출본을 한 단 HTML로 만듭니다(PDF는 브라우저 인쇄).")
+    h.add_argument("file")
+    h.add_argument("--out", default="")
+
     pv = sub.add_parser("privacy", help="주민번호·전화번호·이메일 꼴을 찾습니다.")
     pv.add_argument("files", nargs="+")
 
@@ -147,6 +168,10 @@ def _need(path: Path) -> str:
     if not text:
         raise ValueError(f"파일을 찾지 못했습니다: {path}")
     return text
+
+
+def _is_doc(path: Path) -> bool:
+    return bool(core.doc_kind(store.read(path), path.name))
 
 
 def _run(args) -> int:
@@ -173,6 +198,10 @@ def _run(args) -> int:
         if posting["status"] != "확인함":
             raise ValueError(f"공고 상태가 '{posting['status']}'입니다. 확인한 공고만 분석합니다.")
         _print(core.match_terms(posting["body"], terms.load(), args.industry, args.role))
+    elif args.command == "check" and _is_doc(Path(args.draft)):
+        result = store.run_doc_check(Path(args.draft), args.company, args.ledger, args.analysis, args.style)
+        _print(result) if args.json else print(render_doc(result), end="")
+        return 2 if result["summary"]["errors"] else 0
     elif args.command == "check":
         result = store.run_check(Path(args.draft), args.company, args.ledger, args.analysis, args.style, args.previous)
         _print(result) if args.json else print(render_check(result), end="")
@@ -180,6 +209,18 @@ def _run(args) -> int:
     elif args.command == "diff":
         old, new = _need(Path(args.old)).splitlines(), _need(Path(args.new)).splitlines()
         print("\n".join(difflib.unified_diff(old, new, args.old, args.new, lineterm="")) or "바뀐 줄이 없습니다.")
+    elif args.command == "submit" and _is_doc(Path(args.draft)):
+        _print(store.submit_doc(Path(args.draft), args.company, dry_run=args.dry_run))
+    elif args.command == "html":
+        path = Path(args.file)
+        text = _need(path)
+        kind = core.doc_kind(text, path.name)
+        if not kind:
+            raise ValueError("이력서나 포트폴리오가 아닙니다. 첫 줄을 '# 이력서 · 회사'나 '# 포트폴리오 · 회사'로 써 주세요.")
+        company = core.parse_doc(text)["meta"].get("회사", "")
+        out = Path(args.out) if args.out else path.with_suffix(".html")
+        out.write_text(core.to_html(core.doc_submission(text), f"{core.DOC_KINDS[kind]} {company}".strip()), encoding="utf-8")
+        _print({"html": str(out), "next": "브라우저로 열고 인쇄(Ctrl+P)에서 'PDF로 저장'을 고르면 PDF가 됩니다."})
     elif args.command == "submit":
         _print(store.submit(Path(args.draft), args.company, dry_run=args.dry_run))
     elif args.command == "privacy":
