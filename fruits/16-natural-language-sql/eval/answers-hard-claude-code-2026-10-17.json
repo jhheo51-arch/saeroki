@@ -1,0 +1,117 @@
+{
+ "model": "claude-code",
+ "answers": [
+  {
+   "id": "h01",
+   "answer_status": "완료",
+   "sql": "WITH d AS (\n  SELECT date, SUM(board) AS board\n  FROM subway_daily\n  WHERE station = '고속터미널' AND year = 2025\n  GROUP BY date\n)\nSELECT CASE WHEN w.rainy_day THEN '비 온 날' ELSE '비 안 온 날' END AS \"날씨\",\n       COUNT(*) AS \"날 수\",\n       ROUND(AVG(d.board)) AS \"하루 평균 승차 인원\"\nFROM d JOIN weather_daily w ON d.date = w.date\nGROUP BY 1\nORDER BY 1",
+   "attempts": 1,
+   "answer": "**새록 SQL** · AI가 작성 · 시도 1번 · 완료\n\n**가정**\n- 고속터미널역은 3호선·7호선·9호선 승차 인원을 날짜별로 모두 더한 역 전체 값으로 봅니다.\n- '비 온 날'은 사전 정의대로 하루 강수량 1mm 이상(rainy_day = 참)인 날입니다.\n- 기간은 2025-01-01 ~ 2025-12-31(365일)입니다.\n\n**SQL**\n```sql\nWITH d AS (\n  SELECT date, SUM(board) AS board\n  FROM subway_daily\n  WHERE station = '고속터미널' AND year = 2025\n  GROUP BY date\n)\nSELECT CASE WHEN w.rainy_day THEN '비 온 날' ELSE '비 안 온 날' END AS \"날씨\",\n       COUNT(*) AS \"날 수\",\n       ROUND(AVG(d.board)) AS \"하루 평균 승차 인원\"\nFROM d JOIN weather_daily w ON d.date = w.date\nGROUP BY 1\nORDER BY 1\n```\n\n**결과** (2행 중 앞 20행)\n| 날씨 | 날 수 | 하루 평균 승차 인원 |\n|---|---:|---:|\n| 비 안 온 날 | 257 | 84,632 |\n| 비 온 날 | 108 | 84,435 |\n\n비 온 날의 하루 평균 승차 인원이 약 197명(약 0.2%) 적습니다. 사실상 차이가 거의 없습니다.\n\n**풀이**\n| 부분 | 하는 일 |\n|---|---|\n| WITH d | 2025년 고속터미널역의 노선별 승차 인원을 날짜별로 더해 역 전체 하루 승차 인원을 만듭니다. |\n| JOIN weather_daily | 같은 날짜의 날씨를 붙입니다. |\n| CASE / GROUP BY | 비 온 날과 비 안 온 날로 나눕니다. |\n| COUNT, AVG | 각 그룹의 날 수와 하루 평균 승차 인원을 구합니다. |\n\n**한계·주의**\n- 승차 인원은 교통카드 기준입니다.\n- 날씨는 기상청 관측값이 아니라 재분석 자료입니다.\n- 평일·주말 비율이 두 그룹에서 다를 수 있어 요일 효과가 섞여 있습니다. 평일만 따로 보면 결과가 달라질 수 있습니다.\n- 차이가 매우 작아 비가 승차 인원에 영향을 준다고 결론 내기는 어렵습니다(인과 관계 아님)."
+  },
+  {
+   "id": "h02",
+   "answer_status": "완료",
+   "sql": "WITH st AS (\n  SELECT DISTINCT adm_cd FROM subway_stations\n)\nSELECT CASE WHEN st.adm_cd IS NOT NULL THEN '지하철역 있음' ELSE '지하철역 없음' END AS \"구분\",\n       COUNT(*) AS \"행정동 수\",\n       ROUND(AVG(s.store_count), 1) AS \"평균 상가 수\"\nFROM stores_dong s\nLEFT JOIN st ON s.adm_cd = st.adm_cd\nWHERE s.quarter = '2026-Q2'\nGROUP BY 1\nORDER BY 1",
+   "attempts": 1,
+   "answer": "**새록 SQL** · AI가 작성 · 시도 1번 · 완료\n\n**가정**\n- '지하철역이 있는 행정동'은 subway_stations(서울 안 280개 역)의 역 좌표가 속한 행정동(217곳)으로 봅니다.\n- '상가 수'는 stores_dong의 전체 업소 수(store_count)이고, 2026-Q2 한 분기만 씁니다.\n- 평균은 행정동마다 같은 무게로 낸 단순 평균입니다.\n\n**SQL**\n```sql\nWITH st AS (\n  SELECT DISTINCT adm_cd FROM subway_stations\n)\nSELECT CASE WHEN st.adm_cd IS NOT NULL THEN '지하철역 있음' ELSE '지하철역 없음' END AS \"구분\",\n       COUNT(*) AS \"행정동 수\",\n       ROUND(AVG(s.store_count), 1) AS \"평균 상가 수\"\nFROM stores_dong s\nLEFT JOIN st ON s.adm_cd = st.adm_cd\nWHERE s.quarter = '2026-Q2'\nGROUP BY 1\nORDER BY 1\n```\n\n**결과** (2행 중 앞 20행)\n| 구분 | 행정동 수 | 평균 상가 수 |\n|---|---:|---:|\n| 지하철역 없음 | 210 | 1,002.0 |\n| 지하철역 있음 | 217 | 1,583.7 |\n\n지하철역이 있는 행정동은 평균 상가 수가 약 582개 많아, 없는 행정동의 약 1.6배입니다.\n\n**풀이**\n| 부분 | 하는 일 |\n|---|---|\n| WITH st | 지하철역이 하나라도 있는 행정동 코드 목록을 만듭니다. |\n| FROM stores_dong LEFT JOIN st | 모든 행정동의 상가 수에 역 유무를 붙입니다. |\n| WHERE quarter = '2026-Q2' | 2026년 2분기만 남깁니다. |\n| CASE / GROUP BY | 역 있음·없음 두 그룹으로 나눕니다. |\n| COUNT, AVG | 그룹별 행정동 수와 평균 상가 수를 구합니다. |\n\n**한계·주의**\n- 역 좌표는 근사치라 수십~수백 m 오차가 있어, 경계 근처 역은 옆 동으로 잡혔을 수 있습니다.\n- 역 바로 옆이지만 역이 다른 동에 있는 행정동은 '없음'으로 분류됩니다.\n- 상가 수는 정제한 공공 데이터 집계값이며 공식 통계가 아닙니다. 상관관계일 뿐 역이 상가를 늘린다는 뜻은 아닙니다."
+  },
+  {
+   "id": "h03",
+   "answer_status": "완료",
+   "sql": "WITH top3 AS (\n  SELECT adm_cd, gu, dong, COUNT(DISTINCT station_id) AS n_st\n  FROM bike_stations\n  GROUP BY adm_cd, gu, dong\n  ORDER BY n_st DESC\n  LIMIT 3\n)\nSELECT t.gu AS \"구\", t.dong AS \"행정동\", t.n_st AS \"따릉이 대여소 수\",\n       COUNT(DISTINCT c.store_id) AS \"카페 수(2026-Q2)\"\nFROM top3 t\nLEFT JOIN cafes c ON c.adm_cd = t.adm_cd AND c.quarter = '2026-Q2'\nGROUP BY t.gu, t.dong, t.n_st\nORDER BY t.n_st DESC",
+   "attempts": 1,
+   "answer": "**새록 SQL** · AI가 작성 · 시도 1번 · 완료\n\n**가정**\n- 대여소 수는 bike_stations(2024-12 ~ 2026-06 공개본 합본)의 서로 다른 대여소 번호 개수로 셉니다.\n- 카페 수는 cafes 표의 2026-Q2 분기말 스냅샷 한 분기만 세며, 개인·기타 카페를 포함한 전체 매장입니다.\n\n**SQL**\n```sql\nWITH top3 AS (\n  SELECT adm_cd, gu, dong, COUNT(DISTINCT station_id) AS n_st\n  FROM bike_stations\n  GROUP BY adm_cd, gu, dong\n  ORDER BY n_st DESC\n  LIMIT 3\n)\nSELECT t.gu AS \"구\", t.dong AS \"행정동\", t.n_st AS \"따릉이 대여소 수\",\n       COUNT(DISTINCT c.store_id) AS \"카페 수(2026-Q2)\"\nFROM top3 t\nLEFT JOIN cafes c ON c.adm_cd = t.adm_cd AND c.quarter = '2026-Q2'\nGROUP BY t.gu, t.dong, t.n_st\nORDER BY t.n_st DESC\n```\n\n**결과** (3행 중 앞 20행)\n| 구 | 행정동 | 따릉이 대여소 수 | 카페 수(2026-Q2) |\n|---|---|---:|---:|\n| 영등포구 | 여의동 | 57 | 323 |\n| 강서구 | 가양1동 | 51 | 264 |\n| 마포구 | 상암동 | 32 | 167 |\n\n**풀이**\n| 부분 | 하는 일 |\n|---|---|\n| WITH top3 | 행정동별 대여소 수를 세고 많은 순으로 3곳을 고릅니다. |\n| LEFT JOIN cafes | 같은 행정동의 2026-Q2 카페 매장을 붙입니다. |\n| COUNT(DISTINCT store_id) | 행정동별 카페 매장 수를 셉니다. |\n| ORDER BY | 대여소 수가 많은 순으로 보여 줍니다. |\n\n**한계·주의**\n- 대여소 목록은 여러 시점 공개본을 합친 것이라, 그 사이 폐쇄된 대여소도 들어 있을 수 있습니다.\n- 4위 진관동(29곳)과 3위 상암동(32곳)은 차이가 크지 않습니다.\n- 카페 수는 분기말 스냅샷 기준이며 공식 통계가 아닙니다."
+  },
+  {
+   "id": "h04",
+   "answer_status": "완료",
+   "sql": "SELECT station AS \"역\", SUM(board) AS \"승차 인원 합계\", COUNT(DISTINCT date) AS \"날 수\"\nFROM subway_daily\nWHERE station = '고속터미널' AND year = 2025\nGROUP BY station",
+   "attempts": 1,
+   "answer": "**새록 SQL** · AI가 작성 · 시도 1번 · 완료\n\n**가정**\n- 고속터미널역은 3호선·7호선·9호선 승차 인원을 모두 더한 역 전체 값입니다.\n- 기간은 2025-01-01 ~ 2025-12-31입니다.\n\n**SQL**\n```sql\nSELECT station AS \"역\", SUM(board) AS \"승차 인원 합계\", COUNT(DISTINCT date) AS \"날 수\"\nFROM subway_daily\nWHERE station = '고속터미널' AND year = 2025\nGROUP BY station\n```\n\n**결과** (1행 중 앞 20행)\n| 역 | 승차 인원 합계 | 날 수 |\n|---|---:|---:|\n| 고속터미널 | 30,869,411 | 365 |\n\n2025년 고속터미널역 승차 인원은 약 3,087만 명입니다.\n\n**풀이**\n| 부분 | 하는 일 |\n|---|---|\n| FROM subway_daily | 역별·노선별 하루 승차 인원 표를 씁니다. |\n| WHERE | 고속터미널역, 2025년만 남깁니다. |\n| SUM(board) | 세 노선의 승차 인원을 모두 더합니다. |\n| COUNT(DISTINCT date) | 365일이 빠짐없이 들어 있는지 확인합니다. |\n\n**한계·주의**\n- 승차 인원은 교통카드 기준이며, 같은 사람이 여러 번 탄 것도 각각 셉니다.\n- 노선 사이 환승은 승차로 잡히지 않을 수 있습니다(교통카드 집계 기준)."
+  },
+  {
+   "id": "h05",
+   "answer_status": "완료",
+   "sql": "SELECT quarter AS \"분기\",\n       COUNT(DISTINCT date) AS \"데이터 있는 날 수\",\n       SUM(rides) AS \"대여 건수 합계\",\n       ROUND(SUM(rides) / COUNT(DISTINCT date)) AS \"하루 평균 대여 건수\"\nFROM bike_city_hourly\nWHERE quarter IN ('2025-Q1', '2025-Q2')\nGROUP BY quarter\nORDER BY quarter",
+   "attempts": 1,
+   "answer": "**새록 SQL** · AI가 작성 · 시도 1번 · 완료\n\n**가정**\n- '이용량'은 서울 전체 따릉이 대여 건수로 봅니다.\n- 2025년 2월 원본이 1~16일만 있어 합계 비교는 왜곡되므로, 데이터가 있는 날 수로 나눈 하루 평균으로 비교합니다.\n\n**SQL**\n```sql\nSELECT quarter AS \"분기\",\n       COUNT(DISTINCT date) AS \"데이터 있는 날 수\",\n       SUM(rides) AS \"대여 건수 합계\",\n       ROUND(SUM(rides) / COUNT(DISTINCT date)) AS \"하루 평균 대여 건수\"\nFROM bike_city_hourly\nWHERE quarter IN ('2025-Q1', '2025-Q2')\nGROUP BY quarter\nORDER BY quarter\n```\n\n**결과** (2행 중 앞 20행)\n| 분기 | 데이터 있는 날 수 | 대여 건수 합계 | 하루 평균 대여 건수 |\n|---|---:|---:|---:|\n| 2025-Q1 | 78 | 5,379,935 | 68,974 |\n| 2025-Q2 | 91 | 11,514,296 | 126,531 |\n\n하루 평균으로 보면 2분기가 1분기보다 약 57,557건(약 83%) 많습니다.\n\n**풀이**\n| 부분 | 하는 일 |\n|---|---|\n| FROM bike_city_hourly | 서울 전체 날짜·시간별 대여 건수 표를 씁니다. |\n| WHERE quarter IN | 2025년 1분기와 2분기만 남깁니다. |\n| COUNT(DISTINCT date) | 분기마다 실제 데이터가 있는 날 수를 셉니다(1분기 78일). |\n| SUM / 날 수 | 합계와 하루 평균 대여 건수를 구합니다. |\n\n**한계·주의**\n- 2025-Q1은 2월 17~28일 원본이 없어 78일치만 있습니다. 합계(약 538만 대 1,151만)를 그대로 비교하면 차이가 과장됩니다.\n- 1분기는 겨울이 끼어 있어 계절 영향이 큽니다.\n- 대여 시작 기준이며 반납 위치는 반영하지 않습니다."
+  },
+  {
+   "id": "h06",
+   "answer_status": "답할 수 없음",
+   "sql": "",
+   "attempts": 0,
+   "answer": "**새록 SQL** · AI가 작성 · 시도 0번 · 답할 수 없음\n\n**답할 수 없는 이유**\n- 데이터 사전에 따르면 스타벅스는 cafes 표의 2024-Q4와 2026-Q2 스냅샷에만 들어 있습니다.\n- 2026-Q1 스냅샷에는 스타벅스가 수집되지 않아, 세면 0이나 매우 작은 값이 나오지만 이는 '매장이 없다'는 뜻이 아니라 데이터가 없다는 뜻입니다.\n\n**대신 물어볼 수 있는 질문**\n- 2026년 2분기(2026-Q2) 서울 스타벅스 매장 수\n- 2026년 1분기 메가MGC커피·컴포즈커피 등 분기 추이가 일관된 브랜드의 매장 수\n\n**한계·주의**\n- 0행이나 0을 실제 매장 수로 말하지 않기 위해 SQL을 만들지 않았습니다."
+  },
+  {
+   "id": "h07",
+   "answer_status": "완료",
+   "sql": "SELECT gu AS \"구\", dong AS \"행정동\",\n       ROUND(SUM(delivery_days * (population - delivery_unknown)) / SUM(population - delivery_unknown), 2) AS \"20대 배달 서비스 사용일수(일)\",\n       ROUND(SUM(population)) AS \"20대 추정 인구\"\nFROM delivery_age_monthly\nWHERE month = DATE '2025-12-01' AND age IN (20, 25)\n  AND delivery_days IS NOT NULL\nGROUP BY gu, dong\nHAVING SUM(population - delivery_unknown) > 0\nORDER BY 3 DESC\nLIMIT 3",
+   "attempts": 1,
+   "answer": "**새록 SQL** · AI가 작성 · 시도 1번 · 완료\n\n**가정**\n- '20대'는 연령대 20(20~24세)과 25(25~29세)를 합친 것이며, 남녀를 모두 포함합니다.\n- 행정동 값은 단순 평균이 아니라 (추정 인구 − 배달 사용 추정 불가 인구)로 가중평균합니다.\n- 기간은 2025년 12월 한 달입니다.\n\n**SQL**\n```sql\nSELECT gu AS \"구\", dong AS \"행정동\",\n       ROUND(SUM(delivery_days * (population - delivery_unknown)) / SUM(population - delivery_unknown), 2) AS \"20대 배달 서비스 사용일수(일)\",\n       ROUND(SUM(population)) AS \"20대 추정 인구\"\nFROM delivery_age_monthly\nWHERE month = DATE '2025-12-01' AND age IN (20, 25)\n  AND delivery_days IS NOT NULL\nGROUP BY gu, dong\nHAVING SUM(population - delivery_unknown) > 0\nORDER BY 3 DESC\nLIMIT 3\n```\n\n**결과** (3행 중 앞 20행)\n| 구 | 행정동 | 20대 배달 서비스 사용일수(일) | 20대 추정 인구 |\n|---|---|---:|---:|\n| 관악구 | 신림동 | 19.71 | 7,996 |\n| 강남구 | 논현1동 | 19.57 | 4,463 |\n| 강남구 | 역삼1동 | 19.29 | 7,307 |\n\n**풀이**\n| 부분 | 하는 일 |\n|---|---|\n| FROM delivery_age_monthly | 행정동·성별·연령대별 한 달 배달 서비스 사용일수 표를 씁니다. |\n| WHERE | 2025년 12월, 20~24세와 25~29세만 남깁니다. |\n| SUM(... * (population - delivery_unknown)) / SUM(...) | 성별·연령대 값을 인구로 가중평균해 행정동의 20대 값을 만듭니다. |\n| GROUP BY gu, dong | 행정동별로 묶습니다. |\n| ORDER BY ... LIMIT 3 | 사용일수가 높은 3곳을 고릅니다. |\n\n**한계·주의**\n- 배달 값은 주문 건수가 아니라 한 달에 배달앱을 쓴 날 수의 평균(통신사 가명정보 기반 추정)입니다.\n- 1~3위 차이가 0.4일 안팎으로 작아 순위는 추정 오차에 민감합니다.\n- 공식 통계가 아닙니다."
+  },
+  {
+   "id": "h08",
+   "answer_status": "답할 수 없음",
+   "sql": "",
+   "attempts": 0,
+   "answer": "**새록 SQL** · AI가 작성 · 시도 0번 · 답할 수 없음\n\n**답할 수 없는 이유**\n- 데이터 사전에 따르면 카페 데이터는 2024-Q4부터 수집 범위가 넓어져 업소 수가 크게 늘었고, 증감 비교는 2024-Q4 이후로만 하라고 되어 있습니다.\n- 2024-Q1과 2026-Q2를 비교하면 실제 카페 증가가 아니라 수집 범위 변화가 섞여, 증가 폭을 믿을 수 없습니다.\n\n**대신 물어볼 수 있는 질문**\n- 2024년 4분기보다 2026년 2분기에 서울 카페가 얼마나 늘었어?\n- 2024-Q4 대비 2026-Q2에 분기 추이가 일관된 브랜드(메가MGC커피, 컴포즈커피, 빽다방, 매머드커피, 더벤티, 이디야) 매장이 얼마나 늘었어?\n\n**한계·주의**\n- 원하시면 2024-Q4를 기준으로 바꿔 바로 계산해 드리겠습니다."
+  },
+  {
+   "id": "h09",
+   "answer_status": "완료",
+   "sql": "WITH q AS (\n  SELECT quarter, adm_cd, gu, dong, SUM(avg_rides_per_day) AS daily\n  FROM bike_dong_hourly\n  WHERE day_type = '평일' AND hour IN (7, 8, 18, 19)\n  GROUP BY quarter, adm_cd, gu, dong\n)\nSELECT gu AS \"구\", dong AS \"행정동\",\n       ROUND(AVG(daily), 1) AS \"평일 출퇴근 시간 하루 평균 대여 건수\",\n       COUNT(*) AS \"분기 수\"\nFROM q\nGROUP BY adm_cd, gu, dong\nORDER BY 3 DESC\nLIMIT 10",
+   "attempts": 1,
+   "answer": "**새록 SQL** · AI가 작성 · 시도 1번 · 완료\n\n**가정**\n- '출퇴근 시간'은 평일 오전 7~9시(7시·8시대)와 오후 6~8시(18시·19시대)로 정합니다.\n- '동네'는 행정동, '많이 타는'은 대여(빌린 곳) 기준 하루 평균 대여 건수로 봅니다.\n- 기간을 말하지 않아 데이터 전체 기간(2024-Q1 ~ 2026-Q2, 10개 분기)의 분기별 하루 평균을 다시 평균합니다.\n\n**SQL**\n```sql\nWITH q AS (\n  SELECT quarter, adm_cd, gu, dong, SUM(avg_rides_per_day) AS daily\n  FROM bike_dong_hourly\n  WHERE day_type = '평일' AND hour IN (7, 8, 18, 19)\n  GROUP BY quarter, adm_cd, gu, dong\n)\nSELECT gu AS \"구\", dong AS \"행정동\",\n       ROUND(AVG(daily), 1) AS \"평일 출퇴근 시간 하루 평균 대여 건수\",\n       COUNT(*) AS \"분기 수\"\nFROM q\nGROUP BY adm_cd, gu, dong\nORDER BY 3 DESC\nLIMIT 10\n```\n\n**결과** (10행 중 앞 20행)\n| 구 | 행정동 | 평일 출퇴근 시간 하루 평균 대여 건수 | 분기 수 |\n|---|---|---:|---:|\n| 강서구 | 가양1동 | 1,653.7 | 10 |\n| 영등포구 | 여의동 | 826.2 | 10 |\n| 강서구 | 발산1동 | 779.2 | 10 |\n| 강서구 | 방화1동 | 596.9 | 10 |\n| 영등포구 | 영등포동 | 581.0 | 10 |\n| 강서구 | 공항동 | 552.5 | 10 |\n| 영등포구 | 당산2동 | 530.9 | 10 |\n| 양천구 | 목1동 | 482.1 | 10 |\n| 금천구 | 가산동 | 465.5 | 10 |\n| 마포구 | 상암동 | 399.6 | 10 |\n\n출퇴근 시간에 따릉이를 가장 많이 빌리는 동네는 강서구 가양1동으로, 2위 여의동의 약 2배입니다.\n\n**풀이**\n| 부분 | 하는 일 |\n|---|---|\n| WITH q | 평일 출퇴근 4개 시간대의 하루 평균 대여 건수를 분기·행정동별로 더합니다. |\n| AVG(daily) | 10개 분기의 값을 평균해 전체 기간 하루 평균을 냅니다. |\n| ORDER BY ... LIMIT 10 | 많은 순으로 상위 10곳을 보여 줍니다. |\n\n**한계·주의**\n- 대여 시작 위치 기준이며, 반납(도착) 동네는 반영하지 않습니다.\n- 2025년 2월 원본 누락 때문에 합계 대신 하루 평균(avg_rides_per_day)을 썼습니다.\n- 출퇴근 시간대 정의를 바꾸면(예: 8~9시만) 순위가 달라질 수 있습니다.\n- 대여소가 많은 동이 유리하므로 '주민이 많이 탄다'는 뜻과는 다릅니다."
+  },
+  {
+   "id": "h10",
+   "answer_status": "완료",
+   "sql": "WITH b AS (\n  SELECT brand,\n         COUNT(DISTINCT CASE WHEN quarter = '2025-Q2' THEN store_id END) AS q_prev,\n         COUNT(DISTINCT CASE WHEN quarter = '2026-Q2' THEN store_id END) AS q_now\n  FROM cafes\n  WHERE quarter IN ('2025-Q2', '2026-Q2')\n    AND brand IN ('메가MGC커피', '컴포즈커피', '빽다방', '매머드커피', '더벤티', '이디야')\n  GROUP BY brand\n)\nSELECT brand AS \"브랜드\",\n       q_prev AS \"2025-Q2 매장 수\",\n       q_now AS \"2026-Q2 매장 수\",\n       q_now - q_prev AS \"증감(개)\",\n       ROUND(100.0 * (q_now - q_prev) / q_prev, 1) AS \"증감률(%)\"\nFROM b\nORDER BY \"증감률(%)\" DESC",
+   "attempts": 1,
+   "answer": "**새록 SQL** · AI가 작성 · 시도 1번 · 완료\n\n**가정**\n- '요즘 뜨는'은 최근 1년(2025-Q2 → 2026-Q2) 서울 매장 수 증가율이 높은 것으로 정합니다.\n- 사전 주의에 따라 분기 추이가 일관된 6개 브랜드(메가MGC커피, 컴포즈커피, 빽다방, 매머드커피, 더벤티, 이디야)만 비교합니다. 스타벅스는 2025-Q2 스냅샷에 없고 커피빈·폴바셋은 분기마다 출렁여 뺐습니다.\n- 매장 수는 각 분기 하나씩 골라 셉니다.\n\n**SQL**\n```sql\nWITH b AS (\n  SELECT brand,\n         COUNT(DISTINCT CASE WHEN quarter = '2025-Q2' THEN store_id END) AS q_prev,\n         COUNT(DISTINCT CASE WHEN quarter = '2026-Q2' THEN store_id END) AS q_now\n  FROM cafes\n  WHERE quarter IN ('2025-Q2', '2026-Q2')\n    AND brand IN ('메가MGC커피', '컴포즈커피', '빽다방', '매머드커피', '더벤티', '이디야')\n  GROUP BY brand\n)\nSELECT brand AS \"브랜드\",\n       q_prev AS \"2025-Q2 매장 수\",\n       q_now AS \"2026-Q2 매장 수\",\n       q_now - q_prev AS \"증감(개)\",\n       ROUND(100.0 * (q_now - q_prev) / q_prev, 1) AS \"증감률(%)\"\nFROM b\nORDER BY \"증감률(%)\" DESC\n```\n\n**결과** (6행 중 앞 20행)\n| 브랜드 | 2025-Q2 매장 수 | 2026-Q2 매장 수 | 증감(개) | 증감률(%) |\n|---|---:|---:|---:|---:|\n| 메가MGC커피 | 838 | 996 | 158 | 18.9 |\n| 매머드커피 | 424 | 460 | 36 | 8.5 |\n| 더벤티 | 157 | 168 | 11 | 7.0 |\n| 컴포즈커피 | 460 | 485 | 25 | 5.4 |\n| 빽다방 | 367 | 374 | 7 | 1.9 |\n| 이디야 | 474 | 436 | -38 | -8.0 |\n\n최근 1년 기준으로 가장 뜨는 브랜드는 메가MGC커피(+158개, +18.9%)이고, 이디야는 오히려 줄었습니다.\n\n**풀이**\n| 부분 | 하는 일 |\n|---|---|\n| WITH b | 브랜드별로 2025-Q2와 2026-Q2 매장 수를 각각 셉니다. |\n| WHERE brand IN | 분기 추이가 일관된 6개 브랜드만 남깁니다. |\n| 증감, 증감률 | 1년 사이 늘어난 매장 수와 비율을 계산합니다. |\n| ORDER BY 증감률 | 많이 늘어난 순으로 정렬합니다. |\n\n**한계·주의**\n- '뜨는'을 매장 수 증가로만 봤습니다. 매출·방문객 같은 인기 지표는 데이터에 없습니다.\n- 스타벅스·커피빈·폴바셋 등은 수집이 고르지 않아 비교에서 빠졌습니다.\n- 분기말 스냅샷 기준이며 공식 통계가 아닙니다."
+  },
+  {
+   "id": "h11",
+   "answer_status": "완료",
+   "sql": "WITH d AS (\n  SELECT date, day_type, SUM(board) AS board\n  FROM subway_daily\n  GROUP BY date, day_type\n)\nSELECT d.day_type AS \"평일·주말\",\n       CASE WHEN w.rainy_day THEN '비 온 날' ELSE '비 안 온 날' END AS \"날씨\",\n       COUNT(*) AS \"날 수\",\n       ROUND(AVG(d.board)) AS \"하루 평균 승차 인원(서울 전체)\"\nFROM d JOIN weather_daily w ON d.date = w.date\nGROUP BY 1, 2\nORDER BY 1, 2",
+   "attempts": 1,
+   "answer": "**새록 SQL** · AI가 작성 · 시도 1번 · 완료\n\n**가정**\n- '지하철 타는 사람'은 서울 전체 역·노선의 하루 승차 인원 합계로 봅니다.\n- '비 온 날'은 하루 강수량 1mm 이상(rainy_day = 참)인 날입니다.\n- 평일과 주말은 승차 인원 수준이 크게 달라 나눠서 비교합니다.\n- 기간을 말하지 않아 데이터 전체 기간(2024-01-01 ~ 2026-09-30)을 씁니다.\n\n**SQL**\n```sql\nWITH d AS (\n  SELECT date, day_type, SUM(board) AS board\n  FROM subway_daily\n  GROUP BY date, day_type\n)\nSELECT d.day_type AS \"평일·주말\",\n       CASE WHEN w.rainy_day THEN '비 온 날' ELSE '비 안 온 날' END AS \"날씨\",\n       COUNT(*) AS \"날 수\",\n       ROUND(AVG(d.board)) AS \"하루 평균 승차 인원(서울 전체)\"\nFROM d JOIN weather_daily w ON d.date = w.date\nGROUP BY 1, 2\nORDER BY 1, 2\n```\n\n**결과** (4행 중 앞 20행)\n| 평일·주말 | 날씨 | 날 수 | 하루 평균 승차 인원(서울 전체) |\n|---|---|---:|---:|\n| 주말 | 비 안 온 날 | 190 | 5,269,202 |\n| 주말 | 비 온 날 | 96 | 5,219,318 |\n| 평일 | 비 안 온 날 | 506 | 7,778,329 |\n| 평일 | 비 온 날 | 212 | 7,494,193 |\n\n이 데이터로는 비가 오면 지하철 승차 인원이 늘지 않고 오히려 조금 줄었습니다. 평일은 약 28만 명(약 3.7%), 주말은 약 5만 명(약 0.9%) 적습니다.\n\n**풀이**\n| 부분 | 하는 일 |\n|---|---|\n| WITH d | 날짜별로 모든 역·노선의 승차 인원을 더해 서울 전체 하루 승차 인원을 만듭니다. |\n| JOIN weather_daily | 같은 날짜의 비 여부를 붙입니다. |\n| GROUP BY 1, 2 | 평일·주말과 비 온 날·안 온 날로 나눕니다. |\n| AVG | 그룹별 하루 평균 승차 인원을 구합니다. |\n\n**한계·주의**\n- 상관관계일 뿐 인과 관계가 아닙니다. 장마철·명절·방학 같은 계절 요인이 섞여 있을 수 있습니다.\n- 공휴일 구분은 원본에 따라 달라, 평일 중 공휴일이 비 온 날에 몰렸다면 결과가 왜곡될 수 있습니다.\n- 날씨는 재분석 자료이고, 승차 인원은 교통카드 기준입니다."
+  },
+  {
+   "id": "h12",
+   "answer_status": "답할 수 없음",
+   "sql": "",
+   "attempts": 0,
+   "answer": "**새록 SQL** · AI가 작성 · 시도 0번 · 답할 수 없음\n\n**답할 수 없는 이유**\n- 지하철 승차 데이터(subway_daily)는 2024-01-01 ~ 2026-09-30만 있습니다. 2023년 데이터는 없습니다.\n\n**대신 물어볼 수 있는 질문**\n- 2024년(또는 2025년) 강남역 하루 평균 승차 인원은?\n\n**한계·주의**\n- 없는 기간이라 SQL을 만들지 않았습니다."
+  },
+  {
+   "id": "h13",
+   "answer_status": "답할 수 없음",
+   "sql": "",
+   "attempts": 0,
+   "answer": "**새록 SQL** · AI가 작성 · 시도 0번 · 답할 수 없음\n\n**답할 수 없는 이유**\n- 배달 서비스 데이터(delivery_monthly)는 2024-01 ~ 2025-12만 있고, 사전에 '2026년 데이터는 아직 공개되지 않았습니다'라고 되어 있습니다.\n\n**대신 물어볼 수 있는 질문**\n- 2025년 12월(또는 2025년 3월) 행정동별 배달 서비스 사용일수 순위 보여 줘\n\n**한계·주의**\n- 없는 기간이라 SQL을 만들지 않았습니다.\n- 배달 값은 주문 건수가 아니라 배달앱을 쓴 날 수의 평균입니다."
+  },
+  {
+   "id": "h14",
+   "answer_status": "답할 수 없음",
+   "sql": "",
+   "attempts": 0,
+   "answer": "**새록 SQL** · AI가 작성 · 시도 0번 · 답할 수 없음\n\n**답할 수 없는 이유**\n- 데이터는 서울 생활 데이터만 담고 있어 부산 지하철(서면역) 승차 인원은 없습니다.\n\n**대신 물어볼 수 있는 질문**\n- 서울 지하철역 가운데 하루 평균 승차 인원이 가장 많은 역은?\n\n**한계·주의**\n- 없는 지역이라 SQL을 만들지 않았습니다. 이름이 비슷한 서울 역을 대신 세지 않았습니다."
+  },
+  {
+   "id": "h15",
+   "answer_status": "답할 수 없음",
+   "sql": "",
+   "attempts": 0,
+   "answer": "**새록 SQL** · AI가 작성 · 시도 0번 · 답할 수 없음\n\n**답할 수 없는 이유**\n- 미래 예측은 이 도구가 SQL 조회로 답할 수 없는 질문입니다. 데이터에는 이미 일어난 대여 건수만 있습니다.\n- 따릉이 데이터(bike_city_hourly)는 2026-06-30까지만 있어 '다음 달'(2026-11) 직전 몇 달도 비어 있습니다.\n\n**대신 물어볼 수 있는 질문**\n- 2024년·2025년 11월 서울 따릉이 하루 평균 대여 건수는?\n- 월별 따릉이 하루 평균 대여 건수 추이 보여 줘\n\n**한계·주의**\n- 예측값을 지어내지 않기 위해 SQL을 만들지 않았습니다."
+  },
+  {
+   "id": "h16",
+   "answer_status": "답할 수 없음",
+   "sql": "",
+   "attempts": 0,
+   "answer": "**새록 SQL** · AI가 작성 · 시도 0번 · 답할 수 없음\n\n**답할 수 없는 이유**\n- 지하철 데이터(subway_daily)는 날짜별 하루 승차·하차 인원만 있고 시간대 컬럼이 없습니다. 시간대별 승차 인원은 알 수 없습니다.\n- 시간대 정보가 있는 표는 따릉이(bike_city_hourly)와 날씨(weather_hourly)뿐입니다.\n\n**대신 물어볼 수 있는 질문**\n- 지하철 승차 인원이 가장 많은 요일은?\n- 따릉이 대여가 가장 많은 시간대는 몇 시야?\n\n**한계·주의**\n- 없는 지표라 SQL을 만들지 않았습니다."
+  }
+ ]
+}

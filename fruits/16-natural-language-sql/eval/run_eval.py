@@ -59,13 +59,21 @@ def matches(gold_rows, got_rows, ordered: bool, check_columns: list[int] | None 
     return True
 
 
+UNANSWERABLE = "답할 수 없음"
+
+
 def score_answers(db: Database, questions: list[dict], answers: dict[str, dict]) -> tuple[int, list[dict]]:
-    """미리 받은 답안 SQL(Claude Code 스킬 등)을 정답과 비교합니다. API를 부르지 않습니다."""
+    """미리 받은 답안 SQL(Claude Code 스킬 등)을 정답과 비교합니다. API를 부르지 않습니다.
+
+    어려운 세트(questions-hard.json)는 정답 SQL이 없는 문항이 있습니다.
+    - kind가 '답할 수 없음'이면 답안 상태(answer_status)가 '답할 수 없음'이어야 자동 통과입니다.
+    - 그 밖에 정답 SQL이 없는 문항은 자동 채점하지 않습니다(pass=None). expect 항목은 사람이 판정합니다.
+    """
     passed, report = 0, []
     for q in questions:
-        gold = db.run(q["gold_sql"]).rows
         item = answers.get(q["id"], {})
         sql = (item.get("sql") or "").strip()
+        answer_status = item.get("answer_status")
         status, rows, message = "missing", None, "답안 없음"
         if sql:
             try:
@@ -73,9 +81,19 @@ def score_answers(db: Database, questions: list[dict], answers: dict[str, dict])
                 status, message = "ok", ""
             except QueryError as e:
                 status, message = ("blocked" if e.blocked else "error"), str(e)
-        ok = rows is not None and matches(gold, rows, q["ordered"], q.get("check_columns"))
-        passed += ok
-        report.append({"id": q["id"], "pass": ok, "status": status, "attempts": item.get("attempts"), "sql": sql, "message": message})
+        elif answer_status:
+            status, message = "no_sql", ""
+        if q.get("gold_sql"):
+            ok = rows is not None and matches(db.run(q["gold_sql"]).rows, rows, q["ordered"], q.get("check_columns"))
+        elif q.get("kind") == UNANSWERABLE:
+            ok = answer_status == UNANSWERABLE
+        else:
+            ok = None
+        passed += ok is True
+        report.append({
+            "id": q["id"], "kind": q.get("kind"), "pass": ok, "status": status, "answer_status": answer_status,
+            "attempts": item.get("attempts"), "sql": sql, "message": message, "expect": q.get("expect", []),
+        })
     return passed, report
 
 
@@ -84,8 +102,9 @@ def main(argv: list[str]) -> int:
     parser.add_argument("ids", nargs="*", help="채점할 질문 id(없으면 전체)")
     parser.add_argument("--answers", type=Path, help="답안 JSON으로 채점(API 없이). 형식: {\"model\": ..., \"answers\": [{\"id\", \"sql\", \"attempts\"}]}")
     parser.add_argument("--export-questions", type=Path, help="정답 SQL을 뺀 질문 목록만 내보내기")
+    parser.add_argument("--set", choices=["basic", "hard"], default="basic", help="basic: 기본 20문항, hard: 애매한·여러 표·함정·답할 수 없는 질문(--answers로만 채점)")
     args = parser.parse_args(argv)
-    questions = json.loads((HERE / "questions.json").read_text(encoding="utf-8"))
+    questions = json.loads((HERE / ("questions-hard.json" if args.set == "hard" else "questions.json")).read_text(encoding="utf-8"))
     if args.ids:
         questions = [q for q in questions if q["id"] in args.ids]
     if args.export_questions:
@@ -98,7 +117,11 @@ def main(argv: list[str]) -> int:
         model = data.get("model", "unknown")
         passed, report = score_answers(db, questions, {a["id"]: a for a in data["answers"]})
         for item in report:
-            print(f"{item['id']} {'통과' if item['pass'] else '실패'} ({item['status']})")
+            verdict = {True: "통과", False: "실패", None: "사람 판정"}[item["pass"]]
+            print(f"{item['id']} {verdict} ({item['status']}, {item['answer_status'] or '-'})")
+    elif args.set == "hard":
+        print("어려운 세트는 --answers로만 채점합니다.")
+        return 2
     else:
         key = keystore.get_key()
         if not key:
@@ -114,10 +137,13 @@ def main(argv: list[str]) -> int:
             passed += ok
             report.append({"id": q["id"], "pass": ok, "status": answer.status, "attempts": answer.attempts, "sql": answer.sql, "message": answer.message})
             print(f"{q['id']} {'통과' if ok else '실패'} ({answer.status}, 시도 {answer.attempts})")
-    out = HERE / f"result-{datetime.now():%Y%m%d-%H%M}.local.json"
+    out = HERE / f"result-{args.set}-{datetime.now():%Y%m%d-%H%M}.local.json"
     out.write_text(json.dumps({"model": model, "passed": passed, "total": len(questions), "items": report}, ensure_ascii=False, indent=1), encoding="utf-8")
     print()
-    print(f"{passed}/{len(questions)} 통과 · 자세한 결과: {out}")
+    auto = sum(item["pass"] is not None for item in report)
+    print(f"자동 채점 {passed}/{auto} 통과 · 사람 판정 대기 {len(questions) - auto}문항 · 자세한 결과: {out}")
+    if args.set == "hard":
+        print("어려운 세트는 자동 채점과 별개로 문항마다 expect 항목을 사람이 판정해야 최종 점수가 됩니다.")
     return 0
 
 

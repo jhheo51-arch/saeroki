@@ -309,6 +309,35 @@ class SaerokSqlTest(unittest.TestCase):
             self.assertTrue(result.rows, q["id"])
             self.assertFalse(result.truncated, q["id"])
 
+    def test_hard_set_scores_refusals_and_leaves_judgement_items_to_people(self):
+        import importlib.util
+
+        spec = importlib.util.spec_from_file_location("run_eval", HERE / "eval" / "run_eval.py")
+        run_eval = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(run_eval)
+        questions = json.loads((HERE / "eval" / "questions-hard.json").read_text(encoding="utf-8"))
+        self.assertEqual(len({q["id"] for q in questions}), len(questions))
+        for q in questions:
+            self.assertTrue(q["expect"], q["id"])
+            self.assertTrue(q.get("summary"), q["id"])
+            if q.get("gold_sql"):
+                self.assertTrue(self.db.run(q["gold_sql"]).rows, q["id"])
+        picked = [q for q in questions if q["id"] in ("h04", "h09", "h12", "h14")]
+        answers = {
+            "h04": {"sql": "SELECT SUM(board) FROM subway_daily WHERE year = 2025 AND station = '고속터미널'", "answer_status": "완료"},
+            "h09": {"sql": "SELECT 1", "answer_status": "완료"},
+            "h12": {"answer_status": "답할 수 없음"},
+            "h14": {"sql": "SELECT SUM(board) FROM subway_daily WHERE station = '서면'", "answer_status": "완료"},
+        }
+        passed, report = run_eval.score_answers(self.db, picked, answers)
+        by_id = {r["id"]: r for r in report}
+        self.assertEqual(passed, 2)
+        self.assertTrue(by_id["h04"]["pass"])
+        self.assertIsNone(by_id["h09"]["pass"])
+        self.assertTrue(by_id["h12"]["pass"])
+        self.assertEqual(by_id["h12"]["status"], "no_sql")
+        self.assertFalse(by_id["h14"]["pass"])
+
 
 if __name__ == "__main__":
     unittest.main()

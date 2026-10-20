@@ -1,0 +1,199 @@
+[
+ {
+  "id": "h01",
+  "kind": "여러 표",
+  "question": "2025년에 비 온 날과 비 안 온 날, 고속터미널역 하루 평균 승차 인원은 얼마나 달라?",
+  "summary": "비 온 날 84,435명, 비 안 온 날 84,632명으로 하루 평균 약 197명(0.2%) 차이라 거의 같다.",
+  "ordered": false,
+  "check_columns": [
+   1
+  ],
+  "gold_sql": "WITH d AS (SELECT date, SUM(board) AS board FROM subway_daily WHERE year = 2025 AND station = '고속터미널' GROUP BY date) SELECT w.rainy_day, AVG(d.board) AS avg_board FROM d JOIN weather_daily w USING (date) GROUP BY w.rainy_day",
+  "expect": [
+   "고속터미널의 3개 노선(3·7·9호선)을 날짜별로 먼저 합친 뒤 평균을 낸다",
+   "비 온 날 기준(하루 강수 1mm 이상)을 밝힌다",
+   "결과가 무엇을 뜻하는지 한 줄로 해석한다(데이터에 없는 배경은 '추정'이라고 표시)"
+  ]
+ },
+ {
+  "id": "h02",
+  "kind": "여러 표",
+  "question": "2026년 2분기에 지하철역이 있는 행정동과 없는 행정동의 평균 상가 수를 비교해 줘",
+  "summary": "역이 있는 행정동은 평균 1,584개, 없는 행정동은 1,002개로 역이 있는 쪽이 약 1.6배다.",
+  "ordered": false,
+  "check_columns": [
+   1
+  ],
+  "gold_sql": "SELECT s.adm_cd IN (SELECT adm_cd FROM subway_stations) AS has_station, AVG(s.store_count) AS avg_stores FROM stores_dong s WHERE s.quarter = '2026-Q2' GROUP BY 1",
+  "expect": [
+   "역이 여러 개인 동이 두 번 세어지지 않게 한다(동 기준 중복 제거)",
+   "subway_stations가 서울 안 280개 역만 담은 근사 자료임을 밝힌다",
+   "결과가 무엇을 뜻하는지 한 줄로 해석한다(데이터에 없는 배경은 '추정'이라고 표시)"
+  ]
+ },
+ {
+  "id": "h03",
+  "kind": "여러 표",
+  "question": "따릉이 대여소가 가장 많은 행정동 3곳은 2026년 2분기에 카페가 몇 개씩 있어?",
+  "summary": "여의동 323개, 가양1동 264개, 상암동 167개(대여소 57곳, 51곳, 32곳)다.",
+  "ordered": true,
+  "gold_sql": "WITH b AS (SELECT adm_cd, any_value(dong) AS dong, COUNT(*) AS n_stations FROM bike_stations GROUP BY adm_cd ORDER BY n_stations DESC LIMIT 3) SELECT b.dong, b.n_stations, COUNT(c.store_id) AS n_cafes FROM b LEFT JOIN cafes c ON c.adm_cd = b.adm_cd AND c.quarter = '2026-Q2' GROUP BY b.dong, b.n_stations ORDER BY b.n_stations DESC",
+  "expect": [
+   "카페는 2026-Q2 한 분기만 센다",
+   "결과가 무엇을 뜻하는지 한 줄로 해석한다(데이터에 없는 배경은 '추정'이라고 표시)"
+  ]
+ },
+ {
+  "id": "h04",
+  "kind": "함정",
+  "question": "2025년 고속터미널역 승차 인원 합계는?",
+  "summary": "3호선, 7호선, 9호선을 모두 더해 30,869,411명이다.",
+  "ordered": false,
+  "gold_sql": "SELECT SUM(board) AS board FROM subway_daily WHERE year = 2025 AND station = '고속터미널'",
+  "expect": [
+   "노선 3개를 합쳤다고 밝히거나 노선별로도 보여 준다",
+   "결과가 무엇을 뜻하는지 한 줄로 해석한다(데이터에 없는 배경은 '추정'이라고 표시)",
+   "값 하나를 물었으므로 결과 표는 합계 한 행으로 내고, 노선별 내역은 답 줄이나 따로 보여 준다"
+  ]
+ },
+ {
+  "id": "h05",
+  "kind": "함정",
+  "question": "2025년 1분기와 2분기 따릉이 이용량을 비교해 줘",
+  "summary": "하루 평균 1분기 68,974건, 2분기 126,531건으로 2분기가 약 1.8배다. 2월 원본이 1~16일뿐이라 합계로 비교하면 안 된다.",
+  "ordered": false,
+  "check_columns": [
+   1
+  ],
+  "gold_sql": "WITH d AS (SELECT quarter, date, SUM(rides) AS rides FROM bike_city_hourly WHERE quarter IN ('2025-Q1', '2025-Q2') GROUP BY quarter, date) SELECT quarter, AVG(rides) AS avg_daily_rides FROM d GROUP BY quarter",
+  "expect": [
+   "합계가 아니라 하루 평균으로 비교한다",
+   "2025년 2월 원본이 1~16일만 있다는 점을 밝힌다",
+   "결과가 무엇을 뜻하는지 한 줄로 해석한다(데이터에 없는 배경은 '추정'이라고 표시)"
+  ]
+ },
+ {
+  "id": "h06",
+  "kind": "함정",
+  "question": "2026년 1분기 서울 스타벅스 매장은 몇 개야?",
+  "summary": "정답 SQL 없음. 스타벅스는 2024-Q4와 2026-Q2 스냅샷에만 제대로 들어 있어 2026년 1분기 매장 수는 셀 수 없다고 답해야 맞다.",
+  "expect": [
+   "'1개'를 사실처럼 답하지 않는다",
+   "스타벅스가 2024-Q4와 2026-Q2 스냅샷에만 제대로 들어 있어 이 분기는 셀 수 없다고 말하거나 검토 필요로 표시한다",
+   "결과가 무엇을 뜻하는지 한 줄로 해석한다(데이터에 없는 배경은 '추정'이라고 표시)"
+  ]
+ },
+ {
+  "id": "h07",
+  "kind": "함정",
+  "question": "2025년 12월 20대의 배달 서비스 사용일수가 가장 높은 행정동 3곳은?",
+  "summary": "신림동 19.71일, 논현1동 19.57일, 역삼1동 19.29일(인구 가중평균 사용일수)이다.",
+  "ordered": true,
+  "check_columns": [
+   0,
+   1
+  ],
+  "gold_sql": "SELECT dong, SUM(delivery_days * (population - delivery_unknown)) / SUM(population - delivery_unknown) AS days FROM delivery_age_monthly WHERE month = DATE '2025-12-01' AND age IN (20, 25) AND population > delivery_unknown GROUP BY adm_cd, dong ORDER BY days DESC LIMIT 3",
+  "expect": [
+   "성별·연령대(20·25)를 인구로 가중평균한다(단순 평균이 아님)",
+   "배달 값이 주문 건수가 아니라 사용일수임을 밝힌다",
+   "결과가 무엇을 뜻하는지 한 줄로 해석한다(데이터에 없는 배경은 '추정'이라고 표시)"
+  ]
+ },
+ {
+  "id": "h08",
+  "kind": "함정",
+  "question": "2024년 1분기보다 2026년 2분기에 서울 카페가 얼마나 늘었어?",
+  "summary": "정답 SQL 없음. 2024-Q4부터 수집 범위가 바뀌어 2024-Q1과 그대로 빼면 안 된다. 2024-Q4 대비로 바꿔 비교하면 맞다.",
+  "expect": [
+   "2024-Q4부터 수집 범위가 바뀌어 2024-Q1과 직접 비교하면 안 된다고 경고하거나, 2024-Q4 이후로 바꿔 비교하고 그렇게 밝힌다",
+   "결과가 무엇을 뜻하는지 한 줄로 해석한다(데이터에 없는 배경은 '추정'이라고 표시)"
+  ]
+ },
+ {
+  "id": "h09",
+  "kind": "애매함",
+  "question": "출퇴근 시간에 따릉이를 가장 많이 타는 동네는?",
+  "summary": "정답 하나로 정해지지 않음. 출퇴근 시간대, 평일 여부, 분기를 정해 밝히고 하루 평균으로 순위를 매기면 맞다.",
+  "expect": [
+   "출퇴근 시간(예: 7~9시, 18~20시)과 평일 여부를 가정으로 밝힌다",
+   "기간(분기)을 정하고 밝힌다",
+   "하루 평균(avg_rides_per_day)으로 비교한다",
+   "결과가 무엇을 뜻하는지 한 줄로 해석한다(데이터에 없는 배경은 '추정'이라고 표시)",
+   "비교·순위 결과를 한눈에 보이게 막대 차트로도 보여 주고, 핵심 숫자는 굵게 쓴다",
+   "가정만 늘어놓지 않고 '제 판단으로는 ○○입니다'처럼 답을 분명히 말한다"
+  ]
+ },
+ {
+  "id": "h10",
+  "kind": "애매함",
+  "question": "요즘 뜨는 카페 브랜드는 어디야?",
+  "summary": "정답 하나로 정해지지 않음. '요즘'의 기간과 '뜬다'의 지표를 정해 밝히고, 2024-Q4 이후만 비교하면 맞다.",
+  "expect": [
+   "'요즘'과 '뜬다'를 어떤 기간·지표(매장 증가 수 또는 증가율)로 정했는지 밝힌다",
+   "2024-Q4 이후만 비교하거나, 분기마다 출렁이는 브랜드(스타벅스·커피빈·폴바셋)를 주의로 밝힌다",
+   "결과가 무엇을 뜻하는지 한 줄로 해석한다(데이터에 없는 배경은 '추정'이라고 표시)",
+   "비교·순위 결과를 한눈에 보이게 막대 차트로도 보여 주고, 핵심 숫자는 굵게 쓴다"
+  ]
+ },
+ {
+  "id": "h11",
+  "kind": "애매함",
+  "question": "비 오면 지하철 타는 사람이 늘어?",
+  "summary": "정답 하나로 정해지지 않음. 비 온 날 기준과 비교 방법을 밝히고, 차이를 비 때문이라고 단정하지 않으면 맞다.",
+  "expect": [
+   "비 온 날 기준과 비교 방법(하루 평균, 평일·주말 구분 등)을 밝힌다",
+   "차이가 원인(비 때문)이라고 단정하지 않는다",
+   "결과가 무엇을 뜻하는지 한 줄로 해석한다(데이터에 없는 배경은 '추정'이라고 표시)",
+   "비교·순위 결과를 한눈에 보이게 막대 차트로도 보여 주고, 핵심 숫자는 굵게 쓴다"
+  ]
+ },
+ {
+  "id": "h12",
+  "kind": "답할 수 없음",
+  "question": "2023년 강남역 하루 평균 승차 인원은?",
+  "summary": "답할 수 없음. 지하철 데이터는 2024년부터 있다.",
+  "expect": [
+   "데이터가 2024년부터라 답할 수 없다고 말한다",
+   "다른 연도 값을 대신 답으로 내놓지 않는다",
+   "결과가 무엇을 뜻하는지 한 줄로 해석한다(데이터에 없는 배경은 '추정'이라고 표시)",
+   "가장 가까운 대안(예: 2024년 강남역 하루 평균)을 실제로 조회해 값을 보여 주되, 질문한 값이 아님을 밝힌다"
+  ]
+ },
+ {
+  "id": "h13",
+  "kind": "답할 수 없음",
+  "question": "2026년 3월 행정동별 배달 서비스 사용일수 순위 보여 줘",
+  "summary": "답할 수 없음. 배달 데이터는 2025-12까지만 공개됐다.",
+  "expect": [
+   "배달 데이터가 2025-12까지만 공개돼 답할 수 없다고 말한다"
+  ]
+ },
+ {
+  "id": "h14",
+  "kind": "답할 수 없음",
+  "question": "부산 서면역 하루 승차 인원은?",
+  "summary": "답할 수 없음. 서울 데이터만 있다.",
+  "expect": [
+   "서울 데이터만 있어 답할 수 없다고 말한다"
+  ]
+ },
+ {
+  "id": "h15",
+  "kind": "답할 수 없음",
+  "question": "다음 달 서울 따릉이 대여 건수를 예측해 줘",
+  "summary": "답할 수 없음. 예측은 하지 않는다(지난 추이를 참고로 보여 주는 것은 괜찮다).",
+  "expect": [
+   "예측은 할 수 없다고 말한다(지난 추이를 참고로 보여 주는 것은 괜찮다)"
+  ]
+ },
+ {
+  "id": "h16",
+  "kind": "답할 수 없음",
+  "question": "지하철 승차 인원이 가장 많은 시간대는 몇 시야?",
+  "summary": "답할 수 없음. 지하철은 하루 단위 자료만 있다.",
+  "expect": [
+   "지하철은 하루 단위 자료만 있어 시간대는 답할 수 없다고 말한다"
+  ]
+ }
+]
