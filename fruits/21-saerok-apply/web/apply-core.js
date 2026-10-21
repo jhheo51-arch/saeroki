@@ -761,11 +761,12 @@
   const MD_BULLET = /^\s*[-*+]\s/;
   const MD_HEAD = /(?:^|\s)#{1,6}\s/;
   const MD_LINK = /\[[^\]]+\]\([^)]*\)/;
-  const CHAT_OPEN = ["물론입니다", "네, ", "다음은 ", "아래는 ", "요청하신 "];
+  const CHAT_OPEN = ["물론입니다", "아래는 ", "요청하신 "];
   const LATIN_WORD = /[A-Za-z][A-Za-z0-9]+/g;
+  const LINKISH = /https?:\/\/\S+|[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+|[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)+(?:\/\S*)?/g;
   const JARGON_MAX = 2;
   const REPEAT_DICE = 70;
-  const RESIDUE_MSG = (mark) => `마크다운이나 대화 복사 흔적 '${mark}'이 남았습니다. 제출하면 그대로 보이니 지워 주세요.`;
+  const RESIDUE_MSG = (mark) => `마크다운이나 대화 복사 흔적(${mark})이 남았습니다. 제출하면 그대로 보이니 지워 주세요.`;
   const JARGON_MSG = (words) => `공고에 없는 영문 용어가 한 곳에 ${words.length}개(${words.join(", ")}) 있습니다. 읽는 사람이 아는 말로 풀어 쓰거나 꼭 필요한 하나만 남겨 주세요.`;
 
   function mdResidue(text, doc = false) {
@@ -783,7 +784,7 @@
   function jargon(text, postingBody) {
     const low = (postingBody || "").toLowerCase();
     const out = [];
-    for (const m of plain(text).matchAll(LATIN_WORD)) {
+    for (const m of plain(text).replace(LINKISH, " ").matchAll(LATIN_WORD)) {
       const w = m[0];
       if (!low.includes(w.toLowerCase()) && !out.some((o) => o.toLowerCase() === w.toLowerCase())) out.push(w);
     }

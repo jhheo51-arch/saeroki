@@ -853,8 +853,10 @@ def _term_checks(issues, where, text, terms):
 MD_BULLET = re.compile(r"^\s*[-*+]\s")
 MD_HEAD = re.compile(r"(?:^|\s)#{1,6}\s")
 MD_LINK = re.compile(r"\[[^\]]+\]\([^)]*\)")
-CHAT_OPEN = ("물론입니다", "네, ", "다음은 ", "아래는 ", "요청하신 ")
+CHAT_OPEN = ("물론입니다", "아래는 ", "요청하신 ")
 LATIN_WORD = re.compile(r"[A-Za-z][A-Za-z0-9]+")
+# 연락처의 이메일과 주소는 용어가 아니므로 세기 전에 지웁니다.
+LINKISH = re.compile(r"https?://\S+|[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+|[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)+(?:/\S*)?")
 JARGON_MAX = 2
 REPEAT_DICE = 70
 
@@ -885,7 +887,7 @@ def jargon(text: str, posting_body: str) -> list[str]:
     """공고에 없는 영문 용어(두 글자 이상). 같은 말은 한 번만 셉니다."""
     low = (posting_body or "").lower()
     out = []
-    for m in LATIN_WORD.finditer(plain(text)):
+    for m in LATIN_WORD.finditer(LINKISH.sub(" ", plain(text))):
         w = m.group(0)
         if w.lower() not in low and w.lower() not in [o.lower() for o in out]:
             out.append(w)
@@ -896,7 +898,7 @@ def _writing_checks(issues, where, text, posting_body, doc=False):
     mark = md_residue(text, doc)
     if mark:
         _issue(issues, "warn", "md_residue", where, text,
-               f"마크다운이나 대화 복사 흔적 '{mark}'이 남았습니다. 제출하면 그대로 보이니 지워 주세요.")
+               f"마크다운이나 대화 복사 흔적({mark})이 남았습니다. 제출하면 그대로 보이니 지워 주세요.")
     words = jargon(text, posting_body)
     if len(words) > JARGON_MAX:
         _issue(issues, "warn", "jargon", where, text,
@@ -955,7 +957,7 @@ def check(draft_text: str, ledger_text: str, analysis_text: str = "", posting_te
                 mark = md_residue(line)
                 if mark:
                     _issue(issues, "warn", "md_residue", where, plain(line).strip(),
-                           f"마크다운이나 대화 복사 흔적 '{mark}'이 남았습니다. 제출하면 그대로 보이니 지워 주세요.")
+                           f"마크다운이나 대화 복사 흔적({mark})이 남았습니다. 제출하면 그대로 보이니 지워 주세요.")
         for s in sents:
             text = s["text"]
             for i in s["ids"]:

@@ -207,12 +207,14 @@ class DraftRuleTest(unittest.TestCase):
         line = "이유를 직접 확인하려고 회원 30명에게 짧은 설문을 돌렸습니다."
         for bad in ("**이유를** 직접 확인하려고 회원 30명에게 짧은 설문을 돌렸습니다.",
                     "- 이유를 직접 확인하려고 회원 30명에게 짧은 설문을 돌렸습니다.",
-                    "다음은 이유를 직접 확인하려고 회원 30명에게 짧은 설문을 돌린 일입니다.",
+                    "요청하신 대로 이유를 직접 확인하려고 회원 30명에게 짧은 설문을 돌렸습니다.",
                     "이유를 직접 확인하려고 회원 30명에게 짧은 설문을 돌렸습니다. (AI 정리, 확인 전)"):
             self.hit("md_residue", "warn", draft=replace(DRAFT, line, bad))
         # 공고에 없는 영문 용어 몰림
         self.hit("jargon", "warn", draft=replace(DRAFT, "짧은 설문을 돌렸습니다.", "짧은 survey를 NPS와 CSAT 기준으로 돌렸습니다."))
         self.assertNotIn("jargon", codes(run_check(draft=replace(DRAFT, "짧은 설문을 돌렸습니다.", "짧은 NPS 설문을 돌렸습니다."))))
+        # 자연스러운 첫마디는 대화 흔적으로 보지 않습니다.
+        self.assertNotIn("md_residue", codes(run_check(draft=replace(DRAFT, line, "네, " + line))))
         # 같은 문항 안 동어반복
         first = "예약 기록을 시간대별로 나눠 동아리 스터디룸의 주간 좌석 노쇼율을 18%에서 11%로 낮췄습니다. <!-- E01 결과 -->"
         self.hit("repeat_in_question", "warn", draft=replace(
@@ -422,6 +424,8 @@ class DocRuleTest(unittest.TestCase):
         self.assertIn("jargon", codes(run_doc(replace(RESUME, line, "문의 기록을 CRM과 VOC, CS 기준으로 나눴습니다.")), "warn"))
         # 도구 칸의 영문 이름은 풀어 쓰라고 하지 않습니다.
         self.assertNotIn("jargon", codes(run_doc(replace(RESUME, "- 스프레드시트, 설문 도구", "- Notion, Figma, Jira, Slack"))))
+        # 연락처의 이메일과 주소는 영문 용어로 세지 않습니다.
+        self.assertNotIn("jargon", codes(run_doc(replace(RESUME, line, "문의 기록을 나눴습니다(test@example.com, https://github.com/saerok-test/portfolio)."))))
         last = "- 결과: 예약 2시간 전 알림을 넣은 뒤 주간 좌석 노쇼율이 18%에서 11%로 줄었습니다. <!-- E01 -->"
         self.assertIn("repeat_line", codes(run_doc(replace(
             RESUME, last, last + "\n- 결과: 예약 2시간 전 알림을 넣은 뒤 주간 좌석 노쇼율이 18%에서 11%로 줄어들었습니다. <!-- E01 -->")), "warn"))
