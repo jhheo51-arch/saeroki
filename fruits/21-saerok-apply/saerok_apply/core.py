@@ -1128,6 +1128,8 @@ DOC_KINDS = {"resume": "이력서", "portfolio": "포트폴리오"}
 DOC_PAGES = {"resume": (1, 2), "portfolio": (3, 5)}
 DOC_CARDS = {"resume": ("숫자 카드", 4), "portfolio": ("프로젝트 카드", 3)}
 DOC_META = ("회사", "직무", "판", "상태")
+# 머리에 함께 두는 연락처 줄. 제출본에는 남기되 머리 칸 읽기를 끝내지 않습니다.
+HEAD_CONTACT = ("연락처", "이메일", "전화", "포트폴리오", "깃허브", "블로그")
 WEAK = ["참여했습니다", "공부했습니다", "노력했습니다", "기초", "수료 예정", "활용 가능", "관심"]
 FREE_SECTIONS = ["자격", "교육", "학력", "도구", "연락"]
 DESIGN_WORDS = ["가상", "설계", "가정"]
@@ -1204,7 +1206,8 @@ def parse_doc(text: str, name: str = "") -> dict:
         if not started and not h and f and f.group(1).strip() in DOC_META:
             doc["meta"].setdefault(f.group(1).strip(), f.group(2).strip())
             continue
-        started = True
+        if not (not h and _head_contact(f, s)):
+            started = True
         kind = "line"
         if h:
             section = plain(h.group(2)).strip()
@@ -1241,6 +1244,10 @@ def parse_doc(text: str, name: str = "") -> dict:
     return doc
 
 
+def _head_contact(f, s: str) -> bool:
+    return bool(f) and (f.group(1).strip() in HEAD_CONTACT or bool(_contacts(s)))
+
+
 def doc_submission(text: str) -> str:
     """제출용 본문: 첫 제목, 머리 칸, 안내 줄(>), 장부 ID 주석을 빼고 제목, 표, 쪽 나눔은 남깁니다."""
     out, started = [], False
@@ -1251,7 +1258,7 @@ def doc_submission(text: str) -> str:
         f = FIELD.match(s)
         if not started and f and f.group(1).strip() in DOC_META:
             continue
-        if s:
+        if s and not _head_contact(f, s):
             started = True
         line = re.sub(r"[ \t]+", " ", plain(raw)).rstrip()
         if not line.strip() and (not out or not out[-1].strip()):

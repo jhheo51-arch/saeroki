@@ -998,6 +998,9 @@
   const DOC_PAGES = { resume: [1, 2], portfolio: [3, 5] };
   const DOC_CARDS = { resume: ["숫자 카드", 4], portfolio: ["프로젝트 카드", 3] };
   const DOC_META = ["회사", "직무", "판", "상태"];
+  // 머리에 함께 두는 연락처 줄. 제출본에는 남기되 머리 칸 읽기를 끝내지 않습니다.
+  const HEAD_CONTACT = ["연락처", "이메일", "전화", "포트폴리오", "깃허브", "블로그"];
+  const headContact = (f, s) => !!f && (HEAD_CONTACT.includes(f[1].trim()) || contacts(s).size > 0);
   const WEAK = ["참여했습니다", "공부했습니다", "노력했습니다", "기초", "수료 예정", "활용 가능", "관심"];
   const FREE_SECTIONS = ["자격", "교육", "학력", "도구", "연락"];
   const DESIGN_WORDS = ["가상", "설계", "가정"];
@@ -1064,7 +1067,7 @@
         if (!(f[1].trim() in doc.meta)) doc.meta[f[1].trim()] = f[2].trim();
         continue;
       }
-      started = true;
+      if (!(!h && headContact(f, s))) started = true;
       let kind = "line", body;
       if (h) {
         section = plain(h[2]).trim();
@@ -1103,7 +1106,7 @@
       if (s.startsWith("# ") || s.startsWith(">")) continue;
       const f = FIELD.exec(s);
       if (!started && f && DOC_META.includes(f[1].trim())) continue;
-      if (s) started = true;
+      if (s && !headContact(f, s)) started = true;
       const line = plain(raw).replace(/[ \t]+/g, " ").trimEnd();
       if (!line.trim() && (!out.length || !out[out.length - 1].trim())) continue;
       out.push(line);

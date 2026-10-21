@@ -430,6 +430,14 @@ class DocRuleTest(unittest.TestCase):
         self.assertIn("repeat_line", codes(run_doc(replace(
             RESUME, last, last + "\n- 결과: 예약 2시간 전 알림을 넣은 뒤 주간 좌석 노쇼율이 18%에서 11%로 줄어들었습니다. <!-- E01 -->")), "warn"))
 
+    def test_head_contact(self):
+        # 머리 칸 사이에 둔 연락처 줄은 머리 읽기를 끝내지 않고, 제출본에는 남습니다.
+        text = replace(RESUME, "- 직무: 서비스 기획(신입)\n", "- 직무: 서비스 기획(신입)\n- 연락처: 010-0000-1111, test@example.com\n")
+        self.assertNotIn("doc_meta", codes(run_doc(text)))
+        out = core.doc_submission(text)
+        self.assertIn("010-0000-1111", out)
+        self.assertNotIn("- 판:", out)
+
     def test_portfolio_limits(self):
         self.assertIn("limit_empty", codes(run_doc(replace(PORTFOLIO, "- 실제 이용자에게 시험하지 않은 설계안입니다. <!-- 의견 -->", "")), "error"))
         self.assertIn("limit_empty", codes(run_doc(PORTFOLIO.replace("### 한계", "### 배운 점").replace("### 설계안의 한계", "### 남은 일")), "error"))
@@ -735,7 +743,7 @@ process.stdin.on("data", (c) => d += c).on("end", () => {
                      "- 다음은 `CRM`과 VOC, CS 기준으로 나눈 문의 기록입니다. <!-- 의견 -->\n"
                      "- 다음은 `CRM`과 VOC, CS 기준으로 나눈 문의 기록이었습니다. <!-- 의견 -->\n",
              "name": "portfolio-2026-10-21.md", "others": []},
-            {"text": replace(RESUME, "## 숫자 카드", "- 연락: 010-0000-1111\n\n## 숫자 카드"),
+            {"text": replace(RESUME, "- 직무: 서비스 기획(신입)\n", "- 직무: 서비스 기획(신입)\n- 연락처: 010-0000-1111\n"),
              "others": [{"name": "p", "kind": "portfolio",
                          "text": replace(PORTFOLIO, "## 프로젝트 카드", "- 연락: 010-0000-2222\n\n## 프로젝트 카드")}]},
         ]
