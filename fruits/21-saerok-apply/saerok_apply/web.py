@@ -91,11 +91,21 @@ class Handler(BaseHTTPRequestHandler):
                 return False
         return True
 
+    def _read_raw(self) -> None:
+        # 거절할 요청도 본문을 먼저 읽어 둡니다. 읽지 않은 채 닫으면 Windows에서 연결이 끊겨(RST) 응답이 사라집니다.
+        try:
+            size = int(self.headers.get("Content-Length") or 0)
+        except ValueError:
+            size = -1
+        self._bad_size = size < 0 or size > MAX_BODY
+        if self._bad_size:
+            self.close_connection = True
+        self._raw = b"" if self._bad_size or not size else self.rfile.read(size)
+
     def _body(self) -> dict:
-        size = int(self.headers.get("Content-Length") or 0)
-        if size > MAX_BODY:
-            raise ValueError("요청이 너무 큽니다.")
-        raw = self.rfile.read(size) if size else b"{}"
+        if self._bad_size:
+            raise ValueError("요청이 너무 크거나 본문 길이가 잘못됐습니다.")
+        raw = self._raw or b"{}"
         try:
             data = json.loads(raw.decode("utf-8"))
         except (UnicodeDecodeError, json.JSONDecodeError):
@@ -149,6 +159,7 @@ class Handler(BaseHTTPRequestHandler):
     # ---------- POST ----------
     def do_POST(self):
         path = urlparse(self.path).path
+        self._read_raw()
         if not self._allowed(True):
             return
         try:
