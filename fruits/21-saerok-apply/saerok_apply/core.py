@@ -848,6 +848,68 @@ def _term_checks(issues, where, text, terms):
             break
 
 
+# 쓰기 규칙(사용자 원문): 마크다운이나 대화 복사 흔적, 전문용어 남발, 동어반복을 기계로 잡습니다.
+# 핵심 요점과 논리 판단은 AI 점검이 맡습니다(skills/review/SKILL.md).
+MD_BULLET = re.compile(r"^\s*[-*+]\s")
+MD_HEAD = re.compile(r"(?:^|\s)#{1,6}\s")
+MD_LINK = re.compile(r"\[[^\]]+\]\([^)]*\)")
+CHAT_OPEN = ("물론입니다", "네, ", "다음은 ", "아래는 ", "요청하신 ")
+LATIN_WORD = re.compile(r"[A-Za-z][A-Za-z0-9]+")
+JARGON_MAX = 2
+REPEAT_DICE = 70
+
+
+def md_residue(text: str, doc: bool = False) -> str:
+    """제출 칸에 그대로 보일 마크다운, 대화 복사 흔적. 문서(doc)는 표, 링크, 굵은 글씨를 HTML로 바꾸므로 그것은 빼고 봅니다."""
+    s = plain(text).strip()
+    if "(AI 정리" in s:
+        return "(AI 정리, 확인 전)"
+    if not doc and MD_BULLET.match(s):
+        return "목록 기호"
+    if MD_HEAD.search(s):
+        return "#"
+    for mark in ("`", "*", "__", "~~"):
+        if mark in s:
+            return mark
+    if not doc and MD_LINK.search(s):
+        return "링크 문법"
+    if not doc and "|" in s:
+        return "|"
+    for w in CHAT_OPEN:
+        if s.startswith(w):
+            return w.strip(" ,")
+    return ""
+
+
+def jargon(text: str, posting_body: str) -> list[str]:
+    """공고에 없는 영문 용어(두 글자 이상). 같은 말은 한 번만 셉니다."""
+    low = (posting_body or "").lower()
+    out = []
+    for m in LATIN_WORD.finditer(plain(text)):
+        w = m.group(0)
+        if w.lower() not in low and w.lower() not in [o.lower() for o in out]:
+            out.append(w)
+    return out
+
+
+def _writing_checks(issues, where, text, posting_body, doc=False):
+    mark = md_residue(text, doc)
+    if mark:
+        _issue(issues, "warn", "md_residue", where, text,
+               f"마크다운이나 대화 복사 흔적 '{mark}'이 남았습니다. 제출하면 그대로 보이니 지워 주세요.")
+    words = jargon(text, posting_body)
+    if len(words) > JARGON_MAX:
+        _issue(issues, "warn", "jargon", where, text,
+               f"공고에 없는 영문 용어가 한 곳에 {len(words)}개({', '.join(words)}) 있습니다. 읽는 사람이 아는 말로 풀어 쓰거나 꼭 필요한 하나만 남겨 주세요.")
+
+
+def _near(ka: str, kb: str, dice: int) -> bool:
+    if ka == kb:
+        return True
+    ba, bb = bigrams(ka), bigrams(kb)
+    return 200 * len(ba & bb) >= dice * (len(ba) + len(bb))
+
+
 def check(draft_text: str, ledger_text: str, analysis_text: str = "", posting_text: str = "", style_text: str = "",
           companies: list | None = None, terms: dict | None = None, previous_text: str = "") -> dict:
     """자기소개서 초안 검사. companies는 [{"name", "from": "folder"|"dictionary"}]."""
@@ -889,6 +951,11 @@ def check(draft_text: str, ledger_text: str, analysis_text: str = "", posting_te
         placeholders = 0
         for para in q["paras"]:
             sents += sentences(para)
+            for line in para.split("\n"):
+                mark = md_residue(line)
+                if mark:
+                    _issue(issues, "warn", "md_residue", where, plain(line).strip(),
+                           f"마크다운이나 대화 복사 흔적 '{mark}'이 남았습니다. 제출하면 그대로 보이니 지워 주세요.")
         for s in sents:
             text = s["text"]
             for i in s["ids"]:
@@ -918,6 +985,18 @@ def check(draft_text: str, ledger_text: str, analysis_text: str = "", posting_te
             _company_checks(issues, where, text, current, companies, mine)
             _style_checks(issues, where, text, style)
             _term_checks(issues, where, text, terms)
+            words = jargon(text, posting["body"])
+            if len(words) > JARGON_MAX:
+                _issue(issues, "warn", "jargon", where, text,
+                       f"공고에 없는 영문 용어가 한 곳에 {len(words)}개({', '.join(words)}) 있습니다. 읽는 사람이 아는 말로 풀어 쓰거나 꼭 필요한 하나만 남겨 주세요.")
+        # 같은 문항 안 동어반복(분량 부풀리기)
+        keys = [squash(s["text"]) for s in sents]
+        for b in range(len(sents)):
+            if len(keys[b]) < 15 or NEED in sents[b]["text"]:
+                continue
+            if any(len(keys[a]) >= 15 and _near(keys[a], keys[b], REPEAT_DICE) for a in range(b)):
+                _issue(issues, "warn", "repeat_in_question", where, sents[b]["text"],
+                       "같은 문항 안에서 앞 문장과 거의 같은 말을 되풀이합니다. 분량을 채우는 문장이면 지우고 새 사실이나 판단 이유로 바꿔 주세요.")
         # 경험 문단 원칙(4.1절 10번): STAR 칸 표시가 있는 문항, 또는 경험형 문항
         labeled = [s for s in sents if s["labels"]]
         if q["type"] == "경험형" and not labeled and sents:
@@ -965,6 +1044,7 @@ def check(draft_text: str, ledger_text: str, analysis_text: str = "", posting_te
             _fact_checks(issues, where, s, exps, posting["body"], analysis["research_text"])
         _company_checks(issues, where, sf["content"], current, companies, mine)
         _style_checks(issues, where, sf["content"], style, sentence=False)
+        _writing_checks(issues, where, sf["content"], posting["body"])
         short_rows.append({"name": sf["name"], "limit": sf["limit"], "count": counted, "ratio": f["ratio"],
                            "fit": f["fit"], "ids": sf["ids"]})
     # 문항 사이 중복
@@ -1310,6 +1390,17 @@ def check_doc(text: str, ledger_text: str, analysis_text: str = "", posting_text
         _company_checks(issues, where, t, current, companies, mine)
         _style_checks(issues, where, t, style, sentence=False)
         _term_checks(issues, where, t, terms)
+        if not free:
+            _writing_checks(issues, where, t, asked, doc=True)
+    # 동어반복(분량 부풀리기): 제목을 뺀 줄끼리
+    body_lines = [(ln, squash(ln["text"])) for ln in doc["lines"] if ln["kind"] != "heading" and NEED not in ln["text"]]
+    for b in range(len(body_lines)):
+        ln, kb = body_lines[b]
+        if len(kb) < 20:
+            continue
+        if any(len(ka) >= 20 and _near(ka, kb, REPEAT_DICE) for _, ka in body_lines[:b]):
+            _issue(issues, "warn", "repeat_line", f"{ln['page']}쪽 {ln['section'] or '머리'}", ln["text"],
+                   "앞 줄과 거의 같은 말을 되풀이합니다. 분량을 채우는 줄이면 지우고 새 사실로 바꿔 주세요.")
     for img in doc["images"]:
         where = f"{img['page']}쪽"
         if not any(w in asked for w in PHOTO) and any(w in (img["alt"] + " " + img["src"]).lower() for w in PHOTO):

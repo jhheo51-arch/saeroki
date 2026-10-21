@@ -756,6 +756,53 @@
     }
   }
 
+  // 쓰기 규칙(사용자 원문): 마크다운이나 대화 복사 흔적, 전문용어 남발, 동어반복을 기계로 잡습니다.
+  // 핵심 요점과 논리 판단은 AI 점검이 맡습니다(skills/review/SKILL.md).
+  const MD_BULLET = /^\s*[-*+]\s/;
+  const MD_HEAD = /(?:^|\s)#{1,6}\s/;
+  const MD_LINK = /\[[^\]]+\]\([^)]*\)/;
+  const CHAT_OPEN = ["물론입니다", "네, ", "다음은 ", "아래는 ", "요청하신 "];
+  const LATIN_WORD = /[A-Za-z][A-Za-z0-9]+/g;
+  const JARGON_MAX = 2;
+  const REPEAT_DICE = 70;
+  const RESIDUE_MSG = (mark) => `마크다운이나 대화 복사 흔적 '${mark}'이 남았습니다. 제출하면 그대로 보이니 지워 주세요.`;
+  const JARGON_MSG = (words) => `공고에 없는 영문 용어가 한 곳에 ${words.length}개(${words.join(", ")}) 있습니다. 읽는 사람이 아는 말로 풀어 쓰거나 꼭 필요한 하나만 남겨 주세요.`;
+
+  function mdResidue(text, doc = false) {
+    const s = plain(text).trim();
+    if (s.includes("(AI 정리")) return "(AI 정리, 확인 전)";
+    if (!doc && MD_BULLET.test(s)) return "목록 기호";
+    if (MD_HEAD.test(s)) return "#";
+    for (const mark of ["`", "*", "__", "~~"]) if (s.includes(mark)) return mark;
+    if (!doc && MD_LINK.test(s)) return "링크 문법";
+    if (!doc && s.includes("|")) return "|";
+    for (const w of CHAT_OPEN) if (s.startsWith(w)) return w.replace(/^[ ,]+|[ ,]+$/g, "");
+    return "";
+  }
+
+  function jargon(text, postingBody) {
+    const low = (postingBody || "").toLowerCase();
+    const out = [];
+    for (const m of plain(text).matchAll(LATIN_WORD)) {
+      const w = m[0];
+      if (!low.includes(w.toLowerCase()) && !out.some((o) => o.toLowerCase() === w.toLowerCase())) out.push(w);
+    }
+    return out;
+  }
+
+  function writingChecks(issues, where, text, postingBody, doc = false) {
+    const mark = mdResidue(text, doc);
+    if (mark) issue(issues, "warn", "md_residue", where, text, RESIDUE_MSG(mark));
+    const words = jargon(text, postingBody);
+    if (words.length > JARGON_MAX) issue(issues, "warn", "jargon", where, text, JARGON_MSG(words));
+  }
+
+  function near(ka, kb, dice) {
+    if (ka === kb) return true;
+    const ba = bigrams(ka), bb = bigrams(kb);
+    return 200 * common(ba, bb) >= dice * (ba.size + bb.size);
+  }
+
   function check(draftText, ledgerText, analysisText = "", postingText = "", styleText = "", companies = null, terms = null, previousText = "") {
     const issues = [];
     const draft = parseDraft(draftText);
@@ -784,7 +831,13 @@
       if (!q.version) issue(issues, "error", "question_meta", where, "", "'- 판: v1 · 바꾼 점 한 줄'이 없습니다.");
       const ids = [], sents = [];
       let placeholders = 0;
-      for (const para of q.paras) sents.push(...sentences(para));
+      for (const para of q.paras) {
+        sents.push(...sentences(para));
+        for (const line of para.split("\n")) {
+          const mark = mdResidue(line);
+          if (mark) issue(issues, "warn", "md_residue", where, plain(line).trim(), RESIDUE_MSG(mark));
+        }
+      }
       for (const s of sents) {
         const text = s.text;
         for (const i of s.ids) if (!ids.includes(i)) ids.push(i);
@@ -807,6 +860,15 @@
         companyChecks(issues, where, text, current, companies, mine);
         styleChecks(issues, where, text, style);
         termChecks(issues, where, text, terms);
+        const words = jargon(text, posting.body);
+        if (words.length > JARGON_MAX) issue(issues, "warn", "jargon", where, text, JARGON_MSG(words));
+      }
+      // 같은 문항 안 동어반복(분량 부풀리기)
+      const keys = sents.map((s) => squash(s.text));
+      for (let b = 0; b < sents.length; b++) {
+        if (len(keys[b]) < 15 || sents[b].text.includes(NEED)) continue;
+        if (keys.slice(0, b).some((ka) => len(ka) >= 15 && near(ka, keys[b], REPEAT_DICE))) issue(issues, "warn", "repeat_in_question", where, sents[b].text,
+          "같은 문항 안에서 앞 문장과 거의 같은 말을 되풀이합니다. 분량을 채우는 문장이면 지우고 새 사실이나 판단 이유로 바꿔 주세요.");
       }
       const labeled = sents.filter((s) => s.labels.length);
       if (q.type === "경험형" && !labeled.length && sents.length) issue(issues, "warn", "para_no_star", where, "", "경험형 문항인데 STAR 칸 표시(<!-- E01 행동 --> 등)가 없습니다.");
@@ -841,6 +903,7 @@
       if (!sf.content.includes(NEED)) factChecks(issues, where, s, exps, posting.body, analysis.research_text);
       companyChecks(issues, where, sf.content, current, companies, mine);
       styleChecks(issues, where, sf.content, style, false);
+      writingChecks(issues, where, sf.content, posting.body);
       shortRows.push({ name: sf.name, limit: sf.limit, count: counted, ratio: f.ratio, fit: f.fit, ids: sf.ids });
     }
     // 문항 사이 중복
@@ -1159,6 +1222,15 @@
       companyChecks(issues, where, t, current, companies, mine);
       styleChecks(issues, where, t, style, false);
       termChecks(issues, where, t, terms);
+      if (!free) writingChecks(issues, where, t, asked, true);
+    }
+    // 동어반복(분량 부풀리기): 제목을 뺀 줄끼리
+    const bodyLines = doc.lines.filter((ln) => ln.kind !== "heading" && !ln.text.includes(NEED)).map((ln) => [ln, squash(ln.text)]);
+    for (let b = 0; b < bodyLines.length; b++) {
+      const [ln, kb] = bodyLines[b];
+      if (len(kb) < 20) continue;
+      if (bodyLines.slice(0, b).some(([, ka]) => len(ka) >= 20 && near(ka, kb, REPEAT_DICE))) issue(issues, "warn", "repeat_line", `${ln.page}쪽 ${ln.section || "머리"}`, ln.text,
+        "앞 줄과 거의 같은 말을 되풀이합니다. 분량을 채우는 줄이면 지우고 새 사실로 바꿔 주세요.");
     }
     for (const img of doc.images) {
       const where = `${img.page}쪽`;

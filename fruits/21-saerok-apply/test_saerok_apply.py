@@ -202,6 +202,22 @@ class DraftRuleTest(unittest.TestCase):
         self.assertIn("dup_number", codes(r, "warn"))
         self.assertIn("dup_sentence", codes(r, "warn"))
 
+    def test_writing_rules(self):
+        # 마크다운, 대화 복사 흔적
+        line = "이유를 직접 확인하려고 회원 30명에게 짧은 설문을 돌렸습니다."
+        for bad in ("**이유를** 직접 확인하려고 회원 30명에게 짧은 설문을 돌렸습니다.",
+                    "- 이유를 직접 확인하려고 회원 30명에게 짧은 설문을 돌렸습니다.",
+                    "다음은 이유를 직접 확인하려고 회원 30명에게 짧은 설문을 돌린 일입니다.",
+                    "이유를 직접 확인하려고 회원 30명에게 짧은 설문을 돌렸습니다. (AI 정리, 확인 전)"):
+            self.hit("md_residue", "warn", draft=replace(DRAFT, line, bad))
+        # 공고에 없는 영문 용어 몰림
+        self.hit("jargon", "warn", draft=replace(DRAFT, "짧은 설문을 돌렸습니다.", "짧은 survey를 NPS와 CSAT 기준으로 돌렸습니다."))
+        self.assertNotIn("jargon", codes(run_check(draft=replace(DRAFT, "짧은 설문을 돌렸습니다.", "짧은 NPS 설문을 돌렸습니다."))))
+        # 같은 문항 안 동어반복
+        first = "예약 기록을 시간대별로 나눠 동아리 스터디룸의 주간 좌석 노쇼율을 18%에서 11%로 낮췄습니다. <!-- E01 결과 -->"
+        self.hit("repeat_in_question", "warn", draft=replace(
+            DRAFT, first, first + "\n예약 기록을 시간대별로 나눠 스터디룸 주간 좌석 노쇼율을 18%에서 11%로 낮추었습니다. <!-- E01 결과 -->"))
+
     def test_coverage(self):
         self.hit("no_analysis", "warn", analysis="")
         self.hit("coverage_unknown", "warn", draft=replace(DRAFT, "- 연결: 고객 이해", "- 연결: 고객 이해, 없는 역량"))
@@ -395,6 +411,20 @@ class DocRuleTest(unittest.TestCase):
         self.assertIn("card_count", codes(run_doc(replace(RESUME, "| 주간 좌석 노쇼율 | 18% → 11% | 3개월 <!-- E01 --> |\n", "")), "warn"))
         self.assertIn("count_claim", codes(run_doc(replace(PORTFOLIO, "프로젝트 3개를", "프로젝트 4개를")), "error"))
         self.assertIn("weak_word", codes(run_doc(replace(RESUME, "- 스프레드시트, 설문 도구", "- 스프레드시트 활용 가능")), "warn"))
+
+    def test_writing_rules(self):
+        base = codes(run_doc())
+        for code in ("md_residue", "jargon", "repeat_line"):
+            self.assertNotIn(code, base)
+        line = "문의 기록을 유형별로 나눴습니다."
+        self.assertIn("md_residue", codes(run_doc(replace(RESUME, line, "문의 기록을 `유형별`로 나눴습니다.")), "warn"))
+        self.assertIn("md_residue", codes(run_doc(replace(RESUME, line, "문의 기록을 *유형별*로 나눴습니다.")), "warn"))
+        self.assertIn("jargon", codes(run_doc(replace(RESUME, line, "문의 기록을 CRM과 VOC, CS 기준으로 나눴습니다.")), "warn"))
+        # 도구 칸의 영문 이름은 풀어 쓰라고 하지 않습니다.
+        self.assertNotIn("jargon", codes(run_doc(replace(RESUME, "- 스프레드시트, 설문 도구", "- Notion, Figma, Jira, Slack"))))
+        last = "- 결과: 예약 2시간 전 알림을 넣은 뒤 주간 좌석 노쇼율이 18%에서 11%로 줄었습니다. <!-- E01 -->"
+        self.assertIn("repeat_line", codes(run_doc(replace(
+            RESUME, last, last + "\n- 결과: 예약 2시간 전 알림을 넣은 뒤 주간 좌석 노쇼율이 18%에서 11%로 줄어들었습니다. <!-- E01 -->")), "warn"))
 
     def test_portfolio_limits(self):
         self.assertIn("limit_empty", codes(run_doc(replace(PORTFOLIO, "- 실제 이용자에게 시험하지 않은 설계안입니다. <!-- 의견 -->", "")), "error"))
@@ -643,7 +673,9 @@ process.stdin.on("data", (c) => d += c).on("end", () => {
             {"draft": replace(DRAFT, "가상커머스에 지원한 이유", "가상물류를 고른 이유")},
             {"draft": replace(DRAFT, "대기 예약 기능도 설계해 두었지만 아직 도입 전입니다. <!-- 의견 -->",
                               "노쇼가 잦은 시간대에 대기 예약을 받는 기능을 만들었습니다. <!-- E01 행동 -->\n"
-                              "전환율(클릭률)도 열정으로 봤다. <!-- 메모 -->\n[사용자 확인 필요: 협업]")},
+                              "전환율(클릭률)도 열정으로 봤다. <!-- 메모 -->\n[사용자 확인 필요: 협업]\n"
+                              "- **NPS**와 CSAT, CRM 기준으로 다시 봤습니다. <!-- 의견 -->\n"
+                              "예약 기록을 시간대별로 나눠 스터디룸의 주간 좌석 노쇼율을 18%에서 11%로 낮추었습니다. <!-- E01 결과 -->")},
             {"draft": replace(DRAFT, "| 가상리빙 <!-- E02 --> |", "| 가상리빙 010-1234-5678 |"),
              "ledger": replace(LEDGER, "- 결과: 알림 규칙을", "- 결과: (AI 정리, 확인 전) 알림 규칙을")},
             {"draft": MINI.format(body="동아리는 노쇼율을 18%에서 11%로 낮췄습니다. <!-- E01 결과 -->"), "analysis": "", "style": ""},
@@ -695,7 +727,9 @@ process.stdin.on("data", (c) => d += c).on("end", () => {
                              "| 대기 예약 뒤 노쇼율 | 9% | 예상 <!-- E01 --> |").replace("- 판: v1 · 첫 판\n", ""),
              "ledger": design, "analysis": "", "style": ""},
             {"text": replace(PORTFOLIO, "프로젝트 3개를", "프로젝트 4개를 **가상물류** [링크](https://example.com)에서")
-                     .replace("### 설계안의 한계", "### 남은 일") + "\n- 스프레드시트 활용 가능\n- [사용자 확인 필요: 수상]\n",
+                     .replace("### 설계안의 한계", "### 남은 일") + "\n- 스프레드시트 활용 가능\n- [사용자 확인 필요: 수상]\n"
+                     "- 다음은 `CRM`과 VOC, CS 기준으로 나눈 문의 기록입니다. <!-- 의견 -->\n"
+                     "- 다음은 `CRM`과 VOC, CS 기준으로 나눈 문의 기록이었습니다. <!-- 의견 -->\n",
              "name": "portfolio-2026-10-21.md", "others": []},
             {"text": replace(RESUME, "## 숫자 카드", "- 연락: 010-0000-1111\n\n## 숫자 카드"),
              "others": [{"name": "p", "kind": "portfolio",
