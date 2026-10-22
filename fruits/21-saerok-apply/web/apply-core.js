@@ -10,6 +10,8 @@
   const ACTION_TAGS = ["한 일", "설계안(도입 가정)", "계획"];
   const REQUIRED = ["기간", "소속·직함", "내 역할", "판단 이유", "행동", "결과", "역량"];
   const METRIC_REQUIRED = ["지표", "시점", "비교", "출처"];
+  const FLOW = ["목표와 가설", "대안", "결과 검토"];
+  const NOT_EVIDENCE = ["목표와 가설"];
   const METRIC_VALUES = ["전", "후", "값"];
   const UNCONFIRMED = "(AI 정리, 확인 전)";
   const IMAGE_MARK = "(이미지에서 옮김, 확인 전)";
@@ -329,11 +331,19 @@
           issue(issues, "error", "ledger_field", where, "", `'${key}' 칸이 비었습니다.`);
         }
       }
+      const flow = FLOW.filter((k) => !get(exp.fields, k));
+      if (!exp.actions.some((a) => a.tag === "계획")) flow.push("다음 추진([계획] 행동)");
+      if (flow.length && exp.title !== "경험 이름") issue(issues, "warn", "ledger_flow", where, "",
+        `흐름 칸이 없습니다: ${flow.join(", ")}. 문제 정의부터 다음 추진까지 이으려면 채워 주세요.`);
+      const goal = squash(get(exp.fields, "목표와 가설"));
+      const names = exp.metrics.filter((mt) => get(mt, "지표")).map((mt) => squash(get(mt, "지표")));
+      if (goal && names.length && !names.some((n) => goal.includes(n))) issue(issues, "warn", "ledger_flow_metric", where, "",
+        "목표와 가설에 수치의 지표 이름이 없습니다. 가설에서 정한 지표를 결과에서 그대로 재야 합니다.");
       exp.competencies = plain(get(exp.fields, "역량")).split(/[,，]/).map((c) => c.trim()).filter((c) => c && c !== UNCONFIRMED);
       const confirmed = [exp.title], everything = [exp.title];
-      for (const value of Object.values(exp.fields)) {
+      for (const [key, value] of Object.entries(exp.fields)) {
         everything.push(value);
-        if (!value.includes(UNCONFIRMED)) confirmed.push(value);
+        if (!value.includes(UNCONFIRMED) && !NOT_EVIDENCE.includes(key)) confirmed.push(value);
       }
       for (const a of exp.actions) { everything.push(a.text); if (a.confirmed) confirmed.push(a.text); }
       for (const mt of exp.metrics) { everything.push(mt.raw); if (mt.confirmed) confirmed.push(mt.raw); }
@@ -1296,6 +1306,10 @@
       const limits = doc.sections.filter((s) => s.title.includes("한계"));
       if (!limits.length) issue(issues, "error", "limit_empty", "전체", "", "프로젝트마다 '한계' 칸을 두고 비워 두지 않습니다.");
       for (const s of limits) if (!s.lines) issue(issues, "error", "limit_empty", `${s.page}쪽 ${s.title}`, "", "'한계' 칸이 비었습니다.");
+      for (const [name, words] of [["목표와 가설", ["가설", "목표"]], ["다음 추진", ["다음"]]]) {
+        if (!doc.sections.some((s) => words.some((w) => s.title.includes(w)))) issue(issues, "warn", "flow_missing", "전체", "",
+          `'${name}' 칸이 없습니다. 프로젝트를 문제 정의부터 다음 추진까지 이어 주세요.`);
+      }
     }
     // 문서 사이 불일치
     const myContacts = contacts(text), myFacts = idFacts(text);

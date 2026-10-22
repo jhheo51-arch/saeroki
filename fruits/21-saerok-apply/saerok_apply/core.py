@@ -12,6 +12,10 @@ SOURCES = ["공고", "조사", "의견"]
 ACTION_TAGS = ["한 일", "설계안(도입 가정)", "계획"]
 REQUIRED = ["기간", "소속·직함", "내 역할", "판단 이유", "행동", "결과", "역량"]
 METRIC_REQUIRED = ["지표", "시점", "비교", "출처"]
+# 문제 정의부터 다음 추진까지 잇는 선택 칸. 빠지면 경고만 냅니다. 다음 추진은 [계획] 행동으로 적습니다.
+FLOW = ["목표와 가설", "대안", "결과 검토"]
+# 가설은 확인한 사실이 아니라서 초안 문장의 근거로 쓰지 않습니다.
+NOT_EVIDENCE = ["목표와 가설"]
 METRIC_VALUES = ["전", "후", "값"]
 UNCONFIRMED = "(AI 정리, 확인 전)"
 IMAGE_MARK = "(이미지에서 옮김, 확인 전)"
@@ -373,12 +377,23 @@ def parse_ledger(text: str) -> dict:
             elif not exp["fields"].get(key):
                 issues.append({"level": "error", "code": "ledger_field", "where": where, "text": "",
                                "message": f"'{key}' 칸이 비었습니다."})
+        flow = [k for k in FLOW if not exp["fields"].get(k)]
+        if not any(a["tag"] == "계획" for a in exp["actions"]):
+            flow.append("다음 추진([계획] 행동)")
+        if flow and exp["title"] != TEMPLATE_TITLE:
+            issues.append({"level": "warn", "code": "ledger_flow", "where": where, "text": "",
+                           "message": f"흐름 칸이 없습니다: {', '.join(flow)}. 문제 정의부터 다음 추진까지 이으려면 채워 주세요."})
+        goal = squash(exp["fields"].get("목표와 가설", ""))
+        names = [squash(mt.get("지표", "")) for mt in exp["metrics"] if mt.get("지표")]
+        if goal and names and not any(n in goal for n in names):
+            issues.append({"level": "warn", "code": "ledger_flow_metric", "where": where, "text": "",
+                           "message": "목표와 가설에 수치의 지표 이름이 없습니다. 가설에서 정한 지표를 결과에서 그대로 재야 합니다."})
         exp["competencies"] = [c.strip() for c in re.split(r"[,，]", plain(exp["fields"].get("역량", "")))
                                if c.strip() and c.strip() != UNCONFIRMED]
         confirmed, everything = [exp["title"]], [exp["title"]]
         for key, value in exp["fields"].items():
             everything.append(value)
-            if UNCONFIRMED not in value:
+            if UNCONFIRMED not in value and key not in NOT_EVIDENCE:
                 confirmed.append(value)
         for a in exp["actions"]:
             everything.append(a["text"])
@@ -1477,6 +1492,10 @@ def check_doc(text: str, ledger_text: str, analysis_text: str = "", posting_text
         for s in limits:
             if not s["lines"]:
                 _issue(issues, "error", "limit_empty", f"{s['page']}쪽 {s['title']}", "", "'한계' 칸이 비었습니다.")
+        for name, words in (("목표와 가설", ("가설", "목표")), ("다음 추진", ("다음",))):
+            if not any(w in s["title"] for s in doc["sections"] for w in words):
+                _issue(issues, "warn", "flow_missing", "전체", "",
+                       f"'{name}' 칸이 없습니다. 프로젝트를 문제 정의부터 다음 추진까지 이어 주세요.")
     # 문서 사이 불일치
     my_contacts, my_facts = _contacts(text), _id_facts(text)
     _, my_styles = _ym(all_text)

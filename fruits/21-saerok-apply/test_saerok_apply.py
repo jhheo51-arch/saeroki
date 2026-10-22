@@ -275,7 +275,22 @@ class LedgerRuleTest(unittest.TestCase):
         ledger = replace(LEDGER, "- 결과: 알림 규칙을", "- 결과: (AI 정리, 확인 전) 알림 규칙을")
         rows = core.ledger_report(ledger)["experiences"]
         self.assertEqual(rows[0]["unconfirmed"], ["결과"])
-        self.assertEqual(rows[0]["actions"], {"한 일": 3, "설계안(도입 가정)": 1, "계획": 0})
+        self.assertEqual(rows[0]["actions"], {"한 일": 3, "설계안(도입 가정)": 1, "계획": 1})
+
+    def test_flow_fields_warn(self):
+        self.assertEqual(core.ledger_report(LEDGER)["issues"], [])
+        report = core.ledger_report(replace(LEDGER, "- 대안: 노쇼 벌금도", "- 메모: 노쇼 벌금도"))
+        self.assertEqual([(i["level"], i["code"], i["where"]) for i in report["issues"]], [("warn", "ledger_flow", "E01")])
+        self.assertEqual(report["summary"]["errors"], 0)  # 흐름 칸은 선택이라 오류가 아닙니다.
+        plan = "  - [계획] 대기 예약 설계안을 다음 학기 운영진과 시험해 볼 계획입니다.\n"
+        self.assertIn("다음 추진([계획] 행동)", core.ledger_report(replace(LEDGER, plan, ""))["issues"][0]["message"])
+        moved = replace(LEDGER, "주간 좌석 노쇼율을 규칙 전", "빈 좌석을 규칙 전")
+        self.assertEqual([i["code"] for i in core.ledger_report(moved)["issues"]], ["ledger_flow_metric"])
+
+    def test_hypothesis_is_not_evidence(self):
+        e01 = core.parse_ledger(LEDGER)["experiences"][0]
+        self.assertNotIn("낮출 수 있다고 봤습니다", e01["evidence"])
+        self.assertIn("낮출 수 있다고 봤습니다", e01["all_text"])
 
 
 class PostingTest(unittest.TestCase):
@@ -441,6 +456,13 @@ class DocRuleTest(unittest.TestCase):
     def test_portfolio_limits(self):
         self.assertIn("limit_empty", codes(run_doc(replace(PORTFOLIO, "- 실제 이용자에게 시험하지 않은 설계안입니다. <!-- 의견 -->", "")), "error"))
         self.assertIn("limit_empty", codes(run_doc(PORTFOLIO.replace("### 한계", "### 배운 점").replace("### 설계안의 한계", "### 남은 일")), "error"))
+
+    def test_portfolio_flow(self):
+        no_goal = PORTFOLIO.replace("### 목표와 가설", "### 생각")
+        self.assertIn("flow_missing", codes(run_doc(no_goal), "warn"))
+        no_next = PORTFOLIO.replace("### 다음 추진", "### 이어서").replace("### 다음 설계안: 대기 예약 기능", "### 설계안: 대기 예약 기능")
+        self.assertIn("flow_missing", codes(run_doc(no_next), "warn"))
+        self.assertNotIn("flow_missing", codes(run_doc(RESUME)))  # 이력서는 보지 않습니다.
 
     def test_documents_agree(self):
         other = lambda text: [{"name": "포트폴리오", "kind": "portfolio", "text": text}]
@@ -667,7 +689,7 @@ class WebCoreTest(unittest.TestCase):
 
     SCRIPT = r'''
 const A = require(process.argv[1]); let d = "";
-process.stdin.on("data", (c) => d += c).on("end", () => {
+process.stdin.setEncoding("utf8").on("data", (c) => d += c).on("end", () => {
   const cases = JSON.parse(d);
   console.log(JSON.stringify(cases.map((a) => ({
     check: A.check(a.draft, a.ledger, a.analysis, a.posting, a.style, a.companies, a.terms, a.previous),
@@ -692,6 +714,7 @@ process.stdin.on("data", (c) => d += c).on("end", () => {
              "ledger": replace(LEDGER, "- 결과: 알림 규칙을", "- 결과: (AI 정리, 확인 전) 알림 규칙을")},
             {"draft": MINI.format(body="동아리는 노쇼율을 18%에서 11%로 낮췄습니다. <!-- E01 결과 -->"), "analysis": "", "style": ""},
             {"posting": replace(POSTING, "- 상태: 확인함", f"- 상태: {core.IMAGE_MARK}"), "ledger": ""},
+            {"ledger": replace(LEDGER, "주간 좌석 노쇼율을 규칙 전", "빈 좌석을 규칙 전").replace("- 대안: 상담원을", "- 메모: 상담원을")},
             {"draft": replace(DRAFT, "500자(공백 포함)", "1200바이트"), "analysis": replace(ANALYSIS, "- 조사 안 됨",
                                                                                          "- 회원 3만 명 규모입니다.")},
         ]
@@ -718,7 +741,7 @@ process.stdin.on("data", (c) => d += c).on("end", () => {
 
     DOC_SCRIPT = r'''
 const A = require(process.argv[1]); let d = "";
-process.stdin.on("data", (c) => d += c).on("end", () => {
+process.stdin.setEncoding("utf8").on("data", (c) => d += c).on("end", () => {
   console.log(JSON.stringify(JSON.parse(d).map((a) => ({
     check: A.checkDoc(a.text, a.ledger, a.analysis, a.posting, a.style, a.companies, a.terms, a.others, a.name),
     doc: A.parseDoc(a.text, a.name), submission: A.docSubmission(a.text), html: A.toHtml(A.docSubmission(a.text), a.name) }))));
@@ -731,6 +754,7 @@ process.stdin.on("data", (c) => d += c).on("end", () => {
         variants = [
             {},
             {"text": PORTFOLIO, "name": "portfolio-2026-10-20.md", "others": [{"name": "r", "kind": "resume", "text": RESUME}]},
+            {"text": PORTFOLIO.replace("### 목표와 가설", "### 생각"), "name": "portfolio-2026-10-20.md", "others": []},
             {"text": replace(RESUME, "41%에서 33%로 낮췄", "45%에서 33%로 낮췄") + "\n---\n\n## 더\n\n- 생년월일 2001-01-01\n"
                      "- 서울시 강남구 테헤란로\n\n![증명사진](photo.jpg)\n\n![](a.png)\n",
              "others": [{"name": "p", "kind": "portfolio",
@@ -762,8 +786,8 @@ process.stdin.on("data", (c) => d += c).on("end", () => {
                 self.assertEqual(got[key], want[key], f"문서 사례 {n}의 {key}가 다릅니다.")
         errors = [core.check_doc(a["text"], a["ledger"], a["analysis"], a["posting"], a["style"], a["companies"], a["terms"],
                                  a["others"], a["name"])["summary"]["errors"] for a in cases]
-        self.assertEqual(errors[:2], [0, 0])
-        self.assertTrue(all(e > 0 for e in errors[2:]), errors)
+        self.assertEqual(errors[:3], [0, 0, 0])
+        self.assertTrue(all(e > 0 for e in errors[3:]), errors)
 
     def test_variants_are_not_trivial(self):
         results = [self.python(a)["check"]["summary"]["errors"] for a in self.cases()]

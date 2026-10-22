@@ -20,6 +20,8 @@ class Section:
 
 
 # 제목에 이 말이 들어 있으면 그 기준의 절로 봅니다. '사용자와 목표'처럼 한 제목이 여러 기준에 들 수 있습니다.
+# 문제 정의 → 목표와 가설 → 해결안 선택 → 개발 → QA → 출시와 측정 → 결과 검토 → 다음 추진 흐름에서
+# 개발과 QA는 '해결책'과 '완료 기준'이, 출시부터 다음 추진까지는 '측정과 회고'가 맡습니다.
 CRITERIA = [
     ("problem", "해결할 문제", ("문제", "배경", "pain", "problem")),
     ("evidence", "문제의 근거", ("근거", "증거", "조사", "인터뷰", "리서치", "evidence", "research")),
@@ -31,11 +33,15 @@ CRITERIA = [
                         "user", "persona", "reader")),
     ("solution", "해결책(기능)", ("기능", "해결책", "요구사항", "요구 사항", "설계", "솔루션", "화면", "흐름", "확정", "명령", "구성", "동작",
                           "solution", "feature", "requirement", "flow")),
+    ("choice", "해결안 선택", ("대안", "선택", "비교", "검토한 방법", "고른 이유", "판단 이유", "우선순위",
+                         "alternative", "option", "trade-off")),
+    ("review", "측정과 회고", ("측정", "실험", "출시", "회고", "결과 검토", "검증 계획", "다음 추진", "다음 단계",
+                          "launch", "rollout", "retro")),
 ]
 LABELS = {key: label for key, label, _ in CRITERIA}
 # 낱말은 맞지만 다른 뜻인 제목: '사용자 흐름'은 사용자가 아니라 기능, '위험 신호'는 위험이 아니라 기능입니다.
 NOT_KEYS = {"users": ("사용자 흐름", "사용자 지정", "사용자 확인", "사용자 설정", "사용자 반응"),
-            "risk": ("위험 신호",)}
+            "risk": ("위험 신호",), "choice": ("선택 사항", "선택 항목")}
 LONG_LINES = 500  # 표본 27개 중 이보다 긴 PRD 2개는 모두 구현 기록이 섞여 있었습니다.
 
 INLINE_CODE = re.compile(r"`[^`]*`")
@@ -46,6 +52,11 @@ SOURCE = re.compile(r"https?://|출처|기준|공식|발표|따르면|소개|조
                     r"|\d{4}[-.]\d{1,2}|\d{4}년")
 # 성공 지표는 '얼마나'가 있어야 잴 수 있습니다. 날짜·버전 번호만 있는 것은 세지 않습니다.
 TARGET = re.compile(r"\d[\d,.]*\s*(%|배|명|건|개|회|번|만|억|원|시간|분|초|일|주|개월|점|위|ms)(?![성째차])|\d+\s*/\s*\d+")
+# '50% 감소'처럼 바뀌는 정도를 목표로 삼으면 지금 값(기준선)이 있어야 잴 수 있습니다.
+CHANGE = re.compile(r"줄|늘|감소|증가|높이|낮추|올리|내리|단축|%p")
+BASELINE = re.compile(r"현재|지금|기준선|기준값|처음|이전|(도입|출시|시작|고치기) 전|baseline|→|에서\s*\d", re.IGNORECASE)
+# 측정과 회고는 언제 볼지(기간·날짜)가 있어야 합니다.
+WHEN = re.compile(r"\d+\s*(일|주|개월|달|분기)|\d{4}[-.]\d{1,2}|\d{4}년")
 PLAN = re.compile(r"목표로 한다|목표로 합니다|예정|계획|할 것이다|하겠습니다")  # 앞으로 할 조사는 근거가 아님
 STRUCK = re.compile(r"~~.+~~|→\s*확정|\[x\]", re.IGNORECASE)  # 이미 풀린 질문
 SKIP = re.compile(r"<!--\s*saerok-prd:\s*해당\s*없음\s+(\S+)\s*(.*?)\s*-->")
@@ -168,13 +179,17 @@ def check(text: str, config: dict | None = None) -> dict:
             else "무엇을 보고 성공이라 할지 적은 절이 없습니다.", done)
     elif not TARGET.search(re.sub(r"\d{4}[-.]\d{1,2}([-.]\d{1,2})?|v\d[\d.]*", "", metric.text())):
         add("metric", "weak", "얼마나 바뀌면 성공인지 단위 있는 숫자(%, 명, 회, 4주 등)가 없습니다.", metric)
+    elif CHANGE.search(metric.text()) and not BASELINE.search(metric.text()):
+        add("metric", "weak", "바뀌는 정도를 목표로 삼았는데 지금 값(기준선)이 없어 얼마나 바뀌었는지 잴 수 없습니다.", metric)
     else:
         add("metric", "ok", f"'{metric.title}'", metric)
 
     for key, missing_note in (("users", "누구를 위한 것인지 적은 절이 없습니다."),
                               ("scope_out", "이번에 하지 않을 것을 적은 절이 없습니다."),
                               ("risk", "틀릴 수 있는 가정이나 위험을 적은 절이 없습니다."),
-                              ("solution", "무엇을 만들지 적은 절이 없습니다.")):
+                              ("solution", "무엇을 만들지 적은 절이 없습니다."),
+                              ("choice", "검토한 대안과 이 방법을 고른 이유를 적은 절이 없습니다."),
+                              ("review", "출시 뒤 무엇을 언제 재고, 결과를 보고 다음에 무엇을 할지 적은 절이 없습니다.")):
         sec = found[key]
         body = [t for _, t in sec.body] if sec else []
         rows = [t for t in body if not set(t.strip()) <= set("|-: ")]  # 표 구분선은 내용이 아님
@@ -185,6 +200,8 @@ def check(text: str, config: dict | None = None) -> dict:
             add(key, "weak", f"'{sec.title}' 제목만 있고 내용이 없습니다.", sec)
         elif key == "risk" and not open_rows:
             add(key, "weak", f"'{sec.title}'의 질문이 모두 풀렸습니다. 아직 남은 가정이나 위험을 적어 주세요.", sec)
+        elif key == "review" and not WHEN.search("\n".join(rows)):
+            add(key, "weak", f"'{sec.title}'에 언제 잴지(기간이나 회고 날짜)가 없습니다.", sec)
         else:
             add(key, "ok", f"'{sec.title}'", sec)
 
@@ -198,6 +215,10 @@ def check(text: str, config: dict | None = None) -> dict:
         findings.append({"line": found["solution"].line, "kind": "order",
                          "text": "해결책이 문제보다 먼저 나옵니다. 문제와 근거를 앞에 두세요.",
                          "quote": found["solution"].title})
+    if found["solution"] and found["review"] and found["review"].line < found["solution"].line:
+        findings.append({"line": found["review"].line, "kind": "order",
+                         "text": "측정과 회고가 해결책보다 먼저 나옵니다. 만들 것 뒤에 어떻게 잴지를 두세요.",
+                         "quote": found["review"].title})
 
     # '배경'과 '문제'처럼 문제 절이 여럿이면 모두 봅니다. 근거 절은 '남길 증거'처럼 다른 뜻이 많아 첫 절만 봅니다.
     evidence_lines = {no for s in every["problem"] + [evidence] if s for no, _ in s.body}
@@ -229,7 +250,7 @@ def check(text: str, config: dict | None = None) -> dict:
     if size > LONG_LINES:
         warnings.append({"kind": "long", "text": f"{size}줄로 깁니다. 구현 기록이나 회의록이 섞였다면 따로 빼고 결정만 남기세요."})
     missing = sum(c["status"] == "missing" for c in criteria)
-    if missing >= 5:
+    if missing >= len(CRITERIA) - 2:  # 있는 기준이 2개 이하
         warnings.append({"kind": "not_prd", "text": f"기준 {missing}개가 빠졌습니다. PRD가 아니거나 `##` 제목으로 절을 나누지 않은 문서일 수 있습니다."})
 
     ok = sum(c["status"] == "ok" for c in criteria)

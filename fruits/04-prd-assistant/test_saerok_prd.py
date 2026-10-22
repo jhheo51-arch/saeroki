@@ -25,7 +25,7 @@ class CriteriaTest(unittest.TestCase):
         self.assertEqual(status(r, "problem"), "ok")
         self.assertEqual(status(r, "metric"), "weak")  # '목표' 절에 숫자가 없음
         self.assertEqual(status(r, "users"), "missing")
-        self.assertEqual(r["summary"], {"ok": 3, "total": 7, "findings": 5})
+        self.assertEqual(r["summary"], {"ok": 3, "total": 9, "findings": 5})
 
     def test_line_findings(self):
         kinds = [(f["line"], f["kind"]) for f in check.check(WEAK)["findings"]]
@@ -48,9 +48,25 @@ class CriteriaTest(unittest.TestCase):
 결제
 ## 가정과 위험
 알림을 끌 수 있음
+## 해결안 선택
+메일 안내와 알림 중 알림을 고른 이유: 바로 열어 봅니다.
+## 측정과 회고
+출시 4주 뒤 재방문을 재고, 2주 뒤 회고에서 다음 추진을 정합니다.
 """
         r = check.check(text)
-        self.assertEqual(r["summary"], {"ok": 7, "total": 7, "findings": 0})
+        self.assertEqual(r["summary"], {"ok": 9, "total": 9, "findings": 0})
+
+    def test_change_metric_needs_baseline(self):
+        self.assertEqual(status(check.check("# 제목\n## 성공 지표\n4주 뒤 대기 시간 30% 단축\n"), "metric"), "weak")
+        self.assertEqual(status(check.check("# 제목\n## 성공 지표\n4주 뒤 대기 시간을 지금보다 30% 단축\n"), "metric"), "ok")
+
+    def test_review_needs_when_and_follows_solution(self):
+        self.assertEqual(status(check.check("# 제목\n## 측정과 회고\n재방문을 잰다\n"), "review"), "weak")
+        r = check.check("# 제목\n## 측정과 회고\n4주 뒤 회고\n## 해결책\n알림\n")
+        self.assertIn("측정과 회고가 해결책보다 먼저 나옵니다. 만들 것 뒤에 어떻게 잴지를 두세요.", [f["text"] for f in r["findings"]])
+
+    def test_optional_items_are_not_choice(self):
+        self.assertEqual(status(check.check("# 제목\n## 선택 사항\n다크 모드\n"), "choice"), "missing")
 
     def test_done_list_is_not_a_metric(self):
         r = check.check("# 제목\n## 문제\n문제\n## 완료 기준\n- 화면 3개\n")
@@ -161,7 +177,7 @@ class DesignTest(unittest.TestCase):
 
     def test_design_draft_passes(self):
         r = check.check(DRAFT)
-        self.assertEqual((r["summary"]["ok"], r["summary"]["total"], r["findings"], r["warnings"]), (7, 7, [], []))
+        self.assertEqual((r["summary"]["ok"], r["summary"]["total"], r["findings"], r["warnings"]), (9, 9, [], []))
 
     def test_skill_files(self):
         for name in ("design", "review"):
@@ -180,7 +196,7 @@ class TopicTest(unittest.TestCase):
         r = check.check("# 제목\n<!-- saerok-prd: 해당 없음 users 혼자 쓰는 도구라 사용자는 나 하나 -->\n## 문제\n지연\n")
         users = next(c for c in r["criteria"] if c["key"] == "users")
         self.assertEqual((users["status"], users["note"]), ("skip", "해당 없음: 혼자 쓰는 도구라 사용자는 나 하나"))
-        self.assertEqual(r["summary"]["total"], 6)  # 해당 없음은 분모에서 뺌
+        self.assertEqual(r["summary"]["total"], 8)  # 해당 없음은 분모에서 뺌
         r = check.check("# 제목\n<!-- saerok-prd: 해당 없음 users -->\n")
         self.assertEqual(status(r, "users"), "missing")  # 이유가 없으면 받지 않음
 
@@ -197,13 +213,13 @@ class TopicTest(unittest.TestCase):
         r = compare.compare("# 제목\n## 문제\n지연\n", "# 제목\n<!-- saerok-prd: 해당 없음 risk 하루짜리 실험 -->\n## 문제\n지연\n")
         risk = next(c for c in r["criteria"] if c["key"] == "risk")
         self.assertEqual((risk["before"], risk["after"], risk["change"]), ("missing", "skip", "skip"))
-        self.assertEqual((r["summary"]["total_before"], r["summary"]["total_after"]), (7, 6))
+        self.assertEqual((r["summary"]["total_before"], r["summary"]["total_after"]), (9, 8))
 
 
 class CompareTest(unittest.TestCase):
     def test_revised_example(self):
         r = compare.compare(WEAK, REVISED)
-        self.assertEqual(r["summary"], {"ok_before": 3, "ok_after": 6, "total_before": 7, "total_after": 7, "findings_before": 5,
+        self.assertEqual(r["summary"], {"ok_before": 3, "ok_after": 6, "total_before": 9, "total_after": 9, "findings_before": 5,
                                         "findings_after": 2, "fixed": 3, "added": 0, "fix_rate": 60})
         self.assertEqual([f["kind"] for f in r["fixed"]], ["order", "unsourced", "vague"])
         changed = {c["key"]: c["change"] for c in r["criteria"] if c["change"] != "same"}
@@ -281,7 +297,7 @@ class CliTest(unittest.TestCase):
 
     def test_text_render(self):
         text = check.render(check.check(WEAK))
-        self.assertIn("기준 7개 중 3개 충족", text)
+        self.assertIn("기준 9개 중 3개 충족", text)
         self.assertIn("11줄 [출처]", text)
 
 

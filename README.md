@@ -30,7 +30,7 @@ Claude Code 대화창에서 새록이 플러그인 모음을 한 번만 등록�
 
 | 에이전트 | 하는 일 | 설치 | 쓰는 법 |
 |---|---|---|---|
-| 🍎 [4 새록 검토관](fruits/04-prd-assistant) | PRD를 스무고개로 설계하고 기준표 7개로 검사 | `/plugin install saerok-prd@saeroki` | `/saerok-prd:design <만들 것>`<br>`/saerok-prd:review <PRD 파일>` |
+| 🍎 [4 새록 검토관](fruits/04-prd-assistant) | PRD를 스무고개로 설계하고 기준표 9개로 검사 | `/plugin install saerok-prd@saeroki` | `/saerok-prd:design <만들 것>`<br>`/saerok-prd:review <PRD 파일>` |
 | 🍎 [21 새록 지원서](fruits/21-saerok-apply) | 경험 장부의 사실만으로 이력서, 포트폴리오, 자기소개서를 쓰고 스크립트로 검사 | `/plugin install saerok-apply@saeroki` | `/saerok-apply:resume --company 회사`<br>`/saerok-apply:review <파일>` |
 | 🌸 [18 새록 파수꾼](fruits/18-saerok-watch) | 대화가 20만·40만 토큰을 넘으면 알리고, 토큰이 새는 곳을 대시보드로 | `/plugin install saerok-watch@saeroki` | 설치하면 바로 지켜봄<br>`/saerok-watch:dashboard` |
 | 🌸 [19 새록 면접관](fruits/19-saerok-interview) | 면접관 5명이 자기소개서를 심사하고 근거 달린 예상 질문 10개 | `/plugin install saerok-interview@saeroki` | `/saerok-interview:panel`<br>`/saerok-interview:practice` |
