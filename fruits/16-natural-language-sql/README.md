@@ -1,4 +1,4 @@
-# 🌸 16 새록 SQL
+# 🍎 16 새록 SQL
 
 <img src="../../assets/characters/saeroki-sql.png" alt="데이터 원통을 안은 SQL 새록이" width="140" align="right">
 

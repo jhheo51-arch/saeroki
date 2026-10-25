@@ -4,7 +4,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/PRD-v2.2-40916C" alt="PRD v2.2">
-  <img src="https://img.shields.io/badge/%EC%97%90%EC%9D%B4%EC%A0%84%ED%8A%B8%2016-%F0%9F%8D%8E2%20%C2%B7%20%F0%9F%8C%B86%20%C2%B7%20%F0%9F%8C%B18-D97757" alt="에이전트 16개: 열매 2 · 꽃 6 · 씨앗 8">
+  <img src="https://img.shields.io/badge/%EC%97%90%EC%9D%B4%EC%A0%84%ED%8A%B8%2016-%F0%9F%8D%8E3%20%C2%B7%20%F0%9F%8C%B85%20%C2%B7%20%F0%9F%8C%B18-D97757" alt="에이전트 16개: 열매 3 · 꽃 5 · 씨앗 8">
   <img src="https://img.shields.io/badge/%EB%BF%8C%EB%A6%AC-4-8A5A36" alt="뿌리 4개">
   <a href="#직접-확인하기"><img src="https://img.shields.io/badge/Tests-python_--m_unittest-31572C" alt="자동 검사: python -m unittest"></a>
   <img src="https://img.shields.io/badge/Claude_%2B_Codex-shared_rules-40916C" alt="Claude와 Codex 공통 규칙">
@@ -67,7 +67,7 @@ claude plugin disable saerok-watch
 
 새록이는 나무라서 에이전트도 나무의 말로 부릅니다. 사용자가 직접 쓰는 에이전트는 씨앗에서 꽃을 거쳐 **열매**로 자라고, 에이전트를 받치는 공통 기반은 **뿌리**입니다.
 
-**에이전트 16개(🍎 열매 2 · 🌸 꽃 6 · 🌱 씨앗 8) · 뿌리 4개**
+**에이전트 16개(🍎 열매 3 · 🌸 꽃 5 · 🌱 씨앗 8) · 뿌리 4개**
 
 | 상태 | 뜻 |
 |---|---|
@@ -84,7 +84,7 @@ claude plugin disable saerok-watch
 | 추천 | 🌸 [1 콘텐츠 개인화](fruits/01-content-personalization) · 🌱 [6 레시피](fruits/06-recipe) · 🌱 [11 도서](fruits/11-book-recommendation) |
 | 기획 | 🌱 [3 마케팅 전략](fruits/03-marketing-strategy) · 🍎 [4 새록 검토관(PRD 설계 지원)](fruits/04-prd-assistant) · 🌸 [20 새록 심사단(아이디어 검증)](fruits/20-saerok-idea) |
 | 조사와 분석 | 🌱 [7 금융](fruits/07-finance) · 🌱 [8 미디어 트렌드](fruits/08-media-trend) · 🌱 [9 법률 문서(10번 통합)](fruits/09-legal-document) · 🌱 [15 심층 연구](fruits/15-deep-research) |
-| 데이터 | 🌱 [5 데이터 시각화](fruits/05-data-visualization) · 🌸 [16 새록 SQL(자연어 SQL)](fruits/16-natural-language-sql) |
+| 데이터 | 🌱 [5 데이터 시각화](fruits/05-data-visualization) · 🍎 [16 새록 SQL(자연어 SQL)](fruits/16-natural-language-sql) |
 | 학습 | 🌸 [17 새록 사전(산업별 용어 사전)](fruits/17-saerok-dictionary) · 🌸 [19 새록 면접관(모의 면접)](fruits/19-saerok-interview) · 🍎 [21 새록 지원서(공고 분석·자기소개서·이력서)](fruits/21-saerok-apply) |
 | 돌봄 | 🌸 [18 새록 파수꾼(토큰 사용량 감시)](fruits/18-saerok-watch) |
 
@@ -95,7 +95,7 @@ claude plugin disable saerok-watch
     <td align="center"><a href="fruits/04-prd-assistant"><img src="assets/characters/saeroki-reviewer.png" alt="돋보기로 PRD를 살피는 검토관 새록이" height="96"></a><br><sub>🍎 4 검토관</sub></td>
     <td align="center"><a href="fruits/21-saerok-apply"><img src="assets/characters/saeroki-apply.png" alt="연필을 들고 지원서 봉투를 낀 새록이" height="96"></a><br><sub>🍎 21 지원서</sub></td>
     <td align="center"><a href="fruits/01-content-personalization"><img src="assets/characters/saeroki-curator.png" alt="헤드폰을 쓰고 음표를 띄운 새록이" height="96"></a><br><sub>🌸&nbsp;1&nbsp;콘텐츠&nbsp;개인화</sub></td>
-    <td align="center"><a href="fruits/16-natural-language-sql"><img src="assets/characters/saeroki-sql.png" alt="데이터 원통을 안은 SQL 새록이" height="96"></a><br><sub>🌸 16 SQL</sub></td>
+    <td align="center"><a href="fruits/16-natural-language-sql"><img src="assets/characters/saeroki-sql.png" alt="데이터 원통을 안은 SQL 새록이" height="96"></a><br><sub>🍎 16 SQL</sub></td>
     <td align="center"><a href="fruits/17-saerok-dictionary"><img src="assets/characters/saeroki-dictionary.png" alt="동그란 안경을 쓰고 두꺼운 사전을 낀 새록이" height="96"></a><br><sub>🌸 17 사전</sub></td>
     <td align="center"><a href="fruits/18-saerok-watch"><img src="assets/saeroki-sentry.png" alt="K-2 소총을 든 파수꾼 새록이" height="96"></a><br><sub>🌸 18 파수꾼</sub></td>
     <td align="center"><a href="fruits/19-saerok-interview"><img src="assets/characters/saeroki-interviewer.png" alt="넥타이를 매고 클립보드를 든 면접관 새록이" height="96"></a><br><sub>🌸 19 면접관</sub></td>
@@ -174,10 +174,10 @@ claude plugin disable saerok-watch
 
 ```text
 saeroki/
-├─ fruits/                 에이전트 16개(🍎2 · 🌸6 · 🌱8), 에이전트마다 폴더 하나
+├─ fruits/                 에이전트 16개(🍎3 · 🌸5 · 🌱8), 에이전트마다 폴더 하나
 │  ├─ 01-content-personalization/   🌸 코드·데이터·검사·Claude 지침
 │  ├─ 04-prd-assistant/             🍎 PRD 설계 스무고개·검토 스킬·검사 명령·예시·검사
-│  ├─ 16-natural-language-sql/      🌸 saerok-sql 터미널·서울 데이터(data/)·검사
+│  ├─ 16-natural-language-sql/      🍎 saerok-sql 터미널·서울 데이터(data/)·검사
 │  ├─ 17-saerok-dictionary/         🌸 사전 화면(web/)·용어집(data/)·검사
 │  ├─ 18-saerok-watch/              🌸 토큰 감시 훅·대시보드(web/)·공개 집계(data/)·검사
 │  ├─ 19-saerok-interview/          🌸 면접관 5명·심사·연습·비교 스킬·기록 명령·가상 예시·검사
@@ -227,7 +227,6 @@ python -m unittest -v
 - [ ] 18 새록 파수꾼 훅 설치 후 실제 대화에서 경고 한 줄 확인
 - [ ] 4 새록 검토관으로 새 PRD 2개 검사, 지적 중 고친 비율 기록(2026-10-31까지)
 - [ ] 20 새록 심사단으로 내 아이디어 1개 실제 심사, 판정과 다음 행동 기록
-- [ ] 16 새록 SQL 어려운 세트 h04 새 답 사람 판정(2차 판정 15/16, 스킬 고친 뒤 다시 풀어 자동 채점 통과)
 - [ ] 17 새록 사전 사용자 확인
 - [ ] 17 새록 사전 Claude API 보충
 - [ ] 1 콘텐츠 개인화: 추가 기술 블로그와 뉴스레터 RSS 주소 연결
@@ -235,7 +234,7 @@ python -m unittest -v
 - [ ] 1 콘텐츠 개인화: Claude 또는 OpenAI API 연결
 
 <details>
-<summary>✅ 한 일 41개</summary>
+<summary>✅ 한 일 43개</summary>
 
 - [x] 제품군과 16개 후보를 정리한 PRD v01
 - [x] 17번 산업별 용어 사전 에이전트 후보 추가
@@ -260,6 +259,8 @@ python -m unittest -v
 - [x] 21번 새록 지원서 🍎 열매 승격(2026-10-20): 자기소개서 검사에 더해 이력서·포트폴리오 검사기, 19번 서류 폴더 넘기기, 한 단 HTML 출력 첫 버전 완성
 - [x] 새록 SQL 채점 정답 사람 검토(2026-10-17): 20문항 모두 맞음, 다시 채점 20/20
 - [x] 새록 SQL 어려운 채점 세트 16문항(여러 표·함정·애매함·답할 수 없음): 자동 채점 11/11([결과](fruits/16-natural-language-sql/eval/RESULTS.md))
+- [x] 새록 SQL 어려운 세트 2차 사람 판정 16/16(2026-10-25): 스킬 고친 뒤 다시 푼 답, h04는 합계 한 행으로 다시 풀어 자동 채점 통과
+- [x] 16번 새록 SQL 🍎 열매 승격(2026-10-25): PRD v1.8 완료 기준 모두 충족, 기본 채점 20/20, 어려운 세트 사람 판정 16/16
 - [x] Claude와 Codex가 함께 읽는 공통 행동 원칙
 - [x] 취향 저장, 출처 검사, 중복 제거와 추천 이유
 - [x] 계획 후 실행, 결과 자기 검토와 실행 기록
