@@ -1,0 +1,22 @@
+name: 미국 증시 아침 알림
+
+on:
+  schedule:
+    - cron: "0 22 * * 1-5" # 서울 화~토 아침 7시(미국 월~금 마감 뒤)
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: 지수 보내기
+        env:
+          SLACK_MARKET_WEBHOOK: ${{ secrets.SLACK_MARKET_WEBHOOK }}
+        run: python scripts/us_market.py
