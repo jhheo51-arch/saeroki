@@ -77,6 +77,38 @@ class ScanTest(Sandbox):
         self.assertEqual(s["title"], "새록 파수꾼 만들어 줘")
         self.assertEqual(s["project"], "saeroki")
 
+    def test_subagents_fold_into_parent(self):
+        # 서브에이전트 처리량은 부모에 더하고, 컨텍스트 크기는 본 대화 것만 둡니다.
+        self.write_transcript("s1", [user("면접 심사해 줘"), assistant("m1", 50_000)])
+        subdir = self.claude / "projects" / "p" / "s1" / "subagents"
+        subdir.mkdir(parents=True)
+        for name, ctx in (("agent-a", 120_000), ("agent-b", 30_000)):
+            (subdir / f"{name}.jsonl").write_text(json.dumps(assistant(name, ctx)) + "\n", encoding="utf-8")
+            (subdir / f"{name}.meta.json").write_text(json.dumps({"agentType": "saerok-interview:hr"}), encoding="utf-8")
+        orphan = self.claude / "projects" / "p" / "gone" / "subagents"
+        orphan.mkdir(parents=True)
+        (orphan / "agent-c.jsonl").write_text(json.dumps(assistant("c", 10_000)) + "\n", encoding="utf-8")
+
+        sessions = scan.scan_all(use_cache=False)
+        self.assertEqual(len(sessions), 2)
+        s = next(x for x in sessions if x["session_id"] == "s1")
+        self.assertEqual(s["processed"], 200_000)
+        self.assertEqual(s["max_ctx"], 50_000)
+        self.assertEqual(s["responses"], 1)
+        self.assertEqual(s["buckets"], [80_000, 120_000, 0, 0])
+        self.assertEqual(s["subagents"]["count"], 2)
+        self.assertEqual(s["subagents"]["by_type"]["saerok-interview:hr"], {"count": 2, "processed": 150_000})
+        self.assertEqual(scan.daily(sessions)[0]["processed"], 210_000)
+        t = scan.totals(sessions)
+        self.assertEqual((t["sessions"], t["responses"], t["subagents"]), (2, 4, 2))
+        self.assertEqual(t["subagent_processed"], 150_000)
+        lone = next(x for x in sessions if x["session_id"] == "agent-c")
+        self.assertTrue(lone["title"].startswith("서브에이전트 이름 없음"))
+        # 캐시에서 다시 읽어도 두 번 더해지지 않습니다.
+        scan.scan_all()
+        again = next(x for x in scan.scan_all() if x["session_id"] == "s1")
+        self.assertEqual(again["processed"], 200_000)
+
     def test_cap_simulation_lowers_large_contexts_only(self):
         small = {"buckets": [100, 0, 0, 0]}
         big = {"buckets": [0, 0, 0, 100]}

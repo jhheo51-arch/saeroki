@@ -69,7 +69,8 @@ function renderNow() {
   const over = t.buckets[2] + t.buckets[3];
   const hook = data.environment.hook_installed;
   $("cards").innerHTML = [
-    ["전체 처리량", man(t.processed) + " 토큰", `세션 ${t.sessions}개 · 응답 ${t.responses.toLocaleString("ko-KR")}번`],
+    ["전체 처리량", man(t.processed) + " 토큰", `세션 ${t.sessions}개 · 응답 ${t.responses.toLocaleString("ko-KR")}번` +
+      (t.subagents ? ` · 서브에이전트 ${t.subagents}개가 ${pct(t.subagent_processed, t.processed)}` : "")],
     ["30만 이상 응답의 몫", pct(over, t.processed), "높을수록 긴 세션이 사용량을 끌어올림"],
     ["세션 기본 부담", man(t.baseline_median) + " 토큰", "세션 첫 응답 크기의 중앙값"],
     ["실시간 경고", hook ? "켜짐" : "꺼짐", hook ? `주의 ${man(data.config.caution)} · 경고 ${man(data.config.warn)}` : "적용 탭에서 훅을 설치하세요"],
@@ -98,6 +99,14 @@ function renderNow() {
     : `<div class="empty">${data.environment.hook_installed ? "아직 기준을 넘은 세션이 없습니다." : "훅을 설치하면 기준을 넘을 때마다 여기에 남습니다."}</div>`;
 }
 
+// 세션 표의 서브에이전트 칸: 개수와 처리량, 마우스를 올리면 종류별 몫
+function subCell(sub) {
+  if (!sub) return `<td class="num small">-</td>`;
+  const kinds = Object.entries(sub.by_type).sort((a, b) => b[1].processed - a[1].processed)
+    .map(([name, v]) => `${name} ${v.count}개 · ${man(v.processed)}`).join("\n");
+  return `<td class="num" title="${esc(kinds)}">${sub.count}개 · ${man(sub.processed)}</td>`;
+}
+
 function renderTrend() {
   const days = data.daily.slice(-30);
   if (!days.length) {
@@ -124,8 +133,8 @@ function renderTrend() {
 
   const rows = [...data.sessions].sort((a, b) => b.processed - a.processed).slice(0, 30);
   $("sessions").innerHTML = `<div class="table-wrap"><table>
-    <tr><th>세션</th><th>폴더</th><th class="num">응답</th><th class="num">처리량</th><th class="num">최대</th><th class="num">스크린샷</th><th>마지막</th></tr>
-    ${rows.map((s) => `<tr class="pick${s.session_id === selected ? " on" : ""}" data-session="${esc(s.session_id)}" tabindex="0"><td>${esc(s.title || s.session_id.slice(0, 8))}</td><td>${esc(s.project || "")}</td><td class="num">${s.responses}</td><td class="num">${man(s.processed)}</td><td class="num"><span class="badge l${levelOf(s.max_ctx)}">${man(s.max_ctx)}</span></td><td class="num">${s.images}</td><td>${when(s.last_ts)}</td></tr>`).join("")}
+    <tr><th>세션</th><th>폴더</th><th class="num">응답</th><th class="num">처리량</th><th class="num">서브에이전트</th><th class="num">최대</th><th class="num">스크린샷</th><th>마지막</th></tr>
+    ${rows.map((s) => `<tr class="pick${s.session_id === selected ? " on" : ""}" data-session="${esc(s.session_id)}" tabindex="0"><td>${esc(s.title || s.session_id.slice(0, 8))}</td><td>${esc(s.project || "")}</td><td class="num">${s.responses}</td><td class="num">${man(s.processed)}</td>${subCell(s.subagents)}<td class="num"><span class="badge l${levelOf(s.max_ctx)}">${man(s.max_ctx)}</span></td><td class="num">${s.images}</td><td>${when(s.last_ts)}</td></tr>`).join("")}
   </table></div>`;
 
   const kinds = Object.entries(data.spike_kinds || {});

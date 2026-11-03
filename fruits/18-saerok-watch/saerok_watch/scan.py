@@ -1,9 +1,11 @@
 """Claude Code 세션 기록(~/.claude/projects/*/*.jsonl)에서 토큰 사용량을 셉니다.
 
+서브에이전트 기록(<세션 ID>/subagents/agent-*.jsonl)도 읽어 부모 세션에 묶습니다.
 대화 원문은 저장하지 않고 숫자만 모읍니다. 로컬 대시보드에서 세션을 알아보도록
 첫 요청 앞부분(제목)과 프로젝트 폴더 이름만 내 PC 캐시에 둡니다.
 """
 
+import copy
 import json
 from datetime import datetime
 from pathlib import Path
@@ -13,7 +15,7 @@ from .store import read_json, write_json
 
 # 컨텍스트 크기 구간: 10만 미만, 10~30만, 30~60만, 60만 이상
 BUCKET_EDGES = (100_000, 300_000, 600_000)
-CACHE_VERSION = 5
+CACHE_VERSION = 6
 # 직전 응답보다 이만큼 이상 커지면 '급증'으로 보고 원인을 짚습니다.
 SPIKE_TOKENS = 20_000
 SPIKE_KEEP = 30
@@ -134,9 +136,21 @@ def _title_from(content) -> str | None:
     return None
 
 
+def _agent_type(path: Path) -> str:
+    """서브에이전트 종류(meta.json의 agentType). 없으면 '이름 없음'."""
+    try:
+        meta = json.loads(path.with_suffix(".meta.json").read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        meta = {}
+    return str(meta.get("agentType") or "이름 없음") if isinstance(meta, dict) else "이름 없음"
+
+
 def scan_file(path: Path) -> dict:
+    is_sub = path.parent.name == "subagents"
     s = {
         "session_id": path.stem,
+        "parent": path.parent.parent.name if is_sub else None,
+        "agent_type": _agent_type(path) if is_sub else None,
         "project": None,
         "cwd": None,
         "title": None,
@@ -278,7 +292,55 @@ def transcript_files() -> list[Path]:
     root = claude_home() / "projects"
     if not root.exists():
         return []
-    return sorted(root.glob("*/*.jsonl"))
+    return sorted(list(root.glob("*/*.jsonl")) + list(root.glob("*/*/subagents/*.jsonl")))
+
+
+def _add_counts(into: dict, src: dict) -> None:
+    for k, v in src.items():
+        into[k] = into.get(k, 0) + v
+
+
+def attach_subagents(mains: list[dict], subs: list[dict]) -> list[dict]:
+    """서브에이전트를 부모 세션에 묶습니다.
+
+    서브에이전트도 한도를 쓰므로 처리량·출력·응답 수·날짜별 합·크기 구간에는 더합니다.
+    컨텍스트 크기(첫·최대·마지막, 곡선, 급증)는 본 대화의 창이므로 부모 것만 둡니다.
+    부모 기록이 없는 서브에이전트는 따로 한 세션으로 둡니다. 캐시를 건드리지 않게 복사본에 더합니다.
+    """
+    by_id = {s["session_id"]: s for s in mains}
+    merged = {}
+    orphans = []
+    for sub in subs:
+        parent = by_id.get(sub["parent"])
+        if parent is None:
+            orphan = dict(sub, title=f"서브에이전트 {sub['agent_type']}: {sub['title'] or ''}".strip())
+            orphans.append(orphan)
+            continue
+        m = merged.get(parent["session_id"])
+        if m is None:
+            m = merged[parent["session_id"]] = copy.deepcopy(parent)
+        info = m.setdefault("subagents", {"count": 0, "responses": 0, "processed": 0, "output": 0, "by_type": {}})
+        info["count"] += 1
+        info["responses"] += sub["responses"]
+        info["processed"] += sub["processed"]
+        info["output"] += sub["output"]
+        kind = info["by_type"].setdefault(sub["agent_type"], {"count": 0, "processed": 0})
+        kind["count"] += 1
+        kind["processed"] += sub["processed"]
+        m["processed"] += sub["processed"]
+        m["output"] += sub["output"]
+        m["images"] += sub["images"]
+        m["buckets"] = [a + b for a, b in zip(m["buckets"], sub["buckets"])]
+        for name in ("tool_chars", "tool_counts", "mcp_used", "skills_used"):
+            _add_counts(m[name], sub[name])
+        for day, v in sub["days"].items():
+            dd = m["days"].setdefault(day, _new_day())
+            for k in ("processed", "responses", "images", "over300"):
+                dd[k] += v[k]
+        if (sub["last_ts"] or "") > (m["last_ts"] or ""):
+            m["last_ts"] = sub["last_ts"]
+        m["mtime"] = max(m.get("mtime", 0), sub.get("mtime", 0))
+    return [merged.get(s["session_id"], s) for s in mains] + orphans
 
 
 def scan_all(use_cache: bool = True) -> list[dict]:
@@ -288,7 +350,7 @@ def scan_all(use_cache: bool = True) -> list[dict]:
     if cache.get("version") != CACHE_VERSION:
         cache = {"version": CACHE_VERSION, "files": {}}
     fresh = {}
-    sessions = []
+    mains, subs = [], []
     for path in transcript_files():
         try:
             stat = path.stat()
@@ -303,17 +365,22 @@ def scan_all(use_cache: bool = True) -> list[dict]:
         stats["mtime"] = stat.st_mtime
         fresh[str(path)] = {"sig": sig, "stats": stats}
         if stats["responses"]:
-            sessions.append(stats)
+            (subs if stats.get("parent") else mains).append(stats)
     write_json(cache_path, {"version": CACHE_VERSION, "files": fresh})
+    sessions = attach_subagents(mains, subs)
     sessions.sort(key=lambda x: x.get("last_ts") or "", reverse=True)
     return sessions
 
 
 def totals(sessions: list[dict]) -> dict:
-    t = {"sessions": len(sessions), "responses": 0, "processed": 0, "images": 0, "buckets": [0, 0, 0, 0]}
+    t = {"sessions": len(sessions), "responses": 0, "processed": 0, "images": 0, "buckets": [0, 0, 0, 0],
+         "subagents": 0, "subagent_processed": 0}
     firsts = []
     for s in sessions:
-        t["responses"] += s["responses"]
+        sub = s.get("subagents") or {}
+        t["subagents"] += sub.get("count", 0)
+        t["subagent_processed"] += sub.get("processed", 0)
+        t["responses"] += s["responses"] + sub.get("responses", 0)
         t["processed"] += s["processed"]
         t["images"] += s["images"]
         t["buckets"] = [a + b for a, b in zip(t["buckets"], s["buckets"])]

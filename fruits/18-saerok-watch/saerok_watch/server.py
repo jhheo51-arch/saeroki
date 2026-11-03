@@ -51,7 +51,8 @@ def summary() -> dict:
             continue
         live.append({k: s[k] for k in ("session_id", "project", "title", "responses", "last_ctx", "max_ctx", "images", "compactions", "last_ts")})
     table = [{k: s[k] for k in ("session_id", "project", "title", "first_ts", "last_ts", "responses",
-                                "processed", "max_ctx", "images", "compactions", "buckets")} for s in sessions]
+                                "processed", "max_ctx", "images", "compactions", "buckets")}
+             | {"subagents": s.get("subagents")} for s in sessions]
     return {
         "generated_at": time.strftime("%Y-%m-%d %H:%M:%S"),
         "config": config,
