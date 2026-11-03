@@ -6,7 +6,7 @@ import unittest
 from pathlib import Path
 from unittest import mock
 
-from saerok_slack import app, config, dictionary, game, runner
+from saerok_slack import app, config, dictionary, game, mystery, runner
 
 TERMS = [
     {"id": "retention", "term": "리텐션", "original": "Retention", "korean": "리텐션", "aliases": ["잔존율"],
@@ -104,7 +104,7 @@ class AppTest(unittest.TestCase):
     def test_manifest_matches_commands(self):
         manifest = json.loads((Path(app.__file__).parent / "manifest.json").read_text(encoding="utf-8"))
         names = {c["command"] for c in manifest["features"]["slash_commands"]}
-        self.assertEqual(names, set(app.COMMANDS) | {"/saerok-dict", "/saerok-word", "/saerok-master"})
+        self.assertEqual(names, set(app.COMMANDS) | {"/saerok-dict", "/saerok-word", "/saerok-case", "/saerok-master"})
         self.assertTrue(manifest["settings"]["socket_mode_enabled"])
         # 봇 표시 이름은 영어 소문자·숫자·-_.만 받습니다.
         self.assertRegex(manifest["features"]["bot_user"]["display_name"], r"^[a-z0-9._-]{1,80}$")
@@ -154,6 +154,7 @@ class AppTest(unittest.TestCase):
         bot.owner, bot.bot_user, bot.chat_channels = "U0OWNER", "UBOT", {"C0CHAT"}
         bot.threads = runner.Threads(Path(tmp) / "t.json")
         bot.words, bot.game_lock, bot.busy, bot.started_at, bot.last_error = ["기차", "차표"], app.threading.Lock(), set(), 0, None
+        bot.cases = mystery.load()
         bot.process = mock.Mock()
         return bot
 
@@ -189,6 +190,25 @@ class AppTest(unittest.TestCase):
             self.assertIn("C0NEWCHAN1", bot.chat_channels)
             self.assertIn("DM", bot.master("대화 켜기", "D0DMCHAN11", mock.Mock()))
 
+    def test_case_game_in_thread_and_series(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            bot = self.bot(tmp)
+            client = mock.Mock()
+            client.chat_postMessage.return_value = {"ts": "3.3"}
+            bot.on_case(mock.Mock(), {"channel_id": "C1", "user_id": "U0OTHER", "text": ""}, client, mock.Mock())
+            self.assertIn("제1화", client.chat_postMessage.call_args.kwargs["text"])
+            bot.on_message({"channel": "C1", "user": "U0THIRD", "ts": "3.4", "thread_ts": "3.3", "text": "단서"}, client)
+            self.assertIn("단서 1", client.chat_postMessage.call_args.kwargs["text"])
+            bot.on_message({"channel": "C1", "user": "U0OTHER", "ts": "3.5", "thread_ts": "3.3", "text": "범인 쪼르"}, client)
+            self.assertIn("정답", client.chat_postMessage.call_args.kwargs["text"])
+            bot.process.assert_not_called()  # 추리 게임은 AI를 부르지 않습니다.
+            client.chat_postMessage.return_value = {"ts": "4.4"}
+            bot.on_case(mock.Mock(), {"channel_id": "C1", "user_id": "U0OTHER", "text": ""}, client, mock.Mock())
+            self.assertIn("제2화", client.chat_postMessage.call_args.kwargs["text"])  # 푼 사건 다음 회차
+            respond = mock.Mock()
+            bot.on_case(mock.Mock(), {"channel_id": "C1", "user_id": "U0OTHER", "text": "목록"}, client, respond)
+            self.assertIn("✅ 제1화", respond.call_args.args[0])
+
     def test_offline_detected(self):
         self.assertTrue(runner.offline("Invalid API key · Please run /login"))
         self.assertTrue(runner.offline("Claude AI usage limit reached|1793"))
@@ -222,6 +242,36 @@ class GameTest(unittest.TestCase):
         words = game.load()
         self.assertGreater(len(words), 500)
         self.assertEqual(len(words), len(set(words)))
+
+
+class MysteryTest(unittest.TestCase):
+    def test_cases_are_solvable(self):
+        book = mystery.load()
+        self.assertGreaterEqual(len(book["cases"]), 3)
+        self.assertEqual([c["id"] for c in book["cases"]], list(range(1, len(book["cases"]) + 1)))
+        for case in book["cases"]:
+            names = [s["name"] for s in case["suspects"]]
+            self.assertIn(case["culprit"], names, case["title"])
+            self.assertIn(case["culprit"], case["solution"])
+            self.assertGreaterEqual(len(case["clues"]), 3)
+            for s in case["suspects"]:  # 이름을 부르면 그 동물 한 명만 나와야 합니다.
+                self.assertEqual(mystery.suspect_in(case, "범인 " + s["name"]), [s], s["name"])
+
+    def test_wrong_guesses_and_chatter(self):
+        book = mystery.load()
+        record = mystery.new("C1", mystery.find(book, 1), "U1")
+        self.assertIsNone(mystery.play(record, "어렵다 ㅋㅋ", book))
+        self.assertIn("“", mystery.play(record, "꿀꿀", book))
+        self.assertIn("꿀꿀은 범인이 아니에요", mystery.play(record, "범인 꿀꿀", book))
+        self.assertIn("한 명만", mystery.play(record, "범인 꿀꿀 쪼르", book))
+        self.assertIn("사건 종료", mystery.play(record, "범인 토리", book))
+        self.assertFalse(record["solved"])
+        self.assertIsNone(mystery.play(record, "범인 쪼르", book))  # 끝난 사건
+        record = mystery.new("C1", mystery.find(book, 2), "U1")
+        for _ in range(6):
+            mystery.play(record, "단서", book)
+        self.assertEqual(record["clues"], 5)
+        self.assertIn("너굴", mystery.play(record, "포기", book))
 
 
 class ConfigTest(unittest.TestCase):

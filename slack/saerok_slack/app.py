@@ -12,19 +12,19 @@ from slack_bolt import App
 from slack_bolt.adapter.socket_mode import SocketModeHandler
 from slack_sdk.errors import SlackApiError
 
-from . import config, dictionary, game
+from . import config, dictionary, game, mystery
 from .runner import FRUITS, Fruit, Threads, check, inbox_dir, offline, run
 
 CHUNK = 11000  # markdown 블록 한 메시지 한도(12,000자)보다 조금 작게
 COMMANDS = {"/saerok-sql": "sql", "/saerok-idea": "idea", "/saerok-prd": "prd", "/saerok-interview": "interview"}
-NOT_OWNER = "새록이는 이 PC 주인만 부를 수 있습니다. `/saerok-dict` 사전 찾기와 `/saerok-word` 끝말잇기는 누구나 쓸 수 있습니다."
-FREE = "그동안에도 `/saerok-dict` 사전, `/saerok-dict` 오늘의 용어, `/saerok-word` 끝말잇기는 그대로 쓸 수 있어요."
+NOT_OWNER = "새록이는 이 PC 주인만 부를 수 있습니다. `/saerok-dict` 사전, `/saerok-word` 끝말잇기, `/saerok-case` 숲속 추리는 누구나 쓸 수 있습니다."
+FREE = "그동안에도 `/saerok-dict` 사전, `/saerok-dict` 오늘의 용어, `/saerok-word` 끝말잇기, `/saerok-case` 숲속 추리는 그대로 쓸 수 있어요."
 RESTING = "🌙 새록이는 지금 쉬는 중이에요. " + FREE
 OFFLINE = "🌙 새록이 AI가 지금 답할 수 없어요(주인의 Claude 로그인, 구독, 사용 한도 중 하나를 확인해야 해요). " + FREE
 MASTER_HELP = """*🌳 마스터 명령* (주인에게만 보입니다)
 • `/saerok-master` 또는 `상태`: 켜진 시간, AI 상태, 대화 채널, 처리 중인 일
 • `점검`: AI가 지금 답할 수 있는지 짧게 물어봅니다(구독·로그인 확인)
-• `쉬기` / `깨우기`: 다른 사람의 @saeroki 수다를 잠시 끄고 켭니다. 사전과 끝말잇기는 그대로 됩니다.
+• `쉬기` / `깨우기`: 다른 사람의 @saeroki 수다를 잠시 끄고 켭니다. 사전과 게임은 그대로 됩니다.
 • `대화 켜기` / `대화 끄기`: 지금 채널을 @saeroki 수다 채널로 넣고 뺍니다."""
 
 
@@ -67,10 +67,12 @@ class Bot:
         self.busy_lock = threading.Lock()
         self.game_lock = threading.Lock()
         self.words = game.load()
+        self.cases = mystery.load()
         self.started_at = time.time()
         self.last_error: tuple[float, str] | None = None
         self.app.command("/saerok-dict")(self.on_dict)
         self.app.command("/saerok-word")(self.on_word)
+        self.app.command("/saerok-case")(self.on_case)
         self.app.command("/saerok-master")(self.on_master)
         for name in COMMANDS:
             self.app.command(name)(self.on_fruit)
@@ -148,6 +150,35 @@ class Bot:
         if reply:
             client.chat_postMessage(channel=record["channel"], thread_ts=thread, text=reply)
 
+    # 숲속 추리: 누구나, AI 없이
+    def on_case(self, ack, command, client, respond):
+        ack()
+        arg, user = command.get("text", "").strip(), command["user_id"]
+        solved = {r["case"] for r in self.threads.load().values()
+                  if r["fruit"] == "case" and r.get("solved") and r.get("user") == user}
+        if arg in ("목록", "회차"):
+            respond(mystery.listing(self.cases, solved))
+            return
+        case = mystery.find(self.cases, int(arg)) if arg.isdigit() else None if arg else mystery.next_case(self.cases, solved)
+        if not case:
+            respond(f"그런 사건은 아직 없어요.\n{mystery.listing(self.cases, solved)}")
+            return
+        channel, ts = self.open_root(client, command["channel_id"],
+                                     f"🦉 숲속 추리 제{case['id']}화 · <@{user}> 이 스레드에 답글로 누구나 함께 풀 수 있어요.")
+        if channel != command["channel_id"]:
+            respond("이 대화방에는 새록이가 들어올 수 없어 새록이와의 DM에서 이어 갑니다.")
+        self.threads.put(ts, mystery.new(channel, case, user))
+        client.chat_postMessage(channel=channel, thread_ts=ts, text=mystery.opening(self.cases, case))
+
+    def case_turn(self, client, event: dict, thread: str) -> None:
+        with self.game_lock:
+            record = self.threads.get(thread)
+            reply = mystery.play(record, event.get("text", ""), self.cases)
+            if reply:
+                self.threads.put(thread, record)
+        if reply:
+            client.chat_postMessage(channel=record["channel"], thread_ts=thread, text=reply)
+
     # 마스터: 주인만, AI 없이(점검만 AI에 아주 짧게 물어봄)
     def on_master(self, ack, command, client, respond):
         ack()
@@ -183,8 +214,8 @@ class Bot:
     def status_text(self) -> str:
         minutes = int(time.time() - self.started_at) // 60
         records = list(self.threads.load().values())
-        counts = {k: sum(r["fruit"] == k for r in records) for k in ("chat", "word", *COMMANDS.values())}
-        names = {"chat": "수다", "word": "끝말잇기", "sql": "SQL", "idea": "심사단", "prd": "검토관", "interview": "면접관"}
+        counts = {k: sum(r["fruit"] == k for r in records) for k in ("chat", "word", "case", *COMMANDS.values())}
+        names = {"chat": "수다", "word": "끝말잇기", "case": "숲속 추리", "sql": "SQL", "idea": "심사단", "prd": "검토관", "interview": "면접관"}
         if self.last_error:
             ago = int(time.time() - self.last_error[0]) // 60
             error = f"{ago}분 전 · {self.last_error[1][:120]}"
@@ -253,6 +284,8 @@ class Bot:
         record = self.threads.get(thread) if thread else None
         if record and record["fruit"] == "word":
             return self.word_turn(client, event, thread)
+        if record and record["fruit"] == "case":
+            return self.case_turn(client, event, thread)
         if record and record["fruit"] == "chat":
             return self.chat(client, event, thread, record)
         if not record and self.called(event):

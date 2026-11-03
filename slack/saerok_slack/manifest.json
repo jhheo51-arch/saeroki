@@ -2,7 +2,7 @@
   "display_information": {
     "name": "새록이",
     "description": "새록이 열매를 부르고 @saeroki와 수다를 떱니다. 주인 PC가 켜져 있을 때만 답해요.",
-    "long_description": "새록이는 작업을 함께하며 자라는 작은 묘목입니다. 슬랙에서는 슬래시 명령과 @saeroki로 부릅니다.\n\n*누구나 쓸 수 있어요*\n• /saerok-dict 리텐션 : 기획, 데이터, 마케팅 용어의 뜻과 예문, 출처를 찾아 줍니다. 사전에 없는 말은 지어내지 않습니다. 뒤를 비워 두면 오늘의 용어를 알려 줍니다.\n• /saerok-word : 새록이와 끝말잇기를 합니다. 스레드에 답글로 누구나 함께할 수 있어요.\n• @saeroki 안녕? : 대화 채널에서 부르면 스레드로 답합니다. 그 스레드에서는 부르지 않아도 대화가 이어집니다.\n\n*주인만 쓸 수 있어요*\n• /saerok-sql : 서울 생활 데이터에 우리말로 묻습니다.\n• /saerok-idea : 아이디어 한 줄을 심사합니다.\n• /saerok-prd : 설계 스무고개를 하거나 PRD를 검사합니다.\n• /saerok-interview : 자기소개서를 올리면 면접관 5명이 심사합니다.\n• /saerok-master : 새록이 상태를 보고, 수다를 쉬게 하거나 대화 채널을 정합니다.\n\n사전, 오늘의 용어, 끝말잇기는 AI를 쓰지 않아서 AI가 쉬는 동안에도 됩니다. 새록이는 주인 PC에서 켜져 있을 때만 답합니다. 대화 내용은 슬랙과 AI를 거치니 기밀이나 개인 정보는 올리지 마세요.",
+    "long_description": "새록이는 작업을 함께하며 자라는 작은 묘목입니다. 슬랙에서는 슬래시 명령과 @saeroki로 부릅니다.\n\n*누구나 쓸 수 있어요*\n• /saerok-dict 리텐션 : 기획, 데이터, 마케팅 용어의 뜻과 예문, 출처를 찾아 줍니다. 사전에 없는 말은 지어내지 않습니다. 뒤를 비워 두면 오늘의 용어를 알려 줍니다.\n• /saerok-word : 새록이와 끝말잇기를 합니다. 스레드에 답글로 누구나 함께할 수 있어요.\n• /saerok-case : 숲속 동물 마을 사건을 단서로 풀어 범인을 찾는 추리 시리즈입니다.\n• @saeroki 안녕? : 대화 채널에서 부르면 스레드로 답합니다. 그 스레드에서는 부르지 않아도 대화가 이어집니다.\n\n*주인만 쓸 수 있어요*\n• /saerok-sql : 서울 생활 데이터에 우리말로 묻습니다.\n• /saerok-idea : 아이디어 한 줄을 심사합니다.\n• /saerok-prd : 설계 스무고개를 하거나 PRD를 검사합니다.\n• /saerok-interview : 자기소개서를 올리면 면접관 5명이 심사합니다.\n• /saerok-master : 새록이 상태를 보고, 수다를 쉬게 하거나 대화 채널을 정합니다.\n\n사전, 오늘의 용어, 끝말잇기, 숲속 추리는 AI를 쓰지 않아서 AI가 쉬는 동안에도 됩니다. 새록이는 주인 PC에서 켜져 있을 때만 답합니다. 대화 내용은 슬랙과 AI를 거치니 기밀이나 개인 정보는 올리지 마세요.",
     "background_color": "#40916c"
   },
   "features": {
@@ -21,6 +21,7 @@
       {"command": "/saerok-idea", "description": "🌸 20 새록 심사단: 아이디어 한 줄 심사", "usage_hint": "자취생 반찬 소분 구독", "should_escape": false},
       {"command": "/saerok-prd", "description": "🍎 4 새록 검토관: 설계 스무고개, 또는 '검사' 후 PRD 파일 올리기", "usage_hint": "[만들 것] 또는 검사", "should_escape": false},
       {"command": "/saerok-interview", "description": "🌸 19 새록 면접관: 스레드에 자기소개서를 올리면 심사", "usage_hint": "(입력 없이 실행 후 스레드에 파일 올리기)", "should_escape": false},
+      {"command": "/saerok-case", "description": "🦉 숲속 추리: 누구나, 스레드에서 단서를 모아 범인 찾기", "usage_hint": "[회차] 또는 목록, 비워 두면 다음 사건", "should_escape": false},
       {"command": "/saerok-word", "description": "🎮 새록이와 끝말잇기: 누구나, 스레드에 답글로 이어 가기", "usage_hint": "[첫 단어] 또는 비워 두면 새록이가 먼저", "should_escape": false},
       {"command": "/saerok-master", "description": "🌳 주인 전용: 상태, 점검, 쉬기/깨우기, 대화 켜기/끄기", "usage_hint": "상태 | 점검 | 쉬기 | 깨우기 | 대화 켜기 | 대화 끄기", "should_escape": false}
     ]

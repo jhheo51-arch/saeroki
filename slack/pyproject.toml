@@ -16,4 +16,4 @@ saerok-slack = "saerok_slack.__main__:main"
 packages = ["saerok_slack"]
 
 [tool.setuptools.package-data]
-saerok_slack = ["manifest.json", "words.txt"]
+saerok_slack = ["manifest.json", "words.txt", "cases.json"]
