@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "saerok-slack"
+version = "0.1.0"
+description = "새록이 열매를 슬랙 슬래시 명령으로 부르는 Socket Mode 봇(내 PC에서 실행)"
+requires-python = ">=3.10"
+dependencies = ["slack_bolt>=1.18", "keyring>=24"]
+
+[project.scripts]
+saerok-slack = "saerok_slack.__main__:main"
+
+[tool.setuptools]
+packages = ["saerok_slack"]
+
+[tool.setuptools.package-data]
+saerok_slack = ["manifest.json", "words.txt"]

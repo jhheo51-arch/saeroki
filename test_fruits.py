@@ -7,7 +7,7 @@ FRUITS = Path(__file__).resolve().parent / "fruits"
 
 
 def load_tests(loader, tests, pattern):
-    for folder in sorted(p for p in FRUITS.iterdir() if p.is_dir()):
+    for folder in sorted(p for p in FRUITS.iterdir() if p.is_dir()) + [FRUITS.parent / "slack"]:
         if any(folder.glob("test_*.py")):
             tests.addTests(unittest.TestLoader().discover(str(folder), pattern="test_*.py", top_level_dir=str(folder)))
     return tests

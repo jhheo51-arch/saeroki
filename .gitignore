@@ -7,4 +7,5 @@ data/*.jsonl
 fruits/*/data/*.local.json
 fruits/*/data/*.jsonl
 fruits/*/*.egg-info/
+slack/*.egg-info/
 fruits/*/eval/*.local.json
