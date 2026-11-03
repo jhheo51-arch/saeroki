@@ -3,10 +3,12 @@
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 
 CASES_PATH = Path(__file__).resolve().parent / "cases.json"
 CHANCES = 2  # 범인 지목 기회
+ACCUSE = re.compile(r"범인(이야|이다|입니다|이에요)?[!.]*$")  # "쪼르가 범인이야"처럼 끝에 오는 지목
 GIVE_UP = {"포기", "정답", "정답 보기", "모르겠다", "항복"}
 HELP = ("스레드에 답글로\n"
         "• `단서`: 단서를 하나씩 엽니다\n"
@@ -83,7 +85,7 @@ def play(record: dict, text: str, book: dict) -> str | None:
         left = len(clues) - record["clues"]
         return f"🔎 *단서 {record['clues']}. {clue['name']}*\n{clue['text']}\n_남은 단서 {left}개_"
     found = suspect_in(case, text)
-    if "범인" in text:
+    if text.startswith("범인") or ACCUSE.search(text):
         if len(found) != 1:
             return "범인으로 지목할 동물을 한 명만 적어 주세요. 예: `범인 " + case["suspects"][0]["name"] + "`"
         if found[0]["name"] == case["culprit"]:

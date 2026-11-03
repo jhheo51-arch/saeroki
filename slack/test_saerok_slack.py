@@ -261,6 +261,9 @@ class MysteryTest(unittest.TestCase):
         book = mystery.load()
         record = mystery.new("C1", mystery.find(book, 1), "U1")
         self.assertIsNone(mystery.play(record, "어렵다 ㅋㅋ", book))
+        self.assertIsNone(mystery.play(record, "누가 범인일까? 다 수상해 보여", book))  # 지목이 아닌 말
+        self.assertIn("단서 1", mystery.play(record, "힌트", book))
+        self.assertIn("“", mystery.play(record, "멧돼지", book))  # 동물 이름으로도 부름
         self.assertIn("“", mystery.play(record, "꿀꿀", book))
         self.assertIn("꿀꿀은 범인이 아니에요", mystery.play(record, "범인 꿀꿀", book))
         self.assertIn("한 명만", mystery.play(record, "범인 꿀꿀 쪼르", book))
