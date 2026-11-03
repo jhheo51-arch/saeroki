@@ -1,0 +1,37 @@
+name: 급상승 검색어와 파일 보관 알림
+
+on:
+  schedule:
+    - cron: "0 23 * * *" # 서울 아침 8시 검색어
+    - cron: "0 9 * * *" # 서울 저녁 6시 검색어
+    - cron: "30 23 * * 0" # 서울 월요일 아침 8시 30분 파일 보관 알림
+  workflow_dispatch:
+    inputs:
+      job:
+        description: "보낼 알림"
+        type: choice
+        options: [trends, files]
+        default: trends
+
+permissions:
+  contents: read
+
+jobs:
+  send:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: 급상승 검색어 보내기
+        if: github.event.schedule == '0 23 * * *' || github.event.schedule == '0 9 * * *' || inputs.job == 'trends'
+        env:
+          SLACK_TREND_WEBHOOK: ${{ secrets.SLACK_TREND_WEBHOOK }}
+        run: python scripts/trends.py
+      - name: 파일 보관 알림 보내기
+        if: github.event.schedule == '30 23 * * 0' || inputs.job == 'files'
+        env:
+          SLACK_TREND_WEBHOOK: ${{ secrets.SLACK_TREND_WEBHOOK }}
+          SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
+        run: python scripts/slack_files.py
