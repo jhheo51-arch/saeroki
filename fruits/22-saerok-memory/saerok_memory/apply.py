@@ -35,10 +35,11 @@ def load_log() -> list[dict]:
     return read_json(_log_path(), []) or []
 
 
-def _save(label: str, action: str, ops: list[dict]) -> dict:
+def _save(label: str, action: str, ops: list[dict], saved: int = 0) -> dict:
+    """saved는 이 조치로 줄인 바이트(목차는 목차 바이트, 휴지통은 파일 크기)입니다."""
     log = load_log()
     entry = {"id": time.strftime("%Y%m%d-%H%M%S") + f"-{len(log)}", "action": action, "label": label,
-             "at": time.strftime("%Y-%m-%d %H:%M:%S"), "ops": ops, "undone_at": None}
+             "at": time.strftime("%Y-%m-%d %H:%M:%S"), "ops": ops, "saved_bytes": saved, "undone_at": None}
     log.append(entry)
     write_json(_log_path(), log)
     return entry
@@ -80,31 +81,71 @@ def _index_of(candidate: dict) -> Path:
 # ---- 기억 파일 ----
 
 def index_trim(cid: str, text: str | None = None) -> dict:
-    """긴 목차 줄을 줄이고, 원래 설명은 그 기억 파일 끝으로 옮깁니다."""
-    c = _find(memory.scan(), cid, ("index_line",))
-    index, target = _index_of(c), Path(c["path"])
-    new = (text or c["proposal"]).strip()
-    row = memory.parse_index(new)
-    if len(row) != 1 or row[0]["file"] != target.name:
-        raise ValueError("고친 줄은 '- [제목](파일) — 설명' 꼴이고 같은 파일을 가리켜야 합니다.")
-    if len(new) > LINE_LIMIT:
-        raise ValueError(f"고친 줄이 {len(new)}자입니다. {LINE_LIMIT}자 안으로 줄여 주세요.")
-    lines = _read(index).split("\n")
-    hits = [i for i, line in enumerate(lines) if line.rstrip("\r") == c["before"]]
-    if len(hits) != 1:
-        raise ValueError("목차가 그새 바뀌었습니다. 화면을 새로 고치세요.")
-    old = memory.parse_index(c["before"])[0]
-    end = "\r" if lines[hits[0]].endswith("\r") else ""
-    lines[hits[0]] = new + end
-    body = _read(target)
-    block = memory.moved_block(old, time.strftime("%Y-%m-%d"))
-    if "\r\n" in body:
-        block = block.replace("\n", "\r\n")
-    ops = [_write(target, body.rstrip("\r\n") + block),
-           _write(index, "\n".join(lines))]
-    entry = _save(f"목차 줄 줄이기: {c['title']}", "index_trim", ops)
-    return {"ok": True, "entry": entry,
-            "message": f"{c['title']} 목차 줄을 {len(c['before'])}자에서 {len(new)}자로 줄였습니다. 원래 설명은 본문 끝으로 옮겼습니다."}
+    """긴 목차 줄 하나를 줄이고, 원래 설명은 그 기억 파일 끝으로 옮깁니다."""
+    return index_trim_many([{"id": cid, "text": text}])
+
+
+def index_trim_many(items: list[dict]) -> dict:
+    """고른 목차 줄을 한 번에 줄입니다. 하나라도 맞지 않으면 아무것도 바꾸지 않고, 기록은 한 건이라 한 번에 되돌립니다."""
+    if not items:
+        raise ValueError("고른 목차 줄이 없습니다.")
+    result = memory.scan()
+    plan: dict[Path, list[tuple[dict, str]]] = {}
+    seen = set()
+    for item in items:
+        cid = str(item.get("id", ""))
+        if cid in seen:
+            continue
+        seen.add(cid)
+        c = _find(result, cid, ("index_line",))
+        new = str(item.get("text") or c["proposal"]).strip()
+        row = memory.parse_index(new)
+        if len(row) != 1 or row[0]["file"] != Path(c["path"]).name:
+            raise ValueError(f"{c['title']}: 고친 줄은 '- [제목](파일) — 설명' 꼴이고 같은 파일을 가리켜야 합니다.")
+        if len(new) > LINE_LIMIT:
+            raise ValueError(f"{c['title']}: 고친 줄이 {len(new)}자입니다. {LINE_LIMIT}자 안으로 줄여 주세요.")
+        plan.setdefault(_index_of(c), []).append((c, new))
+
+    # 먼저 모든 줄을 찾아 본 뒤에 씁니다.
+    edits = []
+    for index, pairs in plan.items():
+        raw = _read(index)
+        lines = raw.split("\n")
+        for c, new in pairs:
+            hits = [i for i, line in enumerate(lines) if line.rstrip("\r") == c["before"]]
+            if len(hits) != 1:
+                raise ValueError("목차가 그새 바뀌었습니다. 화면을 새로 고치세요.")
+            end = "\r" if lines[hits[0]].endswith("\r") else ""
+            lines[hits[0]] = new + end
+        edits.append((index, raw, lines, pairs))
+
+    ops, before_bytes, after_bytes = [], 0, 0
+    today = time.strftime("%Y-%m-%d")
+    for index, raw, lines, pairs in edits:
+        for c, _ in pairs:
+            target = Path(c["path"])
+            body = _read(target)
+            block = memory.moved_block(memory.parse_index(c["before"])[0], today)
+            if "\r\n" in body:
+                block = block.replace("\n", "\r\n")
+            ops.append(_write(target, body.rstrip("\r\n") + block))
+        text = "\n".join(lines)
+        ops.append(_write(index, text))
+        before_bytes += len(raw.encode("utf-8"))
+        after_bytes += len(text.encode("utf-8"))
+
+    pairs = [p for _, _, _, ps in edits for p in ps]
+    saved = before_bytes - after_bytes
+    if len(pairs) == 1:
+        c, new = pairs[0]
+        label = f"목차 줄 줄이기: {c['title']}"
+        message = f"{c['title']} 목차 줄을 {len(c['before'])}자에서 {len(new)}자로 줄였습니다. 원래 설명은 본문 끝으로 옮겼습니다."
+    else:
+        label = f"목차 줄 {len(pairs)}개 줄이기"
+        message = (f"목차 줄 {len(pairs)}개를 줄였습니다. 목차가 {before_bytes:,}바이트에서 {after_bytes:,}바이트가 됐습니다. "
+                   "원래 설명은 각 기억 파일 끝으로 옮겼습니다.")
+    entry = _save(label, "index_trim", ops, saved)
+    return {"ok": True, "entry": entry, "message": message, "saved_bytes": saved}
 
 
 def archive(cid: str) -> dict:
@@ -115,14 +156,16 @@ def archive(cid: str) -> dict:
     dst = src.parent / memory.ARCHIVE / src.name
     if dst.exists():
         raise ValueError(f"_archive에 같은 이름이 이미 있습니다: {src.name}")
-    lines = _read(index).split("\n")
+    raw = _read(index)
+    lines = raw.split("\n")
     kept = [line for line in lines if (memory.parse_index(line.rstrip("\r")) or [{}])[0].get("file") != src.name]
     _backup(src)
     ops = [_write(index, "\n".join(kept))]
     dst.parent.mkdir(exist_ok=True)
     shutil.move(str(src), str(dst))
     ops.append({"type": "move", "src": str(src), "dst": str(dst)})
-    entry = _save(f"끝난 기억 보관: {c['title']}", "archive", ops)
+    saved = len(raw.encode("utf-8")) - len("\n".join(kept).encode("utf-8"))
+    entry = _save(f"끝난 기억 보관: {c['title']}", "archive", ops, saved)
     return {"ok": True, "entry": entry, "message": f"{src.name}을 _archive로 옮기고 목차에서 뺐습니다."}
 
 
@@ -152,7 +195,7 @@ def trash_items(ids: list[str]) -> dict:
             failed.append(str(e))
     if not ops:
         raise RuntimeError("하나도 보내지 못했습니다. " + " / ".join(failed[:3]))
-    entry = _save(f"휴지통으로 {len(ops)}개", "trash", ops)
+    entry = _save(f"휴지통으로 {len(ops)}개", "trash", ops, freed)
     message = f"{len(ops)}개({freed / 1e6:,.1f}MB)를 휴지통으로 보냈습니다. 비우기는 직접 하세요."
     if failed:
         message += f" 실패 {len(failed)}개: " + " / ".join(failed[:3])
@@ -215,6 +258,21 @@ def hook_remove() -> dict:
                 out.append({**g, "hooks": kept})
         return out
     return _settings_change("목차 알림 훅 끄기", "hook_remove", drop)
+
+
+# ---- 기록 집계 ----
+
+def stats(log: list[dict] | None = None) -> dict:
+    """PRD v2.3 6장 성공 지표. 되돌린 비율과, 되돌리지 않은 조치로 줄인 바이트."""
+    log = load_log() if log is None else log
+    acts = [e for e in log if e.get("action") != "hook_install" and e.get("action") != "hook_remove"]
+    undone = [e for e in acts if e.get("undone_at")]
+    kept = [e for e in acts if not e.get("undone_at")]
+    index = sum(e.get("saved_bytes", 0) for e in kept if e.get("action") in ("index_trim", "archive"))
+    files = sum(e.get("saved_bytes", 0) for e in kept if e.get("action") == "trash")
+    return {"actions": len(acts), "undone": len(undone),
+            "undo_rate": round(len(undone) / len(acts) * 100, 1) if acts else 0.0,
+            "index_bytes_saved": index, "trashed_bytes": files}
 
 
 # ---- 되돌리기 ----

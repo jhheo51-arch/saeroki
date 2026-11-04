@@ -2,7 +2,10 @@
 
 const TOKEN = document.querySelector('meta[name="saerok-token"]').content;
 let data = null;
-const picked = new Set();
+const picked = new Set();      // 휴지통 후보
+const trimPicked = new Set();  // 목차 줄 후보
+const enc = new TextEncoder();
+const bytes = (t) => enc.encode(String(t ?? "")).length;
 
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
@@ -43,10 +46,9 @@ async function load() {
     const res = await fetch("/api/summary");
     data = await res.json();
     if (!res.ok) throw new Error(data.error || "검사 실패");
-    for (const id of [...picked]) {
-      const all = [...data.versions.candidates, ...data.sessions.candidates];
-      if (!all.some((c) => c.id === id)) picked.delete(id);
-    }
+    const all = [...data.versions.candidates, ...data.sessions.candidates];
+    for (const id of [...picked]) if (!all.some((c) => c.id === id)) picked.delete(id);
+    for (const id of [...trimPicked]) if (!data.memory.candidates.some((c) => c.id === id)) trimPicked.delete(id);
     render();
     $("updated").textContent = `${data.generated_at} 검사`;
   } catch (e) {
@@ -110,13 +112,18 @@ function card(label, value, hint, over = false) {
 // ---- 후보 ----
 function renderCandidates() {
   const mem = data.memory.candidates;
-  const trim = mem.filter((c) => c.kind === "index_line");
+  // 150자 넘는 줄을 먼저, 그다음 예산 때문에 줄일 줄을 줄이는 바이트가 큰 순서로 둡니다.
+  const trim = mem.filter((c) => c.kind === "index_line")
+    .sort((a, b) => (a.budget_only - b.budget_only) || (b.saves - a.saves));
   const arch = mem.filter((c) => c.kind === "archive");
   const review = mem.filter((c) => !c.actionable || ["stale", "broken", "duplicate"].includes(c.kind));
   const count = trim.length + arch.length + data.versions.candidates.length + data.sessions.candidates.length;
   $("cand-count").textContent = count || "";
 
-  $("trim").innerHTML = trim.length ? trim.map(trimItem).join("") : `<div class="empty">${data.limits.line}자 넘는 목차 줄이 없습니다.</div>`;
+  $("trim").innerHTML = trim.length
+    ? `<div id="budget"></div>${trim.map(trimItem).join("")}`
+    : `<div class="empty">${data.limits.line}자 넘는 목차 줄이 없고, 목차도 ${num(data.limits.index)}바이트 안입니다.</div>`;
+  renderBudget();
   $("archive").innerHTML = arch.length ? arch.map((c) => `<div class="item"><div class="row">
       <div><h3>${esc(c.title)}</h3><div class="small">${esc(c.reason)} · ${esc(shortProject(c.project))}</div></div>
       <button data-archive="${esc(c.id)}">_archive로 옮기기</button></div></div>`).join("")
@@ -140,11 +147,52 @@ function renderFiles() {
     `${data.limits.session_days}일 넘게 바뀌지 않은 세션 기록이 없습니다. 열린 기록 ${data.sessions.open}개는 늘 뺍니다.`);
 }
 
+// 목차 예산: 고른 줄을 지금 적힌 문장대로 바꾸면 목차가 몇 바이트가 되는지 바로 계산합니다.
+function renderBudget() {
+  const box = $("budget");
+  if (!box) return;
+  const L = data.limits;
+  const trims = data.memory.candidates.filter((c) => c.kind === "index_line");
+  const projects = data.memory.projects.filter((p) => trims.some((c) => c.project === p.project));
+  box.innerHTML = projects.map((p) => {
+    const mine = trims.filter((c) => c.project === p.project);
+    const on = mine.filter((c) => trimPicked.has(c.id));
+    const after = p.index_bytes - on.reduce((a, c) => a + bytes(c.before) - bytes(currentText(c)), 0);
+    const ok = after <= L.index;
+    const plan = p.budget;
+    const planText = plan
+      ? plan.reachable
+        ? `줄마다 ${plan.line}자 안으로 줄이면 약 ${num(plan.projected_bytes)}바이트가 됩니다. 원래 설명은 기억 파일 끝으로 옮겨져 잃는 것이 없습니다.`
+        : `${plan.line}자까지 줄여도 약 ${num(plan.projected_bytes)}바이트입니다. 끝난 기억 보관도 함께 보세요.`
+      : `목차는 이미 ${num(L.index)}바이트 안입니다. ${L.line}자 넘는 줄만 줄이면 됩니다.`;
+    const ids = mine.map((c) => c.id).join(",");
+    return `<div class="item budget${ok ? "" : " over"}">
+      <div class="row">
+        <div><h3>${esc(p.cwd || shortProject(p.project))} 목차 예산</h3>
+          <div class="small">${esc(planText)}</div></div>
+        <div class="budget-num"><strong class="${ok ? "ok-text" : "over-text"}">${num(p.index_bytes)} → ${num(after)}바이트</strong>
+          <span class="small">기준 ${num(L.index)} · 고른 줄 ${on.length}/${mine.length}</span></div>
+      </div>
+      <div class="gauge"><div class="fill${ok ? "" : " over"}" style="width:${Math.min(100, (after / L.index) * 100)}%"></div></div>
+      <div class="bar-actions">
+        <label><input type="checkbox" data-tall="${esc(ids)}" ${on.length === mine.length ? "checked" : ""}> 모두 고르기</label>
+        <button data-trim-many="${esc(ids)}" ${on.length ? "" : "disabled"}>고른 ${on.length}줄 한 번에 적용</button>
+      </div>
+    </div>`;
+  }).join("");
+}
+
+function currentText(c) {
+  const ta = document.querySelector(`.item[data-id="${c.id}"] textarea`);
+  return ta ? ta.value.trim() : (c.ai_proposal || c.proposal);
+}
+
 function trimItem(c) {
   const ai = c.ai_proposal;
   const start = ai || c.proposal;
   return `<div class="item" data-id="${esc(c.id)}">
-    <h3>${esc(c.title)} <span class="badge over">${esc(c.reason)}</span> <span class="small">${esc(shortProject(c.project))}</span></h3>
+    <h3><input type="checkbox" data-tpick="${esc(c.id)}" ${trimPicked.has(c.id) ? "checked" : ""} aria-label="${esc(c.title)} 고르기">
+      ${esc(c.title)} <span class="badge${c.budget_only ? "" : " over"}">${esc(c.reason)}</span> <span class="small">${esc(shortProject(c.project))}</span></h3>
     <div class="diff">
       <div class="before"><div class="label">지금(${num(c.before.length)}자)</div>${esc(c.before)}</div>
       <div class="after"><div class="label"><span>바꿀 줄 · 고쳐 쓸 수 있습니다</span><span class="len"></span></div>
@@ -178,6 +226,13 @@ function fileTable(list, emptyText) {
 // ---- 기록 ----
 function renderLog() {
   const log = data.apply_log;
+  const st = data.stats;
+  $("log-stats").innerHTML = st && st.actions ? [
+    card("적용한 조치", `${num(st.actions)}건`, `되돌린 것 ${num(st.undone)}건`),
+    card("되돌린 비율", `${st.undo_rate}%`, "목표 10% 이하. 높으면 후보 기준을 다시 봅니다", st.undo_rate > 10),
+    card("목차에서 줄인 양", `${num(st.index_bytes_saved)}바이트`, "되돌린 조치는 뺐습니다"),
+    card("휴지통으로 보낸 양", size(st.trashed_bytes), "비우기 전까지 Windows 휴지통에서 복원할 수 있습니다"),
+  ].join("") : "";
   $("log").innerHTML = log.length
     ? `<div class="table-wrap"><table><thead><tr><th>시각</th><th>조치</th><th>대상</th><th></th></tr></thead><tbody>${log
         .map((e) => {
@@ -198,14 +253,20 @@ function renderLog() {
 function updateLen(item) {
   const ta = item.querySelector("textarea");
   const label = item.querySelector(".after .label");
+  const c = data.memory.candidates.find((x) => x.id === item.dataset.id);
   const n = ta.value.trim().length;
-  item.querySelector(".len").textContent = `${n}자`;
+  const goal = c && c.limit ? c.limit : data.limits.line;
+  item.querySelector(".len").textContent = goal < data.limits.line ? `${n}자 / 예산 ${goal}자` : `${n}자 / ${goal}자`;
   label.classList.toggle("bad", n > data.limits.line);
+  label.classList.toggle("warn", n <= data.limits.line && n > goal);
 }
 
 document.addEventListener("input", (ev) => {
   const item = ev.target.closest(".item[data-id]");
-  if (item && ev.target.tagName === "TEXTAREA") updateLen(item);
+  if (item && ev.target.tagName === "TEXTAREA") {
+    updateLen(item);
+    renderBudget();
+  }
 });
 
 document.addEventListener("change", (ev) => {
@@ -216,6 +277,16 @@ document.addEventListener("change", (ev) => {
   } else if (t.dataset.all) {
     for (const id of t.dataset.all.split(",")) t.checked ? picked.add(id) : picked.delete(id);
     renderFiles();
+  } else if (t.dataset.tpick) {
+    t.checked ? trimPicked.add(t.dataset.tpick) : trimPicked.delete(t.dataset.tpick);
+    renderBudget();
+  } else if (t.dataset.tall) {
+    for (const id of t.dataset.tall.split(",")) {
+      t.checked ? trimPicked.add(id) : trimPicked.delete(id);
+      const box = document.querySelector(`input[data-tpick="${id}"]`);
+      if (box) box.checked = t.checked;
+    }
+    renderBudget();
   }
 });
 
@@ -232,7 +303,19 @@ document.addEventListener("click", async (ev) => {
   }
   b.disabled = true;
   try {
-    if (b.dataset.trim) {
+    if (b.dataset.trimMany) {
+      const ids = b.dataset.trimMany.split(",").filter((i) => trimPicked.has(i));
+      const items = ids.map((id) => ({ id, text: currentText(data.memory.candidates.find((c) => c.id === id)) }));
+      if (items.some((i) => i.text.length > data.limits.line)) {
+        toast(`${data.limits.line}자 넘는 줄이 있습니다. 고친 뒤 다시 누르세요.`);
+      } else if (confirm(`고른 목차 줄 ${ids.length}개를 바꿀까요? 원래 설명은 각 기억 파일 끝으로 옮기고, 기록 탭에서 한 번에 되돌릴 수 있습니다.`)) {
+        const out = await post("/api/trim-many", { items });
+        if (out.ok) {
+          trimPicked.clear();
+          renderBudget();
+        }
+      }
+    } else if (b.dataset.trim) {
       await post("/api/trim", { id: b.dataset.trim, text: item.querySelector("textarea").value.trim() });
     } else if (b.dataset.archive) {
       if (confirm("이 기억 파일을 _archive로 옮기고 목차에서 뺄까요? 기록 탭에서 되돌릴 수 있습니다.")) await post("/api/archive", { id: b.dataset.archive });

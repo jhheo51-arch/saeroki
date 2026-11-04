@@ -86,3 +86,11 @@ button:disabled { opacity: .5; cursor: default; }
 @media (max-width: 600px) {
   .top, main, .tabs { padding-left: 16px; padding-right: 16px; }
 }
+.diff .label.warn { color: var(--caution); font-weight: 600; }
+.item.budget { position: sticky; top: 0; z-index: 2; border-color: var(--accent); }
+.item.budget.over { border-color: var(--warn); }
+.item.budget .gauge { margin: 8px 0 2px; }
+.budget-num { display: flex; flex-direction: column; align-items: flex-end; font-variant-numeric: tabular-nums; }
+.ok-text { color: var(--accent); }
+.over-text { color: var(--warn); }
+#log-stats { margin-bottom: 16px; }

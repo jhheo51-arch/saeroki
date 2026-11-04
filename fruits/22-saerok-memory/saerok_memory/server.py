@@ -30,6 +30,7 @@ def archived_sessions() -> int:
 
 def summary() -> dict:
     mem = memory.scan()
+    log = apply.load_log()
     ai = suggestions()
     for c in mem["candidates"]:
         if c["kind"] == "index_line" and c["id"] in ai:
@@ -43,7 +44,8 @@ def summary() -> dict:
         "sessions": sessions.scan(),
         "archived_sessions": archived_sessions(),
         "hook_installed": apply.hook_installed(),
-        "apply_log": list(reversed(apply.load_log())),
+        "apply_log": list(reversed(log)),
+        "stats": apply.stats(log),
     }
 
 
@@ -99,6 +101,12 @@ class Handler(BaseHTTPRequestHandler):
             if self.path == "/api/trim":
                 text = body.get("text")
                 return self._json(200, apply.index_trim(str(body["id"]), str(text) if text else None))
+            if self.path == "/api/trim-many":
+                items = body.get("items")
+                if not isinstance(items, list) or not all(isinstance(i, dict) for i in items):
+                    raise ValueError("items는 {id, text} 목록이어야 합니다.")
+                return self._json(200, apply.index_trim_many(
+                    [{"id": str(i.get("id", "")), "text": str(i["text"]) if i.get("text") else None} for i in items]))
             if self.path == "/api/archive":
                 return self._json(200, apply.archive(str(body["id"])))
             if self.path == "/api/trash":

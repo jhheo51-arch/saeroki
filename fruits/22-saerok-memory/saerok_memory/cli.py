@@ -47,7 +47,8 @@ def suggest(args) -> int:
     """trim 스킬용. --list는 긴 목차 줄 후보를, --id와 --text는 AI 요약 문장을 저장합니다."""
     path = data_home() / "suggestions.json"
     if args.list:
-        rows = [{"id": c["id"], "project": c["project"], "before": c["before"], "proposal": c["proposal"]}
+        rows = [{"id": c["id"], "project": c["project"], "before": c["before"], "proposal": c["proposal"],
+                 "limit": c["limit"], "budget_only": c["budget_only"]}
                 for c in memory.scan()["candidates"] if c["kind"] == "index_line"]
         print(json.dumps(rows, ensure_ascii=False, indent=2))
         return 0

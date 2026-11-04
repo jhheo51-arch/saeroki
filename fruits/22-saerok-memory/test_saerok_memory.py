@@ -11,7 +11,7 @@ from pathlib import Path
 from unittest import mock
 
 from saerok_memory import apply, hook, memory, sessions, versions
-from saerok_memory.store import LINE_LIMIT
+from saerok_memory.store import BUDGET_MIN_LINE, INDEX_LIMIT, LINE_LIMIT
 
 DAY = 86400
 
@@ -147,6 +147,92 @@ class MemoryTest(Base):
         self.make_memory()
         with self.assertRaises(ValueError):
             apply.archive("../../etc")
+
+
+class BudgetTest(Base):
+    """목차 예산(4,000바이트), 여러 줄 한 번에 줄이기, 기록 집계."""
+
+    def make_big_index(self, lines=40):
+        mem = self.project() / "memory"
+        rows = []
+        for i in range(lines):
+            (mem / f"m{i:02d}.md").write_text(f"---\nname: m{i}\n---\n\n본문 {i}\n", encoding="utf-8")
+            hook = f"기억 {i}번 요약, 진행 기록 가나다라마바사 {i}, 커밋 abc{i:04d} 반영(1차, 2차), 남은 일 아자차카"
+            rows.append(f"- [기억 {i}](m{i:02d}.md) — {hook}")
+        (mem / "MEMORY.md").write_text("\n".join(rows) + "\n", encoding="utf-8")
+        return mem
+
+    def trims(self):
+        return [c for c in memory.scan()["candidates"] if c["kind"] == "index_line"]
+
+    def test_clauses_keep_parentheses(self):
+        self.assertEqual(memory.clauses("가, 나(1, 2), 다"), ["가", "나(1, 2)", "다"])
+        row = {"title": "t", "file": "f.md", "hook": "앞, 포폴 7차(21건 표현 수정, 86점) push 완료, 뒤"}
+        out = memory.propose_line(row, 40)
+        self.assertEqual(out.count("("), out.count(")"))
+
+    def test_budget_none_when_small(self):
+        self.make_big_index(lines=3)
+        [p] = memory.scan()["projects"]
+        self.assertIsNone(p["budget"])
+        self.assertEqual(self.trims(), [])
+
+    def test_budget_finds_limit_under_index_limit(self):
+        mem = self.make_big_index()
+        [p] = memory.scan()["projects"]
+        self.assertGreater(p["index_bytes"], INDEX_LIMIT)
+        plan = p["budget"]
+        self.assertTrue(plan["reachable"])
+        self.assertLessEqual(plan["projected_bytes"], INDEX_LIMIT)
+        trims = self.trims()
+        self.assertTrue(trims)
+        self.assertTrue(all(c["budget_only"] and len(c["proposal"]) <= plan["line"] for c in trims))
+        # 모두 적용하면 예상대로 기준 안에 듭니다.
+        res = apply.index_trim_many([{"id": c["id"]} for c in trims])
+        self.assertLessEqual(len((mem / "MEMORY.md").read_bytes()), INDEX_LIMIT)
+        self.assertEqual(res["saved_bytes"], p["index_bytes"] - len((mem / "MEMORY.md").read_bytes()))
+
+    def test_budget_unreachable_is_reported(self):
+        mem = self.project() / "memory"
+        rows = []
+        for i in range(120):
+            (mem / f"m{i:03d}.md").write_text("본문\n", encoding="utf-8")
+            rows.append(f"- [아주 긴 제목의 기억 번호 {i}번](m{i:03d}.md) — 짧은 설명")
+        (mem / "MEMORY.md").write_text("\n".join(rows) + "\n", encoding="utf-8")
+        [p] = memory.scan()["projects"]
+        self.assertFalse(p["budget"]["reachable"])
+        self.assertEqual(p["budget"]["line"], BUDGET_MIN_LINE)
+
+    def test_trim_many_one_entry_one_undo(self):
+        mem = self.make_big_index()
+        before = {p.name: p.read_bytes() for p in mem.glob("*.md")}
+        picked = self.trims()[:3]
+        res = apply.index_trim_many([{"id": c["id"]} for c in picked])
+        self.assertEqual(len(apply.load_log()), 1)
+        self.assertEqual(sum(op["path"].endswith("MEMORY.md") for op in res["entry"]["ops"]), 1)
+        for c in picked:
+            self.assertIn("## 목차에서 옮긴 기록", Path(c["path"]).read_text(encoding="utf-8"))
+        apply.undo(res["entry"]["id"])
+        self.assertEqual({p.name: p.read_bytes() for p in mem.glob("*.md")}, before)
+
+    def test_trim_many_all_or_nothing(self):
+        mem = self.make_big_index()
+        before = (mem / "MEMORY.md").read_bytes()
+        good, bad = self.trims()[:2]
+        with self.assertRaises(ValueError):
+            apply.index_trim_many([{"id": good["id"]}, {"id": bad["id"], "text": "- [딴 기억](zz.md) — 틀림"}])
+        self.assertEqual((mem / "MEMORY.md").read_bytes(), before)
+        self.assertEqual(apply.load_log(), [])
+
+    def test_stats_undo_rate_and_saved(self):
+        self.make_big_index()
+        trims = self.trims()
+        a = apply.index_trim_many([{"id": trims[0]["id"]}])
+        b = apply.index_trim_many([{"id": trims[1]["id"]}])
+        apply.undo(a["entry"]["id"])
+        st = apply.stats()
+        self.assertEqual((st["actions"], st["undone"], st["undo_rate"]), (2, 1, 50.0))
+        self.assertEqual(st["index_bytes_saved"], b["saved_bytes"])
 
 
 class VersionTest(Base):

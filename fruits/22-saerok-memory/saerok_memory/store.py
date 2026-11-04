@@ -8,6 +8,7 @@ from pathlib import Path
 # PRD v2.3 4장에서 확정한 기준. 바꾸려면 PRD부터 고칩니다.
 LINE_LIMIT = 150            # 목차 한 줄 글자 수
 INDEX_LIMIT = 4_000         # 목차 MEMORY.md 바이트
+BUDGET_MIN_LINE = 60        # 목차 예산을 맞출 때 이보다 짧게 자르자고 하지 않음
 MEMORY_DAYS = 30            # 마감·중단 뒤 지난 날
 VERSION_DAYS = 14           # 옛 버전 파일 마지막 수정 뒤
 SESSION_DAYS = 30           # 세션 기록 마지막 수정 뒤
