@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "saerok-memory"
+version = "0.1.0"
+description = "새록 가지치기: Claude 기억과 옛 파일을 줄이는 정리 에이전트 (새록이 22번 열매)"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.scripts]
+saerok-memory = "saerok_memory.cli:main"
+
+[tool.setuptools]
+packages = ["saerok_memory"]

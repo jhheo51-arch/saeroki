@@ -1,0 +1,16 @@
+{
+  "name": "saerok-memory",
+  "version": "0.1.0",
+  "description": "새록 가지치기: Claude 기억 목차, 끝난 기억, 작업 폴더 옛 버전, 오래된 세션 기록을 찾아 대시보드에서 버튼으로 줄이는 새록이 22번 열매",
+  "author": {
+    "name": "jhheo51-arch"
+  },
+  "homepage": "https://github.com/jhheo51-arch/saeroki/tree/main/fruits/22-saerok-memory",
+  "repository": "https://github.com/jhheo51-arch/saeroki",
+  "keywords": [
+    "memory",
+    "cleanup",
+    "context",
+    "saeroki"
+  ]
+}

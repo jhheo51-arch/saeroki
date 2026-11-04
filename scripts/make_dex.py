@@ -38,6 +38,14 @@ DEX_PROPS = {
         "h   ",
         "h   ",
     ))],
+    "shears": [("R", (0, -6), (
+        "c   c",
+        " c c ",
+        "  s  ",
+        " r r ",
+        "r   r",
+        "r   r",
+    ))],
     "mirror": [("R", (0, -6), (
         " ccc ",
         "cllwc",
@@ -90,6 +98,9 @@ ENTRIES = {
     21: dict(name="새록 지원서", kind="학습", art="apply", cls="연필 새록이", folder="fruits/21-saerok-apply",
              plan="채용 공고를 분석하고 내 경험 장부에 적힌 경험만으로 자기소개서를 쓴다.",
              text="채용 공고를 읽고 내 경험 장부에 적힌 경험만으로 자기소개서를 쓴다. 다 쓴 글은 면접관에게 넘긴다."),
+    22: dict(name="새록 가지치기", kind="돌봄", art="shears", cls="가위 새록이", folder="fruits/22-saerok-memory", plugin="saerok-memory",
+             plan="길어진 기억 목차와 옛 버전 파일, 오래된 세션 기록을 찾아 줄인다.",
+             text="길어진 기억 목차와 묵은 옛 파일을 찾아낸다. 자르는 것은 주인이 고른 가지뿐이고, 잘라 낸 가지는 백업해 둔다."),
 }
 
 STATUS = {"🌱": "seed", "🌸": "flower", "🍎": "fruit"}
