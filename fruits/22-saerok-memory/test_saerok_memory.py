@@ -362,6 +362,22 @@ class HookTest(Base):
         self.assertEqual(hook.run(stdin), "")
         self.assertEqual(hook.run("깨진 입력"), "")
 
+    def test_hook_reminds_once_a_day(self):
+        folder = self.project()
+        (folder / "memory" / "MEMORY.md").write_text("- [a](a.md) — " + "가" * 200 + "\n", encoding="utf-8")
+        stdin = json.dumps({"transcript_path": str(folder / "s.jsonl")})
+        self.assertNotEqual(hook.run(stdin), "")
+        self.assertEqual(hook.run(stdin), "")
+        state_path = hook.data_home() / "hook-state.json"
+        state = json.loads(state_path.read_text(encoding="utf-8"))
+        for v in state.values():
+            v["at"] -= hook.REMIND_SECONDS + 60
+        state_path.write_text(json.dumps(state), encoding="utf-8")
+        self.assertNotEqual(hook.run(stdin), "")  # 하루가 지나 다시 알림
+        # 예전 형식(문자열) 상태 파일도 읽습니다.
+        state_path.write_text(json.dumps({k: "예전" for k in state}), encoding="utf-8")
+        self.assertNotEqual(hook.run(stdin), "")
+
     def test_hook_message_includes_budget(self):
         mem = BudgetTest.make_big_index(self)
         stdin = json.dumps({"transcript_path": str(mem.parent / "s.jsonl")})

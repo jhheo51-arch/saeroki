@@ -5,11 +5,15 @@
 
 import json
 import sys
+import time
 from pathlib import Path
 
 from . import memory
 from .paths import data_home
 from .store import INDEX_LIMIT, LINE_LIMIT, read_json, write_json
+
+
+REMIND_SECONDS = 24 * 3600  # 같은 초과 상태는 하루 한 번만 다시 알림
 
 
 def check(index: Path) -> str:
@@ -47,9 +51,14 @@ def run(stdin_text: str) -> str:
         message = check(index)
         state_path = data_home() / "hook-state.json"
         state = read_json(state_path, {}) or {}
-        if state.get(str(index), "") == message:
+        key = str(index)
+        prev = state.get(key, "")
+        # 예전 상태 파일은 문자열이라 {"msg","at"}로 바꿔 읽습니다.
+        prev_msg, prev_at = (prev.get("msg", ""), prev.get("at", 0)) if isinstance(prev, dict) else (prev, 0)
+        now = time.time()
+        if prev_msg == message and (not message or now - prev_at < REMIND_SECONDS):
             return ""
-        state[str(index)] = message
+        state[key] = {"msg": message, "at": now}
         write_json(state_path, state)
         return json.dumps({"systemMessage": message}, ensure_ascii=False) if message else ""
     except Exception:  # 훅은 절대 세션을 막지 않습니다.
