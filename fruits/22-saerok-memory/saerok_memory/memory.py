@@ -111,17 +111,33 @@ def clauses(hook: str) -> list[str]:
     return [p for p in parts if p]
 
 
+RECORD_DATE = re.compile(r"\b\d{1,2}/\d{1,2}\b|\b\d{4}-\d{2}-\d{2}\b")
+RECORD_HASH = re.compile(r"\b(?=[0-9a-f]*\d)(?=[0-9a-f]*[a-f])[0-9a-f]{7,10}\b")
+RECORD_WORDS = ("push", "커밋")
+
+
+def _is_record(clause: str) -> bool:
+    """날짜, 커밋 해시, push·커밋 말이 든 진행 기록 마디인지."""
+    return bool(RECORD_DATE.search(clause) or RECORD_HASH.search(clause)
+                or any(w in clause for w in RECORD_WORDS))
+
+
 def propose_line(row: dict, limit: int = LINE_LIMIT) -> str:
     """목차 줄 줄이기 제안. 앞에서부터 쉼표 마디를 limit자 안에서 남깁니다. 원래 줄 전체는 본문으로 옮기므로 잃는 것이 없습니다."""
     head = f"- [{row['title']}]({row['file']})"
     if not row["hook"]:
         return head[:limit]
-    keep = ""
-    for part in clauses(row["hook"]):
-        trial = f"{keep}, {part}" if keep else part
+    parts = clauses(row["hook"])
+    # 날짜, 커밋 해시, push 같은 진행 기록 마디는 뒤로 미루고, 설명 마디를 먼저 남깁니다.
+    # 고른 마디는 원래 순서대로 이어 붙입니다.
+    order = sorted(range(len(parts)), key=lambda i: (_is_record(parts[i]), i))
+    chosen: list[int] = []
+    for i in order:
+        trial = ", ".join(parts[j] for j in sorted(chosen + [i]))
         if len(f"{head} — {trial}") > limit:
-            break
-        keep = trial
+            break  # 우선순위 순서로 넣다가 안 들어가면 멈춥니다(뒤 마디로 빈칸을 채우지 않음).
+        chosen.append(i)
+    keep = ", ".join(parts[j] for j in sorted(chosen))
     if not keep:
         room = limit - len(head) - 4
         if room < 8:  # 설명을 넣을 자리가 거의 없으면 제목과 파일만 남깁니다.

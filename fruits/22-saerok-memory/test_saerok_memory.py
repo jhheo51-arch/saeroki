@@ -152,7 +152,7 @@ class MemoryTest(Base):
 class BudgetTest(Base):
     """목차 예산(4,000바이트), 여러 줄 한 번에 줄이기, 기록 집계."""
 
-    def make_big_index(self, lines=40):
+    def make_big_index(self, lines=30):
         mem = self.project() / "memory"
         rows = []
         for i in range(lines):
@@ -168,8 +168,20 @@ class BudgetTest(Base):
     def test_clauses_keep_parentheses(self):
         self.assertEqual(memory.clauses("가, 나(1, 2), 다"), ["가", "나(1, 2)", "다"])
         row = {"title": "t", "file": "f.md", "hook": "앞, 포폴 7차(21건 표현 수정, 86점) push 완료, 뒤"}
-        out = memory.propose_line(row, 40)
+        out = memory.propose_line(row, 32)
         self.assertEqual(out.count("("), out.count(")"))
+
+    def test_propose_keeps_description_before_progress_records(self):
+        row = {"title": "t", "file": "f.md",
+               "hook": "11/3 시작, 설명 핵심 문장, 커밋 abc1234 반영, 열 때 볼 것"}
+        out = memory.propose_line(row, 32)
+        self.assertIn("설명 핵심 문장", out)
+        self.assertLessEqual(len(out), 32)
+        self.assertNotIn("abc1234", out)
+        self.assertNotIn("11/3", out)
+        # 전부 진행 기록이면 예전처럼 앞에서부터 남깁니다.
+        rec = {"title": "t", "file": "f.md", "hook": "11/3 시작, 11/4 이어서"}
+        self.assertIn("11/3 시작", memory.propose_line(rec, 60))
 
     def test_budget_none_when_small(self):
         self.make_big_index(lines=3)
@@ -349,6 +361,13 @@ class HookTest(Base):
         self.assertIn("150자 넘는 줄 1개", json.loads(first)["systemMessage"])
         self.assertEqual(hook.run(stdin), "")
         self.assertEqual(hook.run("깨진 입력"), "")
+
+    def test_hook_message_includes_budget(self):
+        mem = BudgetTest.make_big_index(self)
+        stdin = json.dumps({"transcript_path": str(mem.parent / "s.jsonl")})
+        msg = json.loads(hook.run(stdin))["systemMessage"]
+        plan = memory.scan()["projects"][0]["budget"]
+        self.assertIn(f"줄마다 {plan['line']}자 안으로 줄이면 기준 안에 듭니다", msg)
 
 
 if __name__ == "__main__":

@@ -16,9 +16,11 @@ def check(index: Path) -> str:
     """기준을 넘었으면 알림 문장, 아니면 빈 문자열."""
     if not index.is_file():
         return ""
-    text = index.read_text(encoding="utf-8", errors="replace")
-    size = len(text.encode("utf-8"))
-    long_lines = sum(len(r["line"]) > LINE_LIMIT for r in memory.parse_index(text))
+    raw = index.read_bytes()  # CRLF도 실제 크기로 셉니다.
+    text = raw.decode("utf-8", errors="replace")
+    size = len(raw)
+    rows = memory.parse_index(text)
+    long_lines = sum(len(r["line"]) > LINE_LIMIT for r in rows)
     parts = []
     if size > INDEX_LIMIT:
         parts.append(f"{size:,}바이트(기준 {INDEX_LIMIT:,})")
@@ -26,7 +28,14 @@ def check(index: Path) -> str:
         parts.append(f"{LINE_LIMIT}자 넘는 줄 {long_lines}개")
     if not parts:
         return ""
-    return "새록 가지치기: MEMORY.md가 " + ", ".join(parts) + "입니다. /saerok-memory:dashboard에서 줄일 수 있습니다."
+    msg = "새록 가지치기: MEMORY.md가 " + ", ".join(parts) + "입니다."
+    plan = memory.budget(rows, size) if size > INDEX_LIMIT else None
+    if plan:
+        if plan["reachable"]:
+            msg += f" 줄마다 {plan['line']}자 안으로 줄이면 기준 안에 듭니다."
+        else:
+            msg += f" {plan['line']}자까지 줄여도 {plan['projected_bytes']:,}바이트라 끝난 기억 보관도 필요합니다."
+    return msg + " /saerok-memory:dashboard에서 줄일 수 있습니다."
 
 
 def run(stdin_text: str) -> str:
