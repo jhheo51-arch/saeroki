@@ -11,6 +11,7 @@ from growth import (
     MAX_LEVEL,
     compute_score,
     fetch_owner_commit_shas,
+    fetch_stars,
     list_owned_repos,
     level_for_score,
     merge_visitors,
@@ -92,6 +93,12 @@ class GrowthTest(unittest.TestCase):
         empty = urllib.error.HTTPError("https://api.github.com", 409, "empty repository", {}, None)
         with patch("growth._get_json", side_effect=empty):
             self.assertEqual(fetch_owner_commit_shas("jhheo51-arch/empty", "jhheo51-arch", "token"), set())
+
+    def test_stars_use_count_endpoint_with_read_only_metadata(self):
+        with patch("growth._get_json", return_value={"count": 3}) as get_json:
+            self.assertEqual(fetch_stars("jhheo51-arch/private", "token"), 3)
+        self.assertEqual(get_json.call_args.args[0],
+                         "https://api.github.com/repos/jhheo51-arch/private/stargazers/count")
 
     def test_account_update_uses_all_owned_repos_and_preserves_file_on_failure(self):
         with TemporaryDirectory() as directory:
