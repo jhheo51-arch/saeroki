@@ -20,7 +20,29 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  check-access:
+    if: github.ref != 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      - name: 공개 저장소 방문 자료 접근 확인
+        env:
+          TRAFFIC_TOKEN: ${{ secrets.TRAFFIC_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python - <<'PY'
+          import os
+          from growth import fetch_traffic, list_public_repos
+
+          repos = list_public_repos('jhheo51-arch', os.environ['GITHUB_TOKEN'])
+          for repo in repos:
+              fetch_traffic(repo, os.environ['TRAFFIC_TOKEN'])
+          print(f'공개 저장소 {len(repos)}개 방문 자료 접근 확인')
+          PY
   grow:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
