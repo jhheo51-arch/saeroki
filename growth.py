@@ -1,7 +1,7 @@
-"""공개 저장소 전체의 활동으로 새록이 묘목을 키우고 SVG로 그립니다.
+"""계정 소유 저장소 전체의 활동으로 새록이 묘목을 키우고 SVG로 그립니다.
 
 성장 점수 = 순방문자 + 스타 x 10 + 작업량
-- 방문 합계: 공개 저장소별 날짜별 순방문자(uniques)의 합. 저장소 간 같은 방문자는 구분할 수 없습니다.
+- 방문 합계: 저장소별 날짜별 순방문자(uniques)의 합. 저장소 간 같은 방문자와 본인 방문은 구분할 수 없습니다.
 - 스타: 저장소 주인을 뺀 스타 1개당 10점.
 - 작업량: 사람이 한 커밋마다 1점 + 바뀐 줄 50줄마다 1점(커밋당 최대 4점) + 작업한 날마다 3점.
   봇 커밋과 자동 생성 그림(assets/), 성장 기록(data/growth.json)은 세지 않습니다.
@@ -521,10 +521,10 @@ def render_current_svg(state: dict) -> str:
     bg, ink = _background(level.level)
     behind, front = render_effects(level.level, sprite, pixel, "main")
     work = state.get("work", {})
-    if state.get("scope") == "public_repositories":
-        activity_line = (f"공개 저장소 {state['repo_count']}개 · 방문 합계 {_fmt(state.get('visitors_total'))}"
+    if state.get("scope") == "owned_repositories":
+        activity_line = (f"계정 저장소 · 방문 합계 {_fmt(state.get('visitors_total'))}"
                          f" · 스타 {_fmt(state.get('stars'))} · 작업량 {_fmt(work.get('points'))}")
-        scope_line = f"방문은 저장소별 일일 순방문 합계(저장소 간 중복 가능) · {state['updated_at'][:10]} 기준"
+        scope_line = f"저장소별 방문 합계(중복 및 본인 방문 구분 불가) · {state['updated_at'][:10]} 기준"
     else:
         activity_line = (f"순방문자 {_fmt(state.get('visitors_total'))} · 스타 {_fmt(state.get('stars'))}"
                          f" · 작업량 {_fmt(work.get('points'))} · {state['updated_at'][:10]} 기준")
@@ -765,14 +765,14 @@ def fetch_traffic(repo: str, token: str) -> dict:
     return _get_json(f"https://api.github.com/repos/{repo}/traffic/views", token)
 
 
-def list_public_repos(owner: str, token: str) -> list[str]:
-    """계정 소유 공개 저장소를 페이지 끝까지 확인합니다."""
+def list_owned_repos(owner: str, token: str) -> list[str]:
+    """토큰에 접근 권한이 있는 계정 소유 저장소를 모두 확인합니다."""
     names = []
     page = 1
     while True:
-        items = _get_json(f"https://api.github.com/users/{owner}/repos?type=owner&per_page=100&page={page}", token)
-        names.extend(item["full_name"] for item in items if not item["private"]
-                     and item["owner"]["login"].lower() == owner.lower())
+        items = _get_json(f"https://api.github.com/user/repos?affiliation=owner&visibility=all&per_page=100&page={page}", token)
+        names.extend(item["full_name"] for item in items
+                     if item["owner"]["login"].lower() == owner.lower())
         if len(items) < 100:
             return sorted(set(names))
         page += 1
@@ -796,13 +796,20 @@ def fetch_owner_commit_shas(repo: str, owner: str, token: str) -> set[str]:
         page += 1
 
 
-def read_repo_commits(repo: str, shas: set[str], directory: Path, owner: str) -> list[dict]:
-    """공개 저장소를 임시로 받아 선택된 커밋의 변경 줄 수를 계산합니다."""
+def read_repo_commits(repo: str, shas: set[str], directory: Path, owner: str, token: str) -> list[dict]:
+    """저장소를 임시로 받아 선택된 커밋의 변경 줄 수를 계산합니다."""
     if not shas:
         return []
     target = directory / repo.split("/", 1)[1]
-    subprocess.run(["git", "clone", "--quiet", "--bare", "--single-branch", "--no-tags",
-                    f"https://github.com/{repo}.git", str(target)], check=True, capture_output=True, text=True)
+    askpass = directory / ("askpass.cmd" if os.name == "nt" else "askpass.sh")
+    if os.name == "nt":
+        askpass.write_text('@echo off\nif "%~1"=="Username for \'https://github.com\':" (echo x-access-token) else (echo %SAEROKI_GIT_TOKEN%)\n', encoding="utf-8")
+    else:
+        askpass.write_text('#!/bin/sh\ncase "$1" in *Username*) printf x-access-token;; *) printf %s "$SAEROKI_GIT_TOKEN";; esac\n', encoding="utf-8")
+        askpass.chmod(0o700)
+    env = {**os.environ, "GIT_ASKPASS": str(askpass), "GIT_TERMINAL_PROMPT": "0", "SAEROKI_GIT_TOKEN": token}
+    subprocess.run(["git", "-c", "credential.helper=", "clone", "--quiet", "--bare", "--single-branch", "--no-tags",
+                    f"https://github.com/{repo}.git", str(target)], check=True, capture_output=True, text=True, env=env)
     log = subprocess.run(
         ["git", f"--git-dir={target}", "log", "--no-merges", "--no-renames",
          "--format=@%H|%ad", "--date=short", "--numstat"],
@@ -823,20 +830,24 @@ def read_repo_commits(repo: str, shas: set[str], directory: Path, owner: str) ->
             current["lines"] += int(added) + int(deleted)
     found = {commit["sha"] for commit in commits}
     if found != shas:
-        raise RuntimeError(f"{repo}: 작성자 커밋 {len(shas - found)}개를 복제한 기록에서 찾지 못했습니다")
+        raise RuntimeError(f"작성자 커밋 {len(shas - found)}개를 복제한 기록에서 찾지 못했습니다")
     return commits
 
 
-def merge_repo_visitors(old: dict, repos: list[str], traffic: dict[str, dict]) -> dict:
-    """최근 14일 자료를 저장소별로 덮어써 과거 날짜를 보존합니다."""
-    by_repo = old.get("visitors_by_repo_day")
-    if by_repo is None:
-        by_repo = {"jhheo51-arch/saeroki": old["visitors_by_day"]} if "visitors_by_day" in old else {}
-    merged = {repo: dict(by_repo.get(repo, {})) for repo in repos}
-    for repo, payload in traffic.items():
+def merge_repo_visitors(old: dict, traffic: dict[str, dict]) -> dict:
+    """공개 파일에는 날짜별 합계만 남기고 최근 조회 구간을 다시 계산합니다."""
+    merged = dict(old.get("visitors_by_day", {}))
+    if not merged and "visitors_by_repo_day" in old:
+        for days in old["visitors_by_repo_day"].values():
+            for day, value in days.items():
+                merged[day] = merged.get(day, 0) + value
+    current = {}
+    for payload in traffic.values():
         for item in payload.get("views", []):
-            merged[repo][item["timestamp"][:10]] = int(item["uniques"])
-    return {repo: dict(sorted(days.items())) for repo, days in merged.items()}
+            day = item["timestamp"][:10]
+            current[day] = current.get(day, 0) + int(item["uniques"])
+    merged.update(current)
+    return dict(sorted(merged.items()))
 
 
 def fetch_stars(repo: str, token: str | None) -> int:
@@ -852,25 +863,35 @@ def fetch_stars(repo: str, token: str | None) -> int:
 
 
 def update(state_path: Path, assets_dir: Path, repo: str | None, traffic_token: str | None, api_token: str | None) -> dict:
-    if not repo or not traffic_token or not api_token:
-        raise RuntimeError("공개 저장소 전체 집계에는 저장소 이름, TRAFFIC_TOKEN, GITHUB_TOKEN이 필요합니다")
+    if not repo or not traffic_token:
+        raise RuntimeError("계정 저장소 집계에는 저장소 이름과 TRAFFIC_TOKEN이 필요합니다")
     old = json.loads(state_path.read_text(encoding="utf-8")) if state_path.exists() else {}
     owner = repo.split("/", 1)[0]
-    repos = list_public_repos(owner, api_token)
+    repos = list_owned_repos(owner, traffic_token)
     if not repos or repo not in repos:
-        raise RuntimeError("공개 저장소 목록에 새록이 저장소가 없습니다")
+        raise RuntimeError("계정 소유 저장소 목록에 새록이 저장소가 없습니다")
     # 한 저장소라도 조회하지 못하면 기존 점수와 그림을 그대로 둡니다.
-    traffic = {name: fetch_traffic(name, traffic_token) for name in repos}
-    by_repo = merge_repo_visitors(old, repos, traffic)
-    state = {"scope": "public_repositories", "repo_count": len(repos),
-             "visitors_by_repo_day": by_repo,
-             "visitors_total": sum(sum(days.values()) for days in by_repo.values()),
-             "stars": sum(fetch_stars(name, api_token) for name in repos)}
+    traffic = {}
+    stars = 0
+    for index, name in enumerate(repos, start=1):
+        try:
+            traffic[name] = fetch_traffic(name, traffic_token)
+            stars += fetch_stars(name, traffic_token)
+        except Exception as error:
+            raise RuntimeError(f"저장소 {index}/{len(repos)} 방문 또는 스타 조회 실패: {type(error).__name__}") from None
+    by_day = merge_repo_visitors(old, traffic)
+    state = {"scope": "owned_repositories", "repo_count": len(repos),
+             "visitors_by_day": by_day,
+             "visitors_total": sum(by_day.values()),
+             "stars": stars}
     with tempfile.TemporaryDirectory(prefix="saeroki-growth-") as temporary:
         commits = []
-        for name in repos:
-            shas = fetch_owner_commit_shas(name, owner, api_token)
-            commits.extend(read_repo_commits(name, shas, Path(temporary), owner))
+        for index, name in enumerate(repos, start=1):
+            try:
+                shas = fetch_owner_commit_shas(name, owner, traffic_token)
+                commits.extend(read_repo_commits(name, shas, Path(temporary), owner, traffic_token))
+            except Exception as error:
+                raise RuntimeError(f"저장소 {index}/{len(repos)} 작업량 조회 실패: {type(error).__name__}") from None
     unique_commits = {commit["sha"]: commit for commit in commits}
     state["work"] = work_points(list(unique_commits.values()))
     state["score"] = compute_score(state)
