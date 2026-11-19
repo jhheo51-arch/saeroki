@@ -1,7 +1,7 @@
-"""새록이 묘목 성장 상태를 계산하고 픽셀 아트 SVG로 그립니다.
+"""계정 소유 저장소 전체의 활동으로 새록이 묘목을 키우고 SVG로 그립니다.
 
 성장 점수 = 순방문자 + 스타 x 10 + 작업량
-- 순방문자: GitHub traffic API의 날짜별 순방문자(uniques) 합. 한 사람은 하루에 1점까지만 셉니다.
+- 방문 합계: 저장소별 날짜별 순방문자(uniques)의 합. 저장소 간 같은 방문자와 본인 방문은 구분할 수 없습니다.
 - 스타: 저장소 주인을 뺀 스타 1개당 10점.
 - 작업량: 사람이 한 커밋마다 1점 + 바뀐 줄 50줄마다 1점(커밋당 최대 4점) + 작업한 날마다 3점.
   봇 커밋과 자동 생성 그림(assets/), 성장 기록(data/growth.json)은 세지 않습니다.
@@ -17,6 +17,8 @@ import math
 import os
 import subprocess
 import sys
+import tempfile
+import urllib.error
 import urllib.request
 from dataclasses import dataclass
 from datetime import datetime, timezone
@@ -519,6 +521,14 @@ def render_current_svg(state: dict) -> str:
     bg, ink = _background(level.level)
     behind, front = render_effects(level.level, sprite, pixel, "main")
     work = state.get("work", {})
+    if state.get("scope") == "owned_repositories":
+        activity_line = (f"계정 저장소 · 방문 합계 {_fmt(state.get('visitors_total'))}"
+                         f" · 스타 {_fmt(state.get('stars'))} · 작업량 {_fmt(work.get('points'))}")
+        scope_line = f"저장소별 방문 합계(중복 및 본인 방문 구분 불가) · {state['updated_at'][:10]} 기준"
+    else:
+        activity_line = (f"순방문자 {_fmt(state.get('visitors_total'))} · 스타 {_fmt(state.get('stars'))}"
+                         f" · 작업량 {_fmt(work.get('points'))} · {state['updated_at'][:10]} 기준")
+        scope_line = ""
     bar_w = 520
     return f"""<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 320" role="img" aria-labelledby="title desc">
   <title id="title">자라는 새록이</title>
@@ -550,7 +560,8 @@ def render_current_svg(state: dict) -> str:
   <rect x="520" y="176" width="{bar_w}" height="18" rx="9" fill="{ink['track']}"/>
   <rect x="520" y="176" width="{max(18, round(bar_w * progress))}" height="18" rx="9" fill="{ink['bar']}"/>
   <text x="520" y="228" fill="{ink['line']}" font-size="20" font-weight="600" font-family="{FONT}">성장 점수 {state['score']:,}점 · {goal}</text>
-  <text x="520" y="260" fill="{ink['sub']}" font-size="17" font-weight="500" font-family="{FONT}">순방문자 {_fmt(state.get('visitors_total'))} · 스타 {_fmt(state.get('stars'))} · 작업량 {_fmt(work.get('points'))} · {state['updated_at'][:10]} 기준</text>
+  <text x="520" y="258" fill="{ink['sub']}" font-size="17" font-weight="500" font-family="{FONT}">{activity_line}</text>
+  <text x="520" y="281" fill="{ink['sub']}" font-size="13" font-weight="500" font-family="{FONT}">{scope_line}</text>
 </svg>
 """
 
@@ -754,6 +765,91 @@ def fetch_traffic(repo: str, token: str) -> dict:
     return _get_json(f"https://api.github.com/repos/{repo}/traffic/views", token)
 
 
+def list_owned_repos(owner: str, token: str) -> list[str]:
+    """토큰에 접근 권한이 있는 계정 소유 저장소를 모두 확인합니다."""
+    names = []
+    page = 1
+    while True:
+        items = _get_json(f"https://api.github.com/user/repos?affiliation=owner&visibility=all&per_page=100&page={page}", token)
+        names.extend(item["full_name"] for item in items
+                     if item["owner"]["login"].lower() == owner.lower())
+        if len(items) < 100:
+            return sorted(set(names))
+        page += 1
+
+
+def fetch_owner_commit_shas(repo: str, owner: str, token: str) -> set[str]:
+    """GitHub가 계정 주인에게 귀속한 기본 브랜치의 커밋만 고릅니다."""
+    shas = set()
+    page = 1
+    while True:
+        try:
+            items = _get_json(f"https://api.github.com/repos/{repo}/commits?author={owner}&per_page=100&page={page}", token)
+        except urllib.error.HTTPError as error:
+            if error.code == 409:  # 아직 커밋이 없는 새 공개 저장소
+                return set()
+            raise
+        shas.update(item["sha"] for item in items if len(item.get("parents", [])) < 2
+                    and item.get("author") and item["author"]["login"].lower() == owner.lower())
+        if len(items) < 100:
+            return shas
+        page += 1
+
+
+def read_repo_commits(repo: str, shas: set[str], directory: Path, owner: str, token: str) -> list[dict]:
+    """저장소를 임시로 받아 선택된 커밋의 변경 줄 수를 계산합니다."""
+    if not shas:
+        return []
+    target = directory / repo.split("/", 1)[1]
+    askpass = directory / ("askpass.cmd" if os.name == "nt" else "askpass.sh")
+    if os.name == "nt":
+        askpass.write_text('@echo off\nif "%~1"=="Username for \'https://github.com\':" (echo x-access-token) else (echo %SAEROKI_GIT_TOKEN%)\n', encoding="utf-8")
+    else:
+        askpass.write_text('#!/bin/sh\ncase "$1" in *Username*) printf x-access-token;; *) printf %s "$SAEROKI_GIT_TOKEN";; esac\n', encoding="utf-8")
+        askpass.chmod(0o700)
+    env = {**os.environ, "GIT_ASKPASS": str(askpass), "GIT_TERMINAL_PROMPT": "0", "SAEROKI_GIT_TOKEN": token}
+    subprocess.run(["git", "-c", "credential.helper=", "clone", "--quiet", "--bare", "--single-branch", "--no-tags",
+                    f"https://github.com/{repo}.git", str(target)], check=True, capture_output=True, text=True, env=env)
+    log = subprocess.run(
+        ["git", f"--git-dir={target}", "log", "--no-merges", "--no-renames",
+         "--format=@%H|%ad", "--date=short", "--numstat"],
+        capture_output=True, text=True, encoding="utf-8", check=True,
+    ).stdout
+    commits = []
+    current = None
+    for line in log.splitlines():
+        if line.startswith("@"):
+            sha, date = line[1:].split("|", 1)
+            current = {"sha": sha, "author": owner, "date": date, "lines": 0} if sha in shas else None
+            if current is not None:
+                commits.append(current)
+        elif line.strip() and current is not None:
+            added, deleted, path = line.split("\t", 2)
+            if added == "-" or (repo.endswith("/saeroki") and path.startswith(IGNORED_PATHS)):
+                continue
+            current["lines"] += int(added) + int(deleted)
+    found = {commit["sha"] for commit in commits}
+    if found != shas:
+        raise RuntimeError(f"작성자 커밋 {len(shas - found)}개를 복제한 기록에서 찾지 못했습니다")
+    return commits
+
+
+def merge_repo_visitors(old: dict, traffic: dict[str, dict]) -> dict:
+    """공개 파일에는 날짜별 합계만 남기고 최근 조회 구간을 다시 계산합니다."""
+    merged = dict(old.get("visitors_by_day", {}))
+    if not merged and "visitors_by_repo_day" in old:
+        for days in old["visitors_by_repo_day"].values():
+            for day, value in days.items():
+                merged[day] = merged.get(day, 0) + value
+    current = {}
+    for payload in traffic.values():
+        for item in payload.get("views", []):
+            day = item["timestamp"][:10]
+            current[day] = current.get(day, 0) + int(item["uniques"])
+    merged.update(current)
+    return dict(sorted(merged.items()))
+
+
 def fetch_stars(repo: str, token: str | None) -> int:
     """저장소 주인이 누른 스타는 빼고 셉니다."""
     owner = repo.split("/")[0].lower()
@@ -767,27 +863,40 @@ def fetch_stars(repo: str, token: str | None) -> int:
 
 
 def update(state_path: Path, assets_dir: Path, repo: str | None, traffic_token: str | None, api_token: str | None) -> dict:
+    if not repo or not traffic_token:
+        raise RuntimeError("계정 저장소 집계에는 저장소 이름과 TRAFFIC_TOKEN이 필요합니다")
     old = json.loads(state_path.read_text(encoding="utf-8")) if state_path.exists() else {}
-    state = {k: v for k, v in old.items() if k in ("visitors_by_day", "visitors_total", "stars")}
-    errors = []
-    if repo and traffic_token:
+    owner = repo.split("/", 1)[0]
+    repos = list_owned_repos(owner, traffic_token)
+    if not repos or repo not in repos:
+        raise RuntimeError("계정 소유 저장소 목록에 새록이 저장소가 없습니다")
+    # 한 저장소라도 조회하지 못하면 기존 점수와 그림을 그대로 둡니다.
+    traffic = {}
+    stars = 0
+    for index, name in enumerate(repos, start=1):
         try:
-            state = merge_visitors(state, fetch_traffic(repo, traffic_token))
-        except Exception as error:  # 실패를 0으로 바꾸지 않고 기존 기록을 유지합니다.
-            errors.append(f"traffic: {error}")
-    state.setdefault("visitors_total", None)
-    if repo:
-        try:
-            state["stars"] = fetch_stars(repo, api_token)
+            traffic[name] = fetch_traffic(name, traffic_token)
+            stars += fetch_stars(name, traffic_token)
         except Exception as error:
-            errors.append(f"stars: {error}")
-    state.setdefault("stars", None)
-    state["work"] = work_points(read_commits())
+            raise RuntimeError(f"저장소 {index}/{len(repos)} 방문 또는 스타 조회 실패: {type(error).__name__}") from None
+    by_day = merge_repo_visitors(old, traffic)
+    state = {"scope": "owned_repositories", "repo_count": len(repos),
+             "visitors_by_day": by_day,
+             "visitors_total": sum(by_day.values()),
+             "stars": stars}
+    with tempfile.TemporaryDirectory(prefix="saeroki-growth-") as temporary:
+        commits = []
+        for index, name in enumerate(repos, start=1):
+            try:
+                shas = fetch_owner_commit_shas(name, owner, traffic_token)
+                commits.extend(read_repo_commits(name, shas, Path(temporary), owner, traffic_token))
+            except Exception as error:
+                raise RuntimeError(f"저장소 {index}/{len(repos)} 작업량 조회 실패: {type(error).__name__}") from None
+    unique_commits = {commit["sha"]: commit for commit in commits}
+    state["work"] = work_points(list(unique_commits.values()))
     state["score"] = compute_score(state)
     level = level_for_score(state["score"])
     state["stage"] = {"level": level.level, "name": level.name}
-    if errors:
-        state["last_error"] = "; ".join(errors)
 
     # 점수와 기록이 그대로면 갱신 시각도 그대로 두어 봇 커밋이 매일 생기지 않게 합니다.
     # 그림은 그리는 방식이 바뀌었을 수 있으니 항상 다시 그립니다(내용이 같으면 git 변경도 없습니다).
