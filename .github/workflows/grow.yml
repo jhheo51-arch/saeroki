@@ -35,7 +35,7 @@ jobs:
           import os
           from pathlib import Path
           from tempfile import TemporaryDirectory
-          from growth import _get_json, fetch_traffic, fetch_owner_commit_shas, list_owned_repos, read_repo_commits
+          from growth import _get_json, fetch_traffic, fetch_stars, fetch_owner_commit_shas, list_owned_repos, read_repo_commits
 
           token = os.environ['TRAFFIC_TOKEN']
           repos = list_owned_repos('jhheo51-arch', token)
@@ -45,8 +45,9 @@ jobs:
           for index, repo in enumerate(repos, start=1):
               try:
                   fetch_traffic(repo, token)
+                  fetch_stars(repo, token)
               except Exception as error:
-                  raise RuntimeError(f'저장소 {index}/{len(repos)} 방문 권한 확인 실패: {type(error).__name__}') from None
+                  raise RuntimeError(f'저장소 {index}/{len(repos)} 방문 또는 스타 권한 확인 실패: {type(error).__name__}') from None
           with TemporaryDirectory() as directory:
               repo = private[0]['full_name']
               try:

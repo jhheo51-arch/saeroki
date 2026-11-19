@@ -2,7 +2,7 @@
 
 성장 점수 = 순방문자 + 스타 x 10 + 작업량
 - 방문 합계: 저장소별 날짜별 순방문자(uniques)의 합. 저장소 간 같은 방문자와 본인 방문은 구분할 수 없습니다.
-- 스타: 저장소 주인을 뺀 스타 1개당 10점.
+- 스타: 저장소의 현재 스타 1개당 10점. 개수 API로는 누가 눌렀는지 구분할 수 없습니다.
 - 작업량: 사람이 한 커밋마다 1점 + 바뀐 줄 50줄마다 1점(커밋당 최대 4점) + 작업한 날마다 3점.
   봇 커밋과 자동 생성 그림(assets/), 성장 기록(data/growth.json)은 세지 않습니다.
 레벨은 1부터 100까지이며, 레벨이 오를수록 필요한 점수가 점점 커집니다(Lv.100 약 9,800점).
@@ -851,15 +851,9 @@ def merge_repo_visitors(old: dict, traffic: dict[str, dict]) -> dict:
 
 
 def fetch_stars(repo: str, token: str | None) -> int:
-    """저장소 주인이 누른 스타는 빼고 셉니다."""
-    owner = repo.split("/")[0].lower()
-    total, page = 0, 1
-    while True:
-        users = _get_json(f"https://api.github.com/repos/{repo}/stargazers?per_page=100&page={page}", token)
-        total += sum(1 for user in users if user["login"].lower() != owner)
-        if len(users) < 100:
-            return total
-        page += 1
+    """최소 권한으로 저장소의 스타 개수를 읽습니다."""
+    payload = _get_json(f"https://api.github.com/repos/{repo}/stargazers/count", token)
+    return int(payload["count"])
 
 
 def update(state_path: Path, assets_dir: Path, repo: str | None, traffic_token: str | None, api_token: str | None) -> dict:
