@@ -165,9 +165,10 @@ claude plugin disable saerok-watch
 <details>
 <summary>공개 저장소 방문 집계 토큰 설정하기</summary>
 
-1. GitHub `Settings`에서 Fine-grained token을 만들거나 기존 토큰의 접근 범위를 고릅니다. 계정이 소유한 **공개 저장소 전체**를 선택하고 저장소 권한은 `Administration: Read-only`로 설정합니다. 새 공개 저장소를 만들면 토큰 선택 범위에도 추가해야 합니다.
-2. 새록이 저장소의 `Settings`, `Secrets and variables`, `Actions`에서 `TRAFFIC_TOKEN` 값을 등록하거나 교체합니다. 토큰 값은 코드나 문서에 넣지 않습니다.
-3. `Actions` 탭의 `새록이 성장`에서 `Run workflow`를 누르고, 완료된 실행과 SVG의 저장소 수를 확인합니다. 토큰 범위가 빠진 저장소가 있으면 실행은 실패하고 이전 그림은 유지됩니다.
+1. GitHub `Settings`, `Developer settings`, `Personal access tokens`, `Fine-grained tokens`에서 새 토큰을 만듭니다. `Resource owner`는 `jhheo51-arch`를 고르고, `Repository access`는 **Only select repositories**로 설정해 현재 공개 저장소 18개만 선택합니다. `All repositories`는 비공개 저장소까지 권한 범위에 넣으므로 선택하지 않습니다.
+2. `Repository permissions`에서 `Administration: Read-only`를 선택합니다. 새 공개 저장소를 만들면 토큰의 선택 범위에도 추가해야 합니다.
+3. 새록이 저장소의 `Settings`, `Secrets and variables`, `Actions`에서 `TRAFFIC_TOKEN` 값을 새 토큰으로 교체합니다. 토큰 값은 코드나 문서에 넣지 않습니다.
+4. `Actions` 탭의 `새록이 성장`에서 `Run workflow`를 누르고, 완료된 실행과 SVG의 저장소 수를 확인합니다. 토큰 범위가 빠진 저장소가 있으면 실행은 실패하고 이전 그림은 유지됩니다.
 
 </details>
 
