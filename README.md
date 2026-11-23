@@ -4,7 +4,7 @@
 
 <p align="center">
   <img src="https://img.shields.io/badge/PRD-v2.2-40916C" alt="PRD v2.2">
-  <img src="https://img.shields.io/badge/%EC%97%90%EC%9D%B4%EC%A0%84%ED%8A%B8%2016-%F0%9F%8D%8E3%20%C2%B7%20%F0%9F%8C%B85%20%C2%B7%20%F0%9F%8C%B18-D97757" alt="에이전트 16개: 열매 3 · 꽃 5 · 씨앗 8">
+  <img src="https://img.shields.io/badge/%EC%97%90%EC%9D%B4%EC%A0%84%ED%8A%B8%2017-%F0%9F%8D%8E3%2C%20%F0%9F%8C%B86%2C%20%F0%9F%8C%B18-D97757" alt="에이전트 17개 (열매 3, 꽃 6, 씨앗 8)">
   <img src="https://img.shields.io/badge/%EB%BF%8C%EB%A6%AC-4-8A5A36" alt="뿌리 4개">
   <a href="#직접-확인하기"><img src="https://img.shields.io/badge/Tests-python_--m_unittest-31572C" alt="자동 검사: python -m unittest"></a>
   <img src="https://img.shields.io/badge/Claude_%2B_Codex-shared_rules-40916C" alt="Claude와 Codex 공통 규칙">
@@ -72,7 +72,7 @@ claude plugin disable saerok-watch
 
 새록이는 나무라서 에이전트도 나무의 말로 부릅니다. 사용자가 직접 쓰는 에이전트는 씨앗에서 꽃을 거쳐 **열매**로 자라고, 에이전트를 받치는 공통 기반은 **뿌리**입니다.
 
-**에이전트 16개(🍎 열매 3 · 🌸 꽃 5 · 🌱 씨앗 8) · 뿌리 4개**
+**에이전트 17개(🍎 열매 3, 🌸 꽃 6, 🌱 씨앗 8), 뿌리 4개**
 
 | 상태 | 뜻 |
 |---|---|
@@ -80,7 +80,7 @@ claude plugin disable saerok-watch
 | 🌸 꽃 | 만드는 중입니다 |
 | 🍎 열매 | 첫 버전을 완성했습니다 |
 
-### 에이전트 16개
+### 에이전트 17개
 
 에이전트마다 [`fruits/`](fruits) 아래에 폴더 하나를 둡니다. 씨앗 폴더에는 아직 설명만 있습니다.
 
@@ -180,7 +180,7 @@ claude plugin disable saerok-watch
 
 ```text
 saeroki/
-├─ fruits/                 에이전트 16개(🍎3 · 🌸5 · 🌱8), 에이전트마다 폴더 하나
+├─ fruits/                 에이전트 17개(🍎3, 🌸6, 🌱8), 에이전트마다 폴더 하나
 │  ├─ 01-content-personalization/   🌸 코드·데이터·검사·Claude 지침
 │  ├─ 04-prd-assistant/             🍎 PRD 설계 스무고개·검토 스킬·검사 명령·예시·검사
 │  ├─ 16-natural-language-sql/      🍎 saerok-sql 터미널·서울 데이터(data/)·검사
