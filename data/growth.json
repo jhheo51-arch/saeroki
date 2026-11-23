@@ -1,6 +1,6 @@
 {
   "scope": "owned_repositories",
-  "repo_count": 39,
+  "repo_count": 41,
   "visitors_by_day": {
     "2026-10-02": 0,
     "2026-10-03": 0,
@@ -52,19 +52,21 @@
     "2026-11-18": 10,
     "2026-11-19": 15,
     "2026-11-20": 3,
-    "2026-11-21": 2
+    "2026-11-21": 2,
+    "2026-11-22": 0,
+    "2026-11-23": 0
   },
   "visitors_total": 75,
   "stars": 0,
   "work": {
-    "commits": 1011,
-    "active_days": 47,
-    "points": 2987
+    "commits": 1035,
+    "active_days": 48,
+    "points": 3038
   },
-  "score": 3062,
+  "score": 3113,
   "stage": {
-    "level": 52,
+    "level": 53,
     "name": "열매 맺는 나무"
   },
-  "updated_at": "2026-11-22T20:54:45+00:00"
+  "updated_at": "2026-11-23T05:05:38+00:00"
 }
